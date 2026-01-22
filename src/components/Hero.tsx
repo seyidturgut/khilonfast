@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+// import { useState } from 'react'
 import { HiArrowRight, HiArrowLeft } from 'react-icons/hi2'
 import './Hero.css'
 
@@ -137,11 +137,12 @@ const slides = [
 ]
 
 export default function Hero() {
-    const [currentSlide, setCurrentSlide] = useState(0)
+    // Single slide static version - removed unused state for build
+    // const [currentSlide, setCurrentSlide] = useState(0)
 
-    const nextSlide = () => { }
-    const prevSlide = () => { }
-    const goToSlide = (index: number) => { }
+    const nextSlide = () => { /* Static */ }
+    const prevSlide = () => { /* Static */ }
+    const goToSlide = (_index: number) => { /* Static */ }
 
     return (
         <section id="home" className="hero">

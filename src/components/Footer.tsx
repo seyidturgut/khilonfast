@@ -1,4 +1,4 @@
-import { HiEnvelope, HiPhone, HiMapPin } from 'react-icons/hi2'
+// import { HiEnvelope, HiPhone, HiMapPin } from 'react-icons/hi2'
 import { FaLinkedinIn, FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa'
 import './Footer.css'
 
