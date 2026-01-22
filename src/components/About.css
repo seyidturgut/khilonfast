@@ -1,0 +1,245 @@
+.about {
+    padding: calc(var(--space-2xl) * 1.5) 0;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    position: relative;
+}
+
+.about-container {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: calc(var(--space-2xl) * 1.5);
+    align-items: center;
+    padding-top: var(--space-lg);
+}
+
+.about-visual {
+    position: sticky;
+    top: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-svg {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    filter: drop-shadow(0 4px 20px rgba(197, 214, 61, 0.08));
+}
+
+/* Subtle, Professional Animations */
+.rocket-icon {
+    animation: float-gentle 4s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes float-gentle {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.chart-bars rect {
+    animation: bar-pulse 3s ease-in-out infinite;
+    transform-origin: bottom;
+}
+
+.chart-bars rect:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.chart-bars rect:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.chart-bars rect:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.chart-bars rect:nth-child(4) {
+    animation-delay: 0.9s;
+}
+
+@keyframes bar-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.gear-icon {
+    animation: rotate-slow 20s linear infinite;
+    transform-origin: 380px 180px;
+}
+
+@keyframes rotate-slow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.target-icon {
+    animation: target-gentle 3s ease-in-out infinite;
+    transform-origin: 370px 360px;
+}
+
+@keyframes target-gentle {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+.connect-line {
+    stroke-dasharray: 150;
+    animation: line-draw 4s ease-in-out infinite;
+}
+
+.line-1 {
+    animation-delay: 0s;
+}
+
+.line-2 {
+    animation-delay: 1s;
+}
+
+.line-3 {
+    animation-delay: 2s;
+}
+
+@keyframes line-draw {
+
+    0%,
+    100% {
+        stroke-dashoffset: 150;
+        opacity: 0.2;
+    }
+
+    50% {
+        stroke-dashoffset: 0;
+        opacity: 0.6;
+    }
+}
+
+/* Content Styles */
+.about-content {
+    max-width: 680px;
+}
+
+.about-title {
+    font-size: clamp(2rem, 4vw, 2.875rem);
+    font-weight: 800;
+    color: var(--color-secondary);
+    line-height: 1.25;
+    margin-bottom: var(--space-lg);
+    letter-spacing: -0.02em;
+}
+
+.about-description {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-bottom: calc(var(--space-xl) * 1.2);
+    font-weight: 400;
+}
+
+.about-list {
+    list-style: none;
+    display: grid;
+    gap: var(--space-md);
+}
+
+.about-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all var(--transition-base);
+}
+
+.about-item:hover {
+    border-color: var(--color-primary);
+    background: rgba(197, 214, 61, 0.03);
+    transform: translateX(4px);
+    box-shadow: 0 2px 10px rgba(197, 214, 61, 0.1);
+}
+
+.about-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Accent Bar */
+.about::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary) 30%, transparent 100%);
+}
+
+@media (max-width: 968px) {
+    .about-container {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+    }
+
+    .about-visual {
+        position: relative;
+        top: 0;
+        order: 1;
+    }
+
+    .about-svg {
+        max-width: 300px;
+    }
+
+    .about-content {
+        order: 2;
+    }
+}
+
+@media (max-width: 640px) {
+    .about-svg {
+        max-width: 260px;
+    }
+
+    .about-item {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 1rem;
+    }
+}

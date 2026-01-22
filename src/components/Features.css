@@ -1,0 +1,259 @@
+.features {
+    padding: calc(var(--space-2xl) * 1.5) 0;
+    background: var(--color-bg-main);
+}
+
+.features-container {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: calc(var(--space-2xl) * 1.5);
+    align-items: center;
+}
+
+.features-content {
+    max-width: 580px;
+}
+
+.features-title {
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--color-secondary);
+    line-height: 1.2;
+    margin-bottom: var(--space-lg);
+    letter-spacing: -0.02em;
+}
+
+.features-description {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-bottom: calc(var(--space-xl) * 1.5);
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.feature-item-modern {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+}
+
+.feature-check-modern {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    color: var(--color-primary);
+    flex-shrink: 0;
+    font-size: 2rem;
+    margin-top: -4px;
+}
+
+.feature-item-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* SVG Visual */
+.features-visual-modern {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.features-svg {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+}
+
+/* Chart Bars Animation */
+.chart-bars-animated rect {
+    animation: bar-grow 2s ease-out backwards;
+    transform-origin: bottom;
+}
+
+.chart-bars-animated rect:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.chart-bars-animated rect:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.chart-bars-animated rect:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.chart-bars-animated rect:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.chart-bars-animated rect:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.chart-bars-animated rect:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.chart-bars-animated rect:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.chart-bars-animated rect:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+@keyframes bar-grow {
+    from {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+/* Growth Arrow Animation */
+.growth-arrow-animated {
+    animation: arrow-draw 2s ease-out 1s backwards;
+}
+
+@keyframes arrow-draw {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Percentage Symbol */
+.percentage-symbol {
+    animation: symbol-pulse 3s ease-in-out infinite;
+}
+
+@keyframes symbol-pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Data Points */
+.data-point {
+    animation: point-pulse 2s ease-in-out infinite;
+}
+
+.point-1 {
+    animation-delay: 0s;
+}
+
+.point-2 {
+    animation-delay: 0.5s;
+}
+
+.point-3 {
+    animation-delay: 1s;
+}
+
+@keyframes point-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 0.7;
+    }
+}
+
+/* Floating Stats */
+.stat-text {
+    animation: stat-float 3s ease-in-out infinite;
+}
+
+.floating-stats text:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.floating-stats text:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.floating-stats text:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes stat-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.9;
+    }
+
+    50% {
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .features-container {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+    }
+
+    .features-content {
+        max-width: 100%;
+        order: 2;
+    }
+
+    .features-visual-modern {
+        order: 1;
+    }
+
+    .features-svg {
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 640px) {
+    .features-svg {
+        max-width: 100%;
+    }
+
+    .feature-check-modern {
+        font-size: 1.75rem;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+    }
+
+    .feature-item-title {
+        font-size: 1rem;
+    }
+}

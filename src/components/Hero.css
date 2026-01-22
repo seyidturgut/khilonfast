@@ -1,0 +1,242 @@
+/* Hero.css */
+
+.hero {
+    position: relative;
+    min-height: 85vh;
+    /* Slightly taller for better spacing */
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #d4e157 0%, #C5D63D 100%);
+    padding-top: 120px;
+    /* More space for header */
+    padding-bottom: var(--space-xl);
+    overflow: hidden;
+}
+
+/* Balanced Layout */
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Back to balanced split */
+    gap: var(--space-2xl);
+    align-items: center;
+    max-width: 1280px;
+    /* Standard container max-width */
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hero-content {
+    z-index: 10;
+    /* Ensure text is above background elements */
+    position: relative;
+}
+
+.hero-text {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--color-secondary);
+    line-height: 1.15;
+    margin-bottom: var(--space-md);
+    letter-spacing: -0.02em;
+}
+
+.title-highlight {
+    color: var(--color-secondary);
+    /* No relative position needed unless overlaying */
+}
+
+/* Animation Utilities */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.typing-line {
+    display: inline-block;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.typing-line-1 {
+    animation-delay: 0.2s;
+}
+
+.typing-line-2 {
+    animation-delay: 0.6s;
+}
+
+.hero-description {
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    color: var(--color-secondary);
+    opacity: 0.85;
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+    max-width: 500px;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 1s;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 1.2s;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--color-secondary);
+    color: white;
+    box-shadow: 0 10px 25px rgba(26, 58, 82, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(26, 58, 82, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-secondary);
+    border: 2px solid var(--color-secondary);
+}
+
+.btn-secondary:hover {
+    background: var(--color-secondary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Controls */
+.hero-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 1.4s;
+}
+
+.hero-arrows {
+    display: flex;
+    gap: 12px;
+}
+
+.hero-arrow {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--color-secondary);
+    /* Dark border */
+    background: transparent;
+    color: var(--color-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.hero-arrow:hover {
+    background: var(--color-secondary);
+    color: white;
+    transform: rotate(360deg);
+    /* Playful rotation */
+}
+
+.hero-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--color-secondary);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.hero-dot.active {
+    background: var(--color-secondary);
+    transform: scale(1.5);
+}
+
+/* Visual Clean Area */
+.hero-image {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    /* Center standard */
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-image-wrapper {
+    width: 100%;
+    max-width: 600px;
+    /* Constrain slightly for the specific SVG ratio */
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .hero {
+        padding-top: 100px;
+        min-height: auto;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .hero-content {
+        order: 2;
+    }
+
+    .hero-image {
+        order: 1;
+        min-height: 350px;
+        margin-bottom: var(--space-lg);
+    }
+
+    .hero-buttons,
+    .hero-controls {
+        justify-content: center;
+    }
+}

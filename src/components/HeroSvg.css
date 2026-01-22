@@ -1,0 +1,57 @@
+/* Animation Styles for SVG */
+
+/* Float Animation for Glass Cards */
+@keyframes floatCard {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.glass-card {
+    animation: floatCard 6s ease-in-out infinite;
+}
+
+/* Orbit Rotations */
+@keyframes orbitRotate {
+    from {
+        transform: rotate(0deg);
+        transform-origin: 400px 300px;
+    }
+
+    to {
+        transform: rotate(360deg);
+        transform-origin: 400px 300px;
+    }
+}
+
+.orbit-ring {
+    animation: orbitRotate 60s linear infinite;
+}
+
+.orbit-ring-reverse {
+    animation: orbitRotate 45s linear infinite reverse;
+}
+
+/* Initial Fade In for SVG Elements */
+.hero-svg-net {
+    opacity: 0;
+    animation: fadeInSvg 1s ease-out forwards;
+}
+
+@keyframes fadeInSvg {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -1,0 +1,359 @@
+.services {
+    padding: calc(var(--space-2xl) * 1.75) 0;
+    background: var(--color-bg-dark);
+    position: relative;
+}
+
+.services-header {
+    text-align: center;
+    margin-bottom: calc(var(--space-2xl) * 1.5);
+}
+
+.services-title {
+    font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+    font-weight: 800;
+    color: var(--color-text-light);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.services-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: var(--color-primary);
+    margin: var(--space-lg) auto 0;
+    border-radius: var(--radius-full);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card-modern {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transition: all var(--transition-base);
+    animation: fadeIn 0.6s ease-out backwards;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card-modern:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.25);
+}
+
+.service-image-area {
+    position: relative;
+    height: 240px;
+    background: linear-gradient(135deg, #2d4a5e 0%, #1a3a52 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* SVG Animations Container */
+.service-anim-wrapper {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 4px 12px rgba(197, 214, 61, 0.3));
+    transition: transform var(--transition-slow);
+}
+
+.service-card-modern:hover .service-anim-wrapper {
+    transform: scale(1.1);
+}
+
+.service-icon-svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Code Animation */
+.code-line {
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    animation: type-code 2s infinite ease-in-out;
+}
+
+.code-line.line-1 {
+    animation-delay: 0s;
+}
+
+.code-line.line-2 {
+    animation-delay: 1s;
+}
+
+@keyframes type-code {
+
+    0%,
+    10% {
+        stroke-dashoffset: 20;
+        opacity: 0;
+    }
+
+    50%,
+    90% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+.bracket-left {
+    animation: bracket-pulse 2s infinite ease-in-out;
+}
+
+.bracket-right {
+    animation: bracket-pulse 2s infinite ease-in-out reverse;
+}
+
+@keyframes bracket-pulse {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-2px);
+    }
+}
+
+/* Rocket Animation */
+.rocket-anim {
+    animation: rocket-hover 3s ease-in-out infinite;
+}
+
+@keyframes rocket-hover {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.rocket-flame {
+    animation: flame-flicker 0.2s infinite;
+    transform-origin: 50px 80px;
+}
+
+@keyframes flame-flicker {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+}
+
+.stars-anim circle {
+    animation: star-blink 2s infinite;
+}
+
+.stars-anim circle:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.stars-anim circle:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes star-blink {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        r: 1;
+    }
+
+    50% {
+        opacity: 1;
+        r: 2;
+    }
+}
+
+/* Chart Animation */
+.bar {
+    transform-origin: bottom;
+    animation: bar-bounce 2s infinite ease-in-out;
+}
+
+.bar-1 {
+    animation-delay: 0s;
+}
+
+.bar-2 {
+    animation-delay: 0.2s;
+}
+
+.bar-3 {
+    animation-delay: 0.4s;
+}
+
+@keyframes bar-bounce {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(0.85);
+    }
+}
+
+.chart-line {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: line-grow 3s infinite ease-in-out;
+}
+
+@keyframes line-grow {
+
+    0%,
+    10% {
+        stroke-dashoffset: 100;
+    }
+
+    50%,
+    90% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+/* Overlay & Info Styles */
+.service-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(197, 214, 61, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.service-card-modern:hover .service-overlay {
+    opacity: 1;
+}
+
+.service-info {
+    padding: var(--space-xl);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-title-modern {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    margin-bottom: var(--space-md);
+    line-height: 1.4;
+}
+
+.service-desc-modern {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+    flex: 1;
+}
+
+.service-btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: transparent;
+    border: none;
+    color: var(--color-primary);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    transition: all var(--transition-base);
+    align-self: flex-start;
+}
+
+.service-btn-modern:hover {
+    color: var(--color-primary-dark);
+    gap: var(--space-md);
+}
+
+.btn-arrow-icon {
+    font-size: 1.25rem;
+    transition: transform var(--transition-base);
+}
+
+.service-btn-modern:hover .btn-arrow-icon {
+    transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .service-card-modern:nth-child(3) {
+        grid-column: 1 / -1;
+        max-width: 600px;
+        margin: 0 auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .services {
+        padding: var(--space-2xl) 0;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card-modern:nth-child(3) {
+        grid-column: auto;
+        max-width: 100%;
+    }
+
+    .service-image-area {
+        height: 200px;
+    }
+
+    .service-anim-wrapper {
+        width: 80px;
+        height: 80px;
+    }
+
+    .service-info {
+        padding: var(--space-lg);
+    }
+}
