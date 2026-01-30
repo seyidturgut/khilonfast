@@ -21,6 +21,7 @@ import InteriorDesignMarketing from './pages/InteriorDesignMarketing'
 import FleetRentalMarketing from './pages/FleetRentalMarketing'
 import ManufacturingMarketing from './pages/ManufacturingMarketing'
 import About from './pages/About'
+import GrowthMarketingTraining from './pages/GrowthMarketingTraining'
 
 function App() {
     return (
@@ -47,6 +48,7 @@ function App() {
                     <Route path="/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi" element={<InteriorDesignMarketing />} />
                     <Route path="/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
                     <Route path="/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
+                    <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<GrowthMarketingTraining />} />
                 </Routes>
             </main>
             <Footer />

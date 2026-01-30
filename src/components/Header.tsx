@@ -16,7 +16,8 @@ import {
     HiBolt,
     HiPaintBrush,
     HiTruck,
-    HiWrench
+    HiWrench,
+    HiAcademicCap
 } from 'react-icons/hi2'
 import './Header.css'
 
@@ -28,7 +29,8 @@ const services = [
     { icon: HiShare, title: 'Sosyal Medya Reklamcılığı', desc: 'Hedef kitle etkileşimini artırın', path: '/hizmetlerimiz/sosyal-medya-reklamciligi' },
     { icon: HiMagnifyingGlass, title: 'SEO', desc: 'Arama motorlarında üst sıralara çıkın', path: '/hizmetlerimiz/seo-yonetimi' },
     { icon: HiPencilSquare, title: 'İçerik Üretimi', desc: 'Etkileyici ve özgün içerik üretimi', path: '/hizmetlerimiz/icerik-uretimi' },
-    { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları', path: '/hizmetlerimiz/b2b-email-pazarlama' }
+    { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları', path: '/hizmetlerimiz/b2b-email-pazarlama' },
+    { icon: HiAcademicCap, title: 'Büyüme Odaklı Pazarlama Eğitimi', desc: 'B2B pazarlama ve satış eğitimi', path: '/hizmetlerimiz/buyume-odakli-pazarlama-egitimi' }
 ]
 
 const sectoralServices = [
