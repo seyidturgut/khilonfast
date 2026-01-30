@@ -1,9 +1,7 @@
 import {
     HiRocketLaunch,
-    HiMagnifyingGlass,
     HiChartBar,
     HiLightBulb,
-    HiPresentationChartLine,
     HiKey,
     HiTrophy,
     HiCreditCard,
