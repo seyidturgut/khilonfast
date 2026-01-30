@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
-import { HiMenu, HiX, HiChevronDown } from 'react-icons/hi'
+import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { HiMenu, HiX, HiChevronDown, HiChevronRight, HiArrowLeft } from 'react-icons/hi'
 import {
     HiRocketLaunch,
     HiDocumentText,
@@ -8,101 +9,127 @@ import {
     HiShare,
     HiMagnifyingGlass,
     HiPencilSquare,
-    HiEnvelope
+    HiEnvelope,
+    HiBriefcase,
+    HiCreditCard,
+    HiCommandLine,
+    HiBolt,
+    HiPaintBrush,
+    HiTruck,
+    HiWrench
 } from 'react-icons/hi2'
 import './Header.css'
 
 const services = [
-    { icon: HiRocketLaunch, title: 'Go To Market Stratejisi', desc: 'Pazara giriş ve büyüme planları' },
-    { icon: HiDocumentText, title: 'İçerik Stratejisi', desc: 'Marka hikayenizi güçlendiren içerikler' },
-    { icon: HiPresentationChartLine, title: 'Bütünleşik Dijital Pazarlama', desc: '360 derece pazarlama çözümleri' },
-    { icon: HiCursorArrowRays, title: 'Google Ads', desc: 'Performans odaklı reklam yönetimi' },
-    { icon: HiShare, title: 'Sosyal Medya Reklamcılığı', desc: 'Hedef kitle etkileşimini artırın' },
-    { icon: HiMagnifyingGlass, title: 'SEO', desc: 'Arama motorlarında üst sıralara çıkın' },
-    { icon: HiPencilSquare, title: 'İçerik Üretimi', desc: 'Etkileyici ve özgün içerik üretimi' },
-    { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları' }
+    { icon: HiRocketLaunch, title: 'Go To Market Stratejisi', desc: 'Pazara giriş ve büyüme planları', path: '/hizmetlerimiz/go-to-market-stratejisi' },
+    { icon: HiDocumentText, title: 'İçerik Stratejisi', desc: 'Marka hikayenizi güçlendiren içerikler', path: '/hizmetlerimiz/icerik-stratejisi' },
+    { icon: HiPresentationChartLine, title: 'Bütünleşik Dijital Pazarlama', desc: '360 derece pazarlama çözümleri', path: '/hizmetlerimiz/butunlesik-dijital-pazarlama' },
+    { icon: HiCursorArrowRays, title: 'Google Ads', desc: 'Performans odaklı reklam yönetimi', path: '/hizmetlerimiz/google-ads' },
+    { icon: HiShare, title: 'Sosyal Medya Reklamcılığı', desc: 'Hedef kitle etkileşimini artırın', path: '/hizmetlerimiz/sosyal-medya-reklamciligi' },
+    { icon: HiMagnifyingGlass, title: 'SEO', desc: 'Arama motorlarında üst sıralara çıkın', path: '/hizmetlerimiz/seo-yonetimi' },
+    { icon: HiPencilSquare, title: 'İçerik Üretimi', desc: 'Etkileyici ve özgün içerik üretimi', path: '/hizmetlerimiz/icerik-uretimi' },
+    { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları', path: '/hizmetlerimiz/b2b-email-pazarlama' }
+]
+
+const sectoralServices = [
+    { icon: HiBriefcase, title: 'B2B Firmalar İçin 360 Pazarlama Yönetimi', desc: 'Bütünleşik B2B pazarlama çözümleri', path: '/sektorel-hizmetler/b2b-360-pazarlama-yonetimi' },
+    { icon: HiCreditCard, title: 'Ödeme Sistemleri İçin 360 Pazarlama Yönetimi', desc: 'Fintech odaklı stratejik çözümler', path: '/sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi' },
+    { icon: HiRocketLaunch, title: 'Endüstriyel Gıda & Şef Çözümleri', desc: 'Gıda sektörüne özel 360 pazarlama', path: '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi' },
+    { icon: HiPresentationChartLine, title: 'FinTech Firmaları İçin 360 Pazarlama', desc: 'Finansal teknoloji odaklı çözümler', path: '/sektorel-hizmetler/fintech-360-pazarlama-yonetimi' },
+    { icon: HiCommandLine, title: 'Teknoloji & Yazılım Firmaları İçin 360 Pazarlama Yönetimi', desc: 'SaaS ve yazılım odaklı çözümler', path: '/sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi' },
+    { icon: HiBolt, title: 'Enerji Firmaları İçin 360 Pazarlama Yönetimi', desc: 'Enerji ve teknoloji odaklı çözümler', path: '/sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi' },
+    { icon: HiPaintBrush, title: 'Ofis & Kurumsal İç Tasarım Sektörü İçin Pazarlama Yönetimi', desc: 'Mimari ve kurumsal tasarım çözümleri', path: '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi' },
+    { icon: HiTruck, title: 'Filo Kiralama Firmaları İçin 360 Pazarlama Yönetimi', desc: 'Kurumsal mobilite ve filo çözümleri', path: '/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi' },
+    { icon: HiWrench, title: 'Üretim Sektörü Firmaları İçin 360 Pazarlama Yönetimi', desc: 'Endüstriyel ve üretim odaklı çözümler', path: '/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi' }
 ]
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false)
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+    const [currentMenu, setCurrentMenu] = useState<'main' | 'services' | 'sectoral'>('main')
     const [scrolled, setScrolled] = useState(false)
-    const dropdownRef = useRef<HTMLDivElement>(null)
+    const location = useLocation()
+    const isHome = location.pathname === '/'
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 20)
+            setScrolled(window.scrollY > 50)
         }
-
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setActiveDropdown(null)
-            }
-        }
-
         window.addEventListener('scroll', handleScroll)
-        document.addEventListener('mousedown', handleClickOutside)
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
+        return () => window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        setIsOpen(false)
+        setActiveDropdown(null)
+        setCurrentMenu('main')
+    }, [location])
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+        return () => {
+            document.body.style.overflow = ''
+        }
+    }, [isOpen])
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
-        if (!isOpen) setActiveDropdown(null)
-    }
-
-    const toggleDropdown = (name: string) => {
-        setActiveDropdown(activeDropdown === name ? null : name)
+        if (!isOpen) setCurrentMenu('main')
     }
 
     return (
-        <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+        <header className={`header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
             <div className="container header-container">
                 <div className="logo">
-                    <img src="/fast-logo-big.svg" alt="Khilonfast" />
+                    <Link to="/">
+                        <img src="/fast-logo-big.svg" alt="Khilonfast" />
+                    </Link>
                 </div>
 
-                <nav className={`nav-menu ${isOpen ? 'active' : ''}`}>
-                    <div className={`nav-item ${activeDropdown === 'services' ? 'active' : ''}`} ref={dropdownRef}>
-                        <button
-                            className="nav-link dropdown-toggle"
-                            onClick={() => toggleDropdown('services')}
-                            onMouseEnter={() => window.innerWidth > 968 && setActiveDropdown('services')}
-                        >
+                {/* Desktop Nav */}
+                <nav className="nav-desktop desktop-only">
+                    <div className="nav-item">
+                        <button className="nav-link dropdown-toggle" onMouseEnter={() => setActiveDropdown('services')}>
                             Hizmetlerimiz <HiChevronDown className="dropdown-icon" />
                         </button>
-
-                        <div className={`mega-menu ${activeDropdown === 'services' ? 'show' : ''}`} onMouseLeave={() => window.innerWidth > 968 && setActiveDropdown(null)}>
+                        <div className={`mega-menu compact ${activeDropdown === 'services' ? 'show' : ''}`} onMouseLeave={() => setActiveDropdown(null)}>
                             <div className="mega-menu-grid">
-                                {services.map((service, index) => {
-                                    const Icon = service.icon
-                                    return (
-                                        <a href="#services" key={index} className="mega-menu-item">
-                                            <div className="mega-icon-box">
-                                                <Icon />
-                                            </div>
-                                            <div className="mega-content">
-                                                <h4 className="mega-title">{service.title}</h4>
-                                                <p className="mega-desc">{service.desc}</p>
-                                            </div>
-                                        </a>
-                                    )
-                                })}
+                                {services.map((s, i) => (
+                                    <Link key={i} to={s.path} className="mega-menu-item" onClick={() => setActiveDropdown(null)}>
+                                        <div className="mega-icon-box"><s.icon /></div>
+                                        <div className="mega-content">
+                                            <h4 className="mega-title">{s.title}</h4>
+                                            <p className="mega-desc">{s.desc}</p>
+                                        </div>
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                     </div>
-
-                    <a href="#solutions" className="nav-link">Çözümlerimiz</a>
-                    <a href="#about" className="nav-link">Hakkımızda</a>
-                    <a href="#references" className="nav-link">Referanslar</a>
-                    <a href="#contact" className="nav-link">İletişim</a>
-
-                    <button className="btn btn-primary mobile-only">
-                        Hemen Başlayın
-                    </button>
+                    <div className="nav-item">
+                        <button className="nav-link dropdown-toggle" onMouseEnter={() => setActiveDropdown('sectoral')}>
+                            Sektörel <HiChevronDown className="dropdown-icon" />
+                        </button>
+                        <div className={`mega-menu compact sectoral ${activeDropdown === 'sectoral' ? 'show' : ''}`} onMouseLeave={() => setActiveDropdown(null)}>
+                            <div className="mega-menu-grid">
+                                {sectoralServices.map((s, i) => (
+                                    <Link key={i} to={s.path} className="mega-menu-item" onClick={() => setActiveDropdown(null)}>
+                                        <div className="mega-icon-box"><s.icon /></div>
+                                        <div className="mega-content">
+                                            <h4 className="mega-title">{s.title}</h4>
+                                            <p className="mega-desc">{s.desc}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <Link to="/hakkimizda" className="nav-link">Hakkımızda</Link>
+                    <Link to="/#contact" className="nav-link">İletişim</Link>
                 </nav>
 
                 <div className="header-actions">
@@ -111,12 +138,72 @@ export default function Header() {
                         <span className="divider">|</span>
                         <span>EN</span>
                     </div>
-                    <button className="btn btn-primary desktop-only">
-                        Hemen Başlayın
-                    </button>
-                    <button className="menu-toggle" onClick={toggleMenu}>
+                    <Link to="/#contact" className="btn btn-primary desktop-only">Hemen Başlayın</Link>
+                    <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle Menu">
                         {isOpen ? <HiX /> : <HiMenu />}
                     </button>
+                </div>
+            </div>
+
+            {/* Complete New Mobile Menu Overlay */}
+            <div className={`mobile-menu-overlay ${isOpen ? 'active' : ''}`}>
+                <div className="mobile-menu-header">
+                    <div className="logo">
+                        <img src="/fast-logo-big.svg" alt="Khilonfast" style={{ filter: 'brightness(0) invert(1)' }} />
+                    </div>
+                    <button className="menu-close" onClick={() => setIsOpen(false)}>
+                        <HiX />
+                    </button>
+                </div>
+
+                <div className={`mobile-menu-viewport ${currentMenu}`}>
+                    {/* Main Menu */}
+                    <div className="mobile-menu-page main">
+                        <button className="mobile-link has-arrow" onClick={() => setCurrentMenu('services')}>
+                            Hizmetlerimiz <HiChevronRight />
+                        </button>
+                        <button className="mobile-link has-arrow" onClick={() => setCurrentMenu('sectoral')}>
+                            Sektörel Hizmetler <HiChevronRight />
+                        </button>
+                        <Link to="/hakkimizda" className="mobile-link">Hakkımızda</Link>
+                        <Link to="/#contact" className="mobile-link">İletişim</Link>
+
+                        <div className="mobile-menu-footer">
+                            <Link to="/#contact" className="btn btn-primary" onClick={() => setIsOpen(false)}>Hemen Başlayın</Link>
+                        </div>
+                    </div>
+
+                    {/* Services Sub-Menu */}
+                    <div className="mobile-menu-page sub">
+                        <button className="mobile-back" onClick={() => setCurrentMenu('main')}>
+                            <HiArrowLeft /> Geri: Menü
+                        </button>
+                        <h3 className="mobile-submenu-title">Hizmetlerimiz</h3>
+                        <div className="mobile-submenu-list">
+                            {services.map((s, i) => (
+                                <Link key={i} to={s.path} className="mobile-sub-item" onClick={() => setIsOpen(false)}>
+                                    <div className="sub-icon"><s.icon /></div>
+                                    <span>{s.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Sectoral Sub-Menu */}
+                    <div className="mobile-menu-page sub">
+                        <button className="mobile-back" onClick={() => setCurrentMenu('main')}>
+                            <HiArrowLeft /> Geri: Menü
+                        </button>
+                        <h3 className="mobile-submenu-title">Sektörel Hizmetler</h3>
+                        <div className="mobile-submenu-list">
+                            {sectoralServices.map((s, i) => (
+                                <Link key={i} to={s.path} className="mobile-sub-item" onClick={() => setIsOpen(false)}>
+                                    <div className="sub-icon"><s.icon /></div>
+                                    <span>{s.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>

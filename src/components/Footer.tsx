@@ -1,5 +1,6 @@
 // import { HiEnvelope, HiPhone, HiMapPin } from 'react-icons/hi2'
 import { FaLinkedinIn, FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import './Footer.css'
 
 export default function Footer() {
@@ -40,9 +41,9 @@ export default function Footer() {
                         <div className="footer-column">
                             <h3 className="footer-column-title">Khilon</h3>
                             <ul className="footer-list">
-                                <li><a href="#about">ana sayfa</a></li>
-                                <li><a href="#about">hakkımızda</a></li>
-                                <li><a href="#contact">bize ulaşın</a></li>
+                                <li><Link to="/">ana sayfa</Link></li>
+                                <li><Link to="/hakkimizda">hakkımızda</Link></li>
+                                <li><Link to="/#contact">bize ulaşın</Link></li>
                             </ul>
                         </div>
 

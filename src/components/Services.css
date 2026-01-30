@@ -332,7 +332,7 @@
 
 @media (max-width: 640px) {
     .services {
-        padding: var(--space-2xl) 0;
+        padding: 4rem 0;
     }
 
     .services-grid {

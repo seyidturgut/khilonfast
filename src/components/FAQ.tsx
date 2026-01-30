@@ -2,7 +2,17 @@ import { useState } from 'react'
 import { HiChevronDown } from 'react-icons/hi2'
 import './FAQ.css'
 
-const faqs = [
+interface FAQItem {
+    question: string;
+    answer: string;
+}
+
+interface FAQProps {
+    items?: FAQItem[];
+    subtitle?: string;
+}
+
+const defaultFaqs = [
     {
         question: 'khilonfast hangi hizmetleri sunar?',
         answer: 'khilonfast; denetim, strateji geliştirme, dijital pazarlama, marka yönetimi, CRM, satış ve kurumsal iletişim gibi alanlarda uçtan uca pazarlama hizmetleri sunar. Her hizmet, markaların iş hedeflerine değer katacak şekilde tasarlanır ve ihtiyaçlara göre özelleştirilebilir.'
@@ -25,7 +35,7 @@ const faqs = [
     }
 ]
 
-export default function FAQ() {
+export default function FAQ({ items = defaultFaqs, subtitle }: FAQProps) {
     const [openIndex, setOpenIndex] = useState<number | null>(null)
 
     const toggleFAQ = (index: number) => {
@@ -38,13 +48,17 @@ export default function FAQ() {
                 <div className="faq-header">
                     <h2 className="faq-logo">SSS</h2>
                     <p className="faq-subtitle">
-                        khilonfast hizmetleri hakkında sıkça sorulan soruların yanıtlarını<br />
-                        burada bulabilirsiniz!
+                        {subtitle || (
+                            <>
+                                khilonfast hizmetleri hakkında sıkça sorulan soruların yanıtlarını<br />
+                                burada bulabilirsiniz!
+                            </>
+                        )}
                     </p>
                 </div>
 
                 <div className="faq-list">
-                    {faqs.map((faq, index) => (
+                    {items.map((item, index) => (
                         <div
                             key={index}
                             className={`faq-item ${openIndex === index ? 'active' : ''}`}
@@ -53,12 +67,12 @@ export default function FAQ() {
                                 className="faq-question"
                                 onClick={() => toggleFAQ(index)}
                             >
-                                <span>{faq.question}</span>
+                                <span>{item.question}</span>
                                 <HiChevronDown className="faq-icon" />
                             </button>
 
                             <div className="faq-answer">
-                                <p>{faq.answer}</p>
+                                <p>{item.answer}</p>
                             </div>
                         </div>
                     ))}
