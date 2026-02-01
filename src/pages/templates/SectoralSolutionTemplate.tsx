@@ -64,7 +64,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
 
     return (
         <div className="page-container sectoral-page service-template-page">
-            <section className="sectoral-hero" style={{ backgroundColor: props.hero.themeColor }}>
+            <section className="sectoral-hero">
                 <Breadcrumbs items={props.breadcrumbs} />
                 <div className="container service-hero-container">
                     <div className="service-hero-grid">

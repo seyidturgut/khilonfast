@@ -186,7 +186,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
     return (
         <div className="page-container service-template-page">
-            <section className="service-hero" style={{ backgroundColor: props.hero.themeColor }}>
+            <section className="service-hero">
                 <Breadcrumbs items={props.breadcrumbs} />
                 <div className="container service-hero-container">
                     <div className="service-hero-grid">
