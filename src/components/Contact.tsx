@@ -1,6 +1,13 @@
+import { useState } from 'react'
 import './Contact.css'
 
 export default function Contact() {
+    const [isSubmitted, setIsSubmitted] = useState(false)
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsSubmitted(true)
+    }
     return (
         <section id="contact" className="contact">
             <div className="container">
@@ -40,50 +47,52 @@ export default function Contact() {
                     </div>
 
                     <div className="contact-form-wrapper">
-                        <form className="contact-form">
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    placeholder="Adınız Soyadınız"
-                                    className="form-input"
-                                />
+                        {isSubmitted ? (
+                            <div className="contact-success">
+                                <div className="success-icon">✅</div>
+                                <h3>Mesajınız Alındı!</h3>
+                                <p>En kısa sürede size dönüş yapacağız. İlginiz için teşekkürler.</p>
+                                <button className="btn btn-primary" onClick={() => setIsSubmitted(false)}>
+                                    Yeni Mesaj Gönder
+                                </button>
                             </div>
-                            <div className="form-group">
-                                <input
-                                    type="email"
-                                    placeholder="E-posta Adresiniz"
-                                    className="form-input"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="tel"
-                                    placeholder="Telefon Numaranız"
-                                    className="form-input"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <textarea
-                                    placeholder="Mesajınız"
-                                    className="form-input form-textarea"
-                                    rows={5}
-                                ></textarea>
-                            </div>
-                            <button type="submit" className="btn btn-primary btn-full">
-                                Mesaj Gönder
-                            </button>
-                        </form>
+                        ) : (
+                            <form className="contact-form" onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <input
+                                        type="text"
+                                        placeholder="Adınız Soyadınız"
+                                        className="form-input"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <input
+                                        type="email"
+                                        placeholder="E-posta Adresiniz"
+                                        className="form-input"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <input
+                                        type="tel"
+                                        placeholder="Telefon Numaranız"
+                                        className="form-input"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <textarea
+                                        placeholder="Mesajınız"
+                                        className="form-input form-textarea"
+                                        rows={5}
+                                    ></textarea>
+                                </div>
+                                <button type="submit" className="btn btn-primary btn-full">
+                                    Mesaj Gönder
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </div>
-
-                <footer className="footer">
-                    <p>© 2026 Khilonfast. Tüm hakları saklıdır.</p>
-                    <div className="social-links">
-                        <a href="#" className="social-link">LinkedIn</a>
-                        <a href="#" className="social-link">Twitter</a>
-                        <a href="#" className="social-link">Instagram</a>
-                    </div>
-                </footer>
             </div>
         </section>
     )

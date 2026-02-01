@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import {
     HiChartBar,
     HiCheck,
@@ -62,7 +63,7 @@ export default function IndustrialFoodMarketing() {
                                     <h3 style={{ color: '#1b3d2d', fontSize: '1.6rem' }}>Endüstriyel Gıda & Şef Çözümleri Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p style={{ color: '#1b3d2d', fontWeight: '500' }}>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/b2b-sektorunde-buyume-odakli-pazarlama-egitimi/" className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>Satın Al</a>
+                                        <Link to="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>Satın Al</Link>
                                     </div>
                                 </div>
                             </div>

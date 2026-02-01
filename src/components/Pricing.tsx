@@ -2,7 +2,7 @@ import './Pricing.css'
 
 export default function Pricing() {
     return (
-        <section className="pricing">
+        <section id="pricing" className="pricing">
             <div className="pricing-background">
                 <img src="/oval-top.png" alt="" className="oval-pattern" />
             </div>

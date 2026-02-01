@@ -127,8 +127,8 @@ export default function GrowthMarketingTraining() {
                         'Sektörel Örnek Analizleri',
                         'Metrik ve Analiz Şablonları'
                     ],
-                    buttonText: 'Hemen Kaydol',
-                    buttonLink: 'https://khilonfast.com/contact-us'
+                    buttonText: 'Satın Al',
+                    buttonLink: '/#contact'
                 }
             ]
         },

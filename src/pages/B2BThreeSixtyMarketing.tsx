@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import {
     HiChartBar,
     HiCheck,
@@ -61,7 +62,7 @@ export default function B2BThreeSixtyMarketing() {
                                 <div className="sectoral-card">
                                     <h3>B2B Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
-                                    <a href="https://khilonfast.com/b2b-sektorunde-buyume-odakli-pazarlama-egitimi/" className="sectoral-btn">Satın Al</a>
+                                    <Link to="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" className="sectoral-btn">Satın Al</Link>
                                 </div>
                             </div>
                         </div>
