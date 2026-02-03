@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import GoToMarket from './pages/GoToMarket'
 import ContentStrategy from './pages/ContentStrategy'
@@ -22,10 +23,14 @@ import FleetRentalMarketing from './pages/FleetRentalMarketing'
 import ManufacturingMarketing from './pages/ManufacturingMarketing'
 import About from './pages/About'
 import GrowthMarketingTraining from './pages/GrowthMarketingTraining'
+import MaestroAI from './pages/MaestroAI'
+import EyeTracking from './pages/EyeTracking'
+import SearchConsoleSetup from './pages/SearchConsoleSetup'
 
 function App() {
     return (
         <Router>
+            <ScrollToTop />
             <Header />
             <main>
                 <Routes>
@@ -49,6 +54,9 @@ function App() {
                     <Route path="/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
                     <Route path="/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
                     <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<GrowthMarketingTraining />} />
+                    <Route path="/hizmetlerimiz/maestro-ai" element={<MaestroAI />} />
+                    <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<EyeTracking />} />
+                    <Route path="/hizmetlerimiz/google-search-console-kurulum-akisi" element={<SearchConsoleSetup />} />
                 </Routes>
             </main>
             <Footer />

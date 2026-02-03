@@ -16,7 +16,8 @@ import {
     HiBolt,
     HiPaintBrush,
     HiTruck,
-    HiWrench
+    HiWrench,
+    HiOutlineEye
 } from 'react-icons/hi2'
 import './Header.css'
 
@@ -28,7 +29,10 @@ const services = [
     { icon: HiShare, title: 'Sosyal Medya Reklamcılığı', desc: 'Hedef kitle etkileşimini artırın', path: '/hizmetlerimiz/sosyal-medya-reklamciligi' },
     { icon: HiMagnifyingGlass, title: 'SEO', desc: 'Arama motorlarında üst sıralara çıkın', path: '/hizmetlerimiz/seo-yonetimi' },
     { icon: HiPencilSquare, title: 'İçerik Üretimi', desc: 'Etkileyici ve özgün içerik üretimi', path: '/hizmetlerimiz/icerik-uretimi' },
-    { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları', path: '/hizmetlerimiz/b2b-email-pazarlama' }
+    { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları', path: '/hizmetlerimiz/b2b-email-pazarlama' },
+    { icon: HiBolt, title: 'Maestro AI', desc: 'Sektörel akıllı pazarlama asistanı', path: '/hizmetlerimiz/maestro-ai' },
+    { icon: HiOutlineEye, title: 'Eye Tracking Reklam Analizi', desc: 'AI destekli reklam görsel analizi', path: '/hizmetlerimiz/eye-tracking-reklam-analizi' },
+    { icon: HiCommandLine, title: 'Google Search Console Kurulumu', desc: 'Siteniz için arama konsolu kurulum rehberi', path: '/hizmetlerimiz/google-search-console-kurulum-akisi' }
 ]
 
 const sectoralServices = [

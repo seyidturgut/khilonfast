@@ -90,7 +90,7 @@ export interface AuthorizationSection {
 export interface ServicePageProps {
     hero: {
         title: string;
-        subtitle: string;
+        subtitle: string | ReactNode;
         description: string;
         buttonText: string;
         buttonLink: string;
