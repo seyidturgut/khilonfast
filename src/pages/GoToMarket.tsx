@@ -46,8 +46,8 @@ export default function GoToMarket() {
 
         pricingSection: {
             tag: 'Hizmet Paketleri',
-            title: '360° Dijital Pazarlama Yönetimi',
-            description: 'Pazara giriş yapan firmalar için özelleştirilmiş, stratejik pazarlama takımları.',
+            title: 'Go to Market Stratejisi Çözümleri',
+            description: 'Yeni bir pazara giriş yapmak istiyorsanız, doğru stratejilerle başlamanız şart. khilonfast ile pazara hızlı ve etkili giriş stratejileri oluşturun. Hedef kitlenizi doğru belirleyin ve rekabet avantajı kazanın.',
             packages: [
                 {
                     id: 'core',

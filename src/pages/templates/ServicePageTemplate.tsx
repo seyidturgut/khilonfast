@@ -1,4 +1,6 @@
-import { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
+import { useCart } from '../../context/CartContext'
+import Cart from '../../components/Cart'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
 import './ServicePageTemplate.css'
@@ -95,6 +97,8 @@ export interface ServicePageProps {
         buttonText: string;
         buttonLink: string;
         image: string;
+        videoUrl?: string;
+        hideBadge?: boolean;
         badgeText: string;
         badgeIcon: ReactNode;
         themeColor?: string;
@@ -140,6 +144,42 @@ export interface ServicePageProps {
 }
 
 export default function ServicePageTemplate(props: ServicePageProps) {
+    const { addToCart } = useCart();
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
+    // Handle add to cart
+    const handleAddToCart = (pkg: PricingPackage) => {
+        if (pkg.id && pkg.name && pkg.price) {
+            // Map frontend package IDs to database product_keys
+            const productKeyMap: Record<string, string> = {
+                'core': 'gtm-core',
+                'growth': 'gtm-growth',
+                'ultimate': 'gtm-ultimate',
+                'training': 'b2b-training'
+            };
+
+            const productKey = productKeyMap[pkg.id] || pkg.id;
+
+            // Parse price correctly - remove all non-numeric characters except comma
+            // Turkish format: $9.900 means 9900, $14.900 means 14900
+            const priceStr = pkg.price.replace(/[^0-9,]/g, ''); // Remove $, *, dots, spaces
+            const priceNum = parseFloat(priceStr.replace(',', '.')); // Convert comma to dot for decimal
+
+            addToCart({
+                id: pkg.id,
+                product_id: 0, // Will be mapped by backend using product_key
+                product_key: productKey, // Use mapped product key
+                name: pkg.name,
+                description: pkg.description,
+                price: priceNum,
+                currency: pkg.price.includes('$') ? 'USD' : 'TRY'
+            });
+
+            // Auto-open cart after adding
+            setIsCartOpen(true);
+        }
+    };
+
     // Horizontal Scroll Animation Logic
     const processRef = useRef<HTMLElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -200,20 +240,32 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                         </div>
                         <div className="service-hero-visual">
                             <div className="hero-image-container">
-                                <img src={props.hero.image} alt={props.hero.title} className="hero-main-img" />
-                                <div className="circular-badge">
-                                    <div className="badge-text-wrapper">
-                                        <svg viewBox="0 0 100 100" className="badge-svg">
-                                            <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
-                                            <text className="badge-text">
-                                                <textPath xlinkHref="#circlePath">
-                                                    {props.hero.badgeText}
-                                                </textPath>
-                                            </text>
-                                        </svg>
+                                {props.hero.videoUrl ? (
+                                    <iframe
+                                        src={props.hero.videoUrl}
+                                        title={props.hero.title}
+                                        className="hero-main-video"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                    />
+                                ) : (
+                                    <img src={props.hero.image} alt={props.hero.title} className="hero-main-img" />
+                                )}
+                                {!props.hero.hideBadge && (
+                                    <div className="circular-badge">
+                                        <div className="badge-text-wrapper">
+                                            <svg viewBox="0 0 100 100" className="badge-svg">
+                                                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
+                                                <text className="badge-text">
+                                                    <textPath xlinkHref="#circlePath">
+                                                        {props.hero.badgeText}
+                                                    </textPath>
+                                                </text>
+                                            </svg>
+                                        </div>
+                                        <div className="badge-icon">{props.hero.badgeIcon}</div>
                                     </div>
-                                    <div className="badge-icon">{props.hero.badgeIcon}</div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -311,9 +363,12 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                             </ul>
                                         </div>
                                         <div className="card-footer">
-                                            <a href={pkg.buttonLink || "/#contact"} className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}>
-                                                {pkg.buttonText || 'Seçimi Yap'}
-                                            </a>
+                                            <button
+                                                onClick={() => handleAddToCart(pkg)}
+                                                className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}
+                                            >
+                                                {pkg.buttonText || 'Sepete Ekle'}
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -426,9 +481,12 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                             )}
                                         </div>
                                         <div className="card-footer">
-                                            <a href={pkg.buttonLink || "/#contact"} className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}>
-                                                {pkg.buttonText || 'ÜYE OL'}
-                                            </a>
+                                            <button
+                                                onClick={() => handleAddToCart(pkg)}
+                                                className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}
+                                            >
+                                                {pkg.buttonText || 'Sepete Ekle'}
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -640,6 +698,8 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     </section>
                 )
             }
+
+            <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </div>
     )
 }

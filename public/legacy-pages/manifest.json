@@ -1,0 +1,747 @@
+{
+  "generatedAt": "2026-02-08T14:53:10.417Z",
+  "base": "https://khilonfast.com",
+  "pages": [
+    {
+      "path": "/",
+      "source": "https://khilonfast.com/",
+      "file": "42099b4af021e53fd8fd4e056c2568d7c2e3ffa8.html"
+    },
+    {
+      "path": "/author/khilonfa",
+      "source": "https://khilonfast.com/author/khilonfa/",
+      "file": "0638150b57e19500877e11f088c4c9a4ada5ddae.html"
+    },
+    {
+      "path": "/b2b-email-pazarlama",
+      "source": "https://khilonfast.com/b2b-email-pazarlama/",
+      "file": "5f57966416a8f7eb122c5e70d9a633f9420a58f2.html"
+    },
+    {
+      "path": "/b2b-firmalar-icin-360-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/b2b-firmalar-icin-360-pazarlama-yonetimi/",
+      "file": "5dd9c7e5ca13f5b5acbb4edc8e84eeaf0a8a3137.html"
+    },
+    {
+      "path": "/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "5ab248a2b94c25d4b6edcd1f69966e6e38f1c61f.html"
+    },
+    {
+      "path": "/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy",
+      "source": "https://khilonfast.com/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy/",
+      "file": "8166c074e4ff8ec5a3b2f22b1ae8c8d8a97ef126.html"
+    },
+    {
+      "path": "/b2b-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/b2b-sektoru-butunlesik-pazarlama/",
+      "file": "494c29350f124c210a1f1095f70f88bc921d1170.html"
+    },
+    {
+      "path": "/b2b-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/b2b-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "82825a2ebdb1b776cc97a92c4bbb1e08b97ee58a.html"
+    },
+    {
+      "path": "/butunlesik-dijital-pazarlama",
+      "source": "https://khilonfast.com/butunlesik-dijital-pazarlama/",
+      "file": "3190d6be4e0ec68281aa25eedb77c79acb972f1e.html"
+    },
+    {
+      "path": "/butunlesik-pazarlama-kurulum-akisi",
+      "source": "https://khilonfast.com/butunlesik-pazarlama-kurulum-akisi/",
+      "file": "3bff25ebf763f0ef86fbe49a3ed6a27efb5329ae.html"
+    },
+    {
+      "path": "/category/uncategorized-tr",
+      "source": "https://khilonfast.com/category/uncategorized-tr/",
+      "file": "1022021f30aca3e132733d9793589af991f7941a.html"
+    },
+    {
+      "path": "/checlist",
+      "source": "https://khilonfast.com/checlist/",
+      "file": "0119e32c9b9d4b3ad5d0e46bed91a7429eaaf1cf.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/",
+      "file": "70609019e22a30234c7a8ff26757eb2a60952a1d.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/baslangic-metrikleri-buyumenin-sayisal-pusulasi",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/baslangic-metrikleri-buyumenin-sayisal-pusulasi/",
+      "file": "f11a60481b64add7034b6974df9181d554696e8d.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/buyume-odakli-pazarlamaya-giris-satisa-giden-yolun-haritasi",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/buyume-odakli-pazarlamaya-giris-satisa-giden-yolun-haritasi/",
+      "file": "f1d26e7914ac016adceb19d01b54469c0f2766c7.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/deger-onerisi-ethos-pathos-logos-ile-fark-yaratmak",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/deger-onerisi-ethos-pathos-logos-ile-fark-yaratmak/",
+      "file": "5acc34e3d7ae9582ddce4b9c86eaddb592fa6686.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/deger-onerisini-sistematik-kurmak-pain-point-ve-rol-bazli-mesaj",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/deger-onerisini-sistematik-kurmak-pain-point-ve-rol-bazli-mesaj/",
+      "file": "383d52cbdc639c88a28e07014268106e625da91d.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/egzersiz-hedef-kitle-sorunlarini-not-etmek",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/egzersiz-hedef-kitle-sorunlarini-not-etmek/",
+      "file": "2199145da78c7deb00e7d527a2c76d8f471486b8.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/ilk-temastan-satisa-etkili-iletisim-itiraz-yonetimi-ve-takip",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/ilk-temastan-satisa-etkili-iletisim-itiraz-yonetimi-ve-takip/",
+      "file": "1ea8dc98c6e1c2cc63b5b050a60c590c77094f6e.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/lead-sonrasi-akis-psikoloji-zamanlama-ve-cok-kanalli-temas",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/lead-sonrasi-akis-psikoloji-zamanlama-ve-cok-kanalli-temas/",
+      "file": "8189408df5fc06eaa560a2a206fb8b893049d8af.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/odeme-sistemlerinde-hedef-kitle-karar-verici-ve-onaylayiciyi-dogru-okumak",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/odeme-sistemlerinde-hedef-kitle-karar-verici-ve-onaylayiciyi-dogru-okumak/",
+      "file": "f9a8416a45346d3e8ea96cc1d3489c45f44bcbe9.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/pazarlamanin-uc-net-hedefi-kazanmak-derinlesmek-korumak",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/pazarlamanin-uc-net-hedefi-kazanmak-derinlesmek-korumak/",
+      "file": "ce80fedd9a5b5648033ad1d25a2677fc11834e21.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/satis-hunisi-mesaji-zaman-mecra-ve-asamaya-gore-uyarlamak",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/satis-hunisi-mesaji-zaman-mecra-ve-asamaya-gore-uyarlamak/",
+      "file": "cb87825409bc4132d2528e1c8ad7b504438318d4.html"
+    },
+    {
+      "path": "/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/web-sitesi-ile-buyumek-web-sitesindeki-sayfalarin-gorevleri",
+      "source": "https://khilonfast.com/courses/odeme-sistemlerinde-buyume-odakli-pazarlama/lessons/web-sitesi-ile-buyumek-web-sitesindeki-sayfalarin-gorevleri/",
+      "file": "e75defbd76778aab61c7794ea47bd9c0dd954f6e.html"
+    },
+    {
+      "path": "/donusum-optimizasyonu",
+      "source": "https://khilonfast.com/donusum-optimizasyonu/",
+      "file": "1d49ff68a224cd8577b7f12cef9a1e5d340144a2.html"
+    },
+    {
+      "path": "/elementor-1134",
+      "source": "https://khilonfast.com/elementor-1134/",
+      "file": "cc640e765ff87bce8e0eaa8a244493458e545867.html"
+    },
+    {
+      "path": "/elementor-1156",
+      "source": "https://khilonfast.com/elementor-1156/",
+      "file": "dc9fc814efc51d7dcbf8f892f49a2e587fa357bd.html"
+    },
+    {
+      "path": "/elementor-3074",
+      "source": "https://khilonfast.com/elementor-3074/",
+      "file": "ef7cc42afcf045f1ed59bf1a567f8a950635ef3b.html"
+    },
+    {
+      "path": "/elementor-696",
+      "source": "https://khilonfast.com/elementor-696/",
+      "file": "9850e07a4683f6c24eba21dd15609ad242c432d8.html"
+    },
+    {
+      "path": "/email-marketing",
+      "source": "https://khilonfast.com/email-marketing/",
+      "file": "320be5133a980d7c32318d1ae6dbd5cf29fd3359.html"
+    },
+    {
+      "path": "/en_b2bemailmarketing",
+      "source": "https://khilonfast.com/en_b2bemailmarketing/",
+      "file": "29716f25b216401a3670dc62a0b4bbda7e1dfc1c.html"
+    },
+    {
+      "path": "/en_contentgeneration",
+      "source": "https://khilonfast.com/en_contentgeneration/",
+      "file": "a68bcee57c5e6afae2ec466bd617ceeb4ac7d371.html"
+    },
+    {
+      "path": "/en_contentstrategy",
+      "source": "https://khilonfast.com/en_contentstrategy/",
+      "file": "f5ac5887a242b500eabf20f68b5bc02ae727f95b.html"
+    },
+    {
+      "path": "/en_conversationoptimization",
+      "source": "https://khilonfast.com/en_conversationoptimization/",
+      "file": "2fee7587460bb53f56916e74049e0cbeeee05588.html"
+    },
+    {
+      "path": "/en_gotomarketstrategy",
+      "source": "https://khilonfast.com/en_gotomarketstrategy/",
+      "file": "7e9a8349b0a5521d46a3565a50b253df3699ac4f.html"
+    },
+    {
+      "path": "/en_integrateddigitalmarketingservices",
+      "source": "https://khilonfast.com/en_integrateddigitalmarketingservices/",
+      "file": "778ffd2901a6031b0f10c815f40f910a480cd0d9.html"
+    },
+    {
+      "path": "/en_seo-audit",
+      "source": "https://khilonfast.com/en_seo-audit/",
+      "file": "a063640b9be5c5ae45c7b1d9f2d667353ff0e01f.html"
+    },
+    {
+      "path": "/en_seo-services",
+      "source": "https://khilonfast.com/en_seo-services/",
+      "file": "99014cd15aa40bc5fd6d6b860a18aeae9223c095.html"
+    },
+    {
+      "path": "/en_socialmediaadvertising",
+      "source": "https://khilonfast.com/en_socialmediaadvertising/",
+      "file": "3f9510a154299a1109062b5eaef5b434b25f4162.html"
+    },
+    {
+      "path": "/en_websitedevelopment",
+      "source": "https://khilonfast.com/en_websitedevelopment/",
+      "file": "0b5fbf212c977a0d6f20a14ef6798628ab353746.html"
+    },
+    {
+      "path": "/endustriyel-gida-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/endustriyel-gida-butunlesik-pazarlama/",
+      "file": "36490ee8130165ecb10a15fe854b4ff6e8ae640d.html"
+    },
+    {
+      "path": "/endustriyel-gida-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/endustriyel-gida-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "0ea6c1b8ee1ca233c520fbdc863d9e89c0307b25.html"
+    },
+    {
+      "path": "/endustriyel-gida-sef-cozumleri-sektoru-icin-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/endustriyel-gida-sef-cozumleri-sektoru-icin-pazarlama-yonetimi/",
+      "file": "14fb908d4b506d3629d262c2e8dc037a12bbf663.html"
+    },
+    {
+      "path": "/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi-copy",
+      "source": "https://khilonfast.com/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi-copy/",
+      "file": "dd5d68f48aff83b5ea2785153f7433229d3f371b.html"
+    },
+    {
+      "path": "/enerji-firmalari-icin-360-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/enerji-firmalari-icin-360-pazarlama-yonetimi/",
+      "file": "c57b04e9ad92da2f78c21ef726c7b7aaf52ca0c3.html"
+    },
+    {
+      "path": "/enerji-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/enerji-sektoru-butunlesik-pazarlama/",
+      "file": "2f240bcff6e6bd9a316cf00a9bedb707234b432d.html"
+    },
+    {
+      "path": "/enerji-sektoru-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/enerji-sektoru-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "5e7664d33af3601738dac6c2d6f2fc0e4f2e4f71.html"
+    },
+    {
+      "path": "/enerji-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/enerji-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "ee3c76d6ada72af2f7e9a2c0ef985366b226374e.html"
+    },
+    {
+      "path": "/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi/",
+      "file": "50c2ce8eed081acced831be69c3797f8751e684a.html"
+    },
+    {
+      "path": "/filo-kiralama-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/filo-kiralama-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "1d252e09198ded6d8c9e9689af5d1454d9f4fd4d.html"
+    },
+    {
+      "path": "/filo-kiralama-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/filo-kiralama-sektoru-butunlesik-pazarlama/",
+      "file": "13fa253e2fc96068069c4ca66b176db20093f935.html"
+    },
+    {
+      "path": "/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "d72ece9c990d5a05a46df8894dc72c313fe71790.html"
+    },
+    {
+      "path": "/fintech-firmalari-icin-360-pazarlama-yonetimi-copy",
+      "source": "https://khilonfast.com/fintech-firmalari-icin-360-pazarlama-yonetimi-copy/",
+      "file": "1478ea307a81937091566fea6886aa98fdf6b4cb.html"
+    },
+    {
+      "path": "/fintech-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/fintech-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "5550a3df3cb43900f0130f1adae9e7b5429ce54d.html"
+    },
+    {
+      "path": "/fintech-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/fintech-sektoru-butunlesik-pazarlama/",
+      "file": "6d8cc61b5ebd1dfbfb8cac0e3d86a6402c65cc8d.html"
+    },
+    {
+      "path": "/fintech-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/fintech-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "14abe2690799e721bf0e195bf86ad5ec2787e294.html"
+    },
+    {
+      "path": "/gaming-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/gaming-sektoru-butunlesik-pazarlama/",
+      "file": "8e36157c835334fb327b3c4f759d144109619b6c.html"
+    },
+    {
+      "path": "/go-to-market-stratejisi",
+      "source": "https://khilonfast.com/go-to-market-stratejisi/",
+      "file": "e9afb2b88f9f64022772366d87f829b530256195.html"
+    },
+    {
+      "path": "/google-analytics-kurulum-akisi",
+      "source": "https://khilonfast.com/google-analytics-kurulum-akisi/",
+      "file": "14715c240174b21d00c3d505442af780413ca5e4.html"
+    },
+    {
+      "path": "/google-search-console-kurulum-akisi",
+      "source": "https://khilonfast.com/google-search-console-kurulum-akisi/",
+      "file": "5d8897ee83c8e04a9e4a555d62bb60e6ce2f711f.html"
+    },
+    {
+      "path": "/google-tag-manager-kurulum-akisi",
+      "source": "https://khilonfast.com/google-tag-manager-kurulum-akisi/",
+      "file": "904475a83db74180002d44393d7ac27af9b93bdc.html"
+    },
+    {
+      "path": "/groups/odeme-sistemleri-satin-alanlar",
+      "source": "https://khilonfast.com/groups/odeme-sistemleri-satin-alanlar/",
+      "file": "4301698245b29c9fa47f453c14d576f7e4ec0b66.html"
+    },
+    {
+      "path": "/hakkimizda",
+      "source": "https://khilonfast.com/hakkimizda/",
+      "file": "799297d579f692bbf2b8425b82f2f00bec03004d.html"
+    },
+    {
+      "path": "/hello-world",
+      "source": "https://khilonfast.com/hello-world/",
+      "file": "8961021053da9d9cd29f08bc753583b7964e3f53.html"
+    },
+    {
+      "path": "/hesabim",
+      "source": "https://khilonfast.com/hesabim/",
+      "file": "7afae9c9b178cc397b7ddffdc37299c072dec8ab.html"
+    },
+    {
+      "path": "/hizmetler",
+      "source": "https://khilonfast.com/hizmetler/",
+      "file": "4e9c2b6d47e5fadc31dbc027919d2390821a149c.html"
+    },
+    {
+      "path": "/hizmetler/eye-tracking-reklam-analizi",
+      "source": "https://khilonfast.com/hizmetler/eye-tracking-reklam-analizi/",
+      "file": "3e8995190c90a381426fbc408d503238c8d2d39a.html"
+    },
+    {
+      "path": "/home",
+      "source": "https://khilonfast.com/home/",
+      "file": "fb365c1216b59e1cfc86950425867007a60f4435.html"
+    },
+    {
+      "path": "/icerik-stratejisi",
+      "source": "https://khilonfast.com/icerik-stratejisi/",
+      "file": "6ab98a6726d01812ee1da9c04c3aec7747c56b6c.html"
+    },
+    {
+      "path": "/icerik-uretimi",
+      "source": "https://khilonfast.com/icerik-uretimi/",
+      "file": "bfd43f0c8cd76f4ae9a53d2905f03f2384d49bd6.html"
+    },
+    {
+      "path": "/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi",
+      "source": "https://khilonfast.com/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi/",
+      "file": "d53ad254ca034df896eddea61ff9b0dc24911d81.html"
+    },
+    {
+      "path": "/lessons/gelisme",
+      "source": "https://khilonfast.com/lessons/gelisme/",
+      "file": "08ef9ea580010baafea6f31afaa643964494c1c4.html"
+    },
+    {
+      "path": "/lessons/giris",
+      "source": "https://khilonfast.com/lessons/giris/",
+      "file": "f45d62684b5c7b5d45f7298a42a84cf21cdbd938.html"
+    },
+    {
+      "path": "/lessons/giris-2",
+      "source": "https://khilonfast.com/lessons/giris-2/",
+      "file": "aed7fd68ac298e220c29ea6827425150d9f203e3.html"
+    },
+    {
+      "path": "/lessons/lesson",
+      "source": "https://khilonfast.com/lessons/lesson/",
+      "file": "8eb805039227f59344d5313fee63378b9eeed424.html"
+    },
+    {
+      "path": "/lessons/lesson-10",
+      "source": "https://khilonfast.com/lessons/lesson-10/",
+      "file": "91172a47bb7955d07b9bdd2f65f5fbac8913f9d0.html"
+    },
+    {
+      "path": "/lessons/lesson-11",
+      "source": "https://khilonfast.com/lessons/lesson-11/",
+      "file": "15190c060b0ca33cd594c1c008b6fb4bf8fbbd06.html"
+    },
+    {
+      "path": "/lessons/lesson-12",
+      "source": "https://khilonfast.com/lessons/lesson-12/",
+      "file": "303a6631cfbbc0e66ad0569ba66d874c6c2e35cb.html"
+    },
+    {
+      "path": "/lessons/lesson-13",
+      "source": "https://khilonfast.com/lessons/lesson-13/",
+      "file": "be52511864c6730d9979b0ffc1b866c31521ddd7.html"
+    },
+    {
+      "path": "/lessons/lesson-14",
+      "source": "https://khilonfast.com/lessons/lesson-14/",
+      "file": "bb793d4032f12b0e9675827f40228767de46717d.html"
+    },
+    {
+      "path": "/lessons/lesson-15",
+      "source": "https://khilonfast.com/lessons/lesson-15/",
+      "file": "65e9105cfa48529c31020a3c254cede23a5d4426.html"
+    },
+    {
+      "path": "/lessons/lesson-16",
+      "source": "https://khilonfast.com/lessons/lesson-16/",
+      "file": "18eb5872b86d18ff08ef761955f93162e37653f7.html"
+    },
+    {
+      "path": "/lessons/lesson-17",
+      "source": "https://khilonfast.com/lessons/lesson-17/",
+      "file": "9e2412ccb57e2bd56d003b68ae3c0c389b6ca877.html"
+    },
+    {
+      "path": "/lessons/lesson-18",
+      "source": "https://khilonfast.com/lessons/lesson-18/",
+      "file": "ecf0ea94e38a03461e8900ff2568b18202aba9e2.html"
+    },
+    {
+      "path": "/lessons/lesson-19",
+      "source": "https://khilonfast.com/lessons/lesson-19/",
+      "file": "c3a2e64c9eb056d74d0c20ed9cc558290dea9dab.html"
+    },
+    {
+      "path": "/lessons/lesson-2",
+      "source": "https://khilonfast.com/lessons/lesson-2/",
+      "file": "66dddb2b674e7f7ec5eae5b5e20791744f2e8c9f.html"
+    },
+    {
+      "path": "/lessons/lesson-20",
+      "source": "https://khilonfast.com/lessons/lesson-20/",
+      "file": "3abcca69055098c573b3e950ecc7c932c8abc0bd.html"
+    },
+    {
+      "path": "/lessons/lesson-21",
+      "source": "https://khilonfast.com/lessons/lesson-21/",
+      "file": "1eedbf8f5deb49e226d34866788d678e0744f875.html"
+    },
+    {
+      "path": "/lessons/lesson-22",
+      "source": "https://khilonfast.com/lessons/lesson-22/",
+      "file": "f803e3f3518559ae113c99f003b741f7b12fb68d.html"
+    },
+    {
+      "path": "/lessons/lesson-3",
+      "source": "https://khilonfast.com/lessons/lesson-3/",
+      "file": "ce8e735c4f90f5839e21bce050758b6cded43032.html"
+    },
+    {
+      "path": "/lessons/lesson-4",
+      "source": "https://khilonfast.com/lessons/lesson-4/",
+      "file": "8ff07ba265eec3892c86210cf286ddda0c420a86.html"
+    },
+    {
+      "path": "/lessons/lesson-5",
+      "source": "https://khilonfast.com/lessons/lesson-5/",
+      "file": "4b5dbc7b55b80f87251b47f5b40e1800bed91ab7.html"
+    },
+    {
+      "path": "/lessons/lesson-6",
+      "source": "https://khilonfast.com/lessons/lesson-6/",
+      "file": "0764c365fc44b6cb12eff6fd716368c09ea4b187.html"
+    },
+    {
+      "path": "/lessons/lesson-7",
+      "source": "https://khilonfast.com/lessons/lesson-7/",
+      "file": "aba6fbc0e4c9c1aa41ac7cd4b98920d3473d2a5f.html"
+    },
+    {
+      "path": "/lessons/lesson-8",
+      "source": "https://khilonfast.com/lessons/lesson-8/",
+      "file": "8c1a56f3134e2a4c5a16bcfdaabcba071ec409cb.html"
+    },
+    {
+      "path": "/lessons/lesson-9",
+      "source": "https://khilonfast.com/lessons/lesson-9/",
+      "file": "1d7f2c4bb4442544e2da9364d1ec9998dac8856f.html"
+    },
+    {
+      "path": "/linkedin-reklamlari-kurulum-akisi-khilonfast",
+      "source": "https://khilonfast.com/linkedin-reklamlari-kurulum-akisi-khilonfast/",
+      "file": "c25a57bd7330e68fcaa51e6b31217a1191029c3c.html"
+    },
+    {
+      "path": "/magaza",
+      "source": "https://khilonfast.com/magaza/",
+      "file": "5339d2232648f183f9e03c780595696de917982a.html"
+    },
+    {
+      "path": "/meta-facebook-instagram-reklamlari-kurulum-akisi",
+      "source": "https://khilonfast.com/meta-facebook-instagram-reklamlari-kurulum-akisi/",
+      "file": "4f252a3554f3adda3f722c0ef3f50cfefe84adf0.html"
+    },
+    {
+      "path": "/odeme",
+      "source": "https://khilonfast.com/odeme/",
+      "file": "6db2b71eae481121ef4bf21b72e51871c10bda8e.html"
+    },
+    {
+      "path": "/odeme-sistemleri-icin-tek-noktadan-pazarlama-cozumleri",
+      "source": "https://khilonfast.com/odeme-sistemleri-icin-tek-noktadan-pazarlama-cozumleri/",
+      "file": "335e8e9e954a1f148f53b757219a9414b26497c3.html"
+    },
+    {
+      "path": "/odeme-sistemleri-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/odeme-sistemleri-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "e75fe515994bb6c79bb7d5f7967ba643f2a0cb82.html"
+    },
+    {
+      "path": "/odeme-sistemleri-sunumu",
+      "source": "https://khilonfast.com/odeme-sistemleri-sunumu/",
+      "file": "ab9ca524049315572e9bd1585be2d0616d1cf919.html"
+    },
+    {
+      "path": "/odeme-sistemlerinde-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/odeme-sistemlerinde-butunlesik-pazarlama/",
+      "file": "b315c2d3a1605b6f8433b200eb813e67a0008ac2.html"
+    },
+    {
+      "path": "/odeme-sistemlerinde-buyume-odakli",
+      "source": "https://khilonfast.com/odeme-sistemlerinde-buyume-odakli/",
+      "file": "142842254d2a8dc44204a8cc134c2d01c4708b4d.html"
+    },
+    {
+      "path": "/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi/",
+      "file": "6be5ac7cad424a376873d1376c52341226d776f5.html"
+    },
+    {
+      "path": "/ofis-kurumsal-ic-tasarim-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/ofis-kurumsal-ic-tasarim-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "e0d9f30c693771f8e3d12689cd62bb34a4bd4c31.html"
+    },
+    {
+      "path": "/ofis-kurumsal-ic-tasarim-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/ofis-kurumsal-ic-tasarim-sektoru-butunlesik-pazarlama/",
+      "file": "adf00e9fa4fefb036635830c590eefcaa27f55ef.html"
+    },
+    {
+      "path": "/ofis-kurumsal-ic-tasarim-sektoru-icin-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/ofis-kurumsal-ic-tasarim-sektoru-icin-pazarlama-yonetimi/",
+      "file": "e4a79c2fa2f55256ad2f930cbcc0a1149c921cc4.html"
+    },
+    {
+      "path": "/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "b14c5d00ed08111facff28d7ef4ef7f5d50ecc8a.html"
+    },
+    {
+      "path": "/profile",
+      "source": "https://khilonfast.com/profile/",
+      "file": "1cecae1f2e766b09f29d2451c0d23650d1405ff3.html"
+    },
+    {
+      "path": "/registration",
+      "source": "https://khilonfast.com/registration/",
+      "file": "c06472371e494e1a1bcef1fdcf37d627087a0ea3.html"
+    },
+    {
+      "path": "/registration-success",
+      "source": "https://khilonfast.com/registration-success/",
+      "file": "60167e8133efe5d80a4d01fdbb96cb48263089b3.html"
+    },
+    {
+      "path": "/reset-password",
+      "source": "https://khilonfast.com/reset-password/",
+      "file": "ece65afda87c1c6120602c9a3b66890308d7e53c.html"
+    },
+    {
+      "path": "/search_ads",
+      "source": "https://khilonfast.com/search_ads/",
+      "file": "d77af8ac851d8bd8d6eefc82b070ebd5d9dd3470.html"
+    },
+    {
+      "path": "/search-ads-google-reklamlari-kurulum-akisi",
+      "source": "https://khilonfast.com/search-ads-google-reklamlari-kurulum-akisi/",
+      "file": "c65cc25255e7a7d09c1bbc2f130d34c7810a779d.html"
+    },
+    {
+      "path": "/sektorel-pazarlama",
+      "source": "https://khilonfast.com/sektorel-pazarlama/",
+      "file": "f16ecf6e60bdb92a32ffb167c62da150948ef034.html"
+    },
+    {
+      "path": "/seo",
+      "source": "https://khilonfast.com/seo/",
+      "file": "9051e5307f3cbff4675e2c1fece71e2744f5b36e.html"
+    },
+    {
+      "path": "/seo_services",
+      "source": "https://khilonfast.com/seo_services/",
+      "file": "22ea35cc32b0f0b88699cd69cc75c0361c6996fa.html"
+    },
+    {
+      "path": "/seo-audit",
+      "source": "https://khilonfast.com/seo-audit/",
+      "file": "7a0a84c2f8a0347de33b687f23e94a2a72cc6045.html"
+    },
+    {
+      "path": "/sepet",
+      "source": "https://khilonfast.com/sepet/",
+      "file": "ba0bc65a247efd8cf37638f32712cfd52bd3dbbf.html"
+    },
+    {
+      "path": "/services",
+      "source": "https://khilonfast.com/services/",
+      "file": "d109d728cd41bce6b83f4197844d570e30e9afe0.html"
+    },
+    {
+      "path": "/services/audit",
+      "source": "https://khilonfast.com/services/audit/",
+      "file": "79642006ce21dc3036a26ab2c760f3259d28b880.html"
+    },
+    {
+      "path": "/services/digital-marketing",
+      "source": "https://khilonfast.com/services/digital-marketing/",
+      "file": "8b33e869067f944f87f3c438630d6c011ef1bf60.html"
+    },
+    {
+      "path": "/services/digital-marketing/content-generation",
+      "source": "https://khilonfast.com/services/digital-marketing/content-generation/",
+      "file": "3af6653bfc6b1d9361046d03a3a4e3b6e8cf0808.html"
+    },
+    {
+      "path": "/services/digital-marketing/search-ads",
+      "source": "https://khilonfast.com/services/digital-marketing/search-ads/",
+      "file": "a2458eeae070b9c746169857381a0c8eb6f03c69.html"
+    },
+    {
+      "path": "/services/digital-marketing/search-ads-cloned-533",
+      "source": "https://khilonfast.com/services/digital-marketing/search-ads-cloned-533/",
+      "file": "d6ed6fbff6dc4db24004a42be42b5240794db96c.html"
+    },
+    {
+      "path": "/services/digital-marketing/seo-services",
+      "source": "https://khilonfast.com/services/digital-marketing/seo-services/",
+      "file": "675a114846babb147c821ab7149e98d50162632d.html"
+    },
+    {
+      "path": "/services/digital-marketing/social-media-advertising",
+      "source": "https://khilonfast.com/services/digital-marketing/social-media-advertising/",
+      "file": "706be7cf7d7a5a2aafdb6d0497b68c517649a192.html"
+    },
+    {
+      "path": "/services/go-to-market-strategy",
+      "source": "https://khilonfast.com/services/go-to-market-strategy/",
+      "file": "f13157e7b24a8a2ffde33022c3e7ee30439e3704.html"
+    },
+    {
+      "path": "/services/web-development",
+      "source": "https://khilonfast.com/services/web-development/",
+      "file": "edace2926ed9c9bd3b6fc537fc40b9812f1ec5e0.html"
+    },
+    {
+      "path": "/servis",
+      "source": "https://khilonfast.com/servis/",
+      "file": "800e43da00edd51c8df470ce5f471214fd7d9a7d.html"
+    },
+    {
+      "path": "/site-linkler",
+      "source": "https://khilonfast.com/site-linkler/",
+      "file": "1863a998dea6a464eb6b6640239515327b1b9d64.html"
+    },
+    {
+      "path": "/sosyal-medya-reklamciligi",
+      "source": "https://khilonfast.com/sosyal-medya-reklamciligi/",
+      "file": "86fd6652e28f6e3428c61f3080aa173ccd3a44b6.html"
+    },
+    {
+      "path": "/teknoloji-yazilim-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy",
+      "source": "https://khilonfast.com/teknoloji-yazilim-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy/",
+      "file": "ca4ea0800e672eb8ea0ba78f6b28efe10e99c1f3.html"
+    },
+    {
+      "path": "/teknoloji-yazilim-saas-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/teknoloji-yazilim-saas-butunlesik-pazarlama/",
+      "file": "350334fee13a56379cabc70152cb42af0874e4a5.html"
+    },
+    {
+      "path": "/teknoloji-yazilim-saas-firmalari-icin-360-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/teknoloji-yazilim-saas-firmalari-icin-360-pazarlama-yonetimi/",
+      "file": "011333a4416bf23ea2e5a08536068be39175cd2f.html"
+    },
+    {
+      "path": "/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "1197a27782deecc6eef15b5519c899ab829a48b7.html"
+    },
+    {
+      "path": "/tiktok-kurulum-akisi",
+      "source": "https://khilonfast.com/tiktok-kurulum-akisi/",
+      "file": "8e6ebfde7931b387974cc55447525581e4f6c275.html"
+    },
+    {
+      "path": "/uretim-sektoru-butunlesik-pazarlama",
+      "source": "https://khilonfast.com/uretim-sektoru-butunlesik-pazarlama/",
+      "file": "a2a67cd5f65414b775c065edfcbdb101681d5c5e.html"
+    },
+    {
+      "path": "/uretim-sektoru-firmalari-icin-360-pazarlama-yonetimi",
+      "source": "https://khilonfast.com/uretim-sektoru-firmalari-icin-360-pazarlama-yonetimi/",
+      "file": "fd5d87ff997da1210876775bd69cc8ad62e1f1cc.html"
+    },
+    {
+      "path": "/uretim-sektoru-firmalari-icin-360-pazarlama-yonetimi-2",
+      "source": "https://khilonfast.com/uretim-sektoru-firmalari-icin-360-pazarlama-yonetimi-2/",
+      "file": "0686d85758850515356f3427cbaf6ecdd9242a06.html"
+    },
+    {
+      "path": "/uretim-sektoru-firmalari-icin-360-pazarlama-yonetimi-3",
+      "source": "https://khilonfast.com/uretim-sektoru-firmalari-icin-360-pazarlama-yonetimi-3/",
+      "file": "788e9e76ac285237a6f62a1245a458f991904b01.html"
+    },
+    {
+      "path": "/uretim-sektoru-pazarlama-stratejinizi-maestro-ai-ile-yonetin",
+      "source": "https://khilonfast.com/uretim-sektoru-pazarlama-stratejinizi-maestro-ai-ile-yonetin/",
+      "file": "1891c9845d543e2821819523dc325f2dcbf2a61c.html"
+    },
+    {
+      "path": "/uretim-sektorunde-buyume-odakli-pazarlama-egitimi",
+      "source": "https://khilonfast.com/uretim-sektorunde-buyume-odakli-pazarlama-egitimi/",
+      "file": "697dfe9f76110a967cc6de20a1f1102bdd4abac1.html"
+    },
+    {
+      "path": "/urun-kategori/genel",
+      "source": "https://khilonfast.com/urun-kategori/genel/",
+      "file": "db26d99da847b4d2a29982138f2c463399941bb8.html"
+    },
+    {
+      "path": "/urun/audit",
+      "source": "https://khilonfast.com/urun/audit/",
+      "file": "ac5a9f1edfd0b4a2bb6f36d7579601ea5f2b16f5.html"
+    },
+    {
+      "path": "/web-sitesi-gelistirme",
+      "source": "https://khilonfast.com/web-sitesi-gelistirme/",
+      "file": "343407c7fd1d4a46a50b4d20e687b0620d1c921f.html"
+    }
+  ],
+  "failed": []
+}

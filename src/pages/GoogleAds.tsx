@@ -208,7 +208,7 @@ export default function GoogleAds() {
                     description: "Hizmeti başlatmak için pazarlama araçlarına erişim tanımlayın.",
                     highlightText: "Tüm kanallarda entegre ve tutarlı iletişim sağlayın.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#contact",
+                    buttonLink: "/search-ads-google-reklamlari-kurulum-akisi",
                     theme: "light" as const
                 },
                 {
@@ -216,7 +216,7 @@ export default function GoogleAds() {
                     description: "Sürecin baştan sona nasıl ilerlediğini adım adım görün.",
                     highlightText: "Doğru brief → net süreç → ölçülebilir sonuçları keşfedin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#process",
+                    buttonLink: "/google-tag-manager-kurulum-akisi",
                     theme: "dark" as const
                 }
             ]

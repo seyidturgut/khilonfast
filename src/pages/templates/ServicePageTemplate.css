@@ -74,6 +74,15 @@
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
 }
 
+.hero-main-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+    background: #000;
+}
+
 .circular-badge {
     position: absolute;
     bottom: -20px;

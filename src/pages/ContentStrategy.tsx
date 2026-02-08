@@ -90,7 +90,7 @@ export default function ContentStrategy() {
                     description: "Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.",
                     highlightText: "Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#contact",
+                    buttonLink: "/hizmetlerimiz/google-search-console-kurulum-akisi",
                     theme: "light" as const
                 },
                 {
@@ -98,7 +98,7 @@ export default function ContentStrategy() {
                     description: "Detaylı analiz için Google Analytics erişimlerini tanımlayın.",
                     highlightText: "Analiz süreçlerinizin ölçüm doğruluğunu artırın.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#contact",
+                    buttonLink: "/google-analytics-kurulum-akisi",
                     theme: "dark" as const
                 }
             ]
@@ -111,7 +111,7 @@ export default function ContentStrategy() {
             packages: [
                 {
                     id: 'single-plan',
-                    name: 'Tek Fiyat',
+                    name: 'İçerik Stratejisi Çözümü',
                     price: '₺80.000',
                     period: 'tek sefer*',
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',

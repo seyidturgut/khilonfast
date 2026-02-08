@@ -1,0 +1,112 @@
+.trainings-page {
+    background: #f5f8fb;
+}
+
+.trainings-hero {
+    padding: 7.5rem 0 3rem;
+    background: linear-gradient(180deg, #f8fbff 0%, #eff5fb 100%);
+}
+
+.trainings-hero-inner {
+    max-width: 780px;
+}
+
+.trainings-badge {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(197, 214, 61, 0.2);
+    color: #1a3a52;
+    border: 1px solid rgba(26, 58, 82, 0.08);
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.trainings-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #1a3a52;
+    margin-bottom: 1rem;
+}
+
+.trainings-hero p {
+    color: #4b5563;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.trainings-list {
+    padding: 1rem 0 5rem;
+}
+
+.trainings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.training-card {
+    background: #fff;
+    border: 1px solid #e7edf4;
+    border-radius: 18px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 250px;
+    box-shadow: 0 10px 24px rgba(26, 58, 82, 0.04);
+}
+
+.training-card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(197, 214, 61, 0.2);
+    color: #1a3a52;
+    margin-bottom: 0.85rem;
+}
+
+.training-card h3 {
+    color: #1a3a52;
+    font-size: 1.1rem;
+    line-height: 1.35;
+    margin-bottom: 0.65rem;
+}
+
+.training-card p {
+    color: #5b6470;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.training-link {
+    margin-top: auto;
+    text-decoration: none;
+    color: #1a3a52;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+@media (max-width: 1080px) {
+    .trainings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .trainings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .trainings-hero {
+        padding-top: 6.5rem;
+    }
+}

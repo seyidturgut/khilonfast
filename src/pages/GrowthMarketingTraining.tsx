@@ -20,9 +20,9 @@ export default function GrowthMarketingTraining() {
     const trainingConfig = {
         hero: {
             title: 'Büyüme Odaklı Pazarlama Eğitimi',
-            subtitle: 'B2B Sektöründe Başarının Pusulası',
-            description: 'Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.',
-            buttonText: 'Eğitimi Satın Al',
+            subtitle: 'Bütünleşik pazarlama stratejileri ile markanızı büyütün!',
+            description: 'khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.',
+            buttonText: 'Satın Al',
             buttonLink: '#pricing',
             image: '/img/marketing-training-hero.png',
             badgeText: "Bora Işık ile 10+1 Modül!",
@@ -114,7 +114,7 @@ export default function GrowthMarketingTraining() {
                 {
                     id: 'training-program',
                     name: 'B2B Pazarlama Eğitimi',
-                    price: '5.000 TL',
+                    price: '5000TL',
                     period: 'Tek Seferlik',
                     description: 'Tüm modüllere ömür boyu erişim ve uygulamalı egzersizler.',
                     icon: <HiAcademicCap />,
@@ -159,16 +159,44 @@ export default function GrowthMarketingTraining() {
         },
         faqs: [
             {
-                question: 'Bu eğitime ne zaman başlayabilirim?',
-                answer: 'Satın alma işlemi tamamlanır tamamlanmaz tüm modüllere dijital erişim hakkınız aktif hale gelir.'
+                question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
+                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. Khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
             },
             {
-                question: 'Eğitimi kimler almalı?',
-                answer: 'B2B sektöründe çalışan satış ve pazarlama profesyonelleri, departman yöneticileri ve şirket sahipleri için özel olarak tasarlanmıştır.'
+                question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
+                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. Khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz.'
             },
             {
-                question: 'Video eğitimleri tekrar izleyebilir miyim?',
-                answer: 'Evet, satın aldığınız eğitimlerinize ömür boyu erişim hakkına sahipsiniz, dilediğiniz zaman tekrar izleyebilirsiniz.'
+                question: 'khilonfast ile kimler çalışmamalı?',
+                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, Khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, Khilonfast için uygun müşteriler değildir.'
+            },
+            {
+                question: 'khilonfast kimler için ideal bir iş ortağıdır?',
+                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için Khilonfast ideal bir çözüm sunar.'
+            },
+            {
+                question: 'Khilonfast ile iletişimi nasıl sağlayabilirim?',
+                answer: 'Khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, Khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır.'
+            },
+            {
+                question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
+                answer: 'Khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, Khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir.'
+            },
+            {
+                question: 'Bütünleşik dijital pazarlama stratejileri işletmem için nasıl faydalıdır?',
+                answer: 'Bütünleşik dijital pazarlama, farklı dijital kanalları tek bir strateji altında birleştirerek pazarlama etkinliğinizi artırır. Khilonfast, tüm dijital pazarlama çabalarınızı entegre eder ve bütçenizi en verimli şekilde kullanarak maksimum etkileşim ve dönüşüm sağlar.'
+            },
+            {
+                question: 'Bütünleşik dijital pazarlama kampanyalarının performansını nasıl takip edebilirim?',
+                answer: 'Khilonfast, tüm dijital kanallarınızı kapsayan haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, etkileşim oranları, dönüşümler ve diğer kritik performans göstergeleri hakkında bilgi içerir. Ayrıca, canlı dashboard’lar üzerinden kampanyalarınızı anlık olarak izleyebilirsiniz.'
+            },
+            {
+                question: 'Neden khilonfast bütünleşik dijital pazarlama hizmetini tercih etmeliyim?',
+                answer: 'khilonfast, tüm dijital pazarlama çabalarınızı entegre ederek maksimum verimlilik sağlar. Uzman ekibimiz, dijital stratejinizi bir bütün olarak ele alır ve tüm kanallarda tutarlı bir mesaj ve marka deneyimi sunmanızı sağlar.'
+            },
+            {
+                question: 'Bütünleşik dijital pazarlama stratejisi nasıl oluşturulur?',
+                answer: 'Khilonfast, öncelikle işletmenizin hedeflerini ve mevcut dijital varlıklarını analiz eder. Ardından, tüm dijital kanallarınızı entegre eden bir strateji geliştirir. Kampanyalar başlatıldıktan sonra, performans düzenli olarak izlenir ve optimize edilir.'
             }
         ],
         testimonial: {

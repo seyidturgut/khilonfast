@@ -16,7 +16,7 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 export default function MaestroAI() {
     const maestroConfig = {
         hero: {
-            title: 'Maestro AI',
+            title: 'B2B Pazarlama Stratejinizi Maestro AI ile Yönetin',
             subtitle: (
                 <>
                     B2B Sektörü için özelleştirilmiş<br />
@@ -28,6 +28,8 @@ export default function MaestroAI() {
             buttonText: 'Satın Al',
             buttonLink: '#pricing',
             image: '/img/maestro-ai-hero.png',
+            videoUrl: 'https://www.youtube.com/embed/fiHpDDF440M',
+            hideBadge: true,
             badgeText: "Yapay Zeka Gücü",
             badgeIcon: <HiBolt />,
             themeColor: '#f9fafb'

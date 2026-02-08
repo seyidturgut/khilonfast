@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { HiMenu, HiX, HiChevronDown, HiChevronRight, HiArrowLeft } from 'react-icons/hi'
+import { useAuth } from '../context/AuthContext'
+import Cart from './Cart'
+import CartIcon from './CartIcon'
+import UserIcon from './UserIcon'
 import {
     HiRocketLaunch,
     HiDocumentText,
@@ -17,8 +21,11 @@ import {
     HiPaintBrush,
     HiTruck,
     HiWrench,
-    HiOutlineEye
+    HiOutlineEye,
+    HiAcademicCap
 } from 'react-icons/hi2'
+import { trainingPrograms } from '../data/trainingPrograms'
+import { productPrograms } from '../data/productPrograms'
 import './Header.css'
 
 const services = [
@@ -50,8 +57,10 @@ const sectoralServices = [
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false)
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-    const [currentMenu, setCurrentMenu] = useState<'main' | 'services' | 'sectoral'>('main')
+    const [currentMenu, setCurrentMenu] = useState<'main' | 'services' | 'sectoral' | 'trainings' | 'products'>('main')
     const [scrolled, setScrolled] = useState(false)
+    const [cartOpen, setCartOpen] = useState(false)
+    const { isAuthenticated } = useAuth()
     const location = useLocation()
     const isHome = location.pathname === '/'
 
@@ -132,6 +141,49 @@ export default function Header() {
                             </div>
                         </div>
                     </div>
+                    <div className="nav-item">
+                        <button className="nav-link dropdown-toggle" onMouseEnter={() => setActiveDropdown('trainings')}>
+                            Eğitimler <HiChevronDown className="dropdown-icon" />
+                        </button>
+                        <div className={`mega-menu compact sectoral ${activeDropdown === 'trainings' ? 'show' : ''}`} onMouseLeave={() => setActiveDropdown(null)}>
+                            <div className="mega-menu-grid">
+                                <Link to="/egitimler" className="mega-menu-item" onClick={() => setActiveDropdown(null)}>
+                                    <div className="mega-icon-box"><HiAcademicCap /></div>
+                                    <div className="mega-content">
+                                        <h4 className="mega-title">Tüm Eğitimler</h4>
+                                        <p className="mega-desc">Program listesini tek ekranda görüntüleyin</p>
+                                    </div>
+                                </Link>
+                                {trainingPrograms.slice(0, 8).map((t) => (
+                                    <Link key={t.path} to={t.path} className="mega-menu-item" onClick={() => setActiveDropdown(null)}>
+                                        <div className="mega-icon-box"><HiAcademicCap /></div>
+                                        <div className="mega-content">
+                                            <h4 className="mega-title">{t.title}</h4>
+                                            <p className="mega-desc">{t.summary}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="nav-item">
+                        <button className="nav-link dropdown-toggle" onMouseEnter={() => setActiveDropdown('products')}>
+                            Ürünler <HiChevronDown className="dropdown-icon" />
+                        </button>
+                        <div className={`mega-menu compact ${activeDropdown === 'products' ? 'show' : ''}`} onMouseLeave={() => setActiveDropdown(null)}>
+                            <div className="mega-menu-grid">
+                                {productPrograms.map((product) => (
+                                    <Link key={product.path} to={product.path} className="mega-menu-item" onClick={() => setActiveDropdown(null)}>
+                                        <div className="mega-icon-box">{product.title.includes('Eye') ? <HiOutlineEye /> : <HiBolt />}</div>
+                                        <div className="mega-content">
+                                            <h4 className="mega-title">{product.title}</h4>
+                                            <p className="mega-desc">{product.summary}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                     <Link to="/hakkimizda" className="nav-link">Hakkımızda</Link>
                     <Link to="/#contact" className="nav-link">İletişim</Link>
                 </nav>
@@ -142,7 +194,11 @@ export default function Header() {
                         <span className="divider">|</span>
                         <span>EN</span>
                     </div>
-                    <Link to="/#contact" className="btn btn-primary desktop-only">Hemen Başlayın</Link>
+                    <UserIcon />
+                    <CartIcon onClick={() => setCartOpen(true)} />
+                    {!isAuthenticated && (
+                        <Link to="/register" className="btn btn-primary desktop-only">Hemen Başlayın</Link>
+                    )}
                     <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle Menu">
                         {isOpen ? <HiX /> : <HiMenu />}
                     </button>
@@ -169,11 +225,19 @@ export default function Header() {
                         <button className="mobile-link has-arrow" onClick={() => setCurrentMenu('sectoral')}>
                             Sektörel Hizmetler <HiChevronRight />
                         </button>
+                        <button className="mobile-link has-arrow" onClick={() => setCurrentMenu('trainings')}>
+                            Eğitimler <HiChevronRight />
+                        </button>
+                        <button className="mobile-link has-arrow" onClick={() => setCurrentMenu('products')}>
+                            Ürünler <HiChevronRight />
+                        </button>
                         <Link to="/hakkimizda" className="mobile-link">Hakkımızda</Link>
                         <Link to="/#contact" className="mobile-link">İletişim</Link>
 
                         <div className="mobile-menu-footer">
-                            <Link to="/#contact" className="btn btn-primary" onClick={() => setIsOpen(false)}>Hemen Başlayın</Link>
+                            {!isAuthenticated && (
+                                <Link to="/register" className="btn btn-primary" onClick={() => setIsOpen(false)}>Hemen Başlayın</Link>
+                            )}
                         </div>
                     </div>
 
@@ -208,8 +272,46 @@ export default function Header() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Trainings Sub-Menu */}
+                    <div className="mobile-menu-page sub">
+                        <button className="mobile-back" onClick={() => setCurrentMenu('main')}>
+                            <HiArrowLeft /> Geri: Menü
+                        </button>
+                        <h3 className="mobile-submenu-title">Eğitimler</h3>
+                        <div className="mobile-submenu-list">
+                            <Link to="/egitimler" className="mobile-sub-item" onClick={() => setIsOpen(false)}>
+                                <div className="sub-icon"><HiAcademicCap /></div>
+                                <span>Tüm Eğitimler</span>
+                            </Link>
+                            {trainingPrograms.map((t) => (
+                                <Link key={t.path} to={t.path} className="mobile-sub-item" onClick={() => setIsOpen(false)}>
+                                    <div className="sub-icon"><HiAcademicCap /></div>
+                                    <span>{t.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Products Sub-Menu */}
+                    <div className="mobile-menu-page sub">
+                        <button className="mobile-back" onClick={() => setCurrentMenu('main')}>
+                            <HiArrowLeft /> Geri: Menü
+                        </button>
+                        <h3 className="mobile-submenu-title">Ürünler</h3>
+                        <div className="mobile-submenu-list">
+                            {productPrograms.map((product) => (
+                                <Link key={product.path} to={product.path} className="mobile-sub-item" onClick={() => setIsOpen(false)}>
+                                    <div className="sub-icon">{product.title.includes('Eye') ? <HiOutlineEye /> : <HiBolt />}</div>
+                                    <span>{product.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </header>
     )
 }

@@ -252,7 +252,7 @@ export default function ContentProduction() {
                     description: "Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.",
                     highlightText: "Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#contact",
+                    buttonLink: "/hizmetlerimiz/google-search-console-kurulum-akisi",
                     theme: "light" as const
                 },
                 {
@@ -260,7 +260,7 @@ export default function ContentProduction() {
                     description: "Detaylı analiz için Google Analytics erişimlerini tanımlayın.",
                     highlightText: "Analiz süreçlerinizin ölçüm doğruluğunu artırın.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#process",
+                    buttonLink: "/google-analytics-kurulum-akisi",
                     theme: "dark" as const
                 }
             ]
@@ -269,4 +269,3 @@ export default function ContentProduction() {
 
     return <ServicePageTemplate {...contentConfig} />
 }
-

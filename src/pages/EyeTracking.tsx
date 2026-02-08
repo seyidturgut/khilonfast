@@ -13,7 +13,7 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 export default function EyeTracking() {
     const eyeTrackingConfig = {
         hero: {
-            title: 'Eye Tracking Reklam Analizi',
+            title: 'Eye Tracking Sosyal Medya Reklam Analizi',
             subtitle: (
                 <>
                     Eye Tracking + AI ile;<br />
@@ -25,6 +25,8 @@ export default function EyeTracking() {
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
             image: '/img/eye-tracking-hero.png',
+            videoUrl: 'https://www.youtube.com/embed/fiHpDDF440M',
+            hideBadge: true,
             badgeText: "Veriye Dayalı Analiz",
             badgeIcon: <HiBolt />,
             themeColor: '#f9fafb'

@@ -186,6 +186,30 @@
     opacity: 0.3;
 }
 
+/* Cart and User Icons - Default (for light/scrolled header) */
+.cart-icon-btn,
+.user-icon-btn {
+    color: var(--color-secondary) !important;
+}
+
+.cart-icon-btn:hover,
+.user-icon-btn:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: var(--color-primary-dark) !important;
+}
+
+/* Cart and User Icons - On dark header (home page, not scrolled) */
+.header.is-home:not(.scrolled) .cart-icon-btn,
+.header.is-home:not(.scrolled) .user-icon-btn {
+    color: white !important;
+}
+
+.header.is-home:not(.scrolled) .cart-icon-btn:hover,
+.header.is-home:not(.scrolled) .user-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--color-primary) !important;
+}
+
 .btn {
     padding: 0.75rem 1.5rem;
     border-radius: var(--radius-full);
@@ -273,8 +297,8 @@
 .mobile-menu-viewport {
     flex: 1;
     display: flex;
-    width: 300vw;
-    /* 3 pages */
+    width: 500vw;
+    /* 5 pages */
     transition: transform 0.5s cubic-bezier(0.85, 0, 0.15, 1);
     will-change: transform;
 }
@@ -289,6 +313,14 @@
 
 .mobile-menu-viewport.sectoral {
     transform: translateX(-200vw);
+}
+
+.mobile-menu-viewport.trainings {
+    transform: translateX(-300vw);
+}
+
+.mobile-menu-viewport.products {
+    transform: translateX(-400vw);
 }
 
 .mobile-menu-page {

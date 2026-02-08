@@ -254,7 +254,7 @@ export default function SocialMediaAds() {
                     description: "Hizmeti başlatmak için LinkedIn Ads erişimlerini tanımlayın.",
                     highlightText: "B2B hedef kitlenizle doğru temas noktalarında buluşun.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#contact",
+                    buttonLink: "/linkedin-reklamlari-kurulum-akisi-khilonfast",
                     theme: "light" as const
                 },
                 {
@@ -262,7 +262,7 @@ export default function SocialMediaAds() {
                     description: "Hizmeti başlatmak için TikTok Business erişimlerini paylaşın.",
                     highlightText: "Reklamlarınızın genç hedef kitlelerle etkileşimini güçlendirin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#process",
+                    buttonLink: "/tiktok-kurulum-akisi",
                     theme: "dark" as const
                 },
                 {
@@ -270,7 +270,7 @@ export default function SocialMediaAds() {
                     description: "Hizmeti başlatmak için Meta reklam hesap erişimlerini verin.",
                     highlightText: "Reklamlarınızın erişimini artırarak marka görünürlüğünü güçlendirin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/#process",
+                    buttonLink: "/meta-facebook-instagram-reklamlari-kurulum-akisi",
                     theme: "light" as const
                 }
             ]

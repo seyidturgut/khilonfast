@@ -1,0 +1,243 @@
+/* Dark Theme Styles - ONLY for Admin Pages */
+/* Scoped under .admin-layout to prevent affecting the main site */
+
+.admin-layout * {
+    color: inherit;
+}
+
+.admin-layout body,
+.admin-layout div,
+.admin-layout span,
+.admin-layout p,
+.admin-layout li,
+.admin-layout a {
+    color: #cbd5e1;
+}
+
+/* Headers */
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6 {
+    color: #f8fafc !important;
+}
+
+/* Small text */
+.admin-layout small {
+    color: #94a3b8 !important;
+}
+
+/* Labels */
+.admin-layout label {
+    color: #cbd5e1 !important;
+}
+
+/* Paragraphs */
+.admin-layout p {
+    color: #cbd5e1 !important;
+}
+
+/* Cards */
+.admin-layout .card {
+    background: rgba(30, 41, 59, 0.6) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(148, 163, 184, 0.1) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Override inline white backgrounds */
+.admin-layout [style*="background: white"],
+.admin-layout [style*="background:white"] {
+    background: rgba(30, 41, 59, 0.6) !important;
+}
+
+/* Override inline light borders */
+.admin-layout [style*="border: 1px solid #ddd"],
+.admin-layout [style*="border: 1px solid #e5e7eb"],
+.admin-layout [style*="border-color: #e5e7eb"] {
+    border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+/* Override inline dark text colors */
+.admin-layout [style*="color: #1a3a52"],
+.admin-layout [style*="color: #374151"],
+.admin-layout [style*="color: #111827"],
+.admin-layout [style*="color: #1f2937"],
+.admin-layout [style*="color: #000"] {
+    color: #f8fafc !important;
+}
+
+.admin-layout [style*="color: #6b7280"],
+.admin-layout [style*="color: #4b5563"],
+.admin-layout [style*="color: #9ca3af"] {
+    color: #94a3b8 !important;
+}
+
+/* Override any remaining dark colors */
+.admin-layout [style*="color:#1"],
+.admin-layout [style*="color:#2"],
+.admin-layout [style*="color:#3"],
+.admin-layout [style*="color:#4"],
+.admin-layout [style*="color:#5"],
+.admin-layout [style*="color:#6"] {
+    color: #cbd5e1 !important;
+}
+
+/* Empty State */
+.admin-layout .empty-editor {
+    color: #94a3b8;
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+/* Toolbox */
+.admin-layout .toolbox {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.3) rgba(15, 23, 42, 0.5);
+}
+
+.admin-layout .toolbox button {
+    color: #cbd5e1 !important;
+}
+
+/* Canvas */
+.admin-layout .canvas {
+    background: rgba(15, 23, 42, 0.3) !important;
+}
+
+/* Block items in canvas */
+.admin-layout .canvas>div {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: rgba(148, 163, 184, 0.1) !important;
+    color: #f8fafc !important;
+}
+
+.admin-layout .canvas>div[style*="border: 2px solid"] {
+    border-color: #0ea5e9 !important;
+}
+
+/* Properties panel */
+.admin-layout .properties {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(148, 163, 184, 0.1) !important;
+}
+
+/* Success/Error Messages */
+.admin-layout div[style*="background: #d1fae5"] {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.admin-layout div[style*="background: #fee2e2"] {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Select dropdowns */
+.admin-layout select {
+    background: rgba(15, 23, 42, 0.5) !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+.admin-layout select option {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* Input and Textarea - CRITICAL for typed text visibility */
+.admin-layout input,
+.admin-layout textarea {
+    color: #1a3a52 !important;
+    /* Dark text for light background inputs */
+}
+
+/* Dark background inputs (if any) */
+.admin-layout input[style*="background: rgba"],
+.admin-layout textarea[style*="background: rgba"],
+.admin-layout .form-control {
+    color: #f8fafc !important;
+    /* Light text for dark background inputs */
+}
+
+/* Input placeholders */
+.admin-layout input::placeholder,
+.admin-layout textarea::placeholder {
+    color: #64748b !important;
+}
+
+/* Code blocks */
+.admin-layout code {
+    background: rgba(14, 165, 233, 0.1) !important;
+    color: #0ea5e9 !important;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* Tables */
+.admin-layout table {
+    color: #cbd5e1 !important;
+    background: rgba(30, 41, 59, 0.4) !important;
+}
+
+.admin-layout table th {
+    color: #f8fafc !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    font-weight: 600;
+}
+
+.admin-layout table td {
+    color: #cbd5e1 !important;
+    border-color: rgba(148, 163, 184, 0.1) !important;
+}
+
+/* Table text and links */
+.admin-layout table tr {
+    color: #cbd5e1 !important;
+}
+
+.admin-layout table a {
+    color: #0ea5e9 !important;
+}
+
+.admin-layout table a:hover {
+    color: #38bdf8 !important;
+}
+
+/* Badge/Status elements in tables */
+.admin-layout table .badge,
+.admin-layout table span[style*="background"],
+.admin-layout table span[style*="color"] {
+    color: inherit !important;
+}
+
+/* Buttons (if not styled by component) */
+.admin-layout button:not(.btn):not(.btn-primary):not(.btn-secondary) {
+    color: #cbd5e1;
+}
+
+/* Links */
+.admin-layout a {
+    color: #0ea5e9;
+}
+
+.admin-layout a:hover {
+    color: #06b6d4;
+}
+
+/* Form Grid */
+.admin-layout .form-grid>div {
+    color: #cbd5e1;
+}
+
+/* Hint/Warning boxes */
+.admin-layout .hint,
+.admin-layout [style*="background: #fffbeb"] {
+    background: rgba(251, 191, 36, 0.1) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.2) !important;
+}

@@ -1,0 +1,87 @@
+.payment-result-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 2rem 1rem;
+}
+
+.result-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.result-icon {
+    font-size: 6rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-card.success .result-icon {
+    color: #10b981;
+}
+
+.result-card.failed .result-icon {
+    color: #ef4444;
+}
+
+.result-card h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a3a52;
+    margin: 0 0 1rem 0;
+}
+
+.result-card p {
+    font-size: 1.2rem;
+    color: #6b7280;
+    margin: 0 0 2rem 0;
+}
+
+.order-details {
+    background: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.order-details p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #1a3a52;
+}
+
+.btn-home,
+.btn-retry {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-home {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+}
+
+.btn-retry {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.btn-home:hover,
+.btn-retry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+}

@@ -1,0 +1,59 @@
+/* Content Block Styles */
+
+/* Text Block */
+.text-block {
+    padding: 3rem 0;
+}
+
+.text-block.bg-light {
+    background: #f9fafb;
+}
+
+.content-heading {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a3a52;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+.content-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #4a5568;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Image Block */
+.image-block {
+    padding: 2rem 0;
+}
+
+.image-block img {
+    transition: transform 0.3s ease;
+}
+
+.image-block img:hover {
+    transform: scale(1.02);
+}
+
+/* Button Block */
+.button-block {
+    padding: 2rem 0;
+}
+
+.btn-small {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+.btn-large {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+/* Spacer Block */
+.spacer-block {
+    width: 100%;
+}
