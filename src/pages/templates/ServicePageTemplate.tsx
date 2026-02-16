@@ -1,4 +1,11 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
+import {
+    HiShoppingCart,
+    HiKey,
+    HiClipboardDocumentList,
+    HiMagnifyingGlass,
+    HiCheckBadge
+} from 'react-icons/hi2'
 import { useCart } from '../../context/CartContext'
 import Cart from '../../components/Cart'
 import Breadcrumbs from '../../components/Breadcrumbs'
@@ -97,11 +104,14 @@ export interface ServicePageProps {
         buttonText: string;
         buttonLink: string;
         image: string;
+        imageClassName?: string;
+        imageContainerClassName?: string;
         videoUrl?: string;
         hideBadge?: boolean;
         badgeText: string;
         badgeIcon: ReactNode;
         themeColor?: string;
+        disableBadgeAnimation?: boolean;
     };
     breadcrumbs: { label: string; path?: string }[];
     videoShowcase: {
@@ -121,6 +131,10 @@ export interface ServicePageProps {
         title: string;
         description: string;
         packages: PricingPackage[];
+    };
+    heroPriceCard?: {
+        packageId?: string;
+        priceOnly?: boolean;
     };
     comparisonTable?: ComparisonTable;
     processSection?: ProcessSection;
@@ -224,6 +238,65 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [props.processSection]);
 
+    const standardProcessSteps: ProcessStep[] = [
+        {
+            stepNumber: 1,
+            title: 'Satın Al',
+            description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+            icon: <HiShoppingCart />
+        },
+        {
+            stepNumber: 2,
+            title: 'Yetkilendir',
+            description: 'khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için tıklayın>>',
+            icon: <HiKey />
+        },
+        {
+            stepNumber: 3,
+            title: 'Brief Ver',
+            description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+            icon: <HiClipboardDocumentList />
+        },
+        {
+            stepNumber: 4,
+            title: 'Analiz',
+            description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+            icon: <HiMagnifyingGlass />
+        },
+        {
+            stepNumber: 5,
+            title: 'Onay',
+            description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+            icon: <HiCheckBadge />
+        }
+    ];
+
+    const heroPricePackage = props.heroPriceCard
+        ? props.pricingSection.packages.find((pkg) => pkg.id === props.heroPriceCard?.packageId) || props.pricingSection.packages[0]
+        : null;
+    const isHeroPriceOnly = Boolean(props.heroPriceCard?.priceOnly);
+
+    const renderBrandText = (text?: string) => {
+        if (!text) return text;
+
+        const parts = text.split(/(khilonfast)/gi);
+
+        return (
+            <>
+                {parts.map((part, idx) =>
+                    /^khilonfast$/i.test(part) ? (
+                        <span key={idx} className="brand-khilonfast-word">
+                            <span className="brand-khilon">khilon</span>
+                            <span className="brand-fast">fast</span>
+                        </span>
+                    ) : (
+                        <span key={idx}>{part}</span>
+                    )
+                )}
+            </>
+        );
+    };
+
     return (
         <div className="page-container service-template-page">
             <section className="service-hero">
@@ -238,35 +311,70 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 <a href={props.hero.buttonLink} className="btn-service-primary">{props.hero.buttonText}</a>
                             </div>
                         </div>
-                        <div className="service-hero-visual">
-                            <div className="hero-image-container">
-                                {props.hero.videoUrl ? (
-                                    <iframe
-                                        src={props.hero.videoUrl}
-                                        title={props.hero.title}
-                                        className="hero-main-video"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        allowFullScreen
-                                    />
-                                ) : (
-                                    <img src={props.hero.image} alt={props.hero.title} className="hero-main-img" />
-                                )}
-                                {!props.hero.hideBadge && (
-                                    <div className="circular-badge">
-                                        <div className="badge-text-wrapper">
-                                            <svg viewBox="0 0 100 100" className="badge-svg">
-                                                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
-                                                <text className="badge-text">
-                                                    <textPath xlinkHref="#circlePath">
-                                                        {props.hero.badgeText}
-                                                    </textPath>
-                                                </text>
-                                            </svg>
+                        <div className={`service-hero-visual ${isHeroPriceOnly ? 'price-only' : ''}`}>
+                            {!isHeroPriceOnly && (
+                                <div className={`hero-image-container ${props.hero.imageContainerClassName || ''}`}>
+                                    {props.hero.videoUrl ? (
+                                        <iframe
+                                            src={props.hero.videoUrl}
+                                            title={props.hero.title}
+                                            className="hero-main-video"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowFullScreen
+                                        />
+                                    ) : (
+                                        <img src={props.hero.image} alt={props.hero.title} className={`hero-main-img ${props.hero.imageClassName || ''}`} />
+                                    )}
+                                    {!props.hero.hideBadge && (
+                                        <div className="circular-badge">
+                                            <div className={`badge-text-wrapper ${props.hero.disableBadgeAnimation ? 'no-animation' : ''}`}>
+                                                <svg viewBox="0 0 100 100" className="badge-svg">
+                                                    <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
+                                                    <text className="badge-text">
+                                                        <textPath xlinkHref="#circlePath">
+                                                            {props.hero.badgeText}
+                                                        </textPath>
+                                                    </text>
+                                                </svg>
+                                            </div>
+                                            <div className="badge-icon">{props.hero.badgeIcon}</div>
                                         </div>
-                                        <div className="badge-icon">{props.hero.badgeIcon}</div>
+                                    )}
+                                </div>
+                            )}
+                            {heroPricePackage && (
+                                <div className="hero-price-card compact">
+                                    <div className="card-header">
+                                        <div className="pkg-icon">{heroPricePackage.icon}</div>
+                                        <h3 className="pkg-name">{heroPricePackage.name}</h3>
+                                        <div className="pkg-price-wrap">
+                                            <span className="pkg-price">{heroPricePackage.price}</span>
+                                            <span className="pkg-period">/{heroPricePackage.period}</span>
+                                        </div>
+                                        <p className="pkg-desc">{heroPricePackage.description}</p>
                                     </div>
-                                )}
-                            </div>
+                                    <div className="card-body">
+                                        <ul className="pkg-features">
+                                            {heroPricePackage.features.map((f, i) => (
+                                                <li key={i}>
+                                                    <svg viewBox="0 0 20 20" fill="currentColor" className="check-icon">
+                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {f}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="card-footer">
+                                        <button
+                                            onClick={() => handleAddToCart(heroPricePackage)}
+                                            className="btn-pkg btn-pkg-primary hero-price-btn"
+                                        >
+                                            {heroPricePackage.buttonText || 'Satın Al'}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -326,7 +434,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
             }
 
             {/* Split Layout: Single Pricing + Comparison Table Side-by-Side */}
-            {props.pricingSection.packages.length === 1 && props.comparisonTable ? (
+            {!isHeroPriceOnly && (props.pricingSection.packages.length === 1 && props.comparisonTable ? (
                 <section className="service-pricing-split" id="pricing">
                     <div className="container">
                         <div className="section-header text-center">
@@ -340,7 +448,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                             <div className="split-pricing-col">
                                 {props.pricingSection.packages.map((pkg) => (
                                     <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''} single-mode`}>
-                                        {pkg.isPopular && <div className="popular-badge">En Çok Tercih Edilen</div>}
+                                        {props.pricingSection.packages.length > 1 && pkg.isPopular && <div className="popular-badge">En Çok Tercih Edilen</div>}
                                         <div className="card-header">
                                             <div className="pkg-icon">{pkg.icon}</div>
                                             <h3 className="pkg-name">{pkg.name}</h3>
@@ -367,7 +475,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                                 onClick={() => handleAddToCart(pkg)}
                                                 className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}
                                             >
-                                                {pkg.buttonText || 'Sepete Ekle'}
+                                                {pkg.buttonText || 'Satın Al'}
                                             </button>
                                         </div>
                                     </div>
@@ -442,7 +550,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                             <div className="pricing-grid-linear">
                                 {props.pricingSection.packages.map((pkg) => (
                                     <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''}`}>
-                                        {pkg.isPopular && <div className="popular-badge">En Çok Tercih Edilen</div>}
+                                        {props.pricingSection.packages.length > 1 && pkg.isPopular && <div className="popular-badge">En Çok Tercih Edilen</div>}
                                         <div className="card-header">
                                             <div className="pkg-icon">{pkg.icon}</div>
                                             <h3 className="pkg-name">{pkg.name}</h3>
@@ -485,7 +593,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                                 onClick={() => handleAddToCart(pkg)}
                                                 className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}
                                             >
-                                                {pkg.buttonText || 'Sepete Ekle'}
+                                                {pkg.buttonText || 'Satın Al'}
                                             </button>
                                         </div>
                                     </div>
@@ -550,7 +658,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                         )
                     }
                 </>
-            )}
+            ))}
 
 
 
@@ -569,7 +677,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 </div>
 
                                 {/* Steps */}
-                                {props.processSection.steps.map((step, idx) => (
+                                {standardProcessSteps.map((step, idx) => (
                                     <div key={idx} className="process-card-horizontal">
                                         <div className="step-number">{step.stepNumber}</div>
                                         <div className="process-icon-box-horizontal">
@@ -652,7 +760,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                             {(props.approachSection.title || props.approachSection.tag) && (
                                 <div className="section-header text-center">
                                     {props.approachSection.tag && <span className="showcase-tag">{props.approachSection.tag}</span>}
-                                    {props.approachSection.title && <h2 className="section-title-large">{props.approachSection.title}</h2>}
+                                    {props.approachSection.title && <h2 className="section-title-large">{renderBrandText(props.approachSection.title)}</h2>}
                                     {props.approachSection.description && <p className="section-desc-mid">{props.approachSection.description}</p>}
                                 </div>
                             )}
@@ -665,7 +773,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         </div>
                                         <div className="approach-content">
                                             <h3 className="approach-title">{item.title}</h3>
-                                            <h4 className="approach-subtitle">{item.subtitle}</h4>
+                                            <h4 className="approach-subtitle">{renderBrandText(item.subtitle)}</h4>
                                             <p className="approach-desc">{item.description}</p>
                                         </div>
                                     </div>

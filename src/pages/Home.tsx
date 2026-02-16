@@ -5,7 +5,6 @@ import Services from '../components/Services'
 import Features from '../components/Features'
 import Pricing from '../components/Pricing'
 import FAQ from '../components/FAQ'
-import Contact from '../components/Contact'
 
 export default function Home() {
     return (
@@ -17,7 +16,6 @@ export default function Home() {
             <Features />
             <Pricing />
             <FAQ />
-            <Contact />
         </>
     )
 }

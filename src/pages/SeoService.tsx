@@ -134,8 +134,8 @@ export default function SeoService() {
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
-            title: 'Organik Büyüme Paketleri',
-            description: 'khilonfast ile teknik SEO, içerik optimizasyonu ve otorite inşası süreçlerinizi tek bir noktadan yönetin.',
+            title: 'SEO Çözümleri',
+            description: 'Markanızı üst sıralara taşımak için doğru adımları atın. khilonfast ile SEO kampanyalarınızı başlatın ve online potansiyelinizi ortaya çıkarın.',
             packages: [
                 {
                     id: 'core',

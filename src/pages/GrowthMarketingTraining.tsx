@@ -30,7 +30,7 @@ export default function GrowthMarketingTraining() {
             themeColor: '#F0F9FF' // Very light sky blue
         },
         breadcrumbs: [
-            { label: 'Hizmetlerimiz', path: '/#services' },
+            { label: 'Eğitimlerimiz', path: '/egitimler' },
             { label: 'Pazarlama Eğitimi' }
         ],
         videoShowcase: {
@@ -131,6 +131,10 @@ export default function GrowthMarketingTraining() {
                     buttonLink: '/#contact'
                 }
             ]
+        },
+        heroPriceCard: {
+            packageId: 'training-program',
+            priceOnly: true
         },
         approachSection: {
             tag: 'Kimler İçin?',

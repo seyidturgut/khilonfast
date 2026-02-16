@@ -24,7 +24,7 @@ export default function TrainingProgramPage() {
             badgeIcon: <HiAcademicCap />
         },
         breadcrumbs: [
-            { label: 'Eğitimler', path: '/egitimler' },
+            { label: 'Eğitimlerimiz', path: '/egitimler' },
             { label: training.title }
         ],
         videoShowcase: {
@@ -84,6 +84,10 @@ export default function TrainingProgramPage() {
                     buttonLink: '/#contact'
                 }
             ]
+        },
+        heroPriceCard: {
+            packageId: 'training-program',
+            priceOnly: true
         },
         testimonial: {
             quote: 'Eğitim sonrası pazarlama ve satış ekiplerimizin dili aynılaştı; lead kalitesi ve kapanış oranları belirgin şekilde arttı.',

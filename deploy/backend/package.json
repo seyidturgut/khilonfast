@@ -1,0 +1,32 @@
+{
+    "name": "khilonfast-backend",
+    "version": "1.0.0",
+    "description": "Backend API for Khilonfast subscription and payment system",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "keywords": [
+        "express",
+        "mysql",
+        "lidio",
+        "payment"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2",
+        "mysql2": "^3.6.5",
+        "dotenv": "^16.3.1",
+        "bcryptjs": "^2.4.3",
+        "jsonwebtoken": "^9.0.2",
+        "axios": "^1.6.2",
+        "cors": "^2.8.5",
+        "express-validator": "^7.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
+    }
+}

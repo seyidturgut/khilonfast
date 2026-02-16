@@ -146,7 +146,7 @@ export default function MaestroAI() {
                         'İçerik ve reklam bütçe planlama',
                         'Sektörel gelişim takibi'
                     ],
-                    buttonText: 'Hemen Başlayın',
+                    buttonText: 'Satın Al',
                     buttonLink: '/#contact'
                 },
                 {

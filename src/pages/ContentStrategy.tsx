@@ -22,7 +22,10 @@ export default function ContentStrategy() {
             description: 'khilonfast ile marka hedeflerinize uygun, stratejik içerikler oluşturarak hedef kitlenizle güçlü bir bağ kurun. Çeşitli içerik formatlarıyla etkileşimi artırın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/img/content-strategy-hero.png',
+            image: '/TR_IcerikStratejisi.avif',
+            imageClassName: 'hero-main-img-content-production',
+            imageContainerClassName: 'hero-image-container-content-production',
+            hideBadge: true,
             badgeText: "Stratejik İçerik Planı! Marka Otoritesi!",
             badgeIcon: <HiDocumentText />,
             themeColor: '#FEF3C7' // Warm yellow theme
@@ -139,7 +142,7 @@ export default function ContentStrategy() {
                 { feature: 'Hedef Kitle Tanımlaması', values: [true] },
                 { feature: 'İçerik Konuları ve Frekansı', values: [true] }
             ],
-            note: 'Fiyatlara KDV dahil değildir.'
+            note: '(*) KDV hariçtir.'
         },
         testimonial: {
             quote: "İçerik stratejisi dökümanı sayesinde içerik üretim sürecimiz rayına oturdu. Artık neyi, neden ve kime ürettiğimizi çok daha iyi biliyoruz.",

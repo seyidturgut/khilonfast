@@ -116,13 +116,13 @@ export default function SocialMediaAds() {
             ],
             rows: [
                 { feature: 'Sosyal Medya Reklamları', values: ['1 Meta Hesabı', '2 Hesap (Meta + linkedin veya tiktok)', '3 Hesap (Meta ve/veya Linkedin ve /veya TikTok)'] },
-                { feature: 'Ek kurulum ücreti', values: ['Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'] },
+                { feature: 'Ek Kurulum ücreti', values: ['Aylık paketlerde Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'] },
                 { feature: 'Kampanya yönetimi', values: ['2 Kampanya', '4 Kampanya', '6 Kampanya'] },
                 { feature: 'Kampanya optimizasyonu', values: ['Temel', true, '✓ Sürekli'] },
                 { feature: 'Performans raporu', values: ['✓ E-posta ile, ayda 1 kez raporlama', '✓ E-posta ile, 2 haftada 1 raporlama', '✓ E-posta ile, haftada 1 raporlama'] },
                 { feature: 'Reklam Bütçesi Politikası', values: ['Reklam bütçesinin %10\'u core paket ücretini aşmıyorsa core paket üzerinden fiyatlandırılır; aştığında bir üst paketten fiyatlandırılır.', 'Reklam bütçesinin %10\'u growth paket ücretini aşmıyorsa growth paket üzerinden fiyatlandırılır; aştığında bir üst pakete geçilir.', 'Reklam bütçesinin %10\'u ultimate paket ücretini aşmıyorsa ultimate paket üzerinden fiyatlandırılır; aşması durumunda ek tutar yüzdesel olarak eklenir ve sonraki aylarda bulunduğu üst paketten fiyatlandırma devam eder.'] }
             ],
-            note: 'Fiyatlara KDV dahil değildir.'
+            note: '(*) KDV hariçtir.'
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',

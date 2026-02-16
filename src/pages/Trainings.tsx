@@ -12,7 +12,7 @@ export default function Trainings() {
                 <div className="container trainings-hero-inner">
                     <div className="trainings-badge">
                         <HiAcademicCap />
-                        <span>Khilonfast Academy</span>
+                        <span>khilonfast Academy</span>
                     </div>
                     <h1>Eğitim Programları</h1>
                     <p>

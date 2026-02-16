@@ -126,7 +126,7 @@ export default function B2BEmailMarketing() {
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
-            title: 'Net ve Şeffaf Fiyatlandırma',
+            title: 'B2B Email Pazarlama Çözümleri',
             description: 'khilonfast ile e-posta pazarlama süreçlerinizi en verimli şekilde yönetin ve reklam maliyeti olmadan büyüyün.',
             packages: [
                 {

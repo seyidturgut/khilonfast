@@ -69,7 +69,9 @@
 }
 
 .hero-main-img {
+    display: block;
     width: 100%;
+    background: transparent;
     border-radius: var(--radius-xl);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
 }
@@ -81,6 +83,121 @@
     border-radius: var(--radius-xl);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
     background: #000;
+}
+
+.hero-price-card {
+    margin-top: 1.25rem;
+    background: #ffffff;
+    border: 1px solid rgba(26, 58, 82, 0.12);
+    border-radius: 24px;
+    padding: 1.25rem 1.25rem 1.4rem;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+.service-hero-visual.price-only .hero-price-card {
+    margin-top: 0;
+}
+
+.service-hero-visual.price-only {
+    display: flex;
+    align-items: flex-start;
+}
+
+.hero-price-card.compact {
+    padding: 1rem 1rem 1.1rem;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.hero-price-card.compact .pkg-icon {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.hero-price-card.compact .pkg-name {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.hero-price-card.compact .pkg-price {
+    font-size: 2rem;
+}
+
+.hero-price-card.compact .pkg-desc {
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+}
+
+.hero-price-card.compact .pkg-features {
+    margin-bottom: 20px;
+}
+
+.hero-price-card.compact .pkg-features li {
+    padding: 6px 0;
+    font-size: 0.9rem;
+}
+
+.hero-price-card.compact .check-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.hero-price-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.hero-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    margin-bottom: 0.6rem;
+}
+
+.hero-price-value {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--primary-color);
+}
+
+.hero-price-period {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.hero-price-desc {
+    font-size: 0.98rem;
+    color: var(--text-color);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+}
+
+.hero-price-btn {
+    width: 100%;
+    text-align: center;
+}
+
+/* Content Production hero fix: remove panel/shadow feel and crop embedded badge area */
+.hero-image-container.hero-image-container-content-production {
+    overflow: visible;
+    border-radius: var(--radius-xl);
+    background: transparent;
+}
+
+.hero-main-img.hero-main-img-content-production {
+    width: 112%;
+    max-width: none;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+    transform: scale(1);
+    transform-origin: left center;
+    box-shadow: none;
+    border-radius: var(--radius-xl);
 }
 
 .circular-badge {
@@ -102,6 +219,10 @@
     width: 100%;
     height: 100%;
     animation: rotateBadgeText 15s linear infinite;
+}
+
+.badge-text-wrapper.no-animation {
+    animation: none;
 }
 
 @keyframes rotateBadgeText {
@@ -739,6 +860,19 @@
     color: var(--accent-color);
 }
 
+.brand-khilonfast-word {
+    display: inline-flex;
+    align-items: baseline;
+}
+
+.brand-khilonfast-word .brand-khilon {
+    color: var(--primary-color);
+}
+
+.brand-khilonfast-word .brand-fast {
+    color: var(--accent-color);
+}
+
 .approach-desc {
     font-size: 1rem;
     color: var(--text-color);
@@ -907,8 +1041,7 @@
 
 .split-layout-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    /* Pricing Card (1) | Table (1.5) */
+    grid-template-columns: 1.1fr 1fr;
     gap: 40px;
     align-items: start;
 }
@@ -926,28 +1059,42 @@
 }
 
 .split-table-col {
-    flex-grow: 1;
+    width: 100%;
+    max-width: 760px;
 }
 
 .comparison-table-wrapper.single-mode {
-    border: none;
-    background: transparent;
-    padding: 0;
-    box-shadow: none;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    padding: 14px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+    border-radius: 18px;
+    overflow: hidden;
 }
 
 .comparison-table-wrapper.single-mode table th {
-    background: #f8fafc;
-    /* Slightly darker header for single mode */
-    padding: 15px;
+    background: #f3f4f6;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border-radius: 0;
 }
 
 .comparison-table-wrapper.single-mode table td {
-    padding: 15px;
+    padding: 14px 16px;
 }
 
 .comparison-table-wrapper.single-mode table {
     min-width: 100%;
+    table-layout: fixed;
+}
+
+.comparison-table-wrapper.single-mode .comparison-table th:first-child,
+.comparison-table-wrapper.single-mode .comparison-table td:first-child {
+    width: 44%;
+}
+
+.comparison-table-wrapper.single-mode .comparison-table td:first-child {
+    background: #f8fafc;
 }
 
 @media (max-width: 1024px) {

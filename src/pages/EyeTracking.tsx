@@ -116,7 +116,7 @@ export default function EyeTracking() {
                         'Heatmap Görünümü',
                         'Temel İyileştirme Önerileri'
                     ],
-                    buttonText: 'Hemen Başla',
+                    buttonText: 'Satın Al',
                     buttonLink: '/#contact'
                 },
                 {
@@ -133,7 +133,7 @@ export default function EyeTracking() {
                         'A/B Test Öncesi Ölçüm',
                         'Sektörel Karşılaştırma'
                     ],
-                    buttonText: 'Hemen Başla',
+                    buttonText: 'Satın Al',
                     buttonLink: '/#contact'
                 },
                 {
@@ -149,7 +149,7 @@ export default function EyeTracking() {
                         'Stratejik Danışmanlık Desteği',
                         'Hızlı Onay Süreci'
                     ],
-                    buttonText: 'Hemen Başla',
+                    buttonText: 'Satın Al',
                     buttonLink: '/#contact'
                 }
             ]

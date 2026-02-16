@@ -22,10 +22,14 @@ export default function ContentProduction() {
             description: 'khilonfast ile hedef kitlenize uygun, SEO uyumlu içerikler üreterek marka görünürlüğünüzü artırın. Profesyonel içerik çözümleriyle zaman ve kaynak sorunlarını geride bırakın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/content_production_hero_1769620227118.png',
+            image: '/icerikuretimi-cover.webp',
+            imageClassName: 'hero-main-img-content-production',
+            imageContainerClassName: 'hero-image-container-content-production',
+            hideBadge: true,
             badgeText: "Görünürlüğünüzü Artırın! Zorlukları Aşın!",
             badgeIcon: <HiPencilSquare />,
-            themeColor: '#FEF9C3' // Light yellow theme
+            themeColor: '#FEF9C3', // Light yellow theme
+            disableBadgeAnimation: true
         },
         breadcrumbs: [
             { label: 'Hizmetlerimiz', path: '/#services' },
@@ -124,7 +128,7 @@ export default function ContentProduction() {
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
-            title: 'Net ve Şeffaf Fiyatlandırma',
+            title: 'İçerik Üretimi Çözümleri',
             description: 'khilonfast ile içerik üretim süreçlerinizi en verimli şekilde yönetin ve markanızın görünürlüğünü artırın.',
             packages: [
                 {

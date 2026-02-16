@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, matchPath } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, matchPath, Navigate } from 'react-router-dom'
 import './App.css'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
@@ -73,6 +73,9 @@ function MainContent() {
         '/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi',
         '/hizmetlerimiz/buyume-odakli-pazarlama-egitimi',
+        '/egitimler/buyume-odakli-pazarlama-egitimi',
+        '/courses/odeme-sistemlerinde-buyume-odakli-pazarlama',
+        '/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi',
         '/hizmetlerimiz/maestro-ai',
         '/hizmetlerimiz/eye-tracking-reklam-analizi',
         '/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy',
@@ -126,8 +129,11 @@ function MainContent() {
                     <Route path="/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi" element={<InteriorDesignMarketing />} />
                     <Route path="/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
                     <Route path="/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
-                    <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<GrowthMarketingTraining />} />
+                    <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/egitimler/buyume-odakli-pazarlama-egitimi" element={<GrowthMarketingTraining />} />
                     <Route path="/b2b-sektorunde-buyume-odakli-pazarlama-egitimi" element={<GrowthMarketingTraining />} />
+                    <Route path="/courses/odeme-sistemlerinde-buyume-odakli-pazarlama" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/hizmetlerimiz/maestro-ai" element={<MaestroAI />} />
                     <Route path="/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy" element={<MaestroAI />} />
                     <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<EyeTracking />} />
@@ -139,7 +145,7 @@ function MainContent() {
                     <Route path="/egitimler" element={<Trainings />} />
                     {trainingPrograms
                         .filter((program) =>
-                            program.path !== '/hizmetlerimiz/buyume-odakli-pazarlama-egitimi' &&
+                            program.path !== '/egitimler/buyume-odakli-pazarlama-egitimi' &&
                             program.path !== '/b2b-sektorunde-buyume-odakli-pazarlama-egitimi'
                         )
                         .map((program) => (

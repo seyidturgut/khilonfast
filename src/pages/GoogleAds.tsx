@@ -15,13 +15,13 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 export default function GoogleAds() {
     const gaConfig = {
         hero: {
-            title: 'Google Ads',
-            subtitle: 'Google Reklamcılığı ile Gelirinizi Artırın.',
-            description: 'Rakiplerinizin arasında kaybolmayın! khilonfast ile doğru anahtar kelime stratejileri ve hedeflemelerle markanızı öne çıkarın. Düşük dönüşüm oranlarını, reklam yatırımınızı verimli şekilde kullanarak aşın.',
+            title: 'Google Reklamcılığı ile Gelirinizi Artırın.',
+            subtitle: 'Rakiplerinizin arasında kaybolmayın!',
+            description: 'khilonfast ile doğru anahtar kelime stratejileri ve hedeflemelerle markanızı öne çıkarın. Düşük dönüşüm oranlarını, reklam yatırımınızı verimli şekilde kullanarak aşın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
             image: '/img/google-ads-hero.png',
-            badgeText: "google ads - işiniz büyüsün",
+            badgeText: "Google Ads - İşinizi Büyütün!",
             badgeIcon: <HiChartBar />,
             themeColor: '#FEF3C7' // Warm yellow theme
         },
@@ -116,19 +116,19 @@ export default function GoogleAds() {
             ],
             rows: [
                 { feature: 'Arama Reklamları', values: ['Temel Google Search Ads kurulumu ve temel anahtar kelime araştırması', 'Standart Google Search Ads kurulumu', 'Pro Google Search Ads kurulumu, gelişmiş anahtar kelime araştırması ve reklam metni oluşturma'] },
-                { feature: 'Ek kurulum ücreti', values: ['Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'] },
+                { feature: 'Ek Kurulum ücreti', values: ['Aylık paketlerde Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'] },
                 { feature: 'Google Analytics Entegrasyonu', values: ['-', '-', true] },
                 { feature: 'Reklam kampanyası optimizasyonu', values: ['Temel', true, '✓ Sürekli'] },
                 { feature: 'Reklam uzantıları ve hedefleme', values: ['Sınırlı', '✓ (lokasyon, zamanlama, cihaz)', '✓ (remarketing, demografik, kitle segmentasyonu)'] },
                 { feature: 'Performans raporu', values: ['✓ E-posta ile, ayda 1 kez raporlama', '✓ E-posta ile, 2 haftada 1 raporlama', '✓ E-posta ile, haftada 1 raporlama'] },
                 { feature: 'Reklam Bütçesi Politikası', values: ['Reklam bütçesinin %10\'u core paket ücretini aşmıyorsa core paket üzerinden fiyatlandırılır; aştığında bir üst paketten fiyatlandırılır.', 'Reklam bütçesinin %10\'u growth paket ücretini aşmıyorsa growth paket üzerinden fiyatlandırılır; aştığında bir üst pakete geçilir.', 'Reklam bütçesinin %10\'u ultimate paket ücretini aşmıyorsa ultimate paket üzerinden fiyatlandırılır; aşması durumunda ek tutar yüzdesel olarak eklenir ve sonraki aylarda bulunduğu üst paketten fiyatlandırma devam eder.'] }
             ],
-            note: 'Fiyatlara KDV dahil değildir.'
+            note: '(*) KDV hariçtir.'
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
-            title: 'Net ve Şeffaf Fiyatlandırma',
-            description: 'khilonfast ile reklam bütçenizi en verimli şekilde yönetin ve ölçülebilir büyüme elde edin.',
+            title: 'Google Reklamcılığı Çözümleri',
+            description: 'Markanızı büyütmek için doğru adımları atın. İhtiyacınıza uygun çözümü seçin, khilonfast ile Search Ads Reklamlarınızı hızla başlatın. İster yeni başlayın ister büyütmek isteyin, size uygun bir çözüm var.',
             packages: [
                 {
                     id: 'core',

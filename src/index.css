@@ -41,6 +41,9 @@
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Layout */
+    --container-max-width: 1440px;
 }
 
 * {
@@ -129,9 +132,21 @@ b {
 
 /* Utility Classes */
 .container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
     padding: 0 var(--space-md);
+}
+
+@media (max-width: 1500px) {
+    :root {
+        --container-max-width: 1320px;
+    }
+}
+
+@media (max-width: 1360px) {
+    :root {
+        --container-max-width: 1240px;
+    }
 }
 
 .gradient-text {

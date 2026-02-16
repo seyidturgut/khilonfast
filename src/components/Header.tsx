@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { HiMenu, HiX, HiChevronDown, HiChevronRight, HiArrowLeft } from 'react-icons/hi'
+import { HiMenu, HiX, HiChevronDown, HiChevronRight, HiArrowLeft, HiHome } from 'react-icons/hi'
 import { useAuth } from '../context/AuthContext'
 import Cart from './Cart'
 import CartIcon from './CartIcon'
@@ -38,8 +38,7 @@ const services = [
     { icon: HiPencilSquare, title: 'İçerik Üretimi', desc: 'Etkileyici ve özgün içerik üretimi', path: '/hizmetlerimiz/icerik-uretimi' },
     { icon: HiEnvelope, title: 'B2B Email Pazarlama', desc: 'Profesyonel e-posta kampanyaları', path: '/hizmetlerimiz/b2b-email-pazarlama' },
     { icon: HiBolt, title: 'Maestro AI', desc: 'Sektörel akıllı pazarlama asistanı', path: '/hizmetlerimiz/maestro-ai' },
-    { icon: HiOutlineEye, title: 'Eye Tracking Reklam Analizi', desc: 'AI destekli reklam görsel analizi', path: '/hizmetlerimiz/eye-tracking-reklam-analizi' },
-    { icon: HiCommandLine, title: 'Google Search Console Kurulumu', desc: 'Siteniz için arama konsolu kurulum rehberi', path: '/hizmetlerimiz/google-search-console-kurulum-akisi' }
+    { icon: HiOutlineEye, title: 'Eye Tracking Reklam Analizi', desc: 'AI destekli reklam görsel analizi', path: '/hizmetlerimiz/eye-tracking-reklam-analizi' }
 ]
 
 const sectoralServices = [
@@ -105,6 +104,9 @@ export default function Header() {
 
                 {/* Desktop Nav */}
                 <nav className="nav-desktop desktop-only">
+                    <Link to="/" className="nav-link nav-home-link" aria-label="Ana Sayfa">
+                        <HiHome />
+                    </Link>
                     <div className="nav-item">
                         <button className="nav-link dropdown-toggle" onMouseEnter={() => setActiveDropdown('services')}>
                             Hizmetlerimiz <HiChevronDown className="dropdown-icon" />
@@ -219,6 +221,9 @@ export default function Header() {
                 <div className={`mobile-menu-viewport ${currentMenu}`}>
                     {/* Main Menu */}
                     <div className="mobile-menu-page main">
+                        <Link to="/" className="mobile-link mobile-home-link" onClick={() => setIsOpen(false)}>
+                            <HiHome /> Ana Sayfa
+                        </Link>
                         <button className="mobile-link has-arrow" onClick={() => setCurrentMenu('services')}>
                             Hizmetlerimiz <HiChevronRight />
                         </button>

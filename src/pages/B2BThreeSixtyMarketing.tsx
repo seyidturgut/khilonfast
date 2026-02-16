@@ -18,7 +18,8 @@ export default function B2BThreeSixtyMarketing() {
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
             buttonLink: '#pricing',
-            image: '/b2b_360_marketing_hero_1769621591525.png',
+            image: '/b2b2.avif',
+            hideBadge: true,
             badgeText: "B2B'de Tek Nokta! Etkili Sonuçlar!",
             badgeIcon: <HiChartBar />,
             themeColor: '#D9F99D'
@@ -62,7 +63,7 @@ export default function B2BThreeSixtyMarketing() {
                                 <div className="sectoral-card">
                                     <h3>B2B Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
-                                    <Link to="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" className="sectoral-btn">Satın Al</Link>
+                                    <Link to="/egitimler/buyume-odakli-pazarlama-egitimi" className="sectoral-btn">Satın Al</Link>
                                 </div>
                             </div>
                         </div>

@@ -157,7 +157,7 @@ export default function IntegratedDigitalMarketing() {
                 { feature: 'Anahtar kelime araştırması', values: [true, true, true] },
                 { feature: 'Sayfa içi optimizasyon (on-page)', values: [true, true, true] },
                 { feature: 'Looker Studio kurulumu', values: [true, true, true] },
-                { feature: 'GSC ve GA kurulumu', values: [true, true, true] },
+                { feature: 'GSC ve GA kurulumu', values: ['-', true, true] },
                 { feature: 'İçerik stratejisi dökümanı', values: ['-', '-', true] },
                 { feature: 'Dış SEO (Backlink inşası)', values: ['-', '-', true] },
                 { feature: 'Rekabet analizi', values: ['-', '1 Rakip', '2 Rakip'] },
@@ -171,7 +171,7 @@ export default function IntegratedDigitalMarketing() {
                 // Reklamlar Section
                 { feature: 'Reklamlar', values: [], isSectionHeader: true },
                 { feature: 'Arama Reklamları', values: ['Temel Google Search Ads kurulumu ve temel anahtar kelime araştırması', 'Standart Google Search Ads kurulumu', 'Pro Google Search Ads kurulumu, gelişmiş anahtar kelime araştırması ve reklam metni oluşturma'] },
-                { feature: 'Ek kurulum ücreti', values: ['Aylık paketlerde kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.'] },
+                { feature: 'Ek Kurulum ücreti', values: ['Aylık paketlerde Kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde Kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.', 'Aylık paketlerde Kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.'] },
                 { feature: 'Reklam kampanyası optimizasyonu', values: ['Temel', true, 'Sürekli'] },
                 { feature: 'Reklam Uzantıları ve hedefleme', values: ['Sınırlı', 'Lokasyon, zaman, cihaz', 'İnmarket vb. demografik kitle segmentasyonu'] },
 
@@ -185,9 +185,9 @@ export default function IntegratedDigitalMarketing() {
                 { feature: 'Genel Reklam Yönetimi', values: [], isSectionHeader: true },
                 { feature: 'Performans raporu', values: ['E-posta ile, ayda 1 kez raporlama', 'E-posta ile, 2 haftada 1 raporlama', 'E-posta ile, haftada 1 raporlama'] },
                 { feature: 'Reklam Bütçesi Politikası', values: ['Reklam bütçesinin %10 u Core paket ücretini aşmıyorsa, Core paket üzerinden fiyatlandırılır. Aştığında, Growth pakete geçilir.', 'Reklam bütçesinin %10 u Growth paket ücretini aşmıyorsa, Growth paket üzerinden fiyatlandırılır. Aştığında, Ultimate pakete geçilir.', 'Reklam bütçesinin %10 u Ultimate paket ücretini aşmıyorsa, Ultimate paket üzerinden fiyatlandırılır. Aşması durumunda, ek reklamcıdan Ultimate paket hizmet bedelinin %10 u üzerine %10 reklam bütçesi eklenerek faturalandırılır. Sonraki aylarda da bulunduğu en üst paketten fiyatlandırma devam eder.'] },
-                { feature: 'Ek kurulum ücreti', values: ['kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'] }
+                { feature: 'Ek Kurulum ücreti', values: ['Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.', 'Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'] }
             ],
-            note: 'Fiyatlara KDV dahil değildir. Medya bütçeleri ve 3. parti araç maliyetleri hariçtir.'
+            note: '(*) KDV hariçtir. Medya bütçeleri ve 3. parti araç maliyetleri hariçtir.'
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',

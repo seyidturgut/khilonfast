@@ -6,17 +6,12 @@ export interface TrainingProgram {
 
 export const trainingPrograms: TrainingProgram[] = [
     {
-        path: '/hizmetlerimiz/buyume-odakli-pazarlama-egitimi',
+        path: '/egitimler/buyume-odakli-pazarlama-egitimi',
         title: 'Büyüme Odaklı Pazarlama Eğitimi',
         summary: 'Khilonfast temel büyüme odaklı pazarlama eğitim programı.'
     },
     {
-        path: '/courses/odeme-sistemlerinde-buyume-odakli-pazarlama',
-        title: 'Ödeme Sistemlerinde Büyüme Odaklı Pazarlama',
-        summary: 'Ödeme sistemleri sektörüne özel uçtan uca büyüme odaklı eğitim programı.'
-    },
-    {
-        path: '/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi',
+        path: '/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi',
         title: 'Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi',
         summary: 'Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.'
     },

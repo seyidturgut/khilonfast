@@ -18,6 +18,10 @@ export interface SectoralSolutionProps {
         buttonText: string;
         buttonLink: string;
         image: string;
+        imageClassName?: string;
+        imageContainerClassName?: string;
+        hideBadge?: boolean;
+        disableBadgeAnimation?: boolean;
         badgeText: string;
         badgeIcon: ReactNode;
         themeColor?: string;
@@ -78,10 +82,11 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                         </div>
 
                         <div className="service-hero-visual">
-                            <div className="hero-image-container">
-                                <img src={props.hero.image} alt={props.hero.title} className="hero-main-img" />
-                                <div className="circular-badge">
-                                    <div className="badge-text-wrapper">
+                            <div className={`hero-image-container ${props.hero.hideBadge ? 'no-badge' : ''} ${props.hero.imageContainerClassName || ''}`}>
+                                <img src={props.hero.image} alt={props.hero.title} className={`hero-main-img ${props.hero.hideBadge ? 'no-badge-image' : ''} ${props.hero.imageClassName || ''}`} />
+                                {!props.hero.hideBadge && (
+                                    <div className="circular-badge">
+                                        <div className={`badge-text-wrapper ${props.hero.disableBadgeAnimation ? 'no-animation' : ''}`}>
                                         <svg viewBox="0 0 100 100" className="badge-svg">
                                             <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
                                             <text className="badge-text">
@@ -92,7 +97,8 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                                         </svg>
                                     </div>
                                     <div className="badge-icon">{props.hero.badgeIcon}</div>
-                                </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
