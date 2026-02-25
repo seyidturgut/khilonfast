@@ -1,11 +1,18 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { HiCheckCircle } from 'react-icons/hi';
+import { useCart } from '../context/CartContext';
 import './PaymentSuccess.css';
 
 export default function PaymentSuccess() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { clearCart } = useCart();
     const orderNumber = location.state?.orderNumber || 'N/A';
+
+    useEffect(() => {
+        clearCart();
+    }, [clearCart]);
 
     return (
         <div className="payment-result-page">

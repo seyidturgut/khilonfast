@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
     HiPencilSquare,
     HiMagnifyingGlass,
@@ -8,31 +10,38 @@ import {
     HiTrophy,
     HiCursorArrowRays,
     HiDocumentText,
-    HiUser,
-    HiUserGroup,
-    HiRocketLaunch
+    HiUser
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function ContentProduction() {
-    const contentConfig = {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const isEn = currentLang === 'en'
+    const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
+
+    useEffect(() => {
+        document.title = isEn ? 'Content Production Services | khilonfast' : 'İçerik Üretimi | khilonfast'
+    }, [isEn])
+
+    const trConfig = {
         hero: {
             title: 'Görünürlüğünüzü Artırın!',
             subtitle: 'İçerik üretimindeki zaman ve yaratıcılık zorluklarını aşın!',
             description: 'khilonfast ile hedef kitlenize uygun, SEO uyumlu içerikler üreterek marka görünürlüğünüzü artırın. Profesyonel içerik çözümleriyle zaman ve kaynak sorunlarını geride bırakın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/icerikuretimi-cover.webp',
+            image: '/images/hizmetlerimiz/icerik-uretimi/hero.webp',
             imageClassName: 'hero-main-img-content-production',
             imageContainerClassName: 'hero-image-container-content-production',
             hideBadge: true,
-            badgeText: "Görünürlüğünüzü Artırın! Zorlukları Aşın!",
+            badgeText: 'Görünürlüğünüzü Artırın! Zorlukları Aşın!',
             badgeIcon: <HiPencilSquare />,
-            themeColor: '#FEF9C3', // Light yellow theme
+            themeColor: '#FEF9C3',
             disableBadgeAnimation: true
         },
         breadcrumbs: [
-            { label: 'Hizmetlerimiz', path: '/#services' },
+            { label: 'Hizmetlerimiz', path: homeServicesPath },
             { label: 'İçerik Üretimi' }
         ],
         videoShowcase: {
@@ -85,7 +94,7 @@ export default function ContentProduction() {
             tag: '4 Adımda Üretim',
             title: 'Nasıl Çalışır?',
             description: 'Kusursuz içerik üretimi için işleyen çarklarımız.',
-            videoUrl: 'https://vimeo.com/1131179237?fl=pl&fe=cm',
+            videoUrl: 'https://player.vimeo.com/video/1131179237',
             steps: [
                 {
                     stepNumber: 1,
@@ -113,19 +122,6 @@ export default function ContentProduction() {
                 }
             ]
         },
-        comparisonTable: {
-            headers: [
-                { title: 'Core', icon: <HiKey /> },
-                { title: 'Growth', icon: <HiChartBar /> },
-                { title: 'Ultimate', icon: <HiTrophy /> }
-            ],
-            rows: [
-                { feature: 'Blog Yazısı', values: ['4 içerik x 750 kelime', '6 içerik x 750 kelime', '8 içerik x 750 kelime'] },
-                { feature: 'Görsel', values: ['-', true, true] },
-                { feature: 'Revizyon Hakkı', values: ['1', '2', '4'] }
-            ],
-            note: '(*) KDV hariçtir.'
-        },
         pricingSection: {
             tag: 'Hizmet Paketleri',
             title: 'İçerik Üretimi Çözümleri',
@@ -139,19 +135,7 @@ export default function ContentProduction() {
                     description: 'Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.',
                     icon: <HiKey />,
                     features: [],
-                    buttonText: 'ÜYE OL',
-                    details: [
-                        {
-                            title: 'Kimler İçin Uygun',
-                            description: 'Küçük işletmeler ve dijital pazarlamaya yeni başlayanlar.',
-                            icon: <HiUserGroup />
-                        },
-                        {
-                            title: 'Neden Tercih Edilmeli',
-                            description: 'Dijital pazarlamayı düşük bütçe ve minimal riskle keşfetmek için ideal.',
-                            icon: <HiRocketLaunch />
-                        }
-                    ]
+                    buttonText: t('pricing.buyNow')
                 },
                 {
                     id: 'growth',
@@ -162,19 +146,7 @@ export default function ContentProduction() {
                     isPopular: true,
                     icon: <HiChartBar />,
                     features: [],
-                    buttonText: 'ÜYE OL',
-                    details: [
-                        {
-                            title: 'Kimler İçin Uygun',
-                            description: 'Daha geniş bir kitleye hitap etmek isteyen işletmeler.',
-                            icon: <HiUserGroup />
-                        },
-                        {
-                            title: 'Neden Tercih Edilmeli',
-                            description: 'Daha fazla içerik ve stratejik planlama isteyen işletmeler için uygundur.',
-                            icon: <HiRocketLaunch />
-                        }
-                    ]
+                    buttonText: t('pricing.buyNow')
                 },
                 {
                     id: 'ultimate',
@@ -184,92 +156,121 @@ export default function ContentProduction() {
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
                     icon: <HiTrophy />,
                     features: [],
-                    buttonText: 'ÜYE OL',
-                    details: [
-                        {
-                            title: 'Kimler İçin Uygun',
-                            description: 'Pazarda hakimiyet kurmayı hedefleyen büyük işletmeler.',
-                            icon: <HiUserGroup />
-                        },
-                        {
-                            title: 'Neden Tercih Edilmeli',
-                            description: 'Profesyonel içerik ve kapsamlı strateji ile maksimum etkileşim sağlar.',
-                            icon: <HiRocketLaunch />
-                        }
-                    ]
+                    buttonText: t('pricing.buyNow')
                 }
             ]
         },
         testimonial: {
-            quote: "İçerik üretimindeki tıkanıklığımızı khilonfast ile aştık. Düzenli ve kaliteli içerikler sayesinde organik trafiğimizde %40 artış gördük.",
-            author: "Zeynep Aydın",
-            role: "Pazarlama Müdürü"
+            quote: 'İçerik üretimindeki tıkanıklığımızı khilonfast ile aştık. Düzenli ve kaliteli içerikler sayesinde organik trafiğimizde %40 artış gördük.',
+            author: 'Zeynep Aydın',
+            role: 'Pazarlama Müdürü'
         },
         faqs: [
-            {
-                question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. Khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
-            },
-            {
-                question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. Khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.'
-            },
-            {
-                question: 'khilonfast ile kimler çalışmamalı?',
-                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, Khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, Khilonfast için uygun müşteriler değildir. Bu tür firmalar için, Khilonfast hizmeti uygun olmayabilir.'
-            },
-            {
-                question: 'khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için Khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, Khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, Khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, Khilonfast sizin için mükemmel bir seçimdir.'
-            },
-            {
-                question: 'khilonfast ile iletişimi nasıl sağlayabilirim?',
-                answer: 'khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, Khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
-            },
-            {
-                question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, Khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.'
-            },
-            {
-                question: 'Go to market stratejisi işletmem için nasıl faydalıdır?',
-                answer: 'Go to market stratejisi, yeni bir ürün veya hizmetin pazara hızlı ve etkili bir şekilde giriş yapmasını sağlar. khilonfast, hedef kitlenizi analiz eder, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda başarılı bir konum almanızı sağlar.'
-            },
-            {
-                question: 'Go to market stratejimin performansını nasıl takip edebilirim?',
-                answer: 'khilonfast, go to market stratejinizin performansını izlemek için haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, satışlar, pazar penetrasyonu ve müşteri geri bildirimleri gibi önemli metrikleri içerir. Canlı dashboard’lar aracılığıyla sonuçlarınızı anlık olarak takip edebilirsiniz.'
-            },
-            {
-                question: 'Neden khilonfast go to market stratejisi hizmetini tercih etmeliyim?',
-                answer: 'khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, Khilonfast sizin için ideal bir seçimdir.'
-            },
-            {
-                question: 'Go to market stratejisi nasıl oluşturulur?',
-                answer: 'khilonfast, öncelikle hedef kitlenizi ve pazarınızı analiz eder. Ardından, pazara giriş sürecinizi destekleyecek stratejileri geliştirir. Pazara giriş sonrası performans izlenir ve strateji gerektiğinde güncellenir.'
-            }
-        ],
-        authorizationSection: {
-            title: "YETKİLENDİRME",
-            description: "İçerik üretim süreçlerinin verimli yönetilmesi için aşağıdaki araçların yetkilendirilmesi gerekmektedir.",
-            cards: [
-                {
-                    title: "Google Search Console Yetkilendirme",
-                    description: "Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.",
-                    highlightText: "Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.",
-                    buttonText: "KEŞFET",
-                    buttonLink: "/hizmetlerimiz/google-search-console-kurulum-akisi",
-                    theme: "light" as const
-                },
-                {
-                    title: "Google Analytics Yetkilendirme",
-                    description: "Detaylı analiz için Google Analytics erişimlerini tanımlayın.",
-                    highlightText: "Analiz süreçlerinizin ölçüm doğruluğunu artırın.",
-                    buttonText: "KEŞFET",
-                    buttonLink: "/google-analytics-kurulum-akisi",
-                    theme: "dark" as const
-                }
-            ]
-        }
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+        ]
     }
 
-    return <ServicePageTemplate {...contentConfig} />
+    const enConfig = {
+        hero: {
+            title: 'Turn Content Into Revenue',
+            subtitle: 'Remove production bottlenecks and publish with strategic consistency.',
+            description: 'khilonfast delivers SEO-first, conversion-ready content systems that elevate visibility, authority, and pipeline quality.',
+            buttonText: t('common.startNow'),
+            buttonLink: '#pricing',
+            image: '/images/hizmetlerimiz/icerik-uretimi/hero.webp',
+            imageClassName: 'hero-main-img-content-production',
+            imageContainerClassName: 'hero-image-container-content-production',
+            hideBadge: true,
+            badgeText: 'Scale Visibility with Strategic Content',
+            badgeIcon: <HiPencilSquare />,
+            themeColor: '#FEF9C3',
+            disableBadgeAnimation: true
+        },
+        breadcrumbs: [
+            { label: t('nav.services'), path: homeServicesPath },
+            { label: 'Content Production' }
+        ],
+        videoShowcase: {
+            tag: 'Watch & Learn',
+            title: (
+                <>
+                    Build <span className="highlight-text">Category Authority</span>
+                </>
+            ),
+            description: 'From strategy to execution, we produce high-impact content that attracts qualified traffic and supports conversion goals.',
+            videoUrl: 'https://www.youtube.com/embed/zfz5tG3i5ck'
+        },
+        approachSection: {
+            title: 'Strategic Content Engine',
+            description: 'Create with intent, publish with consistency, optimize for growth.',
+            items: [
+                {
+                    title: 'SEO-Led Production',
+                    subtitle: 'Search Visibility',
+                    description: 'Keyword architecture, metadata, and content structure are designed to improve rankings and discoverability.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    title: 'Conversion Copywriting',
+                    subtitle: 'Message Precision',
+                    description: 'Compelling narratives aligned with your buyer journey increase trust and conversion potential.',
+                    icon: <HiSparkles />
+                },
+                {
+                    title: 'Editorial QA',
+                    subtitle: 'Quality Assurance',
+                    description: 'Every asset is reviewed for clarity, consistency, and strategic alignment before publication.',
+                    icon: <HiCheckBadge />
+                },
+                {
+                    title: 'Human-Led Creativity',
+                    subtitle: 'Brand Authenticity',
+                    description: 'AI supports speed, while human editorial judgment protects originality and brand voice.',
+                    icon: <HiUser />
+                },
+                {
+                    title: 'Voice Consistency',
+                    subtitle: 'Brand Integrity',
+                    description: 'We maintain a unified tone across channels to strengthen recognition and trust.',
+                    icon: <HiDocumentText />
+                }
+            ]
+        },
+        processSection: {
+            tag: '4-Step Workflow',
+            title: 'How It Works?',
+            description: 'A practical operating model for consistent, high-performing content output.',
+            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            steps: [
+                { stepNumber: 1, title: 'Step 1: Strategic Brief', description: 'We define goals, topics, audiences, and conversion intent before production.', icon: <HiPencilSquare /> },
+                { stepNumber: 2, title: 'Step 2: Production', description: 'Specialist writers produce content assets aligned with your positioning.', icon: <HiCursorArrowRays /> },
+                { stepNumber: 3, title: 'Step 3: Editorial Review', description: 'Content is validated for SEO quality, readability, and messaging coherence.', icon: <HiMagnifyingGlass /> },
+                { stepNumber: 4, title: 'Step 4: Delivery & Publishing', description: 'Final assets are delivered publication-ready, or directly deployed if required.', icon: <HiCheckBadge /> }
+            ]
+        },
+        pricingSection: {
+            tag: 'Service Packages',
+            title: 'Content Production Solutions',
+            description: 'Choose the level that matches your growth tempo and publishing ambition.',
+            packages: [
+                { id: 'core', name: 'Core', price: '$499*', period: t('pricing.monthly'), description: 'Essential package for foundational content consistency.', icon: <HiKey />, features: [], buttonText: t('pricing.buyNow') },
+                { id: 'growth', name: 'Growth', price: '$759*', period: t('pricing.monthly'), description: 'Scale package for higher output and stronger demand generation.', isPopular: true, icon: <HiChartBar />, features: [], buttonText: t('pricing.buyNow') },
+                { id: 'ultimate', name: 'Ultimate', price: '$1,299*', period: t('pricing.monthly'), description: 'Advanced package for category leadership and high-velocity growth.', icon: <HiTrophy />, features: [], buttonText: t('pricing.buyNow') }
+            ]
+        },
+        testimonial: {
+            quote: 'khilonfast helped us unblock production and scale quality content. Organic traffic increased by 40%.',
+            author: 'Zeynep Aydin',
+            role: 'Marketing Manager'
+        },
+        faqs: [
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+        ]
+    }
+
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-production" />
 }

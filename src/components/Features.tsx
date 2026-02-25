@@ -1,20 +1,19 @@
 import { HiCheckCircle } from 'react-icons/hi2'
+import { useTranslation } from 'react-i18next'
 import './Features.css'
 
 export default function Features() {
+    const { t } = useTranslation();
+
     return (
         <section id="features" className="features">
             <div className="container features-container">
                 <div className="features-content">
                     <h2 className="features-title">
-                        Büyüme Odaklı<br />
-                        Pazarlama Çözümlerimizi<br />
-                        Keşfedin
+                        {t('features.title')}
                     </h2>
                     <p className="features-description">
-                        khilonfast olarak, iş büyümesin desteklemek için tasarlanmış ürün bazlı
-                        pazarlama çözümleri sunuyoruz. Çözümlerimiz, ölçülebilir sonuçlar sağlamak
-                        için strateji, yaratıcılık ve teknolojiyi bir araya getirir.
+                        {t('features.description')}
                     </p>
 
                     <div className="features-list">
@@ -23,7 +22,7 @@ export default function Features() {
                                 <HiCheckCircle />
                             </div>
                             <div className="feature-text">
-                                <h3 className="feature-item-title">Hedeflenmiş dijital kampanyalarımızla marka görünürlüğü artırın.</h3>
+                                <h3 className="feature-item-title">{t('features.list1')}</h3>
                             </div>
                         </div>
 
@@ -32,7 +31,7 @@ export default function Features() {
                                 <HiCheckCircle />
                             </div>
                             <div className="feature-text">
-                                <h3 className="feature-item-title">Veri odaklı pazarlama stratejilerimizle dönüşüm oranını artırın.</h3>
+                                <h3 className="feature-item-title">{t('features.list2')}</h3>
                             </div>
                         </div>
                     </div>

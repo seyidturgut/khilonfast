@@ -1,4 +1,4 @@
--- CMS Extensions for Khilonfast Database
+-- CMS Extensions for khilonfast Database
 
 -- 1. Extend Users Table for Admin Roles
 -- Note: Run this only if 'role' column doesn't exist
@@ -9,6 +9,7 @@ ALTER TABLE users ADD COLUMN role ENUM('user', 'admin', 'editor') DEFAULT 'user'
 ALTER TABLE products ADD COLUMN type ENUM('service', 'subscription', 'video_course', 'digital_download') DEFAULT 'service';
 ALTER TABLE products ADD COLUMN duration_days INT DEFAULT NULL COMMENT 'Duration in days for subscriptions';
 ALTER TABLE products ADD COLUMN access_content_url VARCHAR(255) DEFAULT NULL COMMENT 'URL for digital content or video page';
+ALTER TABLE products ADD COLUMN features TEXT DEFAULT NULL COMMENT 'Ürün özellikleri (satır satır)';
 
 -- 3. CMS Tables
 
@@ -57,10 +58,13 @@ CREATE TABLE IF NOT EXISTS cms_menus (
 
 -- Initial Settings Data (Defaults)
 INSERT INTO settings (setting_key, setting_value, setting_group, description) VALUES
-('site_title', 'KhilonFast', 'general', 'Website Title'),
+('site_title', 'khilonfast', 'general', 'Website Title'),
 ('google_analytics_id', '', 'seo', 'GA4 Measurement ID'),
 ('smtp_host', 'smtp.example.com', 'mail', 'SMTP Host'),
 ('smtp_port', '587', 'mail', 'SMTP Port'),
+('smtp_user', '', 'mail', 'SMTP Username'),
+('smtp_pass', '', 'mail', 'SMTP Password'),
+('smtp_secure', 'false', 'mail', 'SMTP Secure (true/false)'),
 ('payment_provider', 'lidio', 'payment', 'Active Payment Provider'),
 ('contact_email', 'info@khilonfast.com', 'general', 'Contact Email')
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);

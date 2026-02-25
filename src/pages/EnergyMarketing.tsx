@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
     HiChartBar,
     HiCheck,
@@ -12,14 +13,21 @@ import {
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
 
 export default function EnergyMarketing() {
-    const energyConfig = {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const isEn = currentLang === 'en'
+    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const path = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
+
+    const trConfig = {
         hero: {
             title: 'Enerji Firmaları İçin',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile Enerji Sektörü pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
             buttonLink: '#pricing',
-            image: '/energy-hero.png',
+            image: '/images/sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi/hero.avif',
+            hideBadge: true,
             badgeText: 'Enerji Sektörü Pazarlama Üssü • Enerji Sektörü Pazarlama Üssü • ',
             badgeIcon: <HiBolt />,
             themeColor: '#D9F99D'
@@ -37,7 +45,7 @@ export default function EnergyMarketing() {
                 </>
             ),
             description: 'Enerji sektöründe büyümek için doğru adımları atın. İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın.',
-            vimeoUrl: 'https://player.vimeo.com/video/1133021053?badge=0&autopause=0&player_id=0&app_id=58479'
+            vimeoUrl: 'https://player.vimeo.com/video/1135512097'
         },
         tabsSection: {
             tag: 'Enerji Sektörü için',
@@ -64,7 +72,7 @@ export default function EnergyMarketing() {
                                     <h3 style={{ color: '#1b3d2d', fontSize: '1.6rem' }}>Enerji Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p style={{ color: '#1b3d2d', fontWeight: '500' }}>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to="/egitimler/buyume-odakli-pazarlama-egitimi" className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>Satın Al</Link>
+                                        <Link to={path('trainingGrowth')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -88,12 +96,12 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy/" className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>Detaylı Bilgi</a>
+                                        <Link to={path('maestro')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
-                                        src="https://player.vimeo.com/video/1131184399?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1"
+                                        src="https://player.vimeo.com/video/1138062770?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1"
                                         allow="autoplay; fullscreen; picture-in-picture"
                                         allowFullScreen
                                         title="Maestro AI"
@@ -125,7 +133,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen enerji firmaları.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
-                                        <a href="https://khilonfast.com/b2b-sektorunu-butunlesik-pazarlama/" className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>Satın Al</a>
+                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
@@ -137,7 +145,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Sektörde payını artırmak isteyen enerji markaları.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/b2b-sektorunu-butunlesik-pazarlama/" className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>Satın Al</a>
+                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
@@ -149,7 +157,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Pazar liderliğini hedefleyen enerji devleri.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/b2b-sektorunu-butunlesik-pazarlama/" className="sectoral-btn" style={{ width: '100', padding: '12px' }}>Satın Al</a>
+                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +182,7 @@ export default function EnergyMarketing() {
                                     <h3>Arama Reklamları</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Doğru kitleye ulaşmak için stratejik Google Ads yönetimi.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/search_ads/" className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>Satın Al</a>
+                                        <Link to={path('googleAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card">
@@ -182,7 +190,7 @@ export default function EnergyMarketing() {
                                     <h3>Linkedin Reklamları</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Karar vericilere ve sektör profesyonellerine doğrudan ulaşım.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/sosyal-medya-reklamciligi/" className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>Satın Al</a>
+                                        <Link to={path('socialAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card">
@@ -190,7 +198,7 @@ export default function EnergyMarketing() {
                                     <h3>Kurumsal SEO</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Sektörel aramalarda zirvede yer almanız için sürdürülebilir SEO.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/seo/" className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>Satın Al</a>
+                                        <Link to={path('seo')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card">
@@ -198,7 +206,7 @@ export default function EnergyMarketing() {
                                     <h3>İçerik Üretimi</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Enerji projelerinizi en iyi şekilde anlatan görsel ve yazılı içerikler.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/icerik-uretimi/" className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>Satın Al</a>
+                                        <Link to={path('contentProduction')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +226,7 @@ export default function EnergyMarketing() {
                                         Yeni enerji projeleri ve teknolojileri için kapsamlı Go-To-Market planları.
                                     </p>
                                     <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/go-to-market-stratejisi/" className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>Satın Al</a>
+                                        <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card" style={{ textAlign: 'left' }}>
@@ -227,7 +235,7 @@ export default function EnergyMarketing() {
                                         Yeşil enerji ve sürdürülebilirlik odaklı marka konumlandırması.
                                     </p>
                                     <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/icerik-stratejisi/" className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>Satın Al</a>
+                                        <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-card" style={{ textAlign: 'left' }}>
@@ -236,7 +244,7 @@ export default function EnergyMarketing() {
                                         Kamu ve büyük ölçekli enerji projeleri için stratejik iletişim yönetimi.
                                     </p>
                                     <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <a href="#" className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>Satın Al</a>
+                                        <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -267,7 +275,7 @@ export default function EnergyMarketing() {
                                         <li><span style={{ color: '#1a3a52', marginRight: '10px' }}>•</span> <span>Dönüşümü artırmak için <strong>A/B test önerileri</strong> sunuyoruz.</span></li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <a href="https://khilonfast.com/reklam-gorsel-analizi/" className="sectoral-btn" style={{ width: '100%', padding: '16px' }}>Satın Al</a>
+                                        <Link to={path('eyeTracking')} className="sectoral-btn" style={{ width: '100%', padding: '16px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -282,7 +290,7 @@ export default function EnergyMarketing() {
             role: "Pazarlama Müdürü, SolarTech Enerji"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1128822985?badge=0&autopause=0&player_id=0&app_id=58479"
+            vimeoUrl: "https://player.vimeo.com/video/1135512097"
         },
         faqs: [
             {
@@ -296,5 +304,208 @@ export default function EnergyMarketing() {
         }
     }
 
-    return <SectoralSolutionTemplate {...energyConfig} />
+    
+    const tabIcon = (id: string) => trConfig.tabsSection.tabs.find((tab) => tab.id === id)?.icon
+
+    const enConfig = {
+        ...trConfig,
+        hero: {
+            ...trConfig.hero,
+            title: `For Energy Companies`,
+            subtitle: 'One-Stop Marketing Solutions',
+            description: `Scale energy market growth with khilonfast through an integrated and execution-focused marketing operating model.`,
+            buttonText: 'Explore Solutions',
+            badgeText: 'Energy Companies Growth Engine'
+        },
+        breadcrumbs: [
+            { label: 'Sectoral Services', path: `${path('home')}#sectoral-services`.replace('/#', '/#') },
+            { label: `360 Marketing Management for Energy Companies` }
+        ],
+        videoShowcase: {
+            ...trConfig.videoShowcase,
+            tag: 'Watch & Learn',
+            title: (
+                <>
+                    Growth Strategies That Deliver
+                    <span className="highlight"> Measurable Results</span>
+                </>
+            ),
+            description: 'Select the right solution set for your growth stage and activate your marketing operations with confidence.'
+        },
+        tabsSection: {
+            ...trConfig.tabsSection,
+            tag: `For Energy Companies`,
+            title: '360 Strategic Marketing Solutions',
+            description1: 'Choose the right growth architecture for your market dynamics.',
+            description2: 'Deploy quickly with khilonfast and scale with measurable outcomes.',
+            tabs: [
+                {
+                    id: 'education',
+                    label: 'Growth-Focused Marketing Training',
+                    icon: tabIcon('education') || <HiVideoCamera />,
+                    content: (
+                        <div className="sectoral-tabs-content">
+                            <div className="sectoral-split-layout">
+                                <div className="sectoral-card">
+                                    <h3>Growth-Focused Training for Energy Companies</h3>
+                                    <p>Master a proven operating system that aligns strategy, channel execution, and commercial outcomes.</p>
+                                    <Link to={path('trainingEnergy')} className="sectoral-btn">{t('pricing.buyNow')}</Link>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    id: 'ai',
+                    label: 'Maestro AI',
+                    icon: tabIcon('ai') || <HiSparkles />,
+                    content: (
+                        <div className="sectoral-tabs-content">
+                            <div className="sectoral-split-layout reverse">
+                                <div className="sectoral-card">
+                                    <h3>Scale Decision Quality with Maestro AI</h3>
+                                    <p>Unify data, planning, and campaign intelligence into one strategic command center for your team.</p>
+                                    <ul className="sectoral-features">
+                                        <li><HiCheck /> Accelerates strategic execution</li>
+                                        <li><HiCheck /> Strengthens data-backed decisions</li>
+                                        <li><HiCheck /> Reduces wasted effort and spend</li>
+                                        <li><HiCheck /> Improves growth velocity</li>
+                                    </ul>
+                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    id: 'packages',
+                    label: '360 Digital Marketing Management',
+                    icon: tabIcon('packages') || <HiArrowsPointingIn />,
+                    content: (
+                        <div className='sectoral-tabs-content'>
+                            <div className='tab-grid grid-cols-3'>
+                                <div className='sectoral-card' style={{ border: '1px solid #eef2d0' }}>
+                                    <h3>Core</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Launch quickly with a lean execution setup focused on traction.</p>
+                                    <div style={{ textAlign: 'center' }}>
+                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                    </div>
+                                </div>
+                                <div className='sectoral-card' style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
+                                    <h3>Growth</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Scale demand generation and conversion performance with stronger orchestration.</p>
+                                    <div style={{ marginTop: 'auto' }}>
+                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                    </div>
+                                </div>
+                                <div className='sectoral-card' style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
+                                    <h3>Ultimate</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Operate a full-spectrum growth system with strategic and executional depth.</p>
+                                    <div style={{ marginTop: 'auto' }}>
+                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    id: 'solutions',
+                    label: 'Tailored Solutions',
+                    icon: tabIcon('solutions') || <HiWrenchScrewdriver />,
+                    content: (
+                        <div className="sectoral-tabs-content">
+                            <div className="tab-grid grid-cols-4">
+                                <div className="sectoral-card">
+                                    <HiMagnifyingGlass style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
+                                    <h3>Search Ads</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Capture high-intent demand with conversion-focused campaign architecture.</p>
+                                    <Link to={path('googleAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                                <div className="sectoral-card">
+                                    <HiChartBar style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
+                                    <h3>Social Advertising</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Scale reach and qualified engagement across high-value social channels.</p>
+                                    <Link to={path('socialAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                                <div className="sectoral-card">
+                                    <HiSparkles style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
+                                    <h3>SEO Management</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Build organic authority and sustainable inbound growth.</p>
+                                    <Link to={path('seo')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                                <div className="sectoral-card">
+                                    <HiVideoCamera style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
+                                    <h3>Content Production</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Produce strategic assets that convert expertise into pipeline impact.</p>
+                                    <Link to={path('contentProduction')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    id: 'strategy',
+                    label: 'Strategy & Advisory',
+                    icon: tabIcon('strategy') || <HiChartBar />,
+                    content: (
+                        <div className="sectoral-tabs-content">
+                            <div className="tab-grid grid-cols-3">
+                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
+                                    <h3>Go-to-Market Strategy</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Design your market entry and scaling roadmap with strategic precision.</p>
+                                    <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
+                                    <h3>Content Strategy</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Build messaging systems that increase trust, relevance, and conversion quality.</p>
+                                    <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
+                                    <h3>Growth Advisory</h3>
+                                    <p style={{ fontSize: '0.85rem' }}>Work directly with khilonfast for high-impact strategic and operational guidance.</p>
+                                    <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    id: 'analysis',
+                    label: 'Ad Creative Analysis',
+                    icon: tabIcon('analysis') || <HiMagnifyingGlass />,
+                    content: (
+                        <div className="sectoral-tabs-content">
+                            <div className="sectoral-split-layout">
+                                <div className="sectoral-card">
+                                    <h3>Visual Performance Intelligence</h3>
+                                    <p>Identify weak points in your ad creatives before scaling media budgets.</p>
+                                    <Link to={path('eyeTracking')} className="sectoral-btn">Learn More</Link>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            ]
+        },
+        testimonial: {
+            ...trConfig.testimonial,
+            quote: 'khilonfast gave us a clear growth framework and execution rhythm that improved both pipeline quality and conversion consistency.',
+            role: 'Commercial Director'
+        },
+        faqs: [
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+        ],
+        ...((trConfig as any).growthCTA ? {
+            growthCTA: {
+                ...(trConfig as any).growthCTA,
+                title: 'Grow with a Better Marketing Operating System',
+                description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
+            }
+        } : {})
+    }
+
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-energy" />
 }

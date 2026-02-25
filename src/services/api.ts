@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -24,27 +24,31 @@ api.interceptors.request.use(
 );
 
 // API Functions
+type ApiPayload = Record<string, any>;
+type IdParam = number | string;
+
 export const authAPI = {
-    register: (data) => api.post('/auth/register', data),
-    login: (data) => api.post('/auth/login', data),
+    register: (data: ApiPayload) => api.post('/auth/register', data),
+    login: (data: ApiPayload) => api.post('/auth/login', data),
+    google: (data: ApiPayload) => api.post('/auth/google', data),
     getMe: () => api.get('/auth/me')
 };
 
 export const productsAPI = {
     getAll: () => api.get('/products'),
-    getById: (id) => api.get(`/products/${id}`),
-    getByKey: (key) => api.get(`/products/key/${key}`)
+    getById: (id: IdParam) => api.get(`/products/${id}`),
+    getByKey: (key: IdParam) => api.get(`/products/key/${key}`)
 };
 
 export const ordersAPI = {
-    create: (data) => api.post('/orders', data),
-    getById: (id) => api.get(`/orders/${id}`),
-    getUserOrders: (userId) => api.get(`/orders/user/${userId}`)
+    create: (data: ApiPayload) => api.post('/orders', data),
+    getById: (id: IdParam) => api.get(`/orders/${id}`),
+    getUserOrders: (userId: IdParam) => api.get(`/orders/user/${userId}`)
 };
 
 export const paymentAPI = {
-    initiate: (data) => api.post('/payment/initiate', data),
-    getStatus: (orderId) => api.get(`/payment/status/${orderId}`)
+    initiate: (data: ApiPayload) => api.post('/payment/initiate', data),
+    getStatus: (orderId: IdParam) => api.get(`/payment/status/${orderId}`)
 };
 
 export default api;

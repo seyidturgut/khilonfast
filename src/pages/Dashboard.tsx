@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase } from 'react-icons/hi';
+import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay } from 'react-icons/hi';
 import './Dashboard.css';
 
 interface OrderItem {
@@ -40,13 +40,31 @@ interface Company {
     company_phone?: string;
 }
 
+interface PurchasedContent {
+    subscription_id: number;
+    subscription_status: 'active' | 'expired' | 'cancelled';
+    starts_at: string;
+    expires_at?: string | null;
+    product_id: number;
+    product_key: string;
+    name: string;
+    description?: string | null;
+    features?: string | null;
+    type?: string | null;
+    category?: string | null;
+    access_content_url?: string | null;
+    order_status?: string | null;
+}
+
 export default function Dashboard() {
+    const API_BASE = import.meta.env.VITE_API_URL || '/api';
     const { user } = useAuth();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('orders');
     const [orders, setOrders] = useState<Order[]>([]);
-    const [profile, setProfile] = useState<Profile | null>(null);
-    const [company, setCompany] = useState<Company | null>(null);
+    const [contents, setContents] = useState<PurchasedContent[]>([]);
+    const [, setProfile] = useState<Profile | null>(null);
+    const [, setCompany] = useState<Company | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Form states
@@ -74,7 +92,7 @@ export default function Dashboard() {
     // Redirect if not logged in
     useEffect(() => {
         if (!user) {
-            navigate('/login');
+            navigate('/giris');
         }
     }, [user, navigate]);
 
@@ -83,6 +101,7 @@ export default function Dashboard() {
         const params = new URLSearchParams(window.location.search);
         const tab = params.get('tab');
         const success = params.get('success');
+        const forcePasswordChange = params.get('forcePasswordChange');
 
         if (tab === 'orders') {
             setActiveTab('orders');
@@ -90,6 +109,12 @@ export default function Dashboard() {
                 setMessage('Ödemeniz başarıyla tamamlandı! Siparişiniz aşağıda görüntülenmektedir.');
                 // Clear URL parameters
                 window.history.replaceState({}, '', '/dashboard');
+            }
+        }
+        if (tab === 'password') {
+            setActiveTab('password');
+            if (forcePasswordChange === 'true') {
+                setError('Güvenliğiniz için ilk girişte şifrenizi değiştirmeniz zorunludur.');
             }
         }
     }, []);
@@ -105,10 +130,59 @@ export default function Dashboard() {
         setLoading(true);
         await Promise.all([
             fetchOrders(),
+            fetchContents(),
             fetchProfile(),
             fetchCompany()
         ]);
         setLoading(false);
+    };
+
+    const fetchContents = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE}/profile/contents`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setContents(Array.isArray(data.contents) ? data.contents : []);
+            } else {
+                setContents([]);
+            }
+        } catch (err) {
+            console.error('Error fetching contents:', err);
+            setContents([]);
+        }
+    };
+
+    const getFeatureList = (features?: string | null) => {
+        if (!features) return [];
+        return features
+            .split('\n')
+            .map((item) => item.trim())
+            .filter(Boolean);
+    };
+
+    const getEmbedUrl = (url?: string | null) => {
+        if (!url) return null;
+
+        if (url.includes('youtube.com/watch?v=')) {
+            const id = url.split('v=')[1]?.split('&')[0];
+            return id ? `https://www.youtube.com/embed/${id}` : null;
+        }
+        if (url.includes('youtu.be/')) {
+            const id = url.split('youtu.be/')[1]?.split('?')[0];
+            return id ? `https://www.youtube.com/embed/${id}` : null;
+        }
+        if (url.includes('player.vimeo.com/video/')) {
+            return url;
+        }
+        if (url.includes('vimeo.com/')) {
+            const id = url.split('vimeo.com/')[1]?.split('?')[0];
+            return id ? `https://player.vimeo.com/video/${id}` : null;
+        }
+
+        return null;
     };
 
     const fetchOrders = async () => {
@@ -116,7 +190,7 @@ export default function Dashboard() {
             if (!user?.id) return;
 
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3002/api/orders/user/${user.id}`, {
+            const response = await fetch(`${API_BASE}/orders/user/${user.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -135,7 +209,7 @@ export default function Dashboard() {
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3002/api/profile', {
+            const response = await fetch(`${API_BASE}/profile`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -156,7 +230,7 @@ export default function Dashboard() {
     const fetchCompany = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3002/api/company', {
+            const response = await fetch(`${API_BASE}/company`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -183,7 +257,7 @@ export default function Dashboard() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3002/api/profile', {
+            const response = await fetch(`${API_BASE}/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -216,7 +290,7 @@ export default function Dashboard() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3002/api/profile/password', {
+            const response = await fetch(`${API_BASE}/profile/password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,7 +321,7 @@ export default function Dashboard() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3002/api/company', {
+            const response = await fetch(`${API_BASE}/company`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -292,6 +366,12 @@ export default function Dashboard() {
                         onClick={() => { setActiveTab('orders'); setMessage(''); setError(''); }}
                     >
                         <HiShoppingBag /> Siparişlerim
+                    </button>
+                    <button
+                        className={`tab-button ${activeTab === 'contents' ? 'active' : ''}`}
+                        onClick={() => { setActiveTab('contents'); setMessage(''); setError(''); }}
+                    >
+                        <HiPlay /> İçeriklerim
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
@@ -375,6 +455,56 @@ export default function Dashboard() {
                         </div>
                     )}
 
+                    {/* Purchased Contents Tab */}
+                    {activeTab === 'contents' && (
+                        <div className="tab-content">
+                            <h2>İçeriklerim</h2>
+                            {contents.length === 0 ? (
+                                <div className="empty-state">
+                                    <p>Henüz erişime açık bir eğitim içeriğiniz bulunmuyor.</p>
+                                </div>
+                            ) : (
+                                <div className="content-library-grid">
+                                    {contents.map((content) => {
+                                        const features = getFeatureList(content.features);
+                                        const embedUrl = getEmbedUrl(content.access_content_url);
+
+                                        return (
+                                            <article key={`${content.subscription_id}-${content.product_id}`} className="content-library-card">
+                                                <div className="content-library-header">
+                                                    <h3>{content.name}</h3>
+                                                    <span className="content-badge">Erişim Aktif</span>
+                                                </div>
+                                                {content.description && <p className="content-library-description">{content.description}</p>}
+                                                {features.length > 0 && (
+                                                    <ul className="content-library-features">
+                                                        {features.map((feature, idx) => (
+                                                            <li key={idx}>{feature}</li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                                {embedUrl ? (
+                                                    <div className="content-video-frame">
+                                                        <iframe
+                                                            src={embedUrl}
+                                                            title={content.name}
+                                                            allow="autoplay; fullscreen; picture-in-picture"
+                                                            allowFullScreen
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="content-video-placeholder">
+                                                        Video linki henüz girilmemiş.
+                                                    </div>
+                                                )}
+                                            </article>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* Profile Tab */}
                     {activeTab === 'profile' && (
                         <div className="tab-content">
@@ -421,7 +551,7 @@ export default function Dashboard() {
                                         rows={3}
                                     />
                                 </div>
-                                <button type="submit" className="btn-primary">Değişiklikleri Kaydet</button>
+                                <button type="submit" className="btn btn-primary">Değişiklikleri Kaydet</button>
                             </form>
                         </div>
                     )}
@@ -460,7 +590,7 @@ export default function Dashboard() {
                                         minLength={6}
                                     />
                                 </div>
-                                <button type="submit" className="btn-primary">Şifreyi Değiştir</button>
+                                <button type="submit" className="btn btn-primary">Şifreyi Değiştir</button>
                             </form>
                         </div>
                     )}
@@ -503,7 +633,7 @@ export default function Dashboard() {
                                         onChange={(e) => setCompanyForm({ ...companyForm, company_phone: e.target.value })}
                                     />
                                 </div>
-                                <button type="submit" className="btn-primary">Firma Bilgilerini Kaydet</button>
+                                <button type="submit" className="btn btn-primary">Firma Bilgilerini Kaydet</button>
                             </form>
                         </div>
                     )}

@@ -14,7 +14,7 @@ export default function CTABlock({ data }: CTABlockProps) {
         title = 'İşletmenizin Potansiyeline\nkhilonfast ile Ulaşın!',
         description = 'Size özel yaklaşımımızla, işletmenizin somut sonuçlar elde etmesine ve rakiplerinizin önüne geçmesine yardımcı oluyoruz.',
         buttonText = 'Bize Ulaşın',
-        buttonLink = '#contact'
+    buttonLink = '/iletisim'
     } = data;
 
     return (

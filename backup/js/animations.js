@@ -1,5 +1,5 @@
 /**
- * Next-Generation Interactive Features for Khilonfast
+ * Next-Generation Interactive Features for khilonfast
  * Handles animations, scroll effects, and user interactions
  */
 
@@ -391,7 +391,7 @@ function initIntersectionObserver() {
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 Initializing Khilonfast Next-Gen Features...');
+  console.log('🚀 Initializing khilonfast Next-Gen Features...');
   
   // Initialize all features
   initHeaderScroll();

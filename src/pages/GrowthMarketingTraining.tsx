@@ -1,8 +1,11 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
     HiAcademicCap,
     HiUserGroup,
     HiPresentationChartLine,
     HiPuzzlePiece,
+    HiPencilSquare,
     HiBolt,
     HiFunnel,
     HiChartBar,
@@ -11,13 +14,21 @@ import {
     HiUsers,
     HiChatBubbleLeftRight,
     HiRocketLaunch,
-    HiCube,
     HiCurrencyDollar
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function GrowthMarketingTraining() {
-    const trainingConfig = {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const isEn = currentLang === 'en'
+    const langPrefix = isEn ? '/en' : ''
+
+    useEffect(() => {
+        document.title = isEn ? 'Growth-Focused Marketing Training | khilonfast' : 'Büyüme Odaklı Pazarlama Eğitimi | khilonfast'
+    }, [isEn])
+
+    const trConfig = {
         hero: {
             title: 'Büyüme Odaklı Pazarlama Eğitimi',
             subtitle: 'Bütünleşik pazarlama stratejileri ile markanızı büyütün!',
@@ -25,9 +36,9 @@ export default function GrowthMarketingTraining() {
             buttonText: 'Satın Al',
             buttonLink: '#pricing',
             image: '/img/marketing-training-hero.png',
-            badgeText: "Bora Işık ile 10+1 Modül!",
+            badgeText: 'Bora Işık ile 10+1 Modül!',
             badgeIcon: <HiAcademicCap />,
-            themeColor: '#F0F9FF' // Very light sky blue
+            themeColor: '#F0F9FF'
         },
         breadcrumbs: [
             { label: 'Eğitimlerimiz', path: '/egitimler' },
@@ -42,68 +53,24 @@ export default function GrowthMarketingTraining() {
                 </>
             ),
             description: 'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu programla rakiplerinizin önüne geçin.',
-            videoUrl: 'https://vimeo.com/1045939223' // Placeholder based on similar pages
+            videoUrl: 'https://player.vimeo.com/video/1045939223'
         },
         featuresSection: {
             tag: 'Program Modülleri',
             title: 'Eğitimde Sizi Neler Bekliyor?',
             description: '10+1 Bölümden oluşan bu eğitimde, ilk temastan satışa kadar tüm süreci uçtan uca öğrenin.',
             features: [
-                {
-                    title: 'Büyüme Odaklı Pazarlama',
-                    description: 'Satışa giden yolun haritasını çıkarın ve temel prensipleri öğrenin.',
-                    icon: <HiRocketLaunch />
-                },
-                {
-                    title: 'Hedef Kitle Analizi',
-                    description: 'Karar verici ve onaylayıcıyı doğru okuma teknikleri.',
-                    icon: <HiUserGroup />
-                },
-                {
-                    title: 'Değer Önerisi Kurgusu',
-                    description: 'Ethos, Pathos, Logos ile fark yaratan mesajlar oluşturun.',
-                    icon: <HiPresentationChartLine />
-                },
-                {
-                    title: 'Sistematik Değer Kurma',
-                    description: 'Pain point ve rol bazlı mesaj kurgusuyla etkiyi artırın.',
-                    icon: <HiPuzzlePiece />
-                },
-                {
-                    title: 'Satış Hunisi Yönetimi',
-                    description: 'Mesajı zaman, mecra ve aşamaya göre uyarlama stratejileri.',
-                    icon: <HiFunnel />
-                },
-                {
-                    title: 'Başlangıç Metrikleri',
-                    description: 'Büyümenin sayısal pusulası: CAC, LTV, ROAS ve ROI.',
-                    icon: <HiChartBar />
-                },
-                {
-                    title: 'Pazarlamanın Üç Hedefi',
-                    description: 'Müşteri kazanmak, derinleşmek ve mevcut olanı korumak.',
-                    icon: <HiBolt />
-                },
-                {
-                    title: 'Web Sitesi ile Büyümek',
-                    description: 'Web sitenizdeki sayfaların görevleri ve dönüşüm optimizasyonu.',
-                    icon: <HiGlobeAlt />
-                },
-                {
-                    title: 'Lead Sonrası Akış',
-                    description: 'Psikoloji, zamanlama ve çok kanallı temas yönetimi.',
-                    icon: <HiComputerDesktop />
-                },
-                {
-                    title: 'İlk Temastan Satışa',
-                    description: 'Etkili iletişim, itiraz yönetimi ve takip teknikleri.',
-                    icon: <HiChatBubbleLeftRight />
-                },
-                {
-                    title: 'Bonus Modül',
-                    description: 'B2B sektöründe sürdürülebilir büyüme için özel stratejiler.',
-                    icon: <HiCube />
-                }
+                { title: 'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası', description: 'Büyüme odaklı pazarlamanın temel çerçevesini kurun ve satışa giden yolu haritalayın.', icon: <HiRocketLaunch /> },
+                { title: 'Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak', description: 'Karar verici ve onaylayıcı rolleri doğru ayrıştırarak hedef kitle analizini netleştirin.', icon: <HiUserGroup /> },
+                { title: 'Egzersiz: Hedef Kitle Sorunlarını Not Etmek', description: 'Hedef kitlenin yaşadığı temel problemleri sistematik biçimde not ederek içgörü üretin.', icon: <HiPencilSquare /> },
+                { title: 'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak', description: 'Ethos, Pathos ve Logos yaklaşımıyla güçlü ve ikna edici bir değer önerisi geliştirin.', icon: <HiPresentationChartLine /> },
+                { title: 'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj', description: 'Pain point odaklı ve rol bazlı mesajlarla değer önerinizi sistematik hale getirin.', icon: <HiPuzzlePiece /> },
+                { title: 'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak', description: 'Mesajınızı doğru zamanda, doğru mecrada ve doğru aşamada konumlandırın.', icon: <HiFunnel /> },
+                { title: 'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası', description: 'Büyümeyi ölçmek için başlangıç metriklerini belirleyin ve takip modelini kurun.', icon: <HiChartBar /> },
+                { title: 'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak', description: 'Kazanım, derinleşme ve koruma ekseninde pazarlama hedeflerinizi netleştirin.', icon: <HiBolt /> },
+                { title: 'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri', description: 'Web sitesindeki sayfaların rollerini netleştirerek dönüşüm akışını iyileştirin.', icon: <HiGlobeAlt /> },
+                { title: 'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas', description: 'Lead sonrası süreçte psikoloji, zamanlama ve çok kanallı temas dengesini kurun.', icon: <HiComputerDesktop /> },
+                { title: 'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip', description: 'İlk temastan satış kapanışına kadar etkili iletişim, itiraz yönetimi ve takibi yönetin.', icon: <HiChatBubbleLeftRight /> }
             ]
         },
         pricingSection: {
@@ -112,7 +79,7 @@ export default function GrowthMarketingTraining() {
             description: 'B2B Sektöründe Bütünleşik Dijital Pazarlama Eğitimi’ne hemen başlayın.',
             packages: [
                 {
-                    id: 'training-program',
+                    id: 'training-buyume-odakli-pazarlama',
                     name: 'B2B Pazarlama Eğitimi',
                     price: '5000TL',
                     period: 'Tek Seferlik',
@@ -128,12 +95,12 @@ export default function GrowthMarketingTraining() {
                         'Metrik ve Analiz Şablonları'
                     ],
                     buttonText: 'Satın Al',
-                    buttonLink: '/#contact'
+                    buttonLink: '/iletisim'
                 }
             ]
         },
         heroPriceCard: {
-            packageId: 'training-program',
+            packageId: 'training-buyume-odakli-pazarlama',
             priceOnly: true
         },
         approachSection: {
@@ -141,74 +108,119 @@ export default function GrowthMarketingTraining() {
             title: 'Bu Eğitim Kimler İçin İdeal?',
             description: 'Ekiplerin ortak bir hedef doğrultusunda büyümesini hedefleyen her kademe için.',
             items: [
-                {
-                    title: 'CEO & Şirket Sahipleri',
-                    subtitle: 'Stratejik Yol Haritası',
-                    description: 'Şirketin büyüme yol haritasını anlamak ve pazarlama–satış uyumunu en üst seviyeye çıkarmak için.',
-                    icon: <HiUsers />
-                },
-                {
-                    title: 'Pazarlama Yöneticileri',
-                    subtitle: 'Bütçe ve ROAS Verimliliği',
-                    description: 'Pazarlama bütçesini en verimli şekilde kullanmak ve ROAS/ROI metriklerini iyileştirmek için.',
-                    icon: <HiCurrencyDollar />
-                },
-                {
-                    title: 'Satış Ekipleri',
-                    subtitle: 'Dönüşüm Oranı Artışı',
-                    description: 'Huniden gelen lead’leri daha yüksek oranda kapatmak ve itirazları yönetmek için.',
-                    icon: <HiChartBar />
-                }
+                { title: 'CEO & Şirket Sahipleri', subtitle: 'Stratejik Yol Haritası', description: 'Şirketin büyüme yol haritasını anlamak ve pazarlama–satış uyumunu en üst seviyeye çıkarmak için.', icon: <HiUsers /> },
+                { title: 'Pazarlama Yöneticileri', subtitle: 'Bütçe ve ROAS Verimliliği', description: 'Pazarlama bütçesini en verimli şekilde kullanmak ve ROAS/ROI metriklerini iyileştirmek için.', icon: <HiCurrencyDollar /> },
+                { title: 'Satış Ekipleri', subtitle: 'Dönüşüm Oranı Artışı', description: 'Huniden gelen lead’leri daha yüksek oranda kapatmak ve itirazları yönetmek için.', icon: <HiChartBar /> }
             ]
         },
         faqs: [
-            {
-                question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. Khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
-            },
-            {
-                question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. Khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz.'
-            },
-            {
-                question: 'khilonfast ile kimler çalışmamalı?',
-                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, Khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, Khilonfast için uygun müşteriler değildir.'
-            },
-            {
-                question: 'khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için Khilonfast ideal bir çözüm sunar.'
-            },
-            {
-                question: 'Khilonfast ile iletişimi nasıl sağlayabilirim?',
-                answer: 'Khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, Khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır.'
-            },
-            {
-                question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'Khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, Khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir.'
-            },
-            {
-                question: 'Bütünleşik dijital pazarlama stratejileri işletmem için nasıl faydalıdır?',
-                answer: 'Bütünleşik dijital pazarlama, farklı dijital kanalları tek bir strateji altında birleştirerek pazarlama etkinliğinizi artırır. Khilonfast, tüm dijital pazarlama çabalarınızı entegre eder ve bütçenizi en verimli şekilde kullanarak maksimum etkileşim ve dönüşüm sağlar.'
-            },
-            {
-                question: 'Bütünleşik dijital pazarlama kampanyalarının performansını nasıl takip edebilirim?',
-                answer: 'Khilonfast, tüm dijital kanallarınızı kapsayan haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, etkileşim oranları, dönüşümler ve diğer kritik performans göstergeleri hakkında bilgi içerir. Ayrıca, canlı dashboard’lar üzerinden kampanyalarınızı anlık olarak izleyebilirsiniz.'
-            },
-            {
-                question: 'Neden khilonfast bütünleşik dijital pazarlama hizmetini tercih etmeliyim?',
-                answer: 'khilonfast, tüm dijital pazarlama çabalarınızı entegre ederek maksimum verimlilik sağlar. Uzman ekibimiz, dijital stratejinizi bir bütün olarak ele alır ve tüm kanallarda tutarlı bir mesaj ve marka deneyimi sunmanızı sağlar.'
-            },
-            {
-                question: 'Bütünleşik dijital pazarlama stratejisi nasıl oluşturulur?',
-                answer: 'Khilonfast, öncelikle işletmenizin hedeflerini ve mevcut dijital varlıklarını analiz eder. Ardından, tüm dijital kanallarınızı entegre eden bir strateji geliştirir. Kampanyalar başlatıldıktan sonra, performans düzenli olarak izlenir ve optimize edilir.'
-            }
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
         ],
         testimonial: {
-            quote: "Pazarlamayı sadece reklam vermek sanıyorduk, bu eğitimle bütünleşik stratejinin gücünü anladık. Satışlarımızda gözle görülür bir artış oldu.",
-            author: "Can Ergin",
-            role: "B2B Satış Müdürü"
+            quote: 'Pazarlamayı sadece reklam vermek sanıyorduk, bu eğitimle bütünleşik stratejinin gücünü anladık. Satışlarımızda gözle görülür bir artış oldu.',
+            author: 'Can Ergin',
+            role: 'B2B Satış Müdürü'
         }
     }
 
-    return <ServicePageTemplate {...trainingConfig} />
+    const enConfig = {
+        hero: {
+            title: 'Growth-Focused Marketing Training',
+            subtitle: 'Scale your brand with integrated marketing strategy.',
+            description: 'khilonfast helps you allocate budget across the right channels, align teams, and execute with a measurable growth framework.',
+            buttonText: t('pricing.buyNow'),
+            buttonLink: '#pricing',
+            image: '/img/marketing-training-hero.png',
+            badgeText: '10+1 Modules with Bora Isik',
+            badgeIcon: <HiAcademicCap />,
+            themeColor: '#F0F9FF'
+        },
+        breadcrumbs: [
+            { label: t('header.allTrainings'), path: `/${t('slugs.trainings')}` },
+            { label: 'Marketing Training' }
+        ],
+        videoShowcase: {
+            tag: 'Program Overview',
+            title: (
+                <>
+                    Integrated Digital Marketing for a
+                    <span className="highlight"> Revenue-Driven Funnel</span>
+                </>
+            ),
+            description: 'This curriculum gives your team a practical, end-to-end growth system that starts with audience clarity and ends with measurable sales outcomes.',
+            videoUrl: 'https://player.vimeo.com/video/1045939223'
+        },
+        featuresSection: {
+            tag: 'Training Modules',
+            title: 'What You Will Master',
+            description: 'A complete 10+1 module framework from first touch to closed revenue.',
+            features: [
+                { title: 'Growth Marketing Fundamentals', description: 'Build a strategic roadmap from market signal to sales outcome.', icon: <HiRocketLaunch /> },
+                { title: 'Buyer Mapping', description: 'Understand decision-makers and influencers with precision.', icon: <HiUserGroup /> },
+                { title: 'Audience Problem Discovery', description: 'Create structured insight logs around real buyer pain points.', icon: <HiPencilSquare /> },
+                { title: 'Value Proposition Architecture', description: 'Use ethos, pathos, and logos to develop persuasive market messaging.', icon: <HiPresentationChartLine /> },
+                { title: 'Role-Based Messaging System', description: 'Translate pain points into segment-specific message frameworks.', icon: <HiPuzzlePiece /> },
+                { title: 'Funnel Messaging Strategy', description: 'Adapt message, timing, and channel by funnel stage.', icon: <HiFunnel /> },
+                { title: 'Baseline Metrics Setup', description: 'Define and operationalize the metrics that guide scalable growth.', icon: <HiChartBar /> },
+                { title: 'Three Core Marketing Goals', description: 'Design around acquisition, expansion, and retention outcomes.', icon: <HiBolt /> },
+                { title: 'Website Conversion Architecture', description: 'Align page responsibilities to increase conversion flow quality.', icon: <HiGlobeAlt /> },
+                { title: 'Post-Lead Journey', description: 'Run timing, psychology, and multi-channel follow-up with discipline.', icon: <HiComputerDesktop /> },
+                { title: 'Sales Conversation Excellence', description: 'Improve objection handling, follow-up quality, and close rates.', icon: <HiChatBubbleLeftRight /> }
+            ]
+        },
+        pricingSection: {
+            tag: 'Enroll Now',
+            title: 'Training Package',
+            description: 'Start the integrated B2B growth marketing training program today.',
+            packages: [
+                {
+                    id: 'training-buyume-odakli-pazarlama',
+                    name: 'B2B Marketing Training',
+                    price: '5000TL',
+                    period: 'One-Time',
+                    description: 'Lifetime access to all modules with practical exercises.',
+                    icon: <HiAcademicCap />,
+                    isPopular: true,
+                    features: [
+                        '10+1 Video Training Modules',
+                        'Hands-On Exercise Documents',
+                        'CMO-Level Strategic Frameworks',
+                        'Marketing & Sales Integration',
+                        'Sector-Specific Case Analysis',
+                        'Metrics and Reporting Templates'
+                    ],
+                    buttonText: t('pricing.buyNow'),
+                    buttonLink: `${langPrefix}/${t('slugs.contact')}`.replace(/\/{2,}/g, '/')
+                }
+            ]
+        },
+        heroPriceCard: {
+            packageId: 'training-buyume-odakli-pazarlama',
+            priceOnly: true
+        },
+        approachSection: {
+            tag: 'Who It Is For',
+            title: 'Designed for Growth Teams',
+            description: 'Built for leaders and operators responsible for predictable growth outcomes.',
+            items: [
+                { title: 'CEOs & Founders', subtitle: 'Strategic Clarity', description: 'Align commercial direction and improve marketing-sales coordination at leadership level.', icon: <HiUsers /> },
+                { title: 'Marketing Leaders', subtitle: 'Budget Efficiency', description: 'Optimize channel allocation and improve ROAS/ROI performance.', icon: <HiCurrencyDollar /> },
+                { title: 'Sales Teams', subtitle: 'Higher Close Rate', description: 'Increase lead conversion quality through stronger objection handling and follow-up discipline.', icon: <HiChartBar /> }
+            ]
+        },
+        faqs: [
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+        ],
+        testimonial: {
+            quote: 'This program reframed our approach from isolated tactics to integrated growth execution, and our sales results improved visibly.',
+            author: 'Can Ergin',
+            role: 'B2B Sales Manager'
+        }
+    }
+
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="training-buyume-odakli-pazarlama" disableApiHeroTextOverride />
 }

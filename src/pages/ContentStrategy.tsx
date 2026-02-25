@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
     HiDocumentText,
     HiMagnifyingGlass,
@@ -15,7 +17,15 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function ContentStrategy() {
-    const csConfig = {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const isEn = currentLang === 'en'
+
+    useEffect(() => {
+        document.title = isEn ? 'Content Strategy Services | khilonfast' : 'İçerik Stratejisi | khilonfast'
+    }, [isEn])
+
+    const trConfig = {
         hero: {
             title: 'Doğru İçerik Stratejisi ile Hedef Kitlenize Ulaşın!',
             subtitle: 'Hedef kitlenizi anlayın ve etkili içerik stratejileri oluşturun!',
@@ -50,7 +60,7 @@ export default function ContentStrategy() {
             tag: '5 adımda khilonfast',
             title: 'Nasıl Çalışır?',
             description: 'Sadece birkaç adımda dijital pazarlama sürecinizi başlatın. Tüm adımlar şeffaf, hızlı ve ölçülebilir şekilde tasarlandı.',
-            videoUrl: 'https://vimeo.com/1131179237?fl=pl&fe=cm',
+            videoUrl: 'https://player.vimeo.com/video/1131179237',
             steps: [
                 {
                     stepNumber: 1,
@@ -150,7 +160,7 @@ export default function ContentStrategy() {
             role: "Pazarlama Müdürü"
         },
         approachSection: {
-            title: 'Khilonfast Yaklaşımı',
+            title: 'khilonfast Yaklaşımı',
             description: 'Markanızın potansiyelini 360 derece stratejilerle açığa çıkarıyoruz.',
             items: [
                 {
@@ -188,27 +198,27 @@ export default function ContentStrategy() {
         faqs: [
             {
                 question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. Khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
+                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
             },
             {
                 question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. Khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.'
+                answer: 'khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.'
             },
             {
                 question: 'khilonfast ile kimler çalışmamalı?',
-                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, Khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, Khilonfast için uygun müşteriler değildir. Bu tür firmalar için, Khilonfast hizmeti uygun olmayabilir.'
+                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir.'
             },
             {
                 question: 'khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için Khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, Khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, Khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, Khilonfast sizin için mükemmel bir seçimdir.'
+                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir.'
             },
             {
                 question: 'khilonfast ile iletişimi nasıl sağlayabilirim?',
-                answer: 'khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, Khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
+                answer: 'khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
             },
             {
                 question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, Khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.'
+                answer: 'khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.'
             },
             {
                 question: 'Go to market stratejisi işletmem için nasıl faydalıdır?',
@@ -220,7 +230,7 @@ export default function ContentStrategy() {
             },
             {
                 question: 'Neden khilonfast go to market stratejisi hizmetini tercih etmeliyim?',
-                answer: 'khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, Khilonfast sizin için ideal bir seçimdir.'
+                answer: 'khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için ideal bir seçimdir.'
             },
             {
                 question: 'Go to market stratejisi nasıl oluşturulur?',
@@ -229,5 +239,79 @@ export default function ContentStrategy() {
         ]
     }
 
-    return <ServicePageTemplate {...csConfig} />
+    const enConfig = {
+        hero: {
+            title: 'Turn Content into a Revenue Engine',
+            subtitle: 'Build a strategy your audience actually engages with.',
+            description: 'With khilonfast, design an insight-led content strategy aligned with your growth objectives, funnel stages, and buyer intent.',
+            buttonText: 'Start Now',
+            buttonLink: '#pricing',
+            image: '/TR_IcerikStratejisi.avif',
+            imageClassName: 'hero-main-img-content-production',
+            imageContainerClassName: 'hero-image-container-content-production',
+            hideBadge: true,
+            badgeText: 'Strategic Content Framework for Scalable Growth',
+            badgeIcon: <HiDocumentText />,
+            themeColor: '#FEF3C7'
+        },
+        breadcrumbs: [
+            { label: t('header.services'), path: `/${t('slugs.home')}#services`.replace(/\/\#/, '/#') },
+            { label: t('header.menuItems.services.content.title') }
+        ],
+        videoShowcase: {
+            tag: 'Content Intelligence',
+            title: <>Create Content That Builds Brand Trust and Demand</>,
+            description: 'Develop high-impact narratives with channel-fit formats and SEO-ready planning to improve reach, engagement, and conversion quality.',
+            videoUrl: 'https://www.youtube.com/embed/zfz5tG3i5ck'
+        },
+        processSection: {
+            tag: '5-Step Workflow',
+            title: 'How It Works?',
+            description: 'Launch a measurable content strategy with a clear execution roadmap.',
+            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            steps: [
+                { stepNumber: 1, title: 'Step 1: Purchase', description: t('process.steps.buy.description'), icon: <HiCreditCard /> },
+                { stepNumber: 2, title: 'Step 2: Authorize', description: t('process.steps.auth.description'), icon: <HiKey /> },
+                { stepNumber: 3, title: 'Step 3: Submit Brief', description: t('process.steps.brief.description'), icon: <HiClipboardDocumentList /> },
+                { stepNumber: 4, title: 'Step 4: Analysis', description: t('process.steps.analysis.description'), icon: <HiMagnifyingGlass /> },
+                { stepNumber: 5, title: 'Step 5: Approval', description: t('process.steps.approval.description'), icon: <HiCheckBadge /> }
+            ]
+        },
+        pricingSection: {
+            tag: 'Content Strategy Package',
+            title: 'Content Strategy Solution',
+            description: 'Align your message architecture, editorial plan, and SEO direction under one strategic document.',
+            packages: [
+                {
+                    id: 'single-plan',
+                    name: 'Content Strategy Solution',
+                    price: '$2,000',
+                    period: 'one-time*',
+                    description: 'A complete strategic document tailored to your market and growth goals.',
+                    isPopular: true,
+                    icon: <HiTrophy />,
+                    buttonText: t('pricing.buyNow'),
+                    features: [
+                        'Professional strategic framework for any business size',
+                        'Execution-ready guidance for content teams',
+                        'Business-goal aligned planning model',
+                        'SEO-focused editorial architecture',
+                        'Long-term and sustainable growth direction'
+                    ]
+                }
+            ]
+        },
+        testimonial: {
+            quote: 'After implementing the strategy document, our content production became faster, more consistent, and conversion-driven.',
+            author: 'Zeynep Aydin',
+            role: 'Marketing Manager'
+        },
+        faqs: [
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+        ]
+    }
+
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-strategy" />
 }

@@ -29,12 +29,12 @@ export default function UserIcon() {
 
     const handleLogin = () => {
         setIsDropdownOpen(false);
-        navigate('/login');
+        navigate('/giris');
     };
 
     const handleRegister = () => {
         setIsDropdownOpen(false);
-        navigate('/register');
+        navigate('/kayil-ol');
     };
 
     const handleLogout = () => {

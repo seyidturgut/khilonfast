@@ -1,0 +1,1149 @@
+{
+    "pricing": {
+        "monthly": "Month",
+        "buyNow": "Buy Now",
+        "popular": "Most Popular"
+    },
+    "process": {
+        "steps": {
+            "buy": {
+                "title": "Buy Now",
+                "description": "Choose the package that fits your needs. The process starts automatically once the purchase is completed."
+            },
+            "auth": {
+                "title": "Authorize",
+                "description": "Provide the necessary access permissions to the khilonfast team. Click for authorization details >>"
+            },
+            "brief": {
+                "title": "Give Brief",
+                "description": "Share your goals, target audience, and brand language by answering the questions in the form sent to you. This form formulates the basis of the strategy."
+            },
+            "analysis": {
+                "title": "Analysis",
+                "description": "The khilonfast team analyzes your brief and prepares a de-brief report showing how they understood you. This report allows us to clarify the direction of the service together."
+            },
+            "approval": {
+                "title": "Approval",
+                "description": "Service installations begin upon approval of the de-brief report, and measurements become active within 1 week."
+            }
+        }
+    },
+    "header": {
+        "services": "Services",
+        "sectoral": "Sectoral",
+        "trainings": "Trainings",
+        "products": "Products",
+        "about": "About",
+        "howItWorks": "How It Works?",
+        "contact": "Contact",
+        "login": "Login",
+        "register": "Register",
+        "home": "Home",
+        "allTrainings": "All Trainings",
+        "backMenu": "Back: Menu",
+        "menuItems": {
+            "services": {
+                "gtm": {
+                    "title": "Go To Market Strategy",
+                    "desc": "Market entry and growth plans"
+                },
+                "content": {
+                    "title": "Content Strategy",
+                    "desc": "Contents that strengthen your brand story"
+                },
+                "integrated": {
+                    "title": "Integrated Digital Marketing",
+                    "desc": "360-degree marketing solutions"
+                },
+                "ads": {
+                    "title": "Google Ads",
+                    "desc": "Performance-oriented ad management"
+                },
+                "social": {
+                    "title": "Social Media Advertising",
+                    "desc": "Increase target audience engagement"
+                },
+                "seo": {
+                    "title": "SEO",
+                    "desc": "Rise to the top in search engines"
+                },
+                "production": {
+                    "title": "Content Production",
+                    "desc": "Impressive and original content production"
+                },
+                "email": {
+                    "title": "B2B Email Marketing",
+                    "desc": "Professional email campaigns"
+                }
+            },
+            "sectoral": {
+                "b2b": {
+                    "title": "360 Marketing Management for B2B Companies",
+                    "desc": "Integrated B2B marketing solutions"
+                },
+                "fintech": {
+                    "title": "360 Marketing for FinTech Companies",
+                    "desc": "Financial technology-oriented solutions"
+                },
+                "food": {
+                    "title": "Industrial Food & Chef Solutions",
+                    "desc": "360 marketing specific to the food sector"
+                },
+                "payment": {
+                    "title": "360 Marketing Management for Payment Systems",
+                    "desc": "Fintech-oriented strategic solutions"
+                },
+                "tech": {
+                    "title": "360 Marketing Management for Tech & Software Companies",
+                    "desc": "SaaS and software-oriented solutions"
+                },
+                "energy": {
+                    "title": "360 Marketing Management for Energy Companies",
+                    "desc": "Energy and technology-oriented solutions"
+                },
+                "design": {
+                    "title": "Marketing Management for Office & Corporate Interior Design",
+                    "desc": "Architectural and corporate design solutions"
+                },
+                "fleet": {
+                    "title": "360 Marketing Management for Fleet Rental Companies",
+                    "desc": "Corporate mobility and fleet solutions"
+                },
+                "manufacturing": {
+                    "title": "360 Marketing Management for Manufacturing Companies",
+                    "desc": "Industrial and production-oriented solutions"
+                }
+            },
+            "trainings": {
+                "all": {
+                    "title": "All Trainings",
+                    "desc": "View the program list on a single screen"
+                },
+                "growth": {
+                    "title": "Growth-Oriented Marketing Training",
+                    "desc": "khilonfast's core growth-oriented marketing training program."
+                },
+                "payment": {
+                    "title": "Growth-Oriented Marketing Training in Payment Systems",
+                    "desc": "Applied content focused on sales funnel, value proposition, and measurement."
+                },
+                "b2b": {
+                    "title": "Growth-Oriented Marketing Training in the B2B Sector",
+                    "desc": "Marketing and sales integration training set for B2B companies."
+                },
+                "fintech": {
+                    "title": "Growth-Oriented Marketing Training in the Fintech Sector",
+                    "desc": "Fintech-oriented growth strategies and channel optimization."
+                },
+                "tech": {
+                    "title": "Growth-Oriented Marketing Training in Tech & Software Sector",
+                    "desc": "Performance-oriented training content for SaaS and technology brands."
+                },
+                "manufacturing": {
+                    "title": "Growth-Oriented Marketing Training in the Manufacturing Sector",
+                    "desc": "Sustainable demand and conversion management for manufacturing companies."
+                },
+                "energy": {
+                    "title": "Growth-Oriented Marketing Training in the Energy Sector",
+                    "desc": "Marketing planning approach focused on decision-makers in the energy sector."
+                },
+                "design": {
+                    "title": "Growth-Oriented Marketing Training in Office & Interior Design",
+                    "desc": "Marketing model from proposal to sale for corporate interior design firms."
+                },
+                "fleet": {
+                    "title": "Growth-Oriented Marketing Training in the Fleet Rental Sector",
+                    "desc": "Lead quality and conversion management training in fleet rental companies."
+                },
+                "food": {
+                    "title": "Growth-Oriented Marketing Training in the Industrial Food Sector",
+                    "desc": "Growth-oriented marketing training flow specific to the industrial food sector."
+                }
+            },
+            "products": {
+                "maestro": {
+                    "title": "Maestro AI",
+                    "desc": "Customized AI marketing strategist for the B2B sector."
+                },
+                "eyeTracking": {
+                    "title": "Eye Tracking Ad Analysis",
+                    "desc": "Creative performance analysis and ROI risk reduction with AI + Eye Tracking."
+                }
+            }
+        }
+    },
+    "footer": {
+        "description": "At khilon fast, we strive to help measure marketing activities by using both the science of data analytics and the art of creativity. Our mission is to transform your marketing, making them not only more efficient but also effective in achieving business goals.",
+        "rights": "All rights reserved.",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "career": "Career Opportunities",
+        "columns": {
+            "company": "Khilon",
+            "services": "Services",
+            "info": "Information"
+        },
+        "links": {
+            "home": "home page",
+            "about": "about us",
+            "contact": "contact us"
+        }
+    },
+    "common": {
+        "buyNow": "Buy Now",
+        "explore": "Explore",
+        "loading": "Loading...",
+        "readMore": "Read More",
+        "startNow": "Start Now",
+        "discover": "Discover",
+        "contactUs": "Contact Us",
+        "sampleReport": "Sample Report",
+        "sampleReportDescription": "You can review the PDF content here. You can also download it using the button below.",
+        "sampleReportPdfTitle": "Sample Report PDF",
+        "downloadPdf": "Download PDF",
+        "openInNewTab": "Open in New Tab"
+    },
+    "hero": {
+        "subtitle": "khilonfast MARKETING SOLUTIONS",
+        "title": "Less Time,",
+        "titleHighlight": "More Results!",
+        "description": "khilonfast, your fast way in marketing solutions. We add value to your business with marketing strategies that support growth and offer measurable results."
+    },
+    "about": {
+        "title": "Marketing Solutions Combining Strategy, Creativity, and Technology",
+        "description": "At khilonfast, we offer unique marketing solutions tailored to your business needs. We deliver impactful results by combining strategy, creativity, and technology.",
+        "item1": "Strategic Planning",
+        "item2": "Creative Strategies",
+        "item3": "Technological Innovation"
+    },
+    "solutions": {
+        "header": {
+            "title": "Comprehensive Audit Services for Detailed Business Analysis"
+        },
+        "item1": {
+            "title": "Growth-Oriented Strategic Marketing",
+            "description": "Our audit services comprehensively analyze your business operations to identify areas for improvement and growth opportunities."
+        },
+        "item2": {
+            "title": "Digital Marketing Strategies",
+            "description": "Our solutions help businesses build a strong digital presence and effectively reach their target audiences."
+        },
+        "item3": {
+            "title": "Marketing Solutions Tailored to Your Brand",
+            "description": "We provide maximum impact and success by offering special marketing strategies aligned with your brand's vision, values, and goals."
+        }
+    },
+    "services": {
+        "header": {
+            "title": "Comprehensive Marketing Solutions for Your Business"
+        },
+        "item1": {
+            "title": "Tailored Marketing Strategies That Lead to Success",
+            "description": "Benefit from our wide range of marketing services aimed at growing your business."
+        },
+        "item2": {
+            "title": "Innovative Solutions in Branding and Communication",
+            "description": "Explore our comprehensive solutions in brand strategy and corporate communications."
+        },
+        "item3": {
+            "title": "Marketing Expertise for a Strong Digital Presence",
+            "description": "Examine our special digital marketing solutions to achieve effective results."
+        }
+    },
+    "features": {
+        "title": "Explore Our Growth-Oriented Marketing Solutions",
+        "description": "At khilonfast, we offer product-based marketing solutions designed to support business growth. Our solutions bring together strategy, creativity, and technology to provide measurable results.",
+        "list1": "Increase brand visibility with our targeted digital campaigns.",
+        "list2": "Increase conversion rate with our data-driven marketing strategies."
+    },
+    "faq": {
+        "title": "FAQ",
+        "subtitle": "Find answers to frequently asked questions about khilonfast services here!",
+        "item1": {
+            "question": "What services does khilonfast offer?",
+            "answer": "khilonfast offers end-to-end marketing services in audits, strategy development, digital marketing, brand management, CRM, sales, and corporate communications. Each service is designed to add value to brands' business goals and can be customized according to needs."
+        },
+        "item2": {
+            "question": "How is service pricing determined?",
+            "answer": "khilonfast's service fees vary according to the service type and collaboration model. We have monthly fixed-fee (retainer) and project/product-based pricing options. You can contact us for detailed information."
+        },
+        "item3": {
+            "question": "How is my working model with khilonfast determined?",
+            "answer": "khilonfast offers flexible collaboration models shaped according to the needs of brands. Whether you prefer a monthly fixed-fee model, custom solutions, or specific product-based services — we can create the structure that best fits your marketing goals together."
+        },
+        "item4": {
+            "question": "Do you have success stories?",
+            "answer": "Yes, we have many success stories and customer testimonials showing the impact of our services on brands. You can reach out to us for detailed information."
+        },
+        "item5": {
+            "question": "How can I reach you?",
+            "answer": "To contact khilonfast, you can fill out the contact form on our website or reach us directly via email and phone. We look forward to hearing from you!"
+        }
+    },
+    "aboutPage": {
+        "hero": {
+            "title": "Unleash Your Business's Potential!",
+            "description": "Grow your business with khilonfast, make a difference in the digital world. We are with you in the digital world from market entry to sales and efficient growth."
+        },
+        "who": {
+            "title": "Who is khilonfast?",
+            "description": "khilonfast is a result-oriented growth agency specialized in digital marketing. We provide sustainable growth by simplifying complex marketing processes for B2B and technology-oriented businesses.",
+            "feature1": {
+                "title": "Strategic Planning",
+                "desc": "We ensure companies are correctly positioned in the market."
+            },
+            "feature2": {
+                "title": "Integrated Marketing",
+                "desc": "We manage all channels to work in harmony with each other."
+            },
+            "feature3": {
+                "title": "Data Analysis",
+                "desc": "We base our decisions on market realities and data."
+            },
+            "feature4": {
+                "title": "Technology & Software",
+                "desc": "We accelerate your business processes with digital transformation and Maestro AI."
+            }
+        },
+        "birth": {
+            "title": "How Was khilonfast Born?",
+            "card1": {
+                "title": "Beyond Traditional",
+                "desc": "We set out with an agency model suitable for the speed of the modern world, breaking clichés and sluggish structures in the sector."
+            },
+            "card2": {
+                "title": "A Different Vision",
+                "desc": "We believe every business has unique potential and every brand can reach the top with the right strategy."
+            },
+            "card3": {
+                "title": "Meeting Experience with Technology",
+                "desc": "We blended the basic principles of marketing with today's technological possibilities and achieved results that make a difference."
+            }
+        },
+        "quote": {
+            "title": "Don't just adapt to the speed of the digital age,",
+            "highlight": "learn to manage it!"
+        },
+        "model": {
+            "title": "Our Service Model",
+            "description": "At khilonfast, we designed our service model not just according to the needs of businesses, but also according to their growth potential.",
+            "sub1": {
+                "title": "Analysis-Oriented",
+                "desc": "We start every process with an in-depth analysis and take a digital X-ray of your business. We understand your current situation and fix the deficiencies."
+            },
+            "sub2": {
+                "title": "Innovative Approaches",
+                "desc": "Beyond standards, we develop creative and technical solutions specific to your brand. We don't just follow trends, we guide your brand."
+            }
+        },
+        "why": {
+            "title": "Why khilonfast?",
+            "description": "We provide all the digital muscles necessary to take your business to the next level. We are not just a service provider, but your strategic partner in your growth journey.",
+            "stat1": {
+                "title": "Data-Driven",
+                "desc": "We don't manage any process that we cannot measure."
+            },
+            "stat2": {
+                "title": "Fast Impact",
+                "desc": "We focus on results without wasting your time."
+            },
+            "stat3": {
+                "title": "Global Vision",
+                "desc": "We apply world-class marketing principles."
+            },
+            "stat4": {
+                "title": "Deep Analysis",
+                "desc": "We monitor your competitors and market at all times."
+            }
+        },
+        "quickBanner": {
+            "title": "khilonfast is With You for Fast and Effective Marketing"
+        },
+        "notFor": {
+            "title": "Who is khilonfast Not Suitable For?",
+            "description": "Some approaches that do not align with our vision may not be suitable for working with us.",
+            "item1": {
+                "title": "Not for Those Who Dislike Innovation",
+                "desc": "If you are closed to digital transformation and innovative methods, we may not be the right address."
+            },
+            "item2": {
+                "title": "Those Who Just Say \"Let's Run Ads\"",
+                "desc": "We don't just manage budgets; we build end-to-end growth strategies and brand authority."
+            },
+            "item3": {
+                "title": "Those Who Dream Short-Term",
+                "desc": "We work with visionary brands that are aware that marketing is an investment and a process."
+            }
+        },
+        "brandStatement": {
+            "title": "With our expert staff, we are with you in your brand's growth adventure."
+        },
+        "discover": {
+            "title": "Explore Our Solutions!",
+            "description": "Take a step today to grow your business."
+        }
+    },
+    "howItWorksPage": {
+        "hero": {
+            "kicker": "How It Works?",
+            "title": "How Does khilonfast Work?",
+            "description": "Designed to offer fast, professional, and reliable marketing processes. It reduces unnecessary meeting load, clarifies the process with the right brief, and focuses on measurable results.",
+            "tag1": "Gain Speed",
+            "tag2": "Gain Clarity",
+            "tag3": "Focus"
+        },
+        "steps": {
+            "kicker": "khilonfast in 5 steps",
+            "title": "How It Works?",
+            "description": "Start your digital marketing process in just a few steps. All steps are designed to be transparent, fast, and measurable.",
+            "item1": {
+                "title": "Buy Now",
+                "desc": "Choose the package that fits your needs. The process starts automatically once the purchase is completed."
+            },
+            "item2": {
+                "title": "Authorize",
+                "desc": "Provide the necessary access permissions to the khilonfast team. Use the installation flows below for authorization details."
+            },
+            "item3": {
+                "title": "Give Brief",
+                "desc": "Share your goals, target audience, and brand language by answering the questions in the form sent to you."
+            },
+            "item4": {
+                "title": "Analysis",
+                "desc": "The khilonfast team analyzes your brief and prepares a de-brief report showing how they understood you."
+            },
+            "item5": {
+                "title": "Approval",
+                "desc": "Service installations begin upon approval of the de-brief report, and measurements become active within 1 week."
+            }
+        },
+        "auth": {
+            "kicker": "Authorization Guide",
+            "title": "Authorize and Start",
+            "description": "Connect all channels safely, activate your process quickly.",
+            "videoTitle": "Authorization Guide",
+            "item1": {
+                "title": "Google Analytics",
+                "desc": "Define Google Analytics access to start the service."
+            },
+            "item2": {
+                "title": "Google Tag Manager",
+                "desc": "Give Google Tag Manager permissions to start the service."
+            },
+            "item3": {
+                "title": "Integrated Marketing",
+                "desc": "Define access to marketing tools to start the service."
+            },
+            "item4": {
+                "title": "Google Ads",
+                "desc": "Add Google Ads account access to start the service."
+            },
+            "item5": {
+                "title": "Google Search Console",
+                "desc": "Add Google Search Console permissions to start the service."
+            },
+            "item6": {
+                "title": "Meta (Facebook & Instagram)",
+                "desc": "Provide Meta ad account access to start the service."
+            },
+            "item7": {
+                "title": "LinkedIn Ads",
+                "desc": "Define LinkedIn Ads access to start the service."
+            },
+            "item8": {
+                "title": "TikTok",
+                "desc": "Share TikTok Business access to start the service."
+            }
+        },
+        "values": {
+            "kicker": "Grow your business with khilonfast",
+            "title": "Our Core Approaches",
+            "description": "We gather strategy, data, and operations in a single structure to maximize your performance by effectively managing your digital channels.",
+            "item1": {
+                "title": "360-Degree Perspective",
+                "sub": "khilonfast Approach Covering Every Detail",
+                "desc": "Instead of focusing on a single part, we establish a holistic marketing management aligned with your brand's goals with an approach covering all processes."
+            },
+            "item2": {
+                "title": "Growth-Oriented Strategies",
+                "sub": "Sector-Specific Growth Plans",
+                "desc": "We ensure you establish more effective communication with your target audience and achieve sustainable growth with plans suitable for the dynamics of each sector."
+            },
+            "item3": {
+                "title": "Data-Driven Marketing",
+                "sub": "More Data, More Success",
+                "desc": "We don't just collect data, we turn it into action. We generate clear insights that will strengthen your conversion rates by analyzing customer behavior."
+            },
+            "item4": {
+                "title": "Difference with Innovation",
+                "sub": "Be One Step Ahead of Competitors",
+                "desc": "We prevent you from getting lost in the crowd with advanced data analytics and AI-powered tools, taking your brand ahead in competition."
+            },
+            "item5": {
+                "title": "Strategic Business Partner",
+                "sub": "Reliable Partner for Long-Term Success",
+                "desc": "We establish not only short-term campaigns but long-term and measurable success strategies for your brand's continuous growth."
+            }
+        }
+    },
+    "contact": {
+        "hero": {
+            "eyebrow": "Contact",
+            "title": "Fast, Clear, and Result-Oriented Communication for Your Brand",
+            "lead": "Share your project, goals, and current situation. Our team will get back to you as soon as possible and draw up the most suitable roadmap.",
+            "badge1": "Reply within 24 hours",
+            "badge2": "Privacy commitment"
+        },
+        "card": {
+            "title": "Contact Information",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address",
+            "location": "Istanbul, Turkiye",
+            "hours": "Working hours: 09:00 - 18:30 (Weekdays)"
+        },
+        "form": {
+            "title": "Quick Form",
+            "description": "Fill out the form to get a quote or share project details.",
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "phone": "Phone",
+            "brand": "Company / Brand",
+            "detail": "Project Detail",
+            "firstNamePlaceholder": "Your First Name",
+            "lastNamePlaceholder": "Your Last Name",
+            "emailPlaceholder": "example@firm.com",
+            "phonePlaceholder": "+90 5XX XXX XX XX",
+            "brandPlaceholder": "Company name",
+            "detailPlaceholder": "Write your goal, sector, budget, and expectations.",
+            "submit": "Submit"
+        },
+        "side": {
+            "helpTitle": "In which subjects do we provide support?",
+            "list1": "Go-To-Market and growth strategies",
+            "list2": "Performance ads (Google Ads, social)",
+            "list3": "SEO and content strategy",
+            "list4": "CRM, email marketing and automation",
+            "list5": "Sectoral B2B marketing solutions",
+            "meeting": {
+                "title": "Pre-Interview",
+                "description": "We can schedule a 20-minute meeting for a preliminary assessment.",
+                "button": "Request Meeting"
+            }
+        }
+    },
+    "maestroAI": {
+        "hero": {
+            "title": "Maestro AI",
+            "subtitle": "Get Success with\nSpecialized Maestro AI Marketing Strategist\nfor the B2B Sector",
+            "description": "From CRM to PR, from market research to digital marketing, from one-to-one marketing to marketing strategies, our artificial intelligence module nourished with the experience of expert teams helps you make the right decision, accelerates work, and transforms your marketing into tangible results.",
+            "badge": "AI Power"
+        },
+        "videoShowcase": {
+            "tag": "AI Assistant for B2B Sector Marketing Department",
+            "title": "Accelerate Your Marketing Decisions with Maestro AI",
+            "description": "Created for the B2B sector; from CRM to PR, from market research to digital marketing, our AI module nourished with the experience of expert teams helps you make the right decision, accelerates work, and transforms your marketing into tangible results."
+        },
+        "features": {
+            "tag": "Core Capabilities",
+            "title": "Why Maestro AI?",
+            "description": "A strategist who understands the complex structure of the B2B world and produces suitable solutions.",
+            "items": {
+                "disciplines": {
+                    "title": "Different Disciplines Together",
+                    "desc": "Maestro AI provides a holistic solution by combining different marketing disciplines."
+                },
+                "speed": {
+                    "title": "Gains Speed",
+                    "desc": "Accelerates sectoral experience acquisition that would take years with meetings and research."
+                },
+                "strategist": {
+                    "title": "Wise Strategist",
+                    "desc": "Trained in Marketing topics for the Industrial Food & Chef Solutions Sector"
+                },
+                "results": {
+                    "title": "Result Oriented",
+                    "desc": "Data → suggestions → applicable results."
+                },
+                "memory": {
+                    "title": "Memory",
+                    "desc": "Maestro AI does not forget topics related to your company and knows the sector. It prevents information loss due to turnover by preserving sectoral memory."
+                },
+                "guidance": {
+                    "title": "Sector-Specific Guidance",
+                    "desc": "Guides you correctly since it is trained with sector-specific data. Offers strategies suitable for your business, not general solutions."
+                },
+                "analysis": {
+                    "title": "Neutral Analysis",
+                    "desc": "Works unbiasedly. Complements the points where humans fall short by supporting decision-making through data and facts."
+                },
+                "learning": {
+                    "title": "Continuous Learning",
+                    "desc": "Learns continuously from new campaigns, customer data, and market changes. Offers more accurate and up-to-date suggestions every day."
+                }
+            }
+        },
+        "process": {
+            "tag": "Operating Process",
+            "title": "How Maestro AI Works?",
+            "description": "Strengthen your marketing strategies with our AI assistant specifically developed for the B2B sector.",
+            "steps": {
+                "question": {
+                    "title": "Question",
+                    "desc": "Sales decline, campaign performance, new product launch, etc."
+                },
+                "analysis": {
+                    "title": "Analysis",
+                    "desc": "Synthesizes CRM, market, social media, and advertising data."
+                },
+                "suggestion": {
+                    "title": "Suggestion",
+                    "desc": "Campaign message, channel selection, creative suggestion, reports."
+                },
+                "experience": {
+                    "title": "Experience",
+                    "desc": "Finish decisions and tasks that would take weeks in hours."
+                }
+            }
+        },
+        "pricing": {
+            "tag": "Plans",
+            "title": "Choose the Plan That Fits You",
+            "description": "Strengthen your marketing strategies with our AI assistant specifically developed for the B2B sector.",
+            "plans": {
+                "kredili": {
+                    "name": "Credited Maestro",
+                    "desc": "Increase your digital performance, provide more conversions."
+                },
+                "growth": {
+                    "name": "Unlimited Maestro",
+                    "desc": "Increase your digital performance, provide more conversions."
+                }
+            }
+        },
+        "testimonial": {
+            "quote": "With Maestro AI, we set up our marketing strategies in hours, not weeks. The speed we gain while taking data-driven decisions is invaluable.",
+            "author": "Ali Yılmaz",
+            "role": "Marketing Manager"
+        },
+        "faqs": [
+            {
+                "question": "Why should I choose to work with khilonfast?",
+                "answer": "khilonfast stands out with its extensive digital marketing experience and data-driven approaches. It offers customized solutions for your business needs, continuously optimizes your campaigns, and works in a result-oriented manner. By working with khilonfast, you can ensure your brand gains a strong place in the digital field."
+            },
+            {
+                "question": "Why don't we do face-to-face or online meetings?",
+                "answer": "khilonfast prefers digital communication tools to speed up processes and increase efficiency. All transactions are carried out through our site and email, allowing you to receive service quickly and effectively from anywhere in the world. By eliminating time-consuming synchronous meetings, khilonfast can scale its marketing service and prefers to focus its experience entirely on its expertise for better work. This way, you can work with a high-level agency at reasonable prices without wasting time."
+            },
+            {
+                "question": "Who should not work with khilonfast?",
+                "answer": "khilonfast is ideal for firms that can manage digital processes effectively and adopt modern marketing tools. However, firms that prefer to find a person in front of them more than the quality of the work, feel safe only with a face-to-face meeting, are not good with metrics and analysis, cannot follow developments meaningfully, are distant from new generation marketing tools, do not regularly check communication tools like WhatsApp or email, are too busy to fill out the forms khilonfast will send, or say 'I know better than agencies, let's proceed with my own method' are not suitable customers for khilonfast."
+            },
+            {
+                "question": "Who is an ideal business partner for khilonfast?",
+                "answer": "khilonfast is a perfect business partner for firms looking for fast, efficient, and result-oriented solutions in the digital world. It offers an ideal solution for firms that like taking data-driven decisions, can work with metrics, believe in the power of digital marketing, and are eager to use new generation tools. Additionally, firms that regularly use email and other digital communication tools, have the time and discipline to fill out the forms provided by khilonfast, and seek strategic guidance by trusting the expert team's suggestions get the highest efficiency while working with khilonfast."
+            },
+            {
+                "question": "How can I communicate with khilonfast?",
+                "answer": "All communication with khilonfast is carried out through our user-friendly site and email. After purchasing the service, the necessary forms are sent to you through the system. After filling out these forms, the khilonfast team meticulously examines them, performs the necessary setups, and starts the operation. At every stage of the process, you are informed via email and all necessary support is provided."
+            },
+            {
+                "question": "How will the process proceed after purchasing the service?",
+                "answer": "When you complete the service purchase through khilonfast, the forms you need to fill out are sent to you via our site. These forms collect the information needed for the correct configuration of the service. After the forms are filled out, the khilonfast team makes the necessary definitions and activates your service. Throughout the entire process, necessary information and instructions will be sent to you by email."
+            },
+            {
+                "question": "How are integrated digital marketing strategies beneficial for my business?",
+                "answer": "Integrated digital marketing increases your marketing effectiveness by combining different digital channels under a single strategy. khilonfast integrates all your digital marketing efforts and ensures maximum interaction and conversion by using your budget in the most efficient way."
+            },
+            {
+                "question": "How can I track the performance of integrated digital marketing campaigns?",
+                "answer": "khilonfast offers weekly, monthly, or three-month reports covering all your digital channels. These reports contain information about interaction rates, conversions, and other critical performance indicators. Additionally, you can monitor your campaigns instantly through live dashboards."
+            },
+            {
+                "question": "Why should I choose khilonfast integrated digital marketing service?",
+                "answer": "khilonfast ensures maximum efficiency by integrating all your digital marketing efforts. Our expert team takes your digital strategy as a whole and ensures you present a consistent message and brand experience across all channels."
+            },
+            {
+                "question": "How is an integrated digital marketing strategy created?",
+                "answer": "khilonfast first analyzes your business goals and existing digital assets. Then, it develops a strategy that integrates all your digital channels. After campaigns are launched, performance is regularly monitored and optimized."
+            }
+        ]
+    },
+    "eyeTracking": {
+        "hero": {
+            "title": "Eye Tracking Ad Analysis",
+            "description": "Learn Focus, Cognitive Demand, Engagement, Memory scores instantly with Eye Tracking + AI; take the winning creative live, reduce ROI risk.",
+            "badge": "Data-Driven Analysis"
+        },
+        "videoShowcase": {
+            "tag": "Find the Winning Creative in Minutes",
+            "title": "Measure Your Ad Performance with AI and Eye Tracking",
+            "description": "Strengthen your creative performance with visual analysis. Instead of guessing whether you will get the return on the spent budget, rely directly on scientific data."
+        },
+        "approach": {
+            "tag": "Main Topics",
+            "title": "The Biggest Problems in Social Media Ads",
+            "description": "You are not the only company experiencing these problems. Solution: data-driven ad visual analysis.",
+            "items": {
+                "roi": {
+                    "title": "Low ROI",
+                    "subtitle": "Problem: Budget is there, conversion is not",
+                    "desc": "Solution: Shift the budget to the winning creative with score + benchmark + suggestion report."
+                },
+                "creative": {
+                    "title": "Ineffective Visuals",
+                    "subtitle": "Problem: Clicks are there, sales are not",
+                    "desc": "Solution: Fix weak elements before going live with Heatmap + Focus/Engagement/Memory analysis."
+                },
+                "tests": {
+                    "title": "Unending Tests",
+                    "subtitle": "Problem: A/B test load and cost",
+                    "desc": "Solution: Narrow down the hypothesis with pre-analysis; get faster and low-cost results with fewer variants."
+                },
+                "cmo": {
+                    "title": "For CMOs",
+                    "subtitle": "Prove ROI Before Going Live",
+                    "desc": "Transform ROI pressure into provable data, accelerate team alignment, reduce pre-release risk."
+                },
+                "growth": {
+                    "title": "For Growth Marketers",
+                    "subtitle": "Find the Winning Creative in Minutes",
+                    "desc": "Take action on the same day with fast analysis and ready-made suggestions in time/team constraints; reduce A/B load."
+                },
+                "ceo": {
+                    "title": "For SME CEOs",
+                    "subtitle": "Small Mistakes Should Not Cost Large Budgets",
+                    "desc": "Perform pre-flight control with clear action lists that reduce uncertainty and preserve a professional brand image."
+                }
+            }
+        },
+        "features": {
+            "tag": "Analysis Scores",
+            "title": "Measure Your Creative Performance with 4 Scores",
+            "description": "We score each element of your visuals according to the perception of the human eye.",
+            "focus": {
+                "title": "Focus",
+                "desc": "Shows how understandable the visual is. High score = clear and clean message."
+            },
+            "cognitive": {
+                "title": "Cognitive Demand",
+                "desc": "Shows the level of complexity. A low score provides easier consumption and faster perception."
+            },
+            "engagement": {
+                "title": "Engagement",
+                "desc": "Interest and excitement prediction. A high score symbolizes the possibility of more interaction."
+            },
+            "memory": {
+                "title": "Memory",
+                "desc": "Memorability. A high score increases the likelihood of the visual being remembered."
+            }
+        },
+        "process": {
+            "tag": "How It Works?",
+            "title": "Analysis Process is Very Simple",
+            "description": "Upload your visual and get your comprehensive report in minutes.",
+            "steps": {
+                "upload": {
+                    "title": "Upload Your Visual",
+                    "desc": "Drag and drop your sponsored post/post visual."
+                },
+                "ai": {
+                    "title": "AI Analysis",
+                    "desc": "Eye Tracking model calculates heatmaps and scores instantly."
+                },
+                "result": {
+                    "title": "Result & Suggestion",
+                    "desc": "Get the PDF containing strong/weak areas and an improvement checklist."
+                }
+            }
+        },
+        "authorization": {
+            "title": "Sample Report",
+            "description": "Strengthen your creative performance with visual analysis.",
+            "card": {
+                "title": "Sample PDF Report",
+                "desc": "The report includes Focus, Cognitive Demand, Engagement, and Memory scores; heatmap outputs and applicable creative suggestions.",
+                "highlight": "Examine the demo report, see the analysis quality before going live.",
+                "button": "Sample Report →"
+            }
+        },
+        "pricing": {
+            "tag": "Plans",
+            "title": "Choose the Package That Fits You",
+            "description": "Strong/weak points and applicable suggestions are offered at the end of each analysis.",
+            "plans": {
+                "starter": {
+                    "name": "Starter",
+                    "desc": "Ideal start for single visual analysis."
+                },
+                "growth": {
+                    "name": "Growth",
+                    "desc": "For small teams and regular campaign runners."
+                },
+                "pro": {
+                    "name": "Pro",
+                    "desc": "Professional solution for intense campaign periods and agencies."
+                }
+            }
+        },
+        "testimonial": {
+            "quote": "We minimized our ROI risk with Eye Tracking analysis. Knowing the winning visual before going live allowed us to use our budget much more efficiently.",
+            "author": "Deniz Erten",
+            "role": "E-commerce Director"
+        },
+        "faqs": [
+            {
+                "question": "Why should I choose to work with khilonfast?",
+                "answer": "khilonfast stands out with its extensive digital marketing experience and data-driven approaches. It offers customized solutions for your business needs, continuously optimizes your campaigns, and works in a result-oriented manner."
+            },
+            {
+                "question": "Why don't we do face-to-face or online meetings?",
+                "answer": "khilonfast prefers digital communication tools to speed up processes and increase efficiency. All transactions are carried out through our site and email, allowing us to provide a higher level of service by eliminating time-consuming meetings."
+            },
+            {
+                "question": "Who is an ideal business partner for khilonfast?",
+                "answer": "khilonfast is a perfect business partner for firms looking for fast, efficient, and result-oriented solutions in the digital world, like taking data-driven decisions, and are eager to use new generation tools."
+            },
+            {
+                "question": "How will the process proceed after purchasing the service?",
+                "answer": "After the purchase, the forms you need to fill out are sent to you. After these forms are filled out, our team performs analysis, completes the setups, starts the process, and offers periodic reports."
+            }
+        ]
+    },
+    "pages": {
+        "home": {
+            "seo": {
+                "title": "khilonfast | Fast, Measurable B2B Marketing Growth",
+                "description": "Scale your B2B brand with Khilonfast through integrated strategy, content, and performance marketing. Drive measurable growth, stronger visibility, and sustainable revenue momentum."
+            },
+            "pricing": {
+                "titleLine1": "Clear and Transparent",
+                "titleLine2": "Pricing for Every Service",
+                "description": "At Khilonfast, we present our end-to-end marketing services through a transparent, easy-to-understand, and scalable pricing model. Our flexible structure helps you plan your investment with confidence and clarity.",
+                "cta": "Learn More"
+            }
+        }
+    },
+    "serviceGTM": {
+        "seo": {
+            "title": "Go To Market Strategy | Launch Strong with Khilonfast",
+            "description": "Build a high-impact market entry with Khilonfast. Clarify your audience, sharpen positioning, and launch with a scalable strategy designed for measurable growth."
+        },
+        "hero": {
+            "title": "Capture Market Momentum with a Strategic Entry Plan",
+            "subtitle": "Define the right audience and accelerate your market share growth.",
+            "description": "With khilonfast, plan your go-to-market strategy with precision. Outpace competitors and secure a strong position in your target market.",
+            "buttonText": "Explore Now",
+            "badgeText": "Fast and Powerful Launch. Built for Results."
+        },
+        "breadcrumbs": {
+            "services": "Services",
+            "current": "Go To Market Strategy"
+        },
+        "videoShowcase": {
+            "tag": "Watch & Learn",
+            "titlePrefix": "Increase Your Market Share with the Right",
+            "titleHighlight": "Go To Market Strategy",
+            "description": "Take strategic, data-driven steps before launch. With khilonfast, define your audience clearly and build a durable competitive edge."
+        },
+        "pricing": {
+            "tag": "Service Packages",
+            "title": "Go To Market Strategy Solutions",
+            "description": "Entering a new market requires a precise strategic start. With khilonfast, build a fast and effective launch architecture, define your audience correctly, and gain sustainable competitive advantage.",
+            "core": {
+                "desc": "Take action and establish your digital market presence quickly.",
+                "forWho": "Best Fit For",
+                "forWhoDesc": "Small and mid-sized companies that want a fast market entry with a clear sales proposition and essential positioning.",
+                "why": "Why Choose It",
+                "whyDesc": "Launch with lower risk through a focused marketing plan, core sales proposition, and foundational digital strategy."
+            },
+            "growth": {
+                "desc": "Increase digital performance and drive stronger conversion outcomes.",
+                "forWho": "Best Fit For",
+                "forWhoDesc": "Mid-sized businesses targeting growth through advanced digital execution, content systems, marketing automation, and sales strategy.",
+                "why": "Why Choose It",
+                "whyDesc": "Move your brand to the next level with advanced digital planning, content strategy, automation, and sales scripting."
+            },
+            "ultimate": {
+                "desc": "Stand out in the market and outmaneuver competitors with smart strategy.",
+                "forWho": "Best Fit For",
+                "forWhoDesc": "Companies seeking lasting competitive advantage through comprehensive strategy, brand identity, and funnel design.",
+                "why": "Why Choose It",
+                "whyDesc": "Includes Growth plus corporate identity design and funnel-ready creative templates to amplify brand power."
+            }
+        },
+        "comparison": {
+            "rows": {
+                "marketingPlan": "Marketing Plan Development",
+                "salesValue": "Sales and Value Proposition Design",
+                "digitalStrategy": "Digital Strategy",
+                "contentStrategy": "Content Strategy",
+                "automation": "Marketing Automation Strategy",
+                "salesScript": "Sales Script",
+                "brandDesign": "Corporate Identity Design",
+                "funnelTemplates": "Sales Funnel Creative Templates",
+                "duration": "Timeline",
+                "revisions": "Revision Rights"
+            },
+            "values": {
+                "basic": "Basic",
+                "advanced": "Advanced",
+                "weeks4": "Min 4 Weeks",
+                "weeks6": "Min 6 Weeks",
+                "weeks9": "Min 9 Weeks"
+            },
+            "note": "(*) Excluding VAT. One-time service scope."
+        },
+        "process": {
+            "tag": "GTM in 4 steps",
+            "title": "How It Works?",
+            "description": "Build your market entry strategy in just a few steps. Every stage is designed for transparency, speed, and measurable execution.",
+            "steps": {
+                "buy": {
+                    "title": "Step 1: Purchase",
+                    "desc": "Choose the package aligned with your needs. The workflow starts automatically once payment is completed."
+                },
+                "brief": {
+                    "title": "Step 2: Submit Brief",
+                    "desc": "Complete the form we send to share your goals, audience, and brand language. This brief becomes the strategic foundation."
+                },
+                "analysis": {
+                    "title": "Step 3: Analysis",
+                    "desc": "The khilonfast team analyzes your brief and prepares a de-brief report that aligns understanding and strategic direction."
+                },
+                "approval": {
+                    "title": "Step 4: Approval",
+                    "desc": "After de-brief approval, service setup begins and measurement systems are activated within one week."
+                }
+            }
+        },
+        "approach": {
+            "360": {
+                "title": "360-Degree Perspective",
+                "subtitle": "A Holistic khilonfast Framework",
+                "desc": "At Khilon, we evaluate marketing through a broad strategic lens. Instead of optimizing a single layer, we orchestrate the full growth system and align every channel to your business objectives."
+            },
+            "title": "The khilonfast Approach",
+            "description": "We unlock your brand potential through end-to-end, 360-degree strategy.",
+            "growth": {
+                "title": "Growth-Led Strategies",
+                "subtitle": "Sector-Specific Growth Architecture",
+                "desc": "Every sector has unique dynamics. We design growth plans tailored to your category so you can engage your target audience more effectively and scale with confidence."
+            },
+            "data": {
+                "title": "Data-Driven Marketing",
+                "subtitle": "More Data, Stronger Results",
+                "desc": "Khilon does not just collect data; we turn it into actionable insight. By analyzing behavior patterns, we improve conversion performance and guide next-step decisions with predictive intelligence."
+            },
+            "innovation": {
+                "title": "Innovation as an Edge",
+                "subtitle": "Stay One Step Ahead",
+                "desc": "To avoid blending into market noise, innovation must be continuous. Khilon combines advanced analytics and AI-powered tools to keep your brand ahead of competitors."
+            },
+            "partner": {
+                "title": "Strategic Business Partner",
+                "subtitle": "A Trusted Partner for Long-Term Success",
+                "desc": "Khilon is more than a service provider. We operate as a strategic partner focused on sustainable, long-term outcomes beyond short-term campaign gains."
+            }
+        },
+        "testimonial": {
+            "quote": "Every decision in our market launch was powered by khilonfast's data-led strategy. Results came faster than we expected.",
+            "author": "Murat Celik",
+            "role": "Investor & Advisor"
+        },
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing expertise and a data-led operating model. We deliver tailored strategies, continuously optimize execution, and focus on measurable outcomes."
+            },
+            "q2": {
+                "q": "Why do we not run face-to-face or live online meetings?",
+                "a": "To increase speed and efficiency, khilonfast runs communication through structured digital channels. This removes meeting overhead and enables high-quality delivery with faster turnaround."
+            },
+            "q3": {
+                "q": "Who may not be a fit for khilonfast?",
+                "a": "Teams that are not comfortable with metric-driven workflows, asynchronous communication, and disciplined process inputs may find this model less suitable."
+            },
+            "q4": {
+                "q": "Who is an ideal business partner for khilonfast?",
+                "a": "Companies seeking fast, efficient, and results-focused growth; teams that value data-informed decisions and are open to modern marketing systems."
+            },
+            "q5": {
+                "q": "How can I communicate with khilonfast?",
+                "a": "All communication is managed through our website and email. After purchase, required forms are shared, reviewed, and converted into operational setup and delivery."
+            },
+            "q6": {
+                "q": "How does the process move forward after purchase?",
+                "a": "You complete onboarding forms, then the khilonfast team configures and activates your service. Performance reporting follows your selected cadence."
+            },
+            "q7": {
+                "q": "How does a go-to-market strategy benefit my business?",
+                "a": "A go-to-market strategy enables faster, more effective launch performance for new offerings. khilonfast helps you define audience, positioning, and strategic actions that drive market traction."
+            },
+            "q8": {
+                "q": "How can I track go-to-market performance?",
+                "a": "khilonfast provides weekly, monthly, or quarterly reporting across key metrics such as revenue impact, market penetration, and customer response, supported by dashboard visibility."
+            },
+            "q9": {
+                "q": "Why should I choose khilonfast for go-to-market services?",
+                "a": "Our team builds data-driven launch strategies that deliver competitive clarity and faster execution. We prioritize measurable growth from day one."
+            },
+            "q10": {
+                "q": "How is a go-to-market strategy created?",
+                "a": "We begin with audience and market analysis, design the strategic launch framework, execute with clear milestones, and optimize continuously based on performance signals."
+            }
+        }
+    },
+    "slugs": {
+        "home": "",
+        "about": "about",
+        "contact": "contact",
+        "howItWorks": "how-khilonfast-works-fast-professional-results-driven-marketing-experience",
+        "gtm": "services/go-to-market-strategy",
+        "contentStrategy": "services/content-strategy",
+        "idm": "services/integrated-digital-marketing",
+        "googleAds": "services/google-ads",
+        "socialAds": "services/social-media-advertising",
+        "seo": "services/seo-management",
+        "contentProduction": "services/content-production",
+        "b2bEmail": "services/b2b-email-marketing",
+        "sectoralB2B": "sectoral-services/b2b-360-marketing-management",
+        "sectoralPayment": "sectoral-services/payment-systems-marketing-management",
+        "sectoralFood": "sectoral-services/industrial-food-chef-solutions-marketing-management",
+        "sectoralFintech": "sectoral-services/fintech-360-marketing-management",
+        "sectoralTech": "sectoral-services/technology-software-360-marketing-management",
+        "sectoralEnergy": "sectoral-services/energy-companies-360-marketing-management",
+        "sectoralDesign": "sectoral-services/office-corporate-interior-design-360-marketing-management",
+        "sectoralFleet": "sectoral-services/fleet-rental-companies-360-marketing-management",
+        "sectoralManufacturing": "sectoral-services/manufacturing-companies-360-marketing-management",
+        "trainings": "trainings",
+        "trainingGrowth": "trainings/growth-focused-marketing-training",
+        "trainingPayment": "trainings/growth-focused-marketing-training-for-payment-systems",
+        "trainingB2B": "trainings/growth-focused-marketing-training-for-b2b",
+        "trainingFintech": "trainings/growth-focused-marketing-training-for-fintech",
+        "trainingTech": "trainings/growth-focused-marketing-training-for-technology-and-software",
+        "trainingManufacturing": "trainings/growth-focused-marketing-training-for-manufacturing",
+        "trainingEnergy": "trainings/growth-focused-marketing-training-for-energy",
+        "trainingDesign": "trainings/growth-focused-marketing-training-for-office-and-corporate-interior-design",
+        "trainingFleet": "trainings/growth-focused-marketing-training-for-fleet-rental",
+        "trainingFood": "trainings/growth-focused-marketing-training-for-industrial-food",
+        "maestro": "products/maestro-ai",
+        "eyeTracking": "services/eye-tracking-ad-analysis",
+        "login": "login",
+        "register": "register",
+        "dashboard": "dashboard",
+        "checkout": "checkout",
+        "paymentSuccess": "payment-success",
+        "paymentCallback": "payment-callback"
+    },
+    "serviceIDM": {
+        "hero": {
+            "title": "Unify Every Digital Channel Under One Growth Strategy",
+            "subtitle": "Scale your brand with fully integrated marketing execution.",
+            "description": "Strengthen your digital marketing by directing your budget to the right channels with khilonfast. Manage all channels through one cohesive strategy and elevate measurable performance.",
+            "buttonText": "Start Now",
+            "badgeText": "360 Marketing Power. Competitive Advantage Built In."
+        },
+        "videoShowcase": {
+            "tag": "Watch & Learn",
+            "title": "Achieve High-Impact Results with Integrated Digital Marketing",
+            "description": "Drive stronger engagement and conversion through channel integration. Optimize every marketing investment with khilonfast."
+        },
+        "authorization": {
+            "title": "AUTHORIZATION",
+            "card1": {
+                "title": "Authorization",
+                "desc": "Grant access to required marketing tools to launch the service.",
+                "highlight": "Create a consistent and integrated brand experience across all channels."
+            },
+            "card2": {
+                "title": "How It Works?",
+                "desc": "See the full process step by step from kickoff to delivery.",
+                "highlight": "Right brief -> clear workflow -> measurable outcomes."
+            }
+        },
+        "pricing": {
+            "tag": "Service Packages",
+            "title": "360 Integrated Digital Marketing Management",
+            "description": "Cover all marketing needs from a single strategic hub and remove operational complexity.",
+            "core": {
+                "desc": "Take action and start building your digital presence immediately.",
+                "forWho": "Best Fit For",
+                "forWhoDesc": "Designed for small businesses that want a strong, structured entry into digital marketing and better brand visibility.",
+                "whyDesc": "Increase visibility through SEO, social media, and search advertising. Build a stronger digital footprint and launch with measurable confidence."
+            },
+            "growth": {
+                "desc": "Increase digital performance and accelerate conversion impact.",
+                "forWhoDesc": "Ideal for mid-sized businesses aiming to scale and optimize digital strategy across customer acquisition and engagement.",
+                "whyDesc": "Optimize strategy for stronger conversions, better customer acquisition, and deeper audience engagement with data-led execution."
+            },
+            "ultimate": {
+                "desc": "Lead the market and outperform competitors with intelligent strategy.",
+                "forWhoDesc": "A full-scale strategy for larger organizations seeking sustainable growth, continuous optimization, and clear competitive separation.",
+                "whyDesc": "Maximize conversion and engagement with advanced, data-driven strategy. Build long-term growth architecture and manage all channels under one system."
+            }
+        },
+        "comparison": {
+            "rows": {
+                "keyword": "Keyword research",
+                "onPage": "On-page optimization",
+                "looker": "Looker Studio setup",
+                "setup": "GSC and GA setup",
+                "strategyDoc": "Content strategy document",
+                "backlink": "Off-page SEO (Backlink building)",
+                "competitor": "Competitor analysis",
+                "pageCount": "Number of pages",
+                "audit": "SEO Audit",
+                "aiOpt": "Artificial Intelligence (AI) Optimization",
+                "blog": "Audience-focused blog content production",
+                "email": "Audience email (Open Data/YEAR)",
+                "zeroClick": "Zero-click / e-newsletter network",
+                "searchAds": "Search Ads",
+                "setupFee": "Additional setup fee",
+                "adOpt": "Ad campaign optimization",
+                "extensions": "Ad extensions and targeting",
+                "profile": "Profile setup",
+                "campaign": "Campaign management",
+                "monthlyOpt": "Monthly optimization",
+                "report": "Performance reporting",
+                "policy": "Advertising Budget Policy"
+            },
+            "values": {
+                "competitor1": "1 competitor",
+                "competitor2": "2 competitors",
+                "blog2": "2 content pieces x 750 words",
+                "blog4": "4 content pieces x 750 words",
+                "blog6": "6 content pieces x 750 words",
+                "email10k": "10,000 emails",
+                "searchCore": "Core Google Search Ads setup with foundational keyword research",
+                "searchGrowth": "Standard Google Search Ads setup",
+                "searchUltimate": "Pro Google Search Ads setup with advanced keyword research and ad copy creation",
+                "setupFeeDesc": "For monthly packages, setup fee equals the first three months and applies only in month one.",
+                "setupFeeOnce": "Setup fee equals the first month package fee and applies only once.",
+                "continuous": "Continuous",
+                "limited": "Limited",
+                "geoTargeting": "Location, time, device",
+                "demographic": "In-market and demographic audience segmentation",
+                "profile1": "1 Meta account",
+                "profile2": "2 accounts (Meta + LinkedIn or TikTok)",
+                "profile3": "3 accounts (Meta and/or LinkedIn and/or TikTok)",
+                "campaign2": "2 campaigns",
+                "campaign4": "4 campaigns",
+                "campaign6": "6 campaigns",
+                "reportMonthly": "Email report once per month",
+                "reportBiweekly": "Email report every 2 weeks",
+                "reportWeekly": "Email report once per week",
+                "policyCore": "If 10% of ad budget does not exceed the Core package fee, Core pricing applies. If exceeded, it upgrades to Growth.",
+                "policyGrowth": "If 10% of ad budget does not exceed the Growth package fee, Growth pricing applies. If exceeded, it upgrades to Ultimate.",
+                "policyUltimate": "If 10% of ad budget does not exceed the Ultimate package fee, Ultimate pricing applies. If exceeded, invoicing includes additional specialist cost and 10% ad budget rate over the Ultimate service fee. Pricing remains at the highest reached tier in following months."
+            },
+            "note": "(*) Excluding VAT. Excludes media budgets and third-party tool costs."
+        },
+        "testimonial": {
+            "quote": "After consolidating all digital processes under one strategy, the return on our marketing budget increased by 45%.",
+            "author": "Caner Ozkan",
+            "role": "E-commerce Director"
+        }
+    }
+}

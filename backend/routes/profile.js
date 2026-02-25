@@ -6,11 +6,46 @@ import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
 
+// Get purchased digital contents (video courses etc.)
+router.get('/contents', authMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT
+                s.id AS subscription_id,
+                s.status AS subscription_status,
+                s.starts_at,
+                s.expires_at,
+                p.id AS product_id,
+                p.product_key,
+                p.name,
+                p.description,
+                p.features,
+                p.type,
+                p.category,
+                p.access_content_url,
+                o.status AS order_status
+            FROM subscriptions s
+            INNER JOIN products p ON p.id = s.product_id
+            LEFT JOIN orders o ON o.id = s.order_id
+            WHERE s.user_id = ?
+              AND s.status = 'active'
+              AND (o.status = 'completed' OR o.status IS NULL)
+            ORDER BY s.created_at DESC`,
+            [req.user.id]
+        );
+
+        res.json({ contents: rows });
+    } catch (error) {
+        console.error('Contents fetch error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // Get user profile
 router.get('/', authMiddleware, async (req, res) => {
     try {
         const [users] = await db.query(
-            'SELECT id, email, first_name, last_name, phone, address, created_at FROM users WHERE id = ?',
+            'SELECT id, email, first_name, last_name, phone, address, must_change_password, created_at FROM users WHERE id = ?',
             [req.user.id]
         );
 
@@ -124,6 +159,7 @@ router.put(
 
             // Update password
             await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [newPasswordHash, req.user.id]);
+            await db.query('UPDATE users SET must_change_password = 0 WHERE id = ?', [req.user.id]);
 
             res.json({ message: 'Password changed successfully' });
         } catch (error) {

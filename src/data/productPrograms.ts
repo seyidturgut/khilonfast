@@ -6,7 +6,7 @@ export interface ProductProgram {
 
 export const productPrograms: ProductProgram[] = [
     {
-        path: '/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy',
+        path: '/urunler/maestro-ai',
         title: 'Maestro AI',
         summary: 'B2B sektörü için özelleştirilmiş yapay zeka pazarlama stratejisti.'
     },

@@ -1,6 +1,7 @@
 import { useCart } from '../context/CartContext';
 import { HiX, HiShoppingCart, HiTrash } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Cart.css';
 
 interface CartProps {
@@ -9,12 +10,16 @@ interface CartProps {
 }
 
 export default function Cart({ isOpen, onClose }: CartProps) {
+    const { t, i18n } = useTranslation('common');
     const { items, removeFromCart, getTotalPrice, clearCart } = useCart();
     const navigate = useNavigate();
+    const currentLang = i18n.language.split('-')[0];
+    const langPrefix = currentLang === 'en' ? '/en' : '';
+    const checkoutPath = `${langPrefix}/${t('slugs.checkout')}`.replace(/\/{2,}/g, '/');
 
     const handleCheckout = () => {
         onClose();
-        navigate('/checkout');
+        navigate(checkoutPath);
     };
 
     if (!isOpen) return null;
@@ -25,7 +30,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
             <div className={`cart-drawer ${isOpen ? 'open' : ''}`}>
                 <div className="cart-header">
                     <h2>
-                        <HiShoppingCart /> Sepetim
+                        <HiShoppingCart /> {currentLang === 'en' ? 'My Cart' : 'Sepetim'}
                     </h2>
                     <button className="cart-close" onClick={onClose}>
                         <HiX />
@@ -36,7 +41,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                     {items.length === 0 ? (
                         <div className="cart-empty">
                             <HiShoppingCart className="empty-icon" />
-                            <p>Sepetiniz boş</p>
+                            <p>{currentLang === 'en' ? 'Your cart is empty' : 'Sepetiniz boş'}</p>
                         </div>
                     ) : (
                         <>
@@ -45,14 +50,14 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                     <div className="cart-item-info">
                                         <h3>{item.name}</h3>
                                         <p className="cart-item-price">
-                                            {item.price.toLocaleString('tr-TR')} {item.currency}
+                                            {item.price.toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')} {item.currency}
                                         </p>
                                     </div>
                                     <div className="cart-item-actions">
                                         <button
                                             className="remove-btn"
                                             onClick={() => removeFromCart(item.id)}
-                                            title="Sepetten Kaldır"
+                                            title={currentLang === 'en' ? 'Remove from cart' : 'Sepetten Kaldır'}
                                         >
                                             <HiTrash />
                                         </button>
@@ -66,14 +71,14 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                 {items.length > 0 && (
                     <div className="cart-footer">
                         <div className="cart-total">
-                            <span>Toplam:</span>
-                            <strong>{getTotalPrice().toLocaleString('tr-TR')} TL</strong>
+                            <span>{currentLang === 'en' ? 'Total:' : 'Toplam:'}</span>
+                            <strong>{getTotalPrice().toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')} TL</strong>
                         </div>
                         <button className="btn-checkout" onClick={handleCheckout}>
-                            Ödemeye Geç
+                            {currentLang === 'en' ? 'Proceed to Checkout' : 'Ödemeye Geç'}
                         </button>
                         <button className="btn-clear" onClick={clearCart}>
-                            Sepeti Temizle
+                            {currentLang === 'en' ? 'Clear Cart' : 'Sepeti Temizle'}
                         </button>
                     </div>
                 )}

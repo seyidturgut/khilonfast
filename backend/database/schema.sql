@@ -1,4 +1,4 @@
--- Khilonfast Database Schema
+-- khilonfast Database Schema
 -- Database: khilonfastDB
 
 -- Users table
@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
+    must_change_password TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_email (email)
@@ -20,14 +21,21 @@ CREATE TABLE IF NOT EXISTS products (
     product_key VARCHAR(100) UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    features TEXT,
     price DECIMAL(10, 2) NOT NULL,
     currency VARCHAR(3) DEFAULT 'TRY',
     category VARCHAR(50),
+    type ENUM('service', 'subscription', 'video_course', 'digital_download') DEFAULT 'service',
+    duration_days INT DEFAULT NULL,
+    access_content_url VARCHAR(255) DEFAULT NULL,
     is_active BOOLEAN DEFAULT TRUE,
+    parent_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES products(id) ON DELETE CASCADE,
     INDEX idx_product_key (product_key),
-    INDEX idx_category (category)
+    INDEX idx_category (category),
+    INDEX idx_parent_id (parent_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Orders table

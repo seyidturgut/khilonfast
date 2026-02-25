@@ -2,6 +2,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiUser, HiMail, HiLockClosed, HiPhone } from 'react-icons/hi';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
 
 export default function Register() {
@@ -9,12 +10,13 @@ export default function Register() {
         first_name: '',
         last_name: '',
         email: '',
+        phone: '',
         password: '',
         confirm_password: ''
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { register, user } = useAuth();
+    const { register, googleLogin, user } = useAuth();
     const navigate = useNavigate();
 
     // Redirect if already logged in
@@ -43,7 +45,13 @@ export default function Register() {
         setLoading(true);
 
         try {
-            await register(formData.first_name, formData.last_name, formData.email, formData.password);
+            await register({
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                email: formData.email,
+                password: formData.password,
+                phone: formData.phone?.trim() || undefined
+            });
             navigate('/dashboard');
         } catch (err: any) {
             setError(err.message || 'Kayıt başarısız');
@@ -52,10 +60,23 @@ export default function Register() {
         }
     };
 
+    const handleGoogleCredential = async (credential: string) => {
+        setError('');
+        setLoading(true);
+        try {
+            await googleLogin(credential);
+            navigate('/dashboard');
+        } catch (err: any) {
+            setError(err.message || 'Google ile giriş başarısız');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="auth-page">
             <div className="auth-container">
-                <div className="auth-card">
+                <div className="auth-card auth-card-compact">
                     <h1>Kayıt Ol</h1>
                     <p className="auth-subtitle">Yeni hesap oluşturun</p>
 
@@ -139,13 +160,36 @@ export default function Register() {
                             />
                         </div>
 
+                        <div className="form-group">
+                            <label htmlFor="confirm_password">
+                                <HiLockClosed /> Şifre (Tekrar)
+                            </label>
+                            <input
+                                type="password"
+                                id="confirm_password"
+                                name="confirm_password"
+                                value={formData.confirm_password}
+                                onChange={handleChange}
+                                required
+                                minLength={6}
+                                placeholder="Şifreyi tekrar girin"
+                            />
+                        </div>
+
                         <button type="submit" className="btn-auth-primary" disabled={loading}>
                             {loading ? 'Kayıt yapılıyor...' : 'Kayıt Ol'}
                         </button>
                     </form>
 
+                    <div className="auth-divider">
+                        <span>veya</span>
+                    </div>
+                    <div className="auth-google">
+                        <GoogleLoginButton onCredential={handleGoogleCredential} />
+                    </div>
+
                     <p className="auth-link">
-                        Zaten hesabınız var mı? <Link to="/login">Giriş Yap</Link>
+                        Zaten hesabınız var mı? <Link to="/giris">Giriş Yap</Link>
                     </p>
                 </div>
             </div>

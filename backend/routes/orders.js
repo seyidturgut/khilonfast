@@ -1,17 +1,44 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 import db from '../config/database.js';
-import authMiddleware from '../middleware/auth.js';
+import authMiddleware, { optionalAuthMiddleware } from '../middleware/auth.js';
+import { sendWelcomeAccountEmail } from '../services/emailService.js';
 
 const router = express.Router();
 
+const generateTemporaryPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+    const bytes = crypto.randomBytes(12);
+    let pass = '';
+    for (let i = 0; i < 12; i += 1) {
+        pass += chars[bytes[i] % chars.length];
+    }
+    return pass;
+};
+
+const splitName = (fullName = '') => {
+    const cleaned = String(fullName || '').trim().replace(/\s+/g, ' ');
+    if (!cleaned) return { firstName: 'Yeni', lastName: 'Musteri' };
+    const [first, ...rest] = cleaned.split(' ');
+    return {
+        firstName: first || 'Yeni',
+        lastName: rest.join(' ') || 'Musteri'
+    };
+};
+
 // Create new order
 router.post('/',
-    authMiddleware,
+    optionalAuthMiddleware,
     [
         body('items').isArray({ min: 1 }).withMessage('Order must contain at least one item'),
         body('items.*.product_id').isInt().withMessage('Valid product ID required'),
-        body('items.*.quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1')
+        body('items.*.quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
+        body('guest_email').optional().isEmail().withMessage('Valid guest email required'),
+        body('guest_name').optional().isString(),
+        body('guest_phone').optional().isString()
     ],
     async (req, res) => {
         const connection = await db.getConnection();
@@ -24,8 +51,58 @@ router.post('/',
 
             await connection.beginTransaction();
 
-            const { items } = req.body;
-            const userId = req.user.id;
+            const { items, guest_email, guest_name, guest_phone } = req.body;
+            let userId = req.user?.id || null;
+            let authToken = null;
+            let accountCreated = false;
+            let accountEmailSent = false;
+
+            if (!userId) {
+                if (!guest_email) {
+                    return res.status(400).json({ error: 'Guest checkout icin e-posta zorunludur.' });
+                }
+
+                const [existingUsers] = await connection.query(
+                    'SELECT id FROM users WHERE email = ? LIMIT 1',
+                    [guest_email]
+                );
+
+                if (existingUsers.length > 0) {
+                    return res.status(409).json({
+                        error: 'Bu e-posta zaten kayıtlı. Lütfen giriş yaparak devam edin.'
+                    });
+                }
+
+                const tempPassword = generateTemporaryPassword();
+                const { firstName, lastName } = splitName(guest_name);
+                const salt = await bcrypt.genSalt(10);
+                const passwordHash = await bcrypt.hash(tempPassword, salt);
+
+                const [userInsert] = await connection.query(
+                    `INSERT INTO users (email, password_hash, first_name, last_name, phone, must_change_password)
+                     VALUES (?, ?, ?, ?, ?, 1)`,
+                    [guest_email, passwordHash, firstName, lastName, guest_phone || null]
+                );
+                userId = userInsert.insertId;
+                accountCreated = true;
+
+                authToken = jwt.sign(
+                    { id: userId, email: guest_email, role: 'user' },
+                    process.env.JWT_SECRET,
+                    { expiresIn: '7d' }
+                );
+
+                try {
+                    await sendWelcomeAccountEmail({
+                        to: guest_email,
+                        firstName,
+                        temporaryPassword: tempPassword
+                    });
+                    accountEmailSent = true;
+                } catch (mailError) {
+                    console.error('Welcome email send error:', mailError.message);
+                }
+            }
 
             // Calculate total amount
             let totalAmount = 0;
@@ -92,6 +169,11 @@ router.post('/',
                     order_number: orderNumber,
                     total_amount: totalAmount,
                     status: 'pending'
+                },
+                auth_token: authToken,
+                account: {
+                    created: accountCreated,
+                    email_sent: accountEmailSent
                 }
             });
         } catch (error) {

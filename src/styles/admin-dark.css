@@ -115,7 +115,7 @@
 }
 
 .admin-layout .canvas>div[style*="border: 2px solid"] {
-    border-color: #0ea5e9 !important;
+    border-color: #89b004 !important;
 }
 
 /* Properties panel */
@@ -172,8 +172,8 @@
 
 /* Code blocks */
 .admin-layout code {
-    background: rgba(14, 165, 233, 0.1) !important;
-    color: #0ea5e9 !important;
+    background: rgba(137, 176, 4, 0.12) !important;
+    color: #89b004 !important;
     padding: 2px 8px;
     border-radius: 4px;
 }
@@ -201,11 +201,11 @@
 }
 
 .admin-layout table a {
-    color: #0ea5e9 !important;
+    color: #89b004 !important;
 }
 
 .admin-layout table a:hover {
-    color: #38bdf8 !important;
+    color: #b7d34a !important;
 }
 
 /* Badge/Status elements in tables */
@@ -222,11 +222,11 @@
 
 /* Links */
 .admin-layout a {
-    color: #0ea5e9;
+    color: #89b004;
 }
 
 .admin-layout a:hover {
-    color: #06b6d4;
+    color: #b7d34a;
 }
 
 /* Form Grid */

@@ -1,6 +1,13 @@
 import './Pricing.css'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export default function Pricing() {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
+
     return (
         <section id="pricing" className="pricing">
             <div className="pricing-background">
@@ -10,17 +17,15 @@ export default function Pricing() {
             <div className="container pricing-container">
                 <div className="pricing-content">
                     <h2 className="pricing-title">
-                        Hizmetlerimizde Net ve Şeffaf<br />
-                        Fiyatlandırma
+                        {t('pages.home.pricing.titleLine1')}<br />
+                        {t('pages.home.pricing.titleLine2')}
                     </h2>
                     <p className="pricing-description">
-                        khilonfast olarak, kapsamlı pazarlama hizmetlerimiz için müşterilerimize şeffaf bir
-                        fiyatlandırma sunmaya inanıyoruz. Fiyatlandırmada netlik ve sadeli ğin önemini biliyor ve
-                        işletmelerin çeşitli ihtiyaçlarına göre uyarlanmış sade bir yapı sunuyoruz.
+                        {t('pages.home.pricing.description')}
                     </p>
-                    <button className="btn btn-pricing">
-                        Daha Fazlası
-                    </button>
+                    <Link to={toLocalized('idm')} className="btn btn-pricing">
+                        {t('pages.home.pricing.cta')}
+                    </Link>
                 </div>
             </div>
         </section>

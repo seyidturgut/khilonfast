@@ -42,7 +42,7 @@ export const setupFlows: SetupFlow[] = [
           },
           {
             title: 'Kullanıcı Ekle adımını açın',
-            description: 'KhilonFast ekibinin e-posta adresini kullanıcı olarak ekleyin.'
+            description: 'khilonfast ekibinin e-posta adresini kullanıcı olarak ekleyin.'
           },
           {
             title: 'Gerekli erişim izinlerini verin',
@@ -50,14 +50,14 @@ export const setupFlows: SetupFlow[] = [
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'KhilonFast, Google Analytics verilerinizi analiz etmeye başlayabilir.'
+        completionDescription: 'khilonfast, Google Analytics verilerinizi analiz etmeye başlayabilir.'
       },
       {
         id: 'no',
         label: 'HAYIR, HESABIM YOK',
         steps: [
           {
-            title: 'KhilonFast sizin adınıza GA4 yapısını oluşturur',
+            title: 'khilonfast sizin adınıza GA4 yapısını oluşturur',
             description: 'Uygun paket kapsamında Google Analytics hesabı ve property kurulumu yapılır.'
           },
           {
@@ -102,14 +102,14 @@ export const setupFlows: SetupFlow[] = [
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'KhilonFast, GTM üzerinden ölçüm ve etiket süreçlerini yönetebilir.'
+        completionDescription: 'khilonfast, GTM üzerinden ölçüm ve etiket süreçlerini yönetebilir.'
       },
       {
         id: 'no',
         label: 'HAYIR, HESABIM YOK',
         steps: [
           {
-            title: 'KhilonFast sizin adınıza GTM hesabı açar',
+            title: 'khilonfast sizin adınıza GTM hesabı açar',
             description: 'Markanıza özel container yapısı oluşturulur.'
           },
           {
@@ -132,7 +132,7 @@ export const setupFlows: SetupFlow[] = [
     subtitle:
       'LinkedIn üzerinde B2B hedef kitlelere ulaşmak, lead üretimini başlatmak ve kampanyaları doğru yönetmek için hesap kurulumunun eksiksiz olması gerekir.',
     purpose:
-      'LinkedIn Campaign Manager ve varsa Business Manager yapınızı KhilonFast erişimiyle doğru biçimde yapılandırmak için bu akış izlenir.',
+      'LinkedIn Campaign Manager ve varsa Business Manager yapınızı khilonfast erişimiyle doğru biçimde yapılandırmak için bu akış izlenir.',
     decisionQuestion: 'Mevcut LinkedIn altyapınız hangisine daha uygun?',
     videoUrl: 'https://player.vimeo.com/video/1128165568',
     paths: [
@@ -149,7 +149,7 @@ export const setupFlows: SetupFlow[] = [
             description: 'Reklam hesabı oluşturularak temel faturalama ayarları tamamlanır.'
           },
           {
-            title: 'KhilonFast erişimi tanımlanır',
+            title: 'khilonfast erişimi tanımlanır',
             description: 'Reklam yönetimi için gerekli ajans erişim yetkileri verilir.'
           }
         ],
@@ -169,12 +169,12 @@ export const setupFlows: SetupFlow[] = [
             description: 'Uzun vadeli ve güvenli ajans yönetimi için Business Manager kurgulanır.'
           },
           {
-            title: 'KhilonFast Agency erişimi eklenir',
+            title: 'khilonfast Agency erişimi eklenir',
             description: 'Ajans ID bilgisiyle erişim daveti gönderilir ve yetkilendirme tamamlanır.'
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'LinkedIn reklam yönetimi KhilonFast tarafından devralınabilir duruma gelir.'
+        completionDescription: 'LinkedIn reklam yönetimi khilonfast tarafından devralınabilir duruma gelir.'
       },
       {
         id: 'scenario-3',
@@ -185,7 +185,7 @@ export const setupFlows: SetupFlow[] = [
             description: 'LinkedIn Business Manager altında bağlı varlıkları açın.'
           },
           {
-            title: 'KhilonFast Agency ID ekleyin',
+            title: 'khilonfast Agency ID ekleyin',
             description: 'Business Manager üzerinden ajans erişimini güvenli şekilde tanımlayın.'
           },
           {
@@ -194,7 +194,7 @@ export const setupFlows: SetupFlow[] = [
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'KhilonFast, Business Manager üzerinden hesaplarınızı yönetmeye başlar.'
+        completionDescription: 'khilonfast, Business Manager üzerinden hesaplarınızı yönetmeye başlar.'
       }
     ]
   },
@@ -204,7 +204,7 @@ export const setupFlows: SetupFlow[] = [
     subtitle:
       'Meta platformlarında reklam yayını, dönüşüm takibi ve hedefleme için Business Manager, reklam hesabı ve Pixel kurulumunun birlikte tamamlanması gerekir.',
     purpose:
-      'Meta Business Manager, reklam hesabı, sayfa erişimi ve Pixel yapılandırmasını KhilonFast yönetimine uygun hale getirmek için bu akış kullanılır.',
+      'Meta Business Manager, reklam hesabı, sayfa erişimi ve Pixel yapılandırmasını khilonfast yönetimine uygun hale getirmek için bu akış kullanılır.',
     decisionQuestion: 'Business Manager ve reklam hesabınız hazır mı?',
     videoUrl: 'https://player.vimeo.com/video/1128166155',
     paths: [
@@ -214,7 +214,7 @@ export const setupFlows: SetupFlow[] = [
         steps: [
           {
             title: 'Business Manager üzerinden erişim verin',
-            description: 'İş Ayarları bölümünden KhilonFast Business ID bilgisini ekleyin.'
+            description: 'İş Ayarları bölümünden khilonfast Business ID bilgisini ekleyin.'
           },
           {
             title: 'Reklam hesabı ve sayfa izinlerini açın',
@@ -226,7 +226,7 @@ export const setupFlows: SetupFlow[] = [
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'Meta reklam altyapınız KhilonFast yönetimine hazırdır.'
+        completionDescription: 'Meta reklam altyapınız khilonfast yönetimine hazırdır.'
       },
       {
         id: 'no',
@@ -234,7 +234,7 @@ export const setupFlows: SetupFlow[] = [
         steps: [
           {
             title: 'Business Manager oluşturulur',
-            description: 'KhilonFast, markanıza uygun temel Meta işletme yapısını oluşturur.'
+            description: 'khilonfast, markanıza uygun temel Meta işletme yapısını oluşturur.'
           },
           {
             title: 'Reklam hesabı ve sayfa bağlantısı kurulur',
@@ -254,7 +254,7 @@ export const setupFlows: SetupFlow[] = [
     path: '/search-ads-google-reklamlari-kurulum-akisi',
     title: 'Search Ads (Google Reklamları) Kurulum Akışı',
     subtitle:
-      'KhilonFast reklam yönetimini başlatabilmek için Google Ads hesabınızın erişim yetkisi doğru şekilde tanımlanmalıdır.',
+      'khilonfast reklam yönetimini başlatabilmek için Google Ads hesabınızın erişim yetkisi doğru şekilde tanımlanmalıdır.',
     purpose:
       'Google Ads üzerinde kampanya yönetimi ve dönüşüm optimizasyonu süreçlerini başlatmak için erişim ve izleme kurulumu yapılır.',
     decisionQuestion: 'Google Ads hesabınız var mı?',
@@ -265,7 +265,7 @@ export const setupFlows: SetupFlow[] = [
         label: 'EVET, HESABIM VAR',
         steps: [
           {
-            title: 'KhilonFast erişim talebi gönderir',
+            title: 'khilonfast erişim talebi gönderir',
             description: 'Google Ads hesabınıza manager erişim daveti iletilir.'
           },
           {
@@ -278,7 +278,7 @@ export const setupFlows: SetupFlow[] = [
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'KhilonFast, Search Ads kampanyalarınızı yönetmeye hazırdır.'
+        completionDescription: 'khilonfast, Search Ads kampanyalarınızı yönetmeye hazırdır.'
       },
       {
         id: 'no',
@@ -308,7 +308,7 @@ export const setupFlows: SetupFlow[] = [
     subtitle:
       'TikTok platformunda reklam yayını, dönüşüm takibi ve ajans yönetimi için Business Center, Ads Manager ve Pixel kurulumunun tamamlanması gerekir.',
     purpose:
-      'Mevcut TikTok altyapınıza göre doğru senaryoyu seçerek KhilonFast erişimi ve reklam ölçümleme yapısını hızlıca aktif etmek amaçlanır.',
+      'Mevcut TikTok altyapınıza göre doğru senaryoyu seçerek khilonfast erişimi ve reklam ölçümleme yapısını hızlıca aktif etmek amaçlanır.',
     decisionQuestion: 'Mevcut TikTok altyapınız hangisi?',
     videoUrl: 'https://player.vimeo.com/video/1128166698',
     paths: [
@@ -321,7 +321,7 @@ export const setupFlows: SetupFlow[] = [
             description: 'Admin yetkisiyle mevcut Business Center panelini açın.'
           },
           {
-            title: 'KhilonFast agency erişimini tanımlayın',
+            title: 'khilonfast agency erişimini tanımlayın',
             description: 'Agency ID üzerinden hesap erişim davetini gönderin.'
           },
           {
@@ -330,7 +330,7 @@ export const setupFlows: SetupFlow[] = [
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'TikTok reklam altyapınız KhilonFast yönetimine hazırdır.'
+        completionDescription: 'TikTok reklam altyapınız khilonfast yönetimine hazırdır.'
       },
       {
         id: 'scenario-2',
@@ -346,7 +346,7 @@ export const setupFlows: SetupFlow[] = [
           },
           {
             title: 'Ajans erişimi ve bağlantılar aktif edilir',
-            description: 'KhilonFast erişimi tanımlanır, hesaplar birbiriyle ilişkilendirilir.'
+            description: 'khilonfast erişimi tanımlanır, hesaplar birbiriyle ilişkilendirilir.'
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
@@ -357,7 +357,7 @@ export const setupFlows: SetupFlow[] = [
         label: 'HİÇBİRİ YOK',
         steps: [
           {
-            title: 'KhilonFast Business Center oluşturur',
+            title: 'khilonfast Business Center oluşturur',
             description: 'Markanız için sıfırdan profesyonel Business Center hesabı açılır.'
           },
           {

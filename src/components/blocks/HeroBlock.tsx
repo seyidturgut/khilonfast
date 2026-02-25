@@ -16,12 +16,12 @@ interface HeroBlockProps {
 
 export default function HeroBlock({ data }: HeroBlockProps) {
     const {
-        subtitle = 'KHILONFAST PAZARLAMA ÇÖZÜMLERİ',
+        subtitle = 'khilonfast PAZARLAMA ÇÖZÜMLERİ',
         title = 'Daha Az Zaman,',
         titleHighlight = 'Daha Fazla Sonuç!',
         description = 'khilonfast, pazarlama çözümlerinde hızlı yolunuz. Büyümeyi destekleyen ve ölçülebilir sonuçlar sunan pazarlama stratejileri ile işinize değer katıyoruz.',
         button1Text = 'Hemen Başlayın',
-        button1Link = '#contact',
+    button1Link = '/iletisim',
         button2Text = 'Hizmetlerimiz',
         button2Link = '#services'
     } = data;

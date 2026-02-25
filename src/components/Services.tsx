@@ -1,14 +1,20 @@
 import { HiArrowRight } from 'react-icons/hi2'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import './Services.css'
 
 export default function Services() {
+    const { t, i18n } = useTranslation('common');
+    const currentLang = i18n.language.split('-')[0];
+    const langPrefix = currentLang === 'en' ? '/en' : '';
+    const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+
     return (
         <section id="services" className="services">
             <div className="container">
                 <div className="services-header">
                     <h2 className="services-title">
-                        İşletmeniz İçin Kapsamlı<br />
-                        Pazarlama Çözümleri
+                        {t('services.header.title')}
                     </h2>
                 </div>
 
@@ -33,13 +39,13 @@ export default function Services() {
                         </div>
 
                         <div className="service-info">
-                            <h3 className="service-title-modern">Başarıya Ulaştıran Özel Pazarlama Stratejileri</h3>
-                            <p className="service-desc-modern">İşletmenizin büyümesine yönelik geniş pazarlama hizmetlerimizden yararlanın.</p>
+                            <h3 className="service-title-modern">{t('services.item1.title')}</h3>
+                            <p className="service-desc-modern">{t('services.item1.description')}</p>
 
-                            <button className="service-btn-modern">
-                                <span>Keşfet</span>
+                            <Link to={toLocalized('gtm')} className="service-btn-modern">
+                                <span>{t('common.discover')}</span>
                                 <HiArrowRight className="btn-arrow-icon" />
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -66,13 +72,13 @@ export default function Services() {
                         </div>
 
                         <div className="service-info">
-                            <h3 className="service-title-modern">Markalaşma ve İletişimde Yenilikçi Çözümler</h3>
-                            <p className="service-desc-modern">Marka stratejisi ve kurumsal iletişimde kapsamlı çözümlerimizi keşfedin.</p>
+                            <h3 className="service-title-modern">{t('services.item2.title')}</h3>
+                            <p className="service-desc-modern">{t('services.item2.description')}</p>
 
-                            <button className="service-btn-modern">
-                                <span>Keşfet</span>
+                            <Link to={toLocalized('contentStrategy')} className="service-btn-modern">
+                                <span>{t('common.discover')}</span>
                                 <HiArrowRight className="btn-arrow-icon" />
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -91,13 +97,13 @@ export default function Services() {
                         </div>
 
                         <div className="service-info">
-                            <h3 className="service-title-modern">Dijitalde Güçlü Varlık için Pazarlama Uzmanlığı</h3>
-                            <p className="service-desc-modern">Etkili sonuçlar elde etmek için size özel dijital pazarlama çözümlerimizi inceleyin.</p>
+                            <h3 className="service-title-modern">{t('services.item3.title')}</h3>
+                            <p className="service-desc-modern">{t('services.item3.description')}</p>
 
-                            <button className="service-btn-modern">
-                                <span>Keşfet</span>
+                            <Link to={toLocalized('idm')} className="service-btn-modern">
+                                <span>{t('common.discover')}</span>
                                 <HiArrowRight className="btn-arrow-icon" />
-                            </button>
+                            </Link>
                         </div>
                     </div>
 

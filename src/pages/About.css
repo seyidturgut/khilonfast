@@ -26,7 +26,8 @@
 }
 
 .about-hero-title span {
-    color: #C5D63D;
+    color: #7f980f;
+    text-shadow: 0 2px 14px rgba(255, 255, 255, 0.45);
 }
 
 .about-hero-description {

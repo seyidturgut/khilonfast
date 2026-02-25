@@ -33,7 +33,7 @@ app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Khilonfast API is running' });
+    res.json({ status: 'ok', message: 'khilonfast API is running' });
 });
 
 // Error handling middleware

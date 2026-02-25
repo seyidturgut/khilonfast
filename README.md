@@ -1,4 +1,4 @@
-# Khilonfast - Modern React Website
+# khilonfast - Modern React Website
 
 Modern, premium tasarımlı kurumsal web sitesi. React + TypeScript + Vite ile geliştirilmiştir.
 
@@ -79,4 +79,4 @@ Email: info@khilonfast.com
 
 ---
 
-© 2026 Khilonfast. Tüm hakları saklıdır.
+© 2026 khilonfast. Tüm hakları saklıdır.

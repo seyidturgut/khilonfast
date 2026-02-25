@@ -1,0 +1,1149 @@
+{
+    "pricing": {
+        "monthly": "Ay",
+        "buyNow": "Satın Al",
+        "popular": "En Çok Tercih Edilen"
+    },
+    "process": {
+        "steps": {
+            "buy": {
+                "title": "Satın Al",
+                "description": "İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar."
+            },
+            "auth": {
+                "title": "Yetkilendir",
+                "description": "khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için tıklayın>>"
+            },
+            "brief": {
+                "title": "Brief Ver",
+                "description": "Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur."
+            },
+            "analysis": {
+                "title": "Analiz",
+                "description": "khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar."
+            },
+            "approval": {
+                "title": "Onay",
+                "description": "De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
+            }
+        }
+    },
+    "header": {
+        "services": "Hizmetler",
+        "sectoral": "Sektörel",
+        "trainings": "Eğitimler",
+        "products": "Ürünler",
+        "about": "Hakkımızda",
+        "howItWorks": "Nasıl Çalışır?",
+        "contact": "İletişim",
+        "login": "Giriş Yap",
+        "register": "Kayıt Ol",
+        "home": "Ana Sayfa",
+        "allTrainings": "Tüm Eğitimler",
+        "backMenu": "Geri: Menü",
+        "menuItems": {
+            "services": {
+                "gtm": {
+                    "title": "Go To Market Stratejisi",
+                    "desc": "Pazara giriş ve büyüme planları"
+                },
+                "content": {
+                    "title": "İçerik Stratejisi",
+                    "desc": "Marka hikayenizi güçlendiren içerikler"
+                },
+                "integrated": {
+                    "title": "Bütünleşik Dijital Pazarlama",
+                    "desc": "360 derece pazarlama çözümleri"
+                },
+                "ads": {
+                    "title": "Google Ads",
+                    "desc": "Performans odaklı reklam yönetimi"
+                },
+                "social": {
+                    "title": "Sosyal Medya Reklamcılığı",
+                    "desc": "Hedef kitle etkileşimini artırın"
+                },
+                "seo": {
+                    "title": "SEO",
+                    "desc": "Arama motorlarında üst sıralara çıkın"
+                },
+                "production": {
+                    "title": "İçerik Üretimi",
+                    "desc": "Etkileyici ve özgün içerik üretimi"
+                },
+                "email": {
+                    "title": "B2B Email Pazarlama",
+                    "desc": "Profesyonel e-posta kampanyaları"
+                }
+            },
+            "sectoral": {
+                "b2b": {
+                    "title": "B2B Firmalar İçin 360 Pazarlama Yönetimi",
+                    "desc": "Bütünleşik B2B pazarlama çözümleri"
+                },
+                "fintech": {
+                    "title": "FinTech Firmaları İçin 360 Pazarlama",
+                    "desc": "Finansal teknoloji odaklı çözümler"
+                },
+                "food": {
+                    "title": "Endüstriyel Gıda & Şef Çözümleri",
+                    "desc": "Gıda sektörüne özel 360 pazarlama"
+                },
+                "payment": {
+                    "title": "Ödeme Sistemleri İçin 360 Pazarlama Yönetimi",
+                    "desc": "Fintech odaklı stratejik çözümler"
+                },
+                "tech": {
+                    "title": "Teknoloji & Yazılım Firmaları İçin 360 Pazarlama Yönetimi",
+                    "desc": "SaaS and software-oriented solutions"
+                },
+                "energy": {
+                    "title": "Enerji Firmaları İçin 360 Pazarlama Yönetimi",
+                    "desc": "Enerji ve teknoloji odaklı çözümler"
+                },
+                "design": {
+                    "title": "Ofis & Kurumsal İç Tasarım Sektörü İçin Pazarlama Yönetimi",
+                    "desc": "Mimari ve kurumsal tasarım çözümleri"
+                },
+                "fleet": {
+                    "title": "Filo Kiralama Firmaları İçin 360 Pazarlama Yönetimi",
+                    "desc": "Kurumsal mobilite ve filo çözümleri"
+                },
+                "manufacturing": {
+                    "title": "Üretim Sektörü Firmaları İçin 360 Pazarlama Yönetimi",
+                    "desc": "Endüstriyel ve üretim odaklı çözümler"
+                }
+            },
+            "trainings": {
+                "all": {
+                    "title": "Tüm Eğitimler",
+                    "desc": "Program listesini tek ekranda görüntüleyin"
+                },
+                "growth": {
+                    "title": "Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "khilonfast temel büyüme odaklı pazarlama eğitim programı."
+                },
+                "payment": {
+                    "title": "Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik."
+                },
+                "b2b": {
+                    "title": "B2B Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti."
+                },
+                "fintech": {
+                    "title": "Fintech Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Fintech odaklı büyüme stratejileri ve kanal optimizasyonu."
+                },
+                "tech": {
+                    "title": "Teknoloji & Yazılım Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "SaaS ve teknoloji markaları için performans odaklı eğitim içeriği."
+                },
+                "manufacturing": {
+                    "title": "Üretim Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi."
+                },
+                "energy": {
+                    "title": "Enerji Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Enerji sektöründe karar verici odaklı pazarlama planlama yaklaşımı."
+                },
+                "design": {
+                    "title": "Ofis & Kurumsal İç Tasarım Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Kurumsal iç tasarım firmaları için tekliften satışa pazarlama modeli."
+                },
+                "fleet": {
+                    "title": "Filo Kiralama Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Filo kiralama firmalarında lead kalitesi ve dönüşüm yönetimi eğitimi."
+                },
+                "food": {
+                    "title": "Endüstriyel Gıda Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama eğitim akışı."
+                }
+            },
+            "products": {
+                "maestro": {
+                    "title": "Maestro AI",
+                    "desc": "B2B sektörü için özelleştirilmiş yapay zeka pazarlama stratejisti."
+                },
+                "eyeTracking": {
+                    "title": "Eye Tracking Reklam Analizi",
+                    "desc": "AI + Eye Tracking ile yaratıcı performans analizi ve ROI risk azaltma."
+                }
+            }
+        }
+    },
+    "footer": {
+        "description": "khilon as veri analitiği bilimini hem de yaratıcılık sanatını kullanarak en pazarlama faaliyetlerini ölçülmesine yardımcı olmaya çalışıyoruz. Misyonumuz, pazarlamanızı dönüştürmek, onları yalnızca daha verimli değil, aynı zamanda iş hedeflerine ulaşmada etkili hale getirmektir.",
+        "rights": "Tüm hakları saklıdır.",
+        "privacy": "Gizlilik Politikası",
+        "terms": "Hizmet Şartları",
+        "career": "Kariyer Fırsatları",
+        "columns": {
+            "company": "Khilon",
+            "services": "Servisler",
+            "info": "Bilgilendirme"
+        },
+        "links": {
+            "home": "ana sayfa",
+            "about": "hakkımızda",
+            "contact": "bize ulaşın"
+        }
+    },
+    "common": {
+        "buyNow": "Satın Al",
+        "explore": "Keşfedin",
+        "loading": "Yükleniyor...",
+        "readMore": "Devamını Oku",
+        "startNow": "Hemen Başlayın",
+        "discover": "Keşfet",
+        "contactUs": "İletişime Geçin",
+        "sampleReport": "Örnek Rapor",
+        "sampleReportDescription": "PDF içeriğini burada görüntüleyebilirsiniz. İsterseniz aşağıdaki butondan indirebilirsiniz.",
+        "sampleReportPdfTitle": "Örnek Rapor PDF",
+        "downloadPdf": "PDF'i İndir",
+        "openInNewTab": "Yeni Sekmede Aç"
+    },
+    "hero": {
+        "subtitle": "khilonfast PAZARLAMA ÇÖZÜMLERİ",
+        "title": "Daha Az Zaman,",
+        "titleHighlight": "Daha Fazla Sonuç!",
+        "description": "khilonfast, pazarlama çözümlerinde hızlı yolunuz. Büyümeyi destekleyen ve ölçülebilir sonuçlar sunan pazarlama stratejileri ile işinize değer katıyoruz."
+    },
+    "about": {
+        "title": "Strateji, Yaratıcılık ve Teknolojiyi Birleştiren Pazarlama Çözümleri",
+        "description": "khilonfast olarak, işletmenizin ihtiyaçlarına göre uyarlanmış benzersiz pazarlama çözümleri sunuyoruz. Strateji, yaratıcılık ve teknolojiyi birleştirerek fark yaratan sonuçlar sunuyoruz.",
+        "item1": "Stratejik Planlama",
+        "item2": "Yaratıcı Stratejiler",
+        "item3": "Teknolojik İnovasyon"
+    },
+    "solutions": {
+        "header": {
+            "title": "Ayrıntılı İş Analizi İçin Kapsamlı Denetim Hizmetleri"
+        },
+        "item1": {
+            "title": "Büyüme Odaklı Stratejik Pazarlama",
+            "description": "Denetim hizmetlerimiz, iş operasyonlarınızı kapsamlı bir şekilde analiz ederek iyileştirme alanlarını ve büyüme fırsatlarını belirler."
+        },
+        "item2": {
+            "title": "Dijital Pazarlama Stratejileri",
+            "description": "Çözümlerimiz, işletmelerin güçlü bir dijital varlık oluşturmasına ve hedef kitlelerine etkili bir şekilde ulaşmasına yardımcı olur."
+        },
+        "item3": {
+            "title": "Markanıza Özel Pazarlama Çözümleri",
+            "description": "Markanızın vizyonu, değerleri ve hedefleri ile uyumlu özel pazarlama stratejileri sunarak maksimum etki ve başarı sağlıyoruz."
+        }
+    },
+    "services": {
+        "header": {
+            "title": "İşletmeniz İçin Kapsamlı Pazarlama Çözümleri"
+        },
+        "item1": {
+            "title": "Başarıya Ulaştıran Özel Pazarlama Stratejileri",
+            "description": "İşletmenizinin büyümesine yönelik geniş pazarlama hizmetlerimizden yararlanın."
+        },
+        "item2": {
+            "title": "Markalaşma ve İletişimde Yenilikçi Çözümler",
+            "description": "Marka stratejisi ve kurumsal iletişimde kapsamlı çözümlerimizi keşfedin."
+        },
+        "item3": {
+            "title": "Marketing Expertise for a Strong Digital Presence",
+            "description": "Examine our special digital marketing solutions to achieve effective results."
+        }
+    },
+    "features": {
+        "title": "Büyüme Odaklı Pazarlama Çözümlerimizi Keşfedin",
+        "description": "khilonfast olarak, iş büyümesini desteklemek için tasarlanmış ürün bazlı pazarlama çözümleri sunuyoruz. Çözümlerimiz, ölçülebilir sonuçlar sağlamak için strateji, yaratıcılık ve teknolojiyi bir araya getirir.",
+        "list1": "Hedeflenmiş dijital kampanyalarımızla marka görünürlüğü artırın.",
+        "list2": "Veri odaklı pazarlama stratejilerimizle dönüşüm oranını artırın."
+    },
+    "faq": {
+        "title": "SSS",
+        "subtitle": "khilonfast hizmetleri hakkında sıkça sorulan soruların yanıtlarını burada bulabilirsiniz!",
+        "item1": {
+            "question": "khilonfast hangi hizmetleri sunar?",
+            "answer": "khilonfast; denetim, strateji geliştirme, dijital pazarlama, marka yönetimi, CRM, satış ve kurumsal iletişim gibi alanlarda uçtan uca pazarlama hizmetleri sunar. Her hizmet, markaların iş hedeflerine değer katacak şekilde tasarlanır ve ihtiyaçlara göre özelleştirilebilir."
+        },
+        "item2": {
+            "question": "Hizmet fiyatlandırması nasıl belirlenir?",
+            "answer": "khilonfast'in hizmet ücretleri, hizmet türüne ve iş birliği modeline göre farklılık gösterir. Aylık sabit ücretli (retainer) ve proje/ürün bazlı fiyatlandırma seçeneklerimiz mevcuttur. Detaylı bilgi için bizimle iletişime geçebilirsiniz."
+        },
+        "item3": {
+            "question": "khilonfast ile çalışma modelim nasıl belirlenir?",
+            "answer": "khilonfast, markaların ihtiyaçlarına göre şekillenen esnek iş birliği modelleri sunar. İster aylık sabit ücretli bir çalışma modeli, ister size özel çözümler ya da belirli ürün bazlı hizmetler tercih edin — pazarlama hedeflerinize en uygun yapıyı birlikte oluşturabiliriz."
+        },
+        "item4": {
+            "question": "Başarı hikayeleriniz var mı?",
+            "answer": "Evet, hizmetlerimizin markalar üzerindeki etkisini gösteren birçok başarı hikayemiz ve müşteri yorumumuz bulunuyor. Detaylı bilgi için bize ulaşabilirsiniz."
+        },
+        "item5": {
+            "question": "Size nasıl ulaşabilirim?",
+            "answer": "khilonfast ile iletişime geçmek için web sitemizdeki iletişim formunu doldurabilir veya bize e-posta ve telefon aracılığıyla doğrudan ulaşabilirsiniz. Sizden haber almayı sabırsızlıkla bekliyoruz!"
+        }
+    },
+    "aboutPage": {
+        "hero": {
+            "title": "İşletmenizin Potansiyelini Ortaya Çıkarın!",
+            "description": "khilonfast ile işinizi büyütün, dijital dünyada fark yaratın. Pazara girişten satışa, verimli büyümeye kadar dijital dünyada yanınızdayız."
+        },
+        "who": {
+            "title": "khilonfast kimdir?",
+            "description": "khilonfast, dijital pazarlama alanında uzmanlaşmış, sonuç odaklı bir büyüme ajansıdır. B2B ve teknoloji odaklı işletmelerin karmaşık pazarlama süreçlerini basitleştirerek sürdürülebilir büyüme sağlıyoruz.",
+            "feature1": {
+                "title": "Stratejik Planlama",
+                "desc": "Şirketlerin pazarda doğru konumlanmasını sağlıyoruz."
+            },
+            "feature2": {
+                "title": "Bütünleşik Pazarlama",
+                "desc": "Tüm kanalların birbiriyle uyumlu çalışmasını yönetiyoruz."
+            },
+            "feature3": {
+                "title": "Veri Analizi",
+                "desc": "Kararlarımızı pazar gerçeklerine ve verilere dayandırıyoruz."
+            },
+            "feature4": {
+                "title": "Teknoloji & Yazılım",
+                "desc": "İş süreçlerinizi dijital dönüşüm ve Maestro AI ile hızlandırıyoruz."
+            }
+        },
+        "birth": {
+            "title": "khilonfast Nasıl Doğdu?",
+            "card1": {
+                "title": "Gelenekselin Dışında",
+                "desc": "Sektördeki klişeleri ve hantal yapıları yıkarak, modern dünyanın hızına uygun bir ajans modeliyle yola çıktık."
+            },
+            "card2": {
+                "title": "Farklı Bir Vizyon",
+                "desc": "Her işletmenin benzersiz bir potansiyeli olduğuna ve doğru stratejiyle her markanın zirveye ulaşabileceğine inanıyoruz."
+            },
+            "card3": {
+                "title": "Deneyimle Teknolojiyi Buluşturmak",
+                "desc": "Pazarlamanın temel prensiplerini bugünün teknolojik olanaklarıyla harmanladık ve fark yaratan sonuçlar elde ettik."
+            }
+        },
+        "quote": {
+            "title": "Dijital çağın hızına uyum sağlamayın,",
+            "highlight": "onu yönetmeyi öğrenin!"
+        },
+        "model": {
+            "title": "Hizmet Modelimiz",
+            "description": "khilonfast olarak hizmet modelimizi işletmelerin sadece ihtiyaçlarına değil, aynı zamanda büyüme potansiyellerine göre tasarladık.",
+            "sub1": {
+                "title": "Analiz Odaklı",
+                "desc": "Her sürece derinlemesine bir analizle başlar, işletmenizin dijital röntgenini çekeriz. Mevcut durumunuzu anlayıp eksikleri gideririz."
+            },
+            "sub2": {
+                "title": "Yenilikçi Yaklaşımlar",
+                "desc": "Standartların dışında, markanıza özel yaratıcı ve teknik çözümler geliştiririz. Sadece trendleri takip etmez, markanıza yön veririz."
+            }
+        },
+        "why": {
+            "title": "Neden khilonfast?",
+            "description": "İşletmenizi bir sonraki aşamaya taşımak için gerekli tüm dijital kasları sağlıyoruz. Biz sadece bir hizmet sağlayıcı değil, büyüme yolculuğunuzdaki stratejik ortağınızız.",
+            "stat1": {
+                "title": "Veri Odaklı",
+                "desc": "Ölçemediğimiz hiçbir süreci yönetmiyoruz."
+            },
+            "stat2": {
+                "title": "Hızlı Etki",
+                "desc": "Zamanınızı boşa harcamadan sonuca odaklanıyoruz."
+            },
+            "stat3": {
+                "title": "Global Vizyon",
+                "desc": "Dünya çapında geçerli pazarlama prensipleri uyguluyoruz."
+            },
+            "stat4": {
+                "title": "Derin Analiz",
+                "desc": "Rakiplerinizi ve pazarınızı her an izliyoruz."
+            }
+        },
+        "quickBanner": {
+            "title": "Hızlı ve Etkili Pazarlama İçin khilonfast Yanınızda"
+        },
+        "notFor": {
+            "title": "khilonfast Kimler İçin Uygun Değil?",
+            "description": "Vizyonumuzla örtüşmeyen bazı yaklaşımlar bizimle çalışmanız için uygun olmayabilir.",
+            "item1": {
+                "title": "Yeniliğe Kapalı Olanlar İçin Değil",
+                "desc": "Eğer dijital dönüşüme ve yenilikçi yöntemlere kapalıysanız biz doğru adres olmayabiliriz."
+            },
+            "item2": {
+                "title": "Sadece \"Reklam Çıkalım\" Diyenler",
+                "desc": "Biz sadece bütçe yönetmiyoruz; uçtan uca büyüme stratejisi ve marka otoritesi inşa ediyoruz."
+            },
+            "item3": {
+                "title": "Kısa Vadeli Düşünenler",
+                "desc": "Pazarlamanın bir yatırım ve süreç olduğunun farkında olan, vizyoner markalarla çalışıyoruz."
+            }
+        },
+        "brandStatement": {
+            "title": "Alanında uzman kadromuzla markanızın büyüme serüveninde yanınızdayız."
+        },
+        "discover": {
+            "title": "Çözümlerimizi Keşfedin!",
+            "description": "İşinizi büyütmek için bugün bir adım atın."
+        }
+    },
+    "howItWorksPage": {
+        "hero": {
+            "kicker": "Nasıl Çalışır?",
+            "title": "khilonfast Nasıl Çalışır?",
+            "description": "Hızlı, profesyonel ve güvenilir pazarlama süreçleri sunmak için tasarlandı. Gereksiz toplantı yükünü azaltır, doğru brief ile süreci netleştirir ve ölçülebilir sonuca odaklanır.",
+            "tag1": "Hız Kazandırın",
+            "tag2": "Netlik Kazandırın",
+            "tag3": "Odaklanın"
+        },
+        "steps": {
+            "kicker": "5 adımda khilonfast",
+            "title": "Nasıl Çalışır?",
+            "description": "Sadece birkaç adımda dijital pazarlama sürecinizi başlatın. Tüm adımlar şeffaf, hızlı ve ölçülebilir şekilde tasarlandı.",
+            "item1": {
+                "title": "Satın Al",
+                "desc": "İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar."
+            },
+            "item2": {
+                "title": "Yetkilendir",
+                "desc": "khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için aşağıdaki kurulum akışlarını kullanın."
+            },
+            "item3": {
+                "title": "Brief Ver",
+                "desc": "Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın."
+            },
+            "item4": {
+                "title": "Analiz",
+                "desc": "khilonfast ekibi briefinizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar."
+            },
+            "item5": {
+                "title": "Onay",
+                "desc": "De-brief raporunun onaylanması ile hizmet kurulumları başlar ve ölçümlemeler 1 hafta içinde aktif edilir."
+            }
+        },
+        "auth": {
+            "kicker": "Yetkilendirme Rehberi",
+            "title": "Yetkilendirin ve Başlayın",
+            "description": "Tüm kanalları güvenle bağlayın, sürecinizi hızla aktive edin.",
+            "videoTitle": "Yetkilendirme Rehberi",
+            "item1": {
+                "title": "Google Analytics",
+                "desc": "Hizmeti başlatmak için Google Analytics erişimlerini tanımlayın."
+            },
+            "item2": {
+                "title": "Google Tag Manager",
+                "desc": "Hizmeti başlatmak için Google Tag Manager yetkilerini verin."
+            },
+            "item3": {
+                "title": "Bütünleşik Pazarlama",
+                "desc": "Hizmeti başlatmak için pazarlama araçlarına erişim tanımlayın."
+            },
+            "item4": {
+                "title": "Google Ads",
+                "desc": "Hizmeti başlatmak için Google Ads hesap erişimlerini ekleyin."
+            },
+            "item5": {
+                "title": "Google Search Console",
+                "desc": "Hizmeti başlatmak için Google Search Console yetkilerini ekleyin."
+            },
+            "item6": {
+                "title": "Meta (Facebook & Instagram)",
+                "desc": "Hizmeti başlatmak için Meta reklam hesap erişimlerini verin."
+            },
+            "item7": {
+                "title": "LinkedIn Reklamları",
+                "desc": "Hizmeti başlatmak için LinkedIn Ads erişimlerini tanımlayın."
+            },
+            "item8": {
+                "title": "TikTok",
+                "desc": "Hizmeti başlatmak için TikTok Business erişimlerini paylaşın."
+            }
+        },
+        "values": {
+            "kicker": "khilonfast ile işinizi büyütün",
+            "title": "Temel Yaklaşımlarımız",
+            "description": "Dijital kanallarınızı etkili biçimde yöneterek performansınızı en üst seviyeye çıkarmak için strateji, veri ve operasyonu tek yapıda topluyoruz.",
+            "item1": {
+                "title": "360 Derece Bakış Açısı",
+                "sub": "Her Detayı Kapsayan khilonfast Yaklaşımı",
+                "desc": "Tek bir parçaya odaklanmak yerine tüm süreçleri kapsayan yaklaşımla markanızın hedeflerine uyumlu, bütünsel pazarlama yönetimi kuruyoruz."
+            },
+            "item2": {
+                "title": "Büyüme Odaklı Stratejiler",
+                "sub": "Sektöre Özel Büyüme Planları",
+                "desc": "Her sektörün dinamiklerine uygun planlarla hedef kitlenizle daha etkili iletişim kurmanızı ve sürdürülebilir büyüme elde etmenizi sağlıyoruz."
+            },
+            "item3": {
+                "title": "Veri Odaklı Pazarlama",
+                "sub": "Daha Fazla Veri, Daha Fazla Başarı",
+                "desc": "Veriyi yalnızca toplamaz, aksiyona dönüştürürüz. Müşteri davranışlarını analiz ederek dönüşüm oranlarınızı güçlendirecek net içgörüler üretiriz."
+            },
+            "item4": {
+                "title": "Yenilikle Fark Yaratın",
+                "sub": "Rakiplerden Bir Adım Önde Olun",
+                "desc": "İleri veri analitiği ve yapay zeka destekli araçlarla kalabalıkta kaybolmanızı önler, markanızı rekabette öne taşırız."
+            },
+            "item5": {
+                "title": "Stratejik İş Ortağı",
+                "sub": "Uzun Vadeli Başarı İçin Güvenilir Ortak",
+                "desc": "Yalnızca kısa vadeli kampanyalar değil, markanızın sürekli büyümesi için uzun vadeli ve ölçülebilir başarı stratejileri kurarız."
+            }
+        }
+    },
+    "contact": {
+        "hero": {
+            "eyebrow": "İletişim",
+            "title": "Markanız İçin Hızlı, Net ve Sonuç Odaklı İletişim",
+            "lead": "Projenizi, hedeflerinizi ve mevcut durumunuzu paylaşın. Ekibimiz en kısa sürede size dönüş yapar ve en uygun yol haritasını çıkarır.",
+            "badge1": "24 saat içinde dönüş",
+            "badge2": "Gizlilik taahhüdü"
+        },
+        "card": {
+            "title": "İletişim Bilgileri",
+            "email": "E-posta",
+            "phone": "Telefon",
+            "address": "Adres",
+            "location": "İstanbul, Türkiye",
+            "hours": "Çalışma saatleri: 09:00 - 18:30 (Hafta içi)"
+        },
+        "form": {
+            "title": "Hızlı Form",
+            "description": "Teklif almak veya proje detaylarını paylaşmak için formu doldurun.",
+            "firstName": "Ad",
+            "lastName": "Soyad",
+            "email": "E-posta",
+            "phone": "Telefon",
+            "brand": "Şirket / Marka",
+            "detail": "Proje Detayı",
+            "firstNamePlaceholder": "Adınız",
+            "lastNamePlaceholder": "Soyadınız",
+            "emailPlaceholder": "ornek@firma.com",
+            "phonePlaceholder": "+90 5XX XXX XX XX",
+            "brandPlaceholder": "Şirket adı",
+            "detailPlaceholder": "Hedef, sektör, bütçe ve beklentilerinizi yazın.",
+            "submit": "Gönder"
+        },
+        "side": {
+            "helpTitle": "Hangi konularda destek veriyoruz?",
+            "list1": "Go-To-Market ve büyüme stratejileri",
+            "list2": "Performans reklamları (Google Ads, sosyal)",
+            "list3": "SEO ve içerik stratejisi",
+            "list4": "CRM, email pazarlama ve otomasyon",
+            "list5": "Sektörel B2B pazarlama çözümleri",
+            "meeting": {
+                "title": "Ön Görüşme",
+                "description": "Ön değerlendirme toplantısı için 20 dakikalık bir görüşme planlayabiliriz.",
+                "button": "Toplantı Talep Et"
+            }
+        }
+    },
+    "maestroAI": {
+        "hero": {
+            "title": "Maestro AI",
+            "subtitle": "B2B Sektörü için özelleştirilmiş\nMaestro AI Pazarlama Stratejisti ile\nBaşarıya Ulaşın",
+            "description": "CRM’den PR’a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür.",
+            "badge": "Yapay Zeka Gücü"
+        },
+        "videoShowcase": {
+            "tag": "B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "title": "Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+            "description": "B2B sektörü için oluşturulmuş; CRM’den PR’a, pazar araştırmasından dijital pazarlamaya kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür."
+        },
+        "features": {
+            "tag": "Temel Yetenekler",
+            "title": "Neden Maestro AI?",
+            "description": "B2B dünyasının karmaşık yapısını anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "items": {
+                "disciplines": {
+                    "title": "Farklı Disiplinler Bir Arada",
+                    "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                },
+                "speed": {
+                    "title": "Hız Kazandırır",
+                    "desc": "Toplantılar, araştırmalar, yıllar ile oluşacak sektörel tecrübe kazanımını hızlandırır."
+                },
+                "strategist": {
+                    "title": "Bilge Stratejist",
+                    "desc": "Endüstriyel Gıda & Şef Çözümleri Sektörü Pazarlama konularında eğitimli"
+                },
+                "results": {
+                    "title": "Sonuç Odaklı",
+                    "desc": "Veriler → öneriler → uygulanabilir sonuçlar."
+                },
+                "memory": {
+                    "title": "Bellek",
+                    "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak, turnover nedeniyle bilginin kaybolmasını engeller."
+                },
+                "guidance": {
+                    "title": "Sektöre Özel Yönlendirme",
+                    "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                },
+                "analysis": {
+                    "title": "Tarafsız Analiz",
+                    "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                },
+                "learning": {
+                    "title": "Sürekli Öğrenme",
+                    "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                }
+            }
+        },
+        "process": {
+            "tag": "İşleyiş Süreci",
+            "title": "Maestro AI Nasıl Çalışır?",
+            "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "steps": {
+                "question": {
+                    "title": "Soru",
+                    "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı vb."
+                },
+                "analysis": {
+                    "title": "Analiz",
+                    "desc": "CRM, pazar, sosyal medya ve reklam verilerini sentezler."
+                },
+                "suggestion": {
+                    "title": "Öneri",
+                    "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri, raporlar."
+                },
+                "experience": {
+                    "title": "Tecrübe",
+                    "desc": "Haftalar sürecek kararlaru, işleri saatler içerisinde bitirin."
+                }
+            }
+        },
+        "pricing": {
+            "tag": "Planlar",
+            "title": "Size Uygun Planı Seçin",
+            "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "plans": {
+                "kredili": {
+                    "name": "Kredili Maestro",
+                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın."
+                },
+                "growth": {
+                    "name": "Sınırsız Maestro",
+                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın."
+                }
+            }
+        },
+        "testimonial": {
+            "quote": "Maestro AI ile pazarlama stratejilerimizi haftalar değil, saatler içinde kurguluyoruz. Veriye dayalı kararlar alırken kazandığımız hız paha biçilemez.",
+            "author": "Ali Yılmaz",
+            "role": "Pazarlama Müdürü"
+        },
+        "faqs": [
+            {
+                "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            {
+                "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz."
+            },
+            {
+                "question": "khilonfast ile kimler çalışmamalı?",
+                "answer": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir."
+            },
+            {
+                "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "answer": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler."
+            },
+            {
+                "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "answer": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
+            },
+            {
+                "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "answer": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir."
+            },
+            {
+                "question": "Bütünleşik dijital pazarlama stratejileri işletmem için nasıl faydalıdır?",
+                "answer": "Bütünleşik dijital pazarlama, farklı dijital kanalları tek bir strateji altında birleştirerek pazarlama etkinliğinizi artırır. khilonfast, tüm dijital pazarlama çabalarınızı entegre eder ve bütçenizi en verimli şekilde kullanarak maksimum etkileşim ve dönüşüm sağlar."
+            },
+            {
+                "question": "Bütünleşik dijital pazarlama kampanyalarının performansını nasıl takip edebilirim?",
+                "answer": "khilonfast, tüm dijital kanallarınızı kapsayan haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, etkileşim oranları, dönüşümler ve diğer kritik performans göstergeleri hakkında bilgi içerir. Ayrıca, canlı dashboard’lar üzerinden kampanyalarınızı anlık olarak izleyebilirsiniz."
+            },
+            {
+                "question": "Neden khilonfast bütünleşik dijital pazarlama hizmetini tercih etmeliyim?",
+                "answer": "khilonfast, tüm dijital pazarlama çabalarınızı entegre ederek maksimum verimlilik sağlar. Uzman ekibimiz, dijital stratejinizi bir bütün olarak ele alır ve tüm kanallarda tutarlı bir mesaj ve marka deneyimi sunmanızı sağlar."
+            },
+            {
+                "question": "Bütünleşik dijital pazarlama stratejisi nasıl oluşturulur?",
+                "answer": "khilonfast, öncelikle işletmenizin hedeflerini ve mevcut dijital varlıklarını analiz eder. Ardından, tüm dijital kanallarınızı entegre eden bir strateji geliştirir. Kampanyalar başlatıldıktan sonra, performans düzenli olarak izlenir ve optimize edilir."
+            }
+        ]
+    },
+    "eyeTracking": {
+        "hero": {
+            "title": "Eye Tracking Reklam Analizi",
+            "description": "Eye Tracking + AI ile; Focus, Cognitive Demand, Engagement, Memory skorlarını anında öğrenin; kazanan kreatifi yayına alın, ROI riskini azaltın.",
+            "badge": "Veriye Dayalı Analiz"
+        },
+        "videoShowcase": {
+            "tag": "Dakikalar İçinde Kazanan Kreatifi Bulun",
+            "title": "Reklam Performansınızı AI ve Eye Tracking ile Ölçün",
+            "description": "Görsel analiz ile kreatif performansınızı güçlendirin. Harcanan bütçenin karşılığını alıp almayacağınızı tahmin etmek yerine, doğrudan bilimsel verilere dayanın."
+        },
+        "approach": {
+            "tag": "Ana Konular",
+            "title": "Sosyal Medya Reklamlarında En Büyük Sorunlar",
+            "description": "Bu sorunları yaşayan tek şirket siz değilsiniz. Çözüm: veriye dayalı reklam görsel analizi.",
+            "items": {
+                "roi": {
+                    "title": "Düşük ROI",
+                    "subtitle": "Sorun: Bütçe var, dönüşüm yok",
+                    "desc": "Çözüm: Skor + benchmark + öneri raporu ile bütçeyi kazanan kreatife kaydırın."
+                },
+                "creative": {
+                    "title": "Etkisiz Görseller",
+                    "subtitle": "Sorun: Tıklama var, satış yok",
+                    "desc": "Çözüm: Heatmap + Focus/Engagement/Memory analizi ile zayıf öğeleri yayına girmeden düzeltin."
+                },
+                "tests": {
+                    "title": "Bitmeyen Testler",
+                    "subtitle": "Sorun: A/B test yükü ve maliyet",
+                    "desc": "Çözüm: Ön analizle hipotezi daraltın; daha az varyantla daha hızlı ve düşük maliyetli sonuç alın."
+                },
+                "cmo": {
+                    "title": "CMO'lar İçin",
+                    "subtitle": "ROI'yi Yayına Çıkmadan Kanıtlayın",
+                    "desc": "ROI baskısını kanıtlanabilir verilere dönüştürün, ekip hizalamasını hızlandırın, yayın öncesi riski düşürün."
+                },
+                "growth": {
+                    "title": "Growth Marketer İçin",
+                    "subtitle": "Dakikalar İçinde Kazanan Kreatifi Bulun",
+                    "desc": "Zaman/ekip kısıtında hızlı analiz ve hazır önerilerle aynı gün aksiyon alın; A/B yükünü azaltın."
+                },
+                "ceo": {
+                    "title": "KOBİ CEO'su İçin",
+                    "subtitle": "Küçük Hatalar Büyük Bütçelere Mal Olmasın",
+                    "desc": "Belirsizliği azaltan net aksiyon listeleriyle pre-flight kontrolü yapın ve profesyonel marka imajını koruyun."
+                }
+            }
+        },
+        "features": {
+            "tag": "Analiz Skorları",
+            "title": "4 Skorla Kreatif Performansınızı Ölçün",
+            "description": "Görsellerinizin her bir öğesini insan gözünün algısına göre puanlıyoruz.",
+            "focus": {
+                "title": "Focus (Odak)",
+                "desc": "Görselin ne kadar anlaşılır olduğunu gösterir. Yüksek skor = net ve temiz mesaj."
+            },
+            "cognitive": {
+                "title": "Cognitive Demand",
+                "desc": "Karmaşıklık düzeyini gösterir. Düşük skor, daha kolay tüketim ve daha hızlı algı sağlar."
+            },
+            "engagement": {
+                "title": "Engagement (İlgi)",
+                "desc": "İlgi ve heyecan tahmini. Yüksek skor, daha fazla etkileşim olasılığını simgeler."
+            },
+            "memory": {
+                "title": "Memory (Bellek)",
+                "desc": "Akılda kalıcılık. Yüksek skor, görselin hatırlanma olasılığını artırır."
+            }
+        },
+        "process": {
+            "tag": "Nasıl Çalışır?",
+            "title": "Analiz Süreci Çok Basit",
+            "description": "Görselinizi yükleyin ve dakikalar içinde kapsamlı raporunuzu alın.",
+            "steps": {
+                "upload": {
+                    "title": "Görselinizi Yükleyin",
+                    "desc": "Sponsorlu gönderi/post görselinizi sürükleyip bırakın."
+                },
+                "ai": {
+                    "title": "AI Analizi",
+                    "desc": "Eye Tracking modeli heatmap ve skorları anında hesaplar."
+                },
+                "result": {
+                    "title": "Sonuç & Öneri",
+                    "desc": "Güçlü/zayıf alanları ve iyileştirme checklist’ini içeren PDF’i alın."
+                }
+            }
+        },
+        "authorization": {
+            "title": "Örnek Rapor",
+            "description": "Görsel analiz ile kreatif performansınızı güçlendirin.",
+            "card": {
+                "title": "Örnek PDF Rapor",
+                "desc": "Rapor içinde Focus, Cognitive Demand, Engagement ve Memory skorları; heatmap çıktıları ve uygulanabilir kreatif öneriler yer alır.",
+                "highlight": "Demo raporu inceleyin, analiz kalitesini yayına çıkmadan görün.",
+                "button": "Örnek Rapor →"
+            }
+        },
+        "pricing": {
+            "tag": "Planlar",
+            "title": "Size Uygun Paketi Seçin",
+            "description": "Her analiz sonunda güçlü/zayıf yönler ve uygulanabilir öneriler sunulur.",
+            "plans": {
+                "starter": {
+                    "name": "Starter",
+                    "desc": "Tekli görsel analizi için ideal başlangıç."
+                },
+                "growth": {
+                    "name": "Growth",
+                    "desc": "Küçük ekipler ve düzenli kampanya yürütenler için."
+                },
+                "pro": {
+                    "name": "Pro",
+                    "desc": "Yoğun kampanya dönemleri ve ajanslar için profesyonel çözüm."
+                }
+            }
+        },
+        "testimonial": {
+            "quote": "Eye Tracking analizi ile ROI riskimizi minimize etik. Yayına çıkmadan önce kazanan görseli bilmek bütçemizi çok daha verimli kullanmamızı sağladı.",
+            "author": "Deniz Erten",
+            "role": "E-ticaret Direktörü"
+        },
+        "faqs": [
+            {
+                "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+            },
+            {
+                "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede zaman kaybına yol açan toplantıları ortadan kaldırarak daha üst düzey hizmet sunabiliyoruz."
+            },
+            {
+                "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "answer": "Dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan, veriye dayalı kararlar almayı seven ve yeni nesil araçları kullanmaya istekli firmalar için khilonfast mükemmel bir iş ortağıdır."
+            },
+            {
+                "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "answer": "Satın alım sonrası size doldurmanız gereken formlar iletilir. Bu formlar doldurulduktan sonra ekibimiz analizleri yapar, kurulumları tamamlar ve süreci başlatarak periyodik raporlar sunar."
+            }
+        ]
+    },
+    "serviceGTM": {
+        "hero": {
+            "title": "Pazara Stratejik Giriş ile Başarıyı Yakalayın!",
+            "subtitle": "Pazar payınızı artırmak için hedef kitlenizi doğru belirleyin!",
+            "description": "khilonfast ile pazara giriş stratejilerinizi doğru şekilde planlayın. Rakiplerinizin önüne geçin ve pazarda etkin bir şekilde yerinizi alın.",
+            "buttonText": "Hemen Keşfedin",
+            "badgeText": "Hızlı ve Güçlü Başlangıç! Başarıyı Yakalayın!"
+        },
+        "videoShowcase": {
+            "tag": "İzleyin & Öğrenin",
+            "titlePrefix": "Doğru Go To Market Stratejisiyle",
+            "titleHighlight": "Pazar Payınızı Artırın",
+            "description": "Pazara girişte stratejik ve veri odaklı adımlar atın. khilonfast ile hedef kitlenizi net bir şekilde belirleyin ve rekabet avantajı sağlayın."
+        },
+        "pricing": {
+            "tag": "Hizmet Paketleri",
+            "title": "Go to Market Stratejisi Çözümleri",
+            "description": "Yeni bir pazara giriş yapmak istiyorsanız, doğru stratejilerle başlamanız şart. khilonfast ile pazara hızlı ve etkili giriş stratejileri oluşturun. Hedef kitlenizi doğru belirleyin ve rekabet avantajı kazanın.",
+            "core": {
+                "desc": "Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.",
+                "forWho": "Kimler İçin Uygun",
+                "forWhoDesc": "Pazara hızlı giriş yapmak, temel satış ve değer önerisini oluşturmak isteyen küçük ve orta ölçekli işletmeler için ideal.",
+                "why": "Neden Tercih Edilmeli",
+                "whyDesc": "Pazarlama planı, satış önerisi ve temel dijital stratejiyle, işletmenizin varlığını kısa sürede ve düşük riskle hayata geçirin."
+            },
+            "growth": {
+                "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
+                "forWho": "Kimler İçin Uygun",
+                "forWhoDesc": "Gelişmiş dijital, içerik ve pazarlama otomasyonu ile satış stratejisiyle büyümeyi hedefleyen orta ölçekli işletmeler için ideal.",
+                "why": "Neden Tercih Edilmeli",
+                "whyDesc": "Gelişmiş dijital, içerik, pazarlama otomasyonu stratejisi ve satış scripti sayesinde markanızı bir üst seviyeye taşıyın."
+            },
+            "ultimate": {
+                "desc": "Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.",
+                "forWho": "Kimler İçin Uygun",
+                "forWhoDesc": "Kapsamlı strateji, marka kimliği ve satış hunisi tasarımıyla kalıcı rekabet avantajı isteyen firmalar için ideal.",
+                "why": "Neden Tercih Edilmeli",
+                "whyDesc": "Growth paketine ek olarak; kurumsal kimlik tasarımı ve satış hunisi şablonlarıyla markanızın gücünü artırın."
+            }
+        },
+        "comparison": {
+            "rows": {
+                "marketingPlan": "Pazarlama Planı Geliştirme",
+                "salesValue": "Satış ve Değer Önerisi Oluşturma",
+                "digitalStrategy": "Dijital Strateji",
+                "contentStrategy": "İçerik Stratejisi",
+                "automation": "Pazarlama Otomasyonu Stratejisi",
+                "salesScript": "Satış Scripti",
+                "brandDesign": "Kurumsal Kimlik Tasarımı",
+                "funnelTemplates": "Satış Hunisi Kreatif Şablonlar",
+                "duration": "Süre",
+                "revisions": "Revizyon Hakkı"
+            },
+            "values": {
+                "basic": "Temel",
+                "advanced": "Gelişmiş",
+                "weeks4": "Min 4 Hafta",
+                "weeks6": "Min 6 Hafta",
+                "weeks9": "Min 9 Hafta"
+            },
+            "note": "(*) KDV hariçtir. Tek seferlik hizmettir."
+        },
+        "process": {
+            "tag": "4 adımda GTM",
+            "title": "Nasıl Çalışır?",
+            "description": "Sadece birkaç adımda pazara giriş stratejinizi oluşturun. Tüm adımlar şeffaf, hızlı ve ölçülebilir şekilde tasarlandı.",
+            "steps": {
+                "buy": {
+                    "title": "Adım 1: Satın Al",
+                    "desc": "İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar."
+                },
+                "brief": {
+                    "title": "Adım 2: Brief Ver",
+                    "desc": "Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur."
+                },
+                "analysis": {
+                    "title": "Adım 3: Analiz",
+                    "desc": "khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar."
+                },
+                "approval": {
+                    "title": "Adım 4: Onay",
+                    "desc": "De-brief raporunun onaylanması ile hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
+                }
+            }
+        },
+        "approach": {
+            "360": {
+                "title": "360 Derece Bakış Açısı",
+                "subtitle": "Her Detayı Kapsayan khilonfast Yaklaşımı",
+                "desc": "Khilon olarak pazarlama dünyasına geniş bir pencereden bakıyoruz. 360 derece bakış açısı, tek bir parçaya odaklanmak yerine tüm süreçleri kapsayan bir anlayış gerektiriyor. Bu kapsamlı yaklaşım, markaların ihtiyaçlarını derinlemesine anlayarak tüm pazarlama kanallarını entegre bir strateji ile yönetmemize olanak tanıyor. khilon ile aldığınız en mikro hizmette dahi, o işi hedeflerinize, amacınıza ve stratejinize uyumlu hale getiriyoruz."
+            },
+            "title": "khilonfast Yaklaşımı",
+            "description": "Markanızın potansiyelini 360 derece stratejilerle açığa çıkarıyoruz.",
+            "growth": {
+                "title": "Büyüme Odaklı Stratejiler",
+                "subtitle": "Sektöre Özel Büyüme Planları",
+                "desc": "Her sektörün kendine özgü dinamikleri bulunuyor ve Khilon, bu farklılıkları dikkate alarak büyüme stratejilerinizi geliştiriyor. Markanızın bulunduğu sektöre özel hazırladığımız planlar, hedef kitlenizle daha etkin iletişim kurmanızı sağlar. Sürdürülebilir büyüme için pazardaki eğilimleri yakından takip ederek stratejilerinizi güncel tutuyoruz."
+            },
+            "data": {
+                "title": "Veri Odaklı Pazarlama",
+                "subtitle": "Daha Fazla Veri, Daha Fazla Başarı",
+                "desc": "Khilon, veriyi sadece toplamakla kalmaz; aksiyona dönüştürülebilir içgörüler üretir. Tüketici davranışlarını analiz ederek dönüşüm oranlarını optimize eden çözümler sunarız. Böylece mevcut durumu anlamanın ötesine geçip veriye dayalı öngörülerle geleceğe yönelik adımlar atmanızı sağlarız."
+            },
+            "innovation": {
+                "title": "İnovasyon ile Fark",
+                "subtitle": "Rakiplerden Bir Adım Önde Olun",
+                "desc": "Pazarlama dünyasında kalabalığın içinde kaybolmamak için sürekli yenilikçi olmak gerekir. Khilon, ileri veri analitiği ve yapay zeka destekli araçları kullanarak müşterilerine yenilikçi çözümler sunar. Bu sayede markanızı rekabette bir adım öne taşır."
+            },
+            "partner": {
+                "title": "Stratejik İş Ortağı",
+                "subtitle": "Uzun Vadeli Başarı İçin Güvenilir Partneriniz",
+                "desc": "Khilon sadece bir hizmet sağlayıcı değil, uzun vadeli başarılar için stratejik bir iş ortağıdır. İş hedeflerinizi anlayarak kısa vadeli kampanyaların ötesine geçen sürdürülebilir büyüme stratejileri geliştiririz."
+            }
+        },
+        "testimonial": {
+            "quote": "Pazara girişte attığımız her adımın arkasında khilonfast'in veriye dayalı stratejisi vardı. Sonuçlar beklediğimizden çok daha hızlı geldi.",
+            "author": "Murat Çelik",
+            "role": "Yatırımcı & Danışman"
+        },
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür; bu sayede dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Metrik temelli çalışma disiplinine uzak, düzenli dijital iletişim kuramayan ve süreç formalarını tamamlamayan ekipler için uygun olmayabilir."
+            },
+            "q4": {
+                "q": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "a": "Dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan; veriye dayalı kararlar alan ve yeni nesil araçları kullanmaya istekli firmalar için khilonfast güçlü bir iş ortağıdır."
+            },
+            "q5": {
+                "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "a": "Tüm iletişim kullanıcı dostu sitemiz ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; formlar tamamlandığında ekip kurulumları yapar ve operasyonu başlatır."
+            },
+            "q6": {
+                "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "a": "Satın alma sonrası size iletilen formlar doldurulur. Ardından khilonfast ekibi tanımlamaları yapar, hizmetinizi aktif eder ve raporlama periyotlarına göre düzenli performans çıktılarını paylaşır."
+            },
+            "q7": {
+                "q": "Go to market stratejisi işletmem için nasıl faydalıdır?",
+                "a": "Go to market stratejisi, yeni ürün veya hizmetinizin pazara hızlı ve etkili şekilde giriş yapmasını sağlar. khilonfast hedef kitlenizi analiz eder, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda güçlü konumlanma sunar."
+            },
+            "q8": {
+                "q": "Go to market stratejimin performansını nasıl takip edebilirim?",
+                "a": "khilonfast, satışlar, pazar penetrasyonu ve müşteri geri bildirimleri gibi kritik metrikleri içeren haftalık, aylık veya üç aylık raporlar sunar. Sonuçları dashboard üzerinden anlık izleyebilirsiniz."
+            },
+            "q9": {
+                "q": "Neden khilonfast go to market stratejisi hizmetini tercih etmeliyim?",
+                "a": "khilonfast veri odaklı yaklaşımıyla pazara giriş stratejinizi güçlendirir. Uzman ekip, rekabet avantajı sağlayan aksiyon planları geliştirir ve pazarda daha hızlı sonuç almanızı sağlar."
+            },
+            "q10": {
+                "q": "Go to market stratejisi nasıl oluşturulur?",
+                "a": "khilonfast önce hedef kitlenizi ve pazarı analiz eder. Sonrasında pazara giriş sürecinizi destekleyecek stratejileri kurgular, uygulama sonrası performansı izler ve gerektiğinde stratejiyi optimize eder."
+            }
+        },
+        "seo": {
+            "title": "Go To Market Stratejisi | Khilonfast ile Pazara Güçlü Giriş",
+            "description": "Khilonfast Go To Market stratejisi ile hedef kitlenizi netleştirin, doğru konumlanma ile pazara hızlı giriş yapın ve sürdürülebilir büyüme için güçlü bir temel oluşturun."
+        },
+        "breadcrumbs": {
+            "services": "Hizmetlerimiz",
+            "current": "Go To Market Stratejisi"
+        }
+    },
+    "serviceIDM": {
+        "hero": {
+            "title": "Dijital Kanalları Tek Bir Stratejide Birleştirin!",
+            "subtitle": "Bütünleşik pazarlama stratejileri ile markanızı büyütün!",
+            "description": "khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.",
+            "buttonText": "Hemen Başlayın",
+            "badgeText": "360° Pazarlama Gücü! Rekabet Üstünlüğü!"
+        },
+        "videoShowcase": {
+            "tag": "İzleyin & Öğrenin",
+            "title": "Bütünleşik Dijital Pazarlama ile Başarıya Ulaşın",
+            "description": "Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin."
+        },
+        "authorization": {
+            "title": "YETKİLENDİRME",
+            "card1": {
+                "title": "Yetkilendirme",
+                "desc": "Hizmeti başlatmak için pazarlama araçlarına erişim tanımlayın.",
+                "highlight": "Tüm kanallarda entegre ve tutarlı iletişim sağlayın."
+            },
+            "card2": {
+                "title": "Nasıl Çalışır?",
+                "desc": "Sürecin baştan sona nasıl ilerlediğini adım adım görün.",
+                "highlight": "Doğru brief → net süreç → ölçülebilir sonuçları keşfedin."
+            }
+        },
+        "pricing": {
+            "tag": "Hizmet Paketleri",
+            "title": "360° Dijital Pazarlama Yönetimi",
+            "description": "Tüm pazarlama ihtiyaçlarınızı tek bir yerden karşılayarak operasyonel yüklerden kurtulun.",
+            "core": {
+                "desc": "Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.",
+                "forWho": "Kimler İçin Uygun",
+                "forWhoDesc": "Küçük işletmeler için tasarlanmış, dijital pazarlamada güçlü bir başlangıç yapmak isteyen firmalara uygundur. Markaların dijital varlıklarını güçlendirmesine destek olur.",
+                "whyDesc": "SEO, sosyal medya ve arama ağı reklamlarıyla dijital görünürlüğünüzü artırın. Markanızın dijital varlıklarını güçlendirerek fark edilmenizi sağlar. Dijital dünyada ilk adımlarınızı sağlam ve ölçülebilir bir şekilde atın."
+            },
+            "growth": {
+                "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
+                "forWhoDesc": "Orta ölçekli işletmelerin dijital pazarlama stratejilerini büyütmek ve optimize etmek isteyenler için idealdir. Müşteri kazanımı, mevcut kitleyle etkileşim için tasarlanmıştır.",
+                "whyDesc": "Stratejilerinizi optimize ederek daha fazla dönüşüm elde edin. Müşteri kazanımınızı artırın ve mevcut kitlenizle etkileşiminizi güçlendirin. Dijital pazarlama faaliyetlerinizi veriye dayalı şekilde büyütün."
+            },
+            "ultimate": {
+                "desc": "Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.",
+                "forWhoDesc": "Büyük işletmeler için tam kapsamlı dijital pazarlama stratejisi sunar. Strateji odaklı yaklaşımıyla uzun vadeli büyüme, sürekli optimizasyon ve rekabet avantajı sağlar.",
+                "whyDesc": "Veri odaklı stratejilerle maksimum dönüşüm ve etkileşim sağlayın. Rekabeti geride bırakan, uzun vadeli bir büyüme altyapısı kurun. Tüm dijital pazarlama süreçlerinizi tek çatı altında yönetin ve optimize edin."
+            }
+        },
+        "comparison": {
+            "rows": {
+                "keyword": "Anahtar kelime araştırması",
+                "onPage": "Sayfa içi optimizasyon (on-page)",
+                "looker": "Looker Studio kurulumu",
+                "setup": "GSC ve GA kurulumu",
+                "strategyDoc": "İçerik stratejisi dökümanı",
+                "backlink": "Dış SEO (Backlink inşası)",
+                "competitor": "Rekabet analizi",
+                "pageCount": "Sayfa sayısı",
+                "audit": "Seo Audit",
+                "aiOpt": "Yapay Zeka (AI) Optimizasyonu",
+                "blog": "Hedef Kitle Odaklı Blog Yazısı Üretimi",
+                "email": "Hedef Kitle E-posta (Açık Veri/YIL)",
+                "zeroClick": "Sıfırın Tık / e-bülten Ağı",
+                "searchAds": "Arama Reklamları",
+                "setupFee": "Ek Kurulum ücreti",
+                "adOpt": "Reklam kampanyası optimizasyonu",
+                "extensions": "Reklam Uzantıları ve hedefleme",
+                "profile": "Profil kurulumu",
+                "campaign": "Kampanya yönetimi",
+                "monthlyOpt": "Aylık optimizasyon",
+                "report": "Performans raporu",
+                "policy": "Reklam Bütçesi Politikası"
+            },
+            "values": {
+                "competitor1": "1 Rakip",
+                "competitor2": "2 Rakip",
+                "blog2": "2 içerik X 750 kelime",
+                "blog4": "4 içerik X 750 kelime",
+                "blog6": "6 içerik X 750 kelime",
+                "email10k": "10.000 e-posta",
+                "searchCore": "Temel Google Search Ads kurulumu ve temel anahtar kelime araştırması",
+                "searchGrowth": "Standart Google Search Ads kurulumu",
+                "searchUltimate": "Pro Google Search Ads kurulumu, gelişmiş anahtar kelime araştırması ve reklam metni oluşturma",
+                "setupFeeDesc": "Aylık paketlerde Kurulum ücreti, ilk üç aylık ücret kadar olup sadece ilk ay uygulanır.",
+                "setupFeeOnce": "Kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.",
+                "continuous": "Sürekli",
+                "limited": "Sınırlı",
+                "geoTargeting": "Lokasyon, zaman, cihaz",
+                "demographic": "İnmarket vb. demografik kitle segmentasyonu",
+                "profile1": "1 Meta Hesap",
+                "profile2": "2 Hesap (Meta + Linkedin veya Tiktok)",
+                "profile3": "3 Hesap (Meta ve/veya Linkedin ve/veya Tiktok)",
+                "campaign2": "2 Kampanya",
+                "campaign4": "4 Kampanya",
+                "campaign6": "6 Kampanya",
+                "reportMonthly": "E-posta ile, ayda 1 kez raporlama",
+                "reportBiweekly": "E-posta ile, 2 haftada 1 raporlama",
+                "reportWeekly": "E-posta ile, haftada 1 raporlama",
+                "policyCore": "Reklam bütçesinin %10 u Core paket ücretini aşmıyorsa, Core paket üzerinden fiyatlandırılır. Aştığında, Growth pakete geçilir.",
+                "policyGrowth": "Reklam bütçesinin %10 u Growth paket ücretini aşmıyorsa, Growth paket üzerinden fiyatlandırılır. Aştığında, Ultimate pakete geçilir.",
+                "policyUltimate": "Reklam bütçesinin %10 u Ultimate paket ücretini aşmıyorsa, Ultimate paket üzerinden fiyatlandırılır. Aşması durumunda, ek reklamcıdan Ultimate paket hizmet bedelinin %10 u üzerine %10 reklam bütçesi eklenerek faturalandırılır. Sonraki aylarda da bulunduğu en üst paketten fiyatlandırma devam eder."
+            },
+            "note": "(*) KDV hariçtir. Medya bütçeleri ve 3. parti araç maliyetleri hariçtir."
+        },
+        "testimonial": {
+            "quote": "Tüm dijital süreçlerimizi tek bir stratejide birleştirdikten sonra pazarlama bütçemizin geri dönüşü %45 oranında arttı.",
+            "author": "Caner Özkan",
+            "role": "E-Ticaret Direktörü"
+        }
+    },
+    "pages": {
+        "home": {
+            "seo": {
+                "title": "khilonfast | B2B Pazarlamada Hızlı ve Ölçülebilir Büyüme",
+                "description": "Khilonfast ile strateji, içerik ve performans pazarlamasını tek noktadan yönetin. B2B markanız için ölçülebilir büyüme, yüksek görünürlük ve sürdürülebilir gelir artışı sağlayın."
+            },
+            "pricing": {
+                "titleLine1": "Hizmetlerimizde Net ve Şeffaf",
+                "titleLine2": "Fiyatlandırma",
+                "description": "Khilonfast olarak kapsamlı pazarlama hizmetlerimizi açık, anlaşılır ve ölçeklenebilir bir fiyatlandırma modeliyle sunuyoruz. İşletmenizin hedeflerine göre esnekleşen yapımızla yatırımınızı güvenle planlamanızı sağlıyoruz.",
+                "cta": "Daha Fazlası"
+            }
+        }
+    },
+    "slugs": {
+        "home": "",
+        "about": "hakkimizda",
+        "contact": "iletisim",
+        "howItWorks": "khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi",
+        "gtm": "hizmetlerimiz/go-to-market-stratejisi",
+        "contentStrategy": "hizmetlerimiz/icerik-stratejisi",
+        "idm": "hizmetlerimiz/butunlesik-dijital-pazarlama",
+        "googleAds": "hizmetlerimiz/google-ads",
+        "socialAds": "hizmetlerimiz/sosyal-medya-reklamciligi",
+        "seo": "hizmetlerimiz/seo-yonetimi",
+        "contentProduction": "hizmetlerimiz/icerik-uretimi",
+        "b2bEmail": "hizmetlerimiz/b2b-email-pazarlama",
+        "sectoralB2B": "sektorel-hizmetler/b2b-360-pazarlama-yonetimi",
+        "sectoralPayment": "sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi",
+        "sectoralFood": "sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi",
+        "sectoralFintech": "sektorel-hizmetler/fintech-360-pazarlama-yonetimi",
+        "sectoralTech": "sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi",
+        "sectoralEnergy": "sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi",
+        "sectoralDesign": "sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi",
+        "sectoralFleet": "sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi",
+        "sectoralManufacturing": "sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi",
+        "trainings": "egitimler",
+        "trainingGrowth": "egitimler/buyume-odakli-pazarlama-egitimi",
+        "trainingPayment": "egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi",
+        "trainingB2B": "b2b-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFintech": "fintech-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingTech": "teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingManufacturing": "uretim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingEnergy": "enerji-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingDesign": "ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFleet": "filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFood": "endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "maestro": "urunler/maestro-ai",
+        "eyeTracking": "hizmetler/eye-tracking-reklam-analizi",
+        "login": "giris",
+        "register": "kayil-ol",
+        "dashboard": "dashboard",
+        "checkout": "checkout",
+        "paymentSuccess": "payment-success",
+        "paymentCallback": "payment-callback"
+    }
+}

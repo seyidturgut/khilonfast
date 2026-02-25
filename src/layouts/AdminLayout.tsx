@@ -1,16 +1,15 @@
 import { ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     HiHome,
     HiCog,
-    HiDocumentText,
     HiShoppingBag,
     HiUsers,
     HiLogout,
     HiSparkles
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
-import '../styles/admin-dark.css';
+import '../styles/admin-light.css';
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -18,11 +17,16 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
     const location = useLocation();
+    const navigate = useNavigate();
     const { logout, user } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/giris', { replace: true });
+    };
 
     const menuItems = [
         { icon: HiHome, label: 'Dashboard', path: '/admin' },
-        { icon: HiDocumentText, label: 'Sayfalar', path: '/admin/pages' },
         { icon: HiShoppingBag, label: 'Ürünler', path: '/admin/products' },
         { icon: HiUsers, label: 'Kullanıcılar', path: '/admin/users' },
         { icon: HiCog, label: 'Ayarlar', path: '/admin/settings' },
@@ -49,7 +53,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         {user?.email?.charAt(0).toUpperCase() || 'A'}
                     </div>
                     <div className="user-details">
-                        <div className="user-name">{user?.name || 'Admin'}</div>
+                        <div className="user-name">{`${user?.first_name || ''} ${user?.last_name || ''}`.trim() || 'Admin'}</div>
                         <div className="user-role">{user?.role === 'admin' ? 'Administrator' : 'Editor'}</div>
                     </div>
                 </div>
@@ -79,7 +83,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
                 {/* Footer */}
                 <div className="sidebar-footer">
-                    <button onClick={logout} className="logout-btn">
+                    <button onClick={handleLogout} className="logout-btn">
                         <HiLogout className="logout-icon" />
                         <span>Çıkış Yap</span>
                     </button>
@@ -98,24 +102,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 .admin-layout {
                     display: flex;
                     min-height: 100vh;
-                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+                    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 }
 
                 /* ========== SIDEBAR ========== */
                 .admin-sidebar {
                     width: 280px;
-                    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-                    border-right: 1px solid rgba(148, 163, 184, 0.1);
+                    background: #ffffff;
+                    border-right: 1px solid #e2e8f0;
                     display: flex;
                     flex-direction: column;
                     position: relative;
-                    backdrop-filter: blur(10px);
                 }
 
                 .sidebar-header {
                     padding: 1.75rem 1.5rem;
-                    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+                    border-bottom: 1px solid #e2e8f0;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -129,28 +132,27 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
                 .logo-icon {
                     font-size: 1.75rem;
-                    color: #f59e0b;
-                    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5));
+                    color: #c5d63d;
                 }
 
                 .logo-text {
                     margin: 0;
                     font-size: 1.5rem;
                     font-weight: 800;
-                    color: #f8fafc;
+                    color: #1a3a52;
                     letter-spacing: -0.5px;
                 }
 
                 .logo-accent {
-                    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+                    background: linear-gradient(135deg, #90aa23 0%, #c5d63d 100%);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                 }
 
                 .logo-badge {
-                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                    color: #1e293b;
+                    background: #eef6b6;
+                    color: #4d5f09;
                     font-size: 0.65rem;
                     font-weight: 700;
                     padding: 4px 8px;
@@ -161,8 +163,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 /* User Info */
                 .user-info {
                     padding: 1.25rem 1.5rem;
-                    background: rgba(15, 23, 42, 0.4);
-                    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+                    background: #f8fafc;
+                    border-bottom: 1px solid #e2e8f0;
                     display: flex;
                     align-items: center;
                     gap: 12px;
@@ -172,14 +174,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     width: 42px;
                     height: 42px;
                     border-radius: 12px;
-                    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+                    background: linear-gradient(135deg, #1a3a52 0%, #2d5570 100%);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     font-weight: 700;
                     font-size: 1.1rem;
                     color: white;
-                    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+                    box-shadow: 0 8px 18px rgba(26, 58, 82, 0.16);
                 }
 
                 .user-details {
@@ -190,7 +192,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 .user-name {
                     font-size: 0.95rem;
                     font-weight: 600;
-                    color: #f8fafc;
+                    color: #1f2937;
                     margin-bottom: 2px;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -199,7 +201,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
                 .user-role {
                     font-size: 0.75rem;
-                    color: #94a3b8;
+                    color: #64748b;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
                     font-weight: 500;
@@ -215,7 +217,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 .nav-section-label {
                     font-size: 0.7rem;
                     font-weight: 700;
-                    color: #64748b;
+                    color: #94a3b8;
                     letter-spacing: 1.2px;
                     margin-bottom: 0.75rem;
                     padding: 0 0.5rem;
@@ -236,7 +238,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     gap: 12px;
                     padding: 12px 14px;
                     border-radius: 10px;
-                    color: #cbd5e1;
+                    color: #334155;
                     text-decoration: none;
                     font-weight: 500;
                     font-size: 0.95rem;
@@ -246,16 +248,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 }
 
                 .nav-link:hover {
-                    background: rgba(14, 165, 233, 0.1);
-                    color: #0ea5e9;
-                    transform: translateX(2px);
+                    background: #f1f5f9;
+                    color: #1a3a52;
                 }
 
                 .nav-link.active {
-                    background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
-                    color: #0ea5e9;
+                    background: #edf5cc;
+                    color: #1a3a52;
                     font-weight: 600;
-                    box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+                    box-shadow: inset 0 0 0 1px #d8e58a;
                 }
 
                 .nav-icon {
@@ -270,15 +271,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 .nav-indicator {
                     width: 4px;
                     height: 20px;
-                    background: linear-gradient(180deg, #0ea5e9 0%, #06b6d4 100%);
+                    background: linear-gradient(180deg, #b5cb2f 0%, #c5d63d 100%);
                     border-radius: 2px;
-                    box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+                    box-shadow: none;
                 }
 
                 /* Footer */
                 .sidebar-footer {
                     padding: 1rem 1.5rem 1.5rem;
-                    border-top: 1px solid rgba(148, 163, 184, 0.1);
+                    border-top: 1px solid #e2e8f0;
                 }
 
                 .logout-btn {
@@ -287,10 +288,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     gap: 10px;
                     width: 100%;
                     padding: 12px 14px;
-                    background: rgba(239, 68, 68, 0.1);
-                    border: 1px solid rgba(239, 68, 68, 0.2);
+                    background: #fff;
+                    border: 1px solid #fecaca;
                     border-radius: 10px;
-                    color: #f87171;
+                    color: #b91c1c;
                     cursor: pointer;
                     font-size: 0.9rem;
                     font-weight: 600;
@@ -298,8 +299,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 }
 
                 .logout-btn:hover {
-                    background: rgba(239, 68, 68, 0.2);
-                    border-color: rgba(239, 68, 68, 0.3);
+                    background: #fef2f2;
+                    border-color: #fca5a5;
                     transform: translateY(-1px);
                 }
 
@@ -310,7 +311,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 .version-info {
                     margin-top: 1rem;
                     font-size: 0.7rem;
-                    color: #475569;
+                    color: #94a3b8;
                     text-align: center;
                     font-weight: 500;
                 }
@@ -319,7 +320,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 .admin-main {
                     flex: 1;
                     overflow-y: auto;
-                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
                 }
 
                 .admin-content {
@@ -330,10 +331,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
                 /* Global Card Styles */
                 .admin-content .card {
-                    background: rgba(30, 41, 59, 0.6) !important;
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(148, 163, 184, 0.1) !important;
-                    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2) !important;
+                    background: #fff !important;
+                    border: 1px solid #e2e8f0 !important;
+                    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06) !important;
                 }
 
                 /* Scrollbar */
@@ -344,18 +344,32 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
                 .sidebar-nav::-webkit-scrollbar-track,
                 .admin-main::-webkit-scrollbar-track {
-                    background: rgba(15, 23, 42, 0.5);
+                    background: #f1f5f9;
                 }
 
                 .sidebar-nav::-webkit-scrollbar-thumb,
                 .admin-main::-webkit-scrollbar-thumb {
-                    background: rgba(148, 163, 184, 0.3);
+                    background: #cbd5e1;
                     border-radius: 3px;
                 }
 
                 .sidebar-nav::-webkit-scrollbar-thumb:hover,
                 .admin-main::-webkit-scrollbar-thumb:hover {
-                    background: rgba(148, 163, 184, 0.5);
+                    background: #94a3b8;
+                }
+
+                @media (max-width: 1024px) {
+                    .admin-layout {
+                        flex-direction: column;
+                    }
+
+                    .admin-sidebar {
+                        width: 100%;
+                    }
+
+                    .admin-content {
+                        padding: 1rem;
+                    }
                 }
             `}</style>
         </div>

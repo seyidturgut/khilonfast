@@ -1,19 +1,27 @@
 import { HiRocketLaunch, HiChartBar, HiMagnifyingGlass, HiSparkles, HiCommandLine, HiXMark } from 'react-icons/hi2'
+import Breadcrumbs from '../components/Breadcrumbs'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import './About.css'
 
 export default function About() {
+    const { t, i18n } = useTranslation('common');
+    const currentLang = i18n.language.split('-')[0];
+    const langPrefix = currentLang === 'en' ? '/en' : '';
+    const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+
     return (
         <div className="about-page">
             {/* Hero Section */}
             <section className="about-hero">
+                <Breadcrumbs items={[{ label: t('header.about') }]} />
                 <div className="container">
                     <div className="about-hero-content">
-                        <h1 className="about-hero-title">İşletmenizin Potansiyelini <br /><span>Ortaya Çıkarın!</span></h1>
+                        <h1 className="about-hero-title" dangerouslySetInnerHTML={{ __html: t('aboutPage.hero.title') }}></h1>
                         <p className="about-hero-description">
-                            khilonfast ile işinizi büyütün, dijital dünyada fark yaratın. Pazara girişten satışa,
-                            verimli büyümeye kadar dijital dünyada yanınızdayız.
+                            {t('aboutPage.hero.description')}
                         </p>
-                        <a href="/hizmetlerimiz/butunlesik-dijital-pazarlama" className="btn btn-white">Keşfet</a>
+                        <Link to={toLocalized('idm')} className="btn btn-white">{t('common.explore')}</Link>
                     </div>
                 </div>
                 <div className="about-hero-bg-accent"></div>
@@ -24,46 +32,44 @@ export default function About() {
                 <div className="container">
                     <div className="about-grid reverse">
                         <div className="about-text-content">
-                            <h2 className="section-title">khilonfast kimdir?</h2>
+                            <h2 className="section-title">{t('aboutPage.who.title')}</h2>
                             <p className="section-description">
-                                khilonfast, dijital pazarlama alanında uzmanlaşmış, sonuç odaklı bir büyüme ajansıdır.
-                                B2B ve teknoloji odaklı işletmelerin karmaşık pazarlama süreçlerini basitleştirerek
-                                sürdürülebilir büyüme sağlıyoruz.
+                                {t('aboutPage.who.description')}
                             </p>
                             <div className="about-features-list">
                                 <div className="feature-item">
                                     <div className="feature-icon"><HiRocketLaunch /></div>
                                     <div className="feature-text">
-                                        <h4>Stratejik Planlama</h4>
-                                        <p>Şirketlerin pazarda doğru konumlanmasını sağlıyoruz.</p>
+                                        <h4>{t('aboutPage.who.feature1.title')}</h4>
+                                        <p>{t('aboutPage.who.feature1.desc')}</p>
                                     </div>
                                 </div>
                                 <div className="feature-item">
                                     <div className="feature-icon"><HiChartBar /></div>
                                     <div className="feature-text">
-                                        <h4>Bütünleşik Pazarlama</h4>
-                                        <p>Tüm kanalların birbiriyle uyumlu çalışmasını yönetiyoruz.</p>
+                                        <h4>{t('aboutPage.who.feature2.title')}</h4>
+                                        <p>{t('aboutPage.who.feature2.desc')}</p>
                                     </div>
                                 </div>
                                 <div className="feature-item">
                                     <div className="feature-icon"><HiMagnifyingGlass /></div>
                                     <div className="feature-text">
-                                        <h4>Veri Analizi</h4>
-                                        <p>Kararlarımızı pazar gerçeklerine ve verilere dayandırıyoruz.</p>
+                                        <h4>{t('aboutPage.who.feature3.title')}</h4>
+                                        <p>{t('aboutPage.who.feature3.desc')}</p>
                                     </div>
                                 </div>
                                 <div className="feature-item">
                                     <div className="feature-icon"><HiCommandLine /></div>
                                     <div className="feature-text">
-                                        <h4>Teknoloji & Yazılım</h4>
-                                        <p>İş süreçlerinizi dijital dönüşüm ve Maestro AI ile hızlandırıyoruz.</p>
+                                        <h4>{t('aboutPage.who.feature4.title')}</h4>
+                                        <p>{t('aboutPage.who.feature4.desc')}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="about-visual">
                             <div className="image-frame">
-                                <img src="/about-hero.png" alt="Khilonfast Vision" />
+                                <img src="/about-hero.png" alt="khilonfast Vision" />
                             </div>
                         </div>
                     </div>
@@ -73,28 +79,28 @@ export default function About() {
             {/* How was khilonfast Born? Section */}
             <section className="about-birth">
                 <div className="container">
-                    <h2 className="section-title centered">khilonfast Nasıl Doğdu?</h2>
+                    <h2 className="section-title centered">{t('aboutPage.birth.title')}</h2>
                     <div className="birth-grid">
                         <div className="birth-card">
                             <div className="birth-image">
-                                <img src="/khilon-birth-1.png" alt="Gelenekselin Dışında" />
+                                <img src="/khilon-birth-1.png" alt={t('aboutPage.birth.card1.title')} />
                             </div>
-                            <h3>Gelenekselin Dışında</h3>
-                            <p>Sektördeki klişeleri ve hantal yapıları yıkarak, modern dünyanın hızına uygun bir ajans modeliyle yola çıktık.</p>
+                            <h3>{t('aboutPage.birth.card1.title')}</h3>
+                            <p>{t('aboutPage.birth.card1.desc')}</p>
                         </div>
                         <div className="birth-card">
                             <div className="birth-image">
-                                <img src="/khilon-birth-2.png" alt="Farklı Bir Vizyon" />
+                                <img src="/khilon-birth-2.png" alt={t('aboutPage.birth.card2.title')} />
                             </div>
-                            <h3>Farklı Bir Vizyon</h3>
-                            <p>Her işletmenin benzersiz bir potansiyeli olduğuna ve doğru stratejiyle her markanın zirveye ulaşabileceğine inanıyoruz.</p>
+                            <h3>{t('aboutPage.birth.card2.title')}</h3>
+                            <p>{t('aboutPage.birth.card2.desc')}</p>
                         </div>
                         <div className="birth-card">
                             <div className="birth-image">
-                                <img src="/khilon-birth-3.png" alt="Deneyimle Teknolojiyi Buluşturduk" />
+                                <img src="/khilon-birth-3.png" alt={t('aboutPage.birth.card3.title')} />
                             </div>
-                            <h3>Deneyimle Teknolojiyi Buluşturduk</h3>
-                            <p>Pazarlamanın temel prensiplerini bugünün teknolojik imkanlarıyla harmanlayıp fark yaratan sonuçlar elde ettik.</p>
+                            <h3>{t('aboutPage.birth.card3.title')}</h3>
+                            <p>{t('aboutPage.birth.card3.desc')}</p>
                         </div>
                     </div>
                 </div>
@@ -103,7 +109,7 @@ export default function About() {
             {/* Banner Quote */}
             <section className="about-banner-quote">
                 <div className="container">
-                    <h3>Dijital çağın hızına uyum sağlamayın, <span>onu yönetmeyi öğrenin!</span></h3>
+                    <h3>{t('aboutPage.quote.title')} <span>{t('aboutPage.quote.highlight')}</span></h3>
                 </div>
             </section>
 
@@ -112,19 +118,18 @@ export default function About() {
                 <div className="container">
                     <div className="about-grid">
                         <div className="about-text-content">
-                            <h2 className="section-title">Hizmet Modelimiz</h2>
+                            <h2 className="section-title">{t('aboutPage.model.title')}</h2>
                             <p className="section-description">
-                                khilonfast olarak hizmet modelimizi işletmelerin sadece ihtiyaçlarına değil,
-                                aynı zamanda büyüme potansiyellerine göre tasarladık.
+                                {t('aboutPage.model.description')}
                             </p>
                             <div className="model-sub-sections">
                                 <div className="model-sub">
-                                    <h4>Analiz Kanıksandığında</h4>
-                                    <p>Her sürece derinlemesine bir analizle başlar, işletmenizin dijital röntgenini çekeriz. Mevcut durumunuzu anlayıp eksikleri gideririz.</p>
+                                    <h4>{t('aboutPage.model.sub1.title')}</h4>
+                                    <p>{t('aboutPage.model.sub1.desc')}</p>
                                 </div>
                                 <div className="model-sub">
-                                    <h4>Yenilikçi Yaklaşımlar</h4>
-                                    <p>Standartların dışında, markanıza özel yaratıcı ve teknik çözümler geliştiririz. Sadece trendleri takip etmez, markanıza yön veririz.</p>
+                                    <h4>{t('aboutPage.model.sub2.title')}</h4>
+                                    <p>{t('aboutPage.model.sub2.desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -140,36 +145,35 @@ export default function About() {
                 <div className="container">
                     <div className="about-grid reverse">
                         <div className="about-text-content">
-                            <h2 className="section-title">Neden khilonfast?</h2>
+                            <h2 className="section-title">{t('aboutPage.why.title')}</h2>
                             <p className="section-description">
-                                İşletmenizi bir sonraki aşamaya taşımak için gerekli tüm dijital kasları sağlıyoruz.
-                                Biz sadece bir hizmet sağlayıcı değil, büyüme yolculuğunuzdaki stratejik ortağınızız.
+                                {t('aboutPage.why.description')}
                             </p>
                             <div className="why-stats-grid">
                                 <div className="why-stat-item">
                                     <HiChartBar className="stat-icon" />
-                                    <h4>Veri Odaklı</h4>
-                                    <p>Ölçemediğimiz hiçbir süreci yönetmiyoruz.</p>
+                                    <h4>{t('aboutPage.why.stat1.title')}</h4>
+                                    <p>{t('aboutPage.why.stat1.desc')}</p>
                                 </div>
                                 <div className="why-stat-item">
                                     <HiRocketLaunch className="stat-icon" />
-                                    <h4>Hızlı Etki</h4>
-                                    <p>Zamanınızı boşa harcamadan sonuca odaklanıyoruz.</p>
+                                    <h4>{t('aboutPage.why.stat2.title')}</h4>
+                                    <p>{t('aboutPage.why.stat2.desc')}</p>
                                 </div>
                                 <div className="why-stat-item">
                                     <HiSparkles className="stat-icon" />
-                                    <h4>Global Vizyon</h4>
-                                    <p>Dünya çapında geçerli pazarlama prensipleri uyguluyoruz.</p>
+                                    <h4>{t('aboutPage.why.stat3.title')}</h4>
+                                    <p>{t('aboutPage.why.stat3.desc')}</p>
                                 </div>
                                 <div className="why-stat-item">
                                     <HiMagnifyingGlass className="stat-icon" />
-                                    <h4>Derin Analiz</h4>
-                                    <p>Rakiplerinizi ve pazarınızı her an izliyoruz.</p>
+                                    <h4>{t('aboutPage.why.stat4.title')}</h4>
+                                    <p>{t('aboutPage.why.stat4.desc')}</p>
                                 </div>
                             </div>
                         </div>
                         <div className="about-visual">
-                            <img src="/why-khilon.png" alt="Why Khilonfast" className="floating-img" />
+                            <img src="/images/about/visual.png" alt="Why khilonfast" className="floating-img" />
                         </div>
                     </div>
                 </div>
@@ -178,7 +182,7 @@ export default function About() {
             {/* Quick Banner */}
             <section className="quick-banner">
                 <div className="container">
-                    <h2>Hızlı ve Etkili Pazarlama İçin khilonfast Yanınızda</h2>
+                    <h2>{t('aboutPage.quickBanner.title')}</h2>
                 </div>
             </section>
 
@@ -187,30 +191,30 @@ export default function About() {
                 <div className="container">
                     <div className="about-grid">
                         <div className="about-text-content">
-                            <h2 className="section-title">khilonfast Kimler İçin <br />Uygun Değil?</h2>
+                            <h2 className="section-title">{t('aboutPage.notFor.title')}</h2>
                             <p className="section-description">
-                                Vizyonumuzla örtüşmeyen bazı yaklaşımlar bizimle çalışmanız için uygun olmayabilir.
+                                {t('aboutPage.notFor.description')}
                             </p>
                             <div className="not-for-list">
                                 <div className="not-item">
                                     <div className="not-icon"><HiXMark /></div>
                                     <div className="not-text">
-                                        <h4>Geleneksel Çizgiden Tiksinenler İçin Değil</h4>
-                                        <p>Eğer dijital dönüşüme ve yenilikçi yöntemlere kapalıysanız biz doğru adres olmayabiliriz.</p>
+                                        <h4>{t('aboutPage.notFor.item1.title')}</h4>
+                                        <p>{t('aboutPage.notFor.item1.desc')}</p>
                                     </div>
                                 </div>
                                 <div className="not-item">
                                     <div className="not-icon"><HiXMark /></div>
                                     <div className="not-text">
-                                        <h4>Sadece "Reklam Çıkalım" Diyenler</h4>
-                                        <p>Biz sadece bütçe yönetmiyoruz; uçtan uca büyüme stratejisi ve marka otoritesi inşa ediyoruz.</p>
+                                        <h4>{t('aboutPage.notFor.item2.title')}</h4>
+                                        <p>{t('aboutPage.notFor.item2.desc')}</p>
                                     </div>
                                 </div>
                                 <div className="not-item">
                                     <div className="not-icon"><HiXMark /></div>
                                     <div className="not-text">
-                                        <h4>Kısa Vadeli Düşleyenler</h4>
-                                        <p>Pazarlamanın bir yatırım ve süreç olduğunun farkında olan, vizyoner markalarla çalışıyoruz.</p>
+                                        <h4>{t('aboutPage.notFor.item3.title')}</h4>
+                                        <p>{t('aboutPage.notFor.item3.desc')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -227,7 +231,7 @@ export default function About() {
                 <div className="container">
                     <div className="statement-box">
                         <img src="/fast-logo-big.svg" alt="Khilon" className="statement-logo" />
-                        <h3>Alanında uzman kadromuzla markanızın büyüme serüveninde yanınızdayız.</h3>
+                        <h3>{t('aboutPage.brandStatement.title')}</h3>
                     </div>
                 </div>
             </section>
@@ -235,11 +239,11 @@ export default function About() {
             {/* Discover Section */}
             <section className="discover-banner">
                 <div className="container">
-                    <h2>Çözümlerimizi Keşfedin!</h2>
-                    <p>İşinizi büyütmek için bugün bir adım atın.</p>
+                    <h2>{t('aboutPage.discover.title')}</h2>
+                    <p>{t('aboutPage.discover.description')}</p>
                     <div className="discover-actions">
-                        <a href="/sektorel-hizmetler/b2b-360-pazarlama-yonetimi" className="btn btn-primary">Hemen Başlayın</a>
-                        <a href="/iletisim" className="btn btn-outline">İletişime Geçin</a>
+                        <Link to={toLocalized('sectoralB2B')} className="btn btn-primary">{t('common.startNow')}</Link>
+                        <Link to={toLocalized('contact')} className="btn btn-outline">{t('common.contactUs')}</Link>
                     </div>
                 </div>
             </section>

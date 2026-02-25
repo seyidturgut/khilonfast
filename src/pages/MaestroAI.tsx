@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
     HiStar,
     HiBolt,
@@ -14,210 +15,198 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function MaestroAI() {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const contactPath = `${langPrefix}/${t('slugs.contact')}`.replace(/\/{2,}/g, '/')
+
     const maestroConfig = {
         hero: {
-            title: 'B2B Pazarlama Stratejinizi Maestro AI ile Yönetin',
+            title: t('maestroAI.hero.title'),
             subtitle: (
                 <>
-                    B2B Sektörü için özelleştirilmiş<br />
-                    Maestro AI Pazarlama Stratejisti ile<br />
-                    Başarıya Ulaşın
+                    {t('maestroAI.hero.subtitle').split('\n').map((line, i) => (
+                        <span key={i}>{line}<br /></span>
+                    ))}
                 </>
             ),
-            description: 'CRM’den PR’a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür.',
-            buttonText: 'Satın Al',
+            description: t('maestroAI.hero.description'),
+            buttonText: t('pricing.buyNow'),
             buttonLink: '#pricing',
             image: '/img/maestro-ai-hero.png',
             videoUrl: 'https://www.youtube.com/embed/fiHpDDF440M',
             hideBadge: true,
-            badgeText: "Yapay Zeka Gücü",
+            badgeText: t('maestroAI.hero.badge'),
             badgeIcon: <HiBolt />,
             themeColor: '#f9fafb'
         },
         breadcrumbs: [
-            { label: 'Hizmetlerimiz', path: '/#services' },
-            { label: 'Maestro AI' }
+            { label: t('header.home'), path: langPrefix || '/' },
+            { label: t('header.products'), path: '#' },
+            { label: t('maestroAI.hero.title') }
         ],
         videoShowcase: {
-            tag: 'B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı',
+            tag: t('maestroAI.videoShowcase.tag'),
             title: (
                 <>
-                    Pazarlama Kararlarınızı
-                    <span className="highlight"> Maestro AI</span> ile Hızlandırın
+                    {t('maestroAI.videoShowcase.title').split('Maestro AI')[0]}
+                    <span className="highlight"> Maestro AI</span>
+                    {t('maestroAI.videoShowcase.title').split('Maestro AI')[1]}
                 </>
             ),
-            description: 'B2B sektörü için oluşturulmuş; CRM’den PR’a, pazar araştırmasından dijital pazarlamaya kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür.',
-            videoUrl: 'https://vimeo.com/1045939223'
+            description: t('maestroAI.videoShowcase.description'),
+            videoUrl: 'https://player.vimeo.com/video/1045939223'
         },
         featuresSection: {
-            tag: 'Temel Yetenekler',
-            title: 'Neden Maestro AI?',
-            description: 'B2B dünyasının karmaşık yapısını anlayan ve buna uygun çözümler üreten bir stratejist.',
+            tag: t('maestroAI.features.tag'),
+            title: t('maestroAI.features.title'),
+            description: t('maestroAI.features.description'),
             features: [
                 {
-                    title: 'Farklı Disiplinler Bir Arada',
-                    description: 'Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar.',
+                    title: t('maestroAI.features.items.disciplines.title'),
+                    description: t('maestroAI.features.items.disciplines.desc'),
                     icon: <HiArrowsPointingIn />
                 },
                 {
-                    title: 'Hız Kazandırır',
-                    description: 'Toplantılar, araştırmalar, yıllar ile oluşacak sektörel tecrübe kazanımını hızlandırır.',
+                    title: t('maestroAI.features.items.speed.title'),
+                    description: t('maestroAI.features.items.speed.desc'),
                     icon: <HiBolt />
                 },
                 {
-                    title: 'Bilge Stratejist',
-                    description: 'Endüstriyel Gıda & Şef Çözümleri Sektörü Pazarlama konularında eğitimli',
+                    title: t('maestroAI.features.items.strategist.title'),
+                    description: t('maestroAI.features.items.strategist.desc'),
                     icon: <HiAcademicCap />
                 },
                 {
-                    title: 'Sonuç Odaklı',
-                    description: 'Veriler → öneriler → uygulanabilir sonuçlar.',
+                    title: t('maestroAI.features.items.results.title'),
+                    description: t('maestroAI.features.items.results.desc'),
                     icon: <HiChartBar />
                 },
                 {
-                    title: 'Bellek',
-                    description: 'Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak, turnover nedeniyle bilginin kaybolmasını engeller.',
+                    title: t('maestroAI.features.items.memory.title'),
+                    description: t('maestroAI.features.items.memory.desc'),
                     icon: <HiCpuChip />
                 },
                 {
-                    title: 'Sektöre Özel Yönlendirme',
-                    description: 'Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar.',
+                    title: t('maestroAI.features.items.guidance.title'),
+                    description: t('maestroAI.features.items.guidance.desc'),
                     icon: <HiSparkles />
                 },
                 {
-                    title: 'Tarafsız Analiz',
-                    description: 'Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar.',
+                    title: t('maestroAI.features.items.analysis.title'),
+                    description: t('maestroAI.features.items.analysis.desc'),
                     icon: <HiDocumentMagnifyingGlass />
                 },
                 {
-                    title: 'Sürekli Öğrenme',
-                    description: 'Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar.',
+                    title: t('maestroAI.features.items.learning.title'),
+                    description: t('maestroAI.features.items.learning.desc'),
                     icon: <HiStar />
                 }
             ]
         },
         processSection: {
-            tag: 'İşleyiş Süreci',
-            title: 'Maestro AI Nasıl Çalışır?',
-            description: 'B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.',
+            tag: t('maestroAI.process.tag'),
+            title: t('maestroAI.process.title'),
+            description: t('maestroAI.process.description'),
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Soru',
-                    description: 'Satış düşüşü, kampanya performansı, yeni ürün lansmanı vb.',
+                    title: t('maestroAI.process.steps.question.title'),
+                    description: t('maestroAI.process.steps.question.desc'),
                     icon: <HiCloudArrowUp />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Analiz',
-                    description: 'CRM, pazar, sosyal medya ve reklam verilerini sentezler.',
+                    title: t('maestroAI.process.steps.analysis.title'),
+                    description: t('maestroAI.process.steps.analysis.desc'),
                     icon: <HiQueueList />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Öneri',
-                    description: 'Kampanya mesajı, kanal seçimi, kreatif öneri, raporlar.',
+                    title: t('maestroAI.process.steps.suggestion.title'),
+                    description: t('maestroAI.process.steps.suggestion.desc'),
                     icon: <HiSparkles />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Tecrübe',
-                    description: 'Haftalar sürecek kararlaru, işleri saatler içerisinde bitirin.',
+                    title: t('maestroAI.process.steps.experience.title'),
+                    description: t('maestroAI.process.steps.experience.desc'),
                     icon: <HiCommandLine />
                 }
             ]
         },
         pricingSection: {
-            tag: 'Planlar',
-            title: 'Size Uygun Planı Seçin',
-            description: 'B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.',
+            tag: t('maestroAI.pricing.tag'),
+            title: t('maestroAI.pricing.title'),
+            description: t('maestroAI.pricing.description'),
             packages: [
                 {
                     id: 'kredili-maestro',
-                    name: 'Kredili Maestro',
+                    productKey: 'maestro-kredili',
+                    name: t('maestroAI.pricing.plans.kredili.name'),
                     price: '1.200TL',
-                    period: 'ay',
-                    description: 'Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.',
+                    period: t('pricing.monthly'),
+                    description: t('maestroAI.pricing.plans.kredili.desc'),
                     icon: <HiStar />,
                     features: [
-                        'Orta ölçekli işletmeler için ideal',
-                        'Dijital pazarlama strateji optimize',
-                        'Genişletilmiş raporlama içeriği',
-                        'İçerik ve reklam bütçe planlama',
-                        'Sektörel gelişim takibi'
+                        ...(currentLang === 'en'
+                            ? [
+                                'Ideal for growth-stage teams',
+                                'Digital marketing strategy optimization',
+                                'Expanded reporting content',
+                                'Content and media budget planning',
+                                'Sector-focused growth tracking'
+                            ]
+                            : [
+                                'Orta ölçekli işletmeler için ideal',
+                                'Dijital pazarlama strateji optimize',
+                                'Genişletilmiş raporlama içeriği',
+                                'İçerik ve reklam bütçe planlama',
+                                'Sektörel gelişim takibi'
+                            ])
                     ],
-                    buttonText: 'Satın Al',
-                    buttonLink: '/#contact'
+                    buttonText: t('pricing.buyNow'),
+                    buttonLink: contactPath
                 },
                 {
                     id: 'sinirsiz-maestro',
-                    name: 'Sınırsız Maestro',
+                    productKey: 'maestro-sinirsiz',
+                    name: t('maestroAI.pricing.plans.growth.name'),
                     price: '2.000TL',
-                    period: 'ay',
-                    description: 'Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.',
+                    period: t('pricing.monthly'),
+                    description: t('maestroAI.pricing.plans.growth.desc'),
                     icon: <HiBolt />,
                     isPopular: true,
                     features: [
-                        'Daha geniş kitlelere ulaşım',
-                        'Aylık raporlar ve performans izleme',
-                        'Dijital görünürlük artışı',
-                        'Gelişmiş strateji yönetimi',
-                        'Sürekli kampanya optimizasyonu'
+                        ...(currentLang === 'en'
+                            ? [
+                                'Reach wider audiences',
+                                'Monthly reporting and performance tracking',
+                                'Stronger digital visibility',
+                                'Advanced strategy management',
+                                'Continuous campaign optimization'
+                            ]
+                            : [
+                                'Daha geniş kitlelere ulaşım',
+                                'Aylık raporlar ve performans izleme',
+                                'Dijital görünürlük artışı',
+                                'Gelişmiş strateji yönetimi',
+                                'Sürekli kampanya optimizasyonu'
+                            ])
                     ],
-                    buttonText: 'Üye Ol',
-                    buttonLink: '/#contact'
+                    buttonText: t('pricing.buyNow'),
+                    buttonLink: contactPath
                 }
             ]
         },
         testimonial: {
-            quote: "Maestro AI ile pazarlama stratejilerimizi haftalar değil, saatler içinde kurguluyoruz. Veriye dayalı kararlar alırken kazandığımız hız paha biçilemez.",
-            author: "Ali Yılmaz",
-            role: "Pazarlama Müdürü"
+            quote: t('maestroAI.testimonial.quote'),
+            author: t('maestroAI.testimonial.author'),
+            role: t('maestroAI.testimonial.role')
         },
-        faqs: [
-            {
-                question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. Khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
-            },
-            {
-                question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. Khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz.'
-            },
-            {
-                question: 'khilonfast ile kimler çalışmamalı?',
-                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, Khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, Khilonfast için uygun müşteriler değildir.'
-            },
-            {
-                question: 'khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için Khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, Khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, Khilonfast ile çalışırken en yüksek verimi elde ederler.'
-            },
-            {
-                question: 'Khilonfast ile iletişimi nasıl sağlayabilirim?',
-                answer: 'Khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, Khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
-            },
-            {
-                question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'Khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, Khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir.'
-            },
-            {
-                question: 'Bütünleşik dijital pazarlama stratejileri işletmem için nasıl faydalıdır?',
-                answer: 'Bütünleşik dijital pazarlama, farklı dijital kanalları tek bir strateji altında birleştirerek pazarlama etkinliğinizi artırır. Khilonfast, tüm dijital pazarlama çabalarınızı entegre eder ve bütçenizi en verimli şekilde kullanarak maksimum etkileşim ve dönüşüm sağlar.'
-            },
-            {
-                question: 'Bütünleşik dijital pazarlama kampanyalarının performansını nasıl takip edebilirim?',
-                answer: 'Khilonfast, tüm dijital kanallarınızı kapsayan haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, etkileşim oranları, dönüşümler ve diğer kritik performans göstergeleri hakkında bilgi içerir. Ayrıca, canlı dashboard’lar üzerinden kampanyalarınızı anlık olarak izleyebilirsiniz.'
-            },
-            {
-                question: 'Neden khilonfast bütünleşik dijital pazarlama hizmetini tercih etmeliyim?',
-                answer: 'khilonfast, tüm dijital pazarlama çabalarınızı entegre ederek maksimum verimlilik sağlar. Uzman ekibimiz, dijital stratejinizi bir bütün olarak ele alır ve tüm kanallarda tutarlı bir mesaj ve marka deneyimi sunmanızı sağlar.'
-            },
-            {
-                question: 'Bütünleşik dijital pazarlama stratejisi nasıl oluşturulur?',
-                answer: 'Khilonfast, öncelikle işletmenizin hedeflerini ve mevcut dijital varlıklarını analiz eder. Ardından, tüm dijital kanallarınızı entegre eden bir strateji geliştirir. Kampanyalar başlatıldıktan sonra, performans düzenli olarak izlenir ve optimize edilir.'
-            }
-        ]
+        faqs: t('maestroAI.faqs', { returnObjects: true }) as any
     }
 
 
-    return <ServicePageTemplate {...maestroConfig} />
+    return <ServicePageTemplate {...maestroConfig} serviceKey="service-maestro-ai" />
 }

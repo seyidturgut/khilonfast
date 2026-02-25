@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { HiChevronDown } from 'react-icons/hi2'
+import { useTranslation } from 'react-i18next'
 import './FAQ.css'
 
 interface FAQItem {
@@ -12,31 +13,34 @@ interface FAQProps {
     subtitle?: string;
 }
 
-const defaultFaqs = [
-    {
-        question: 'khilonfast hangi hizmetleri sunar?',
-        answer: 'khilonfast; denetim, strateji geliştirme, dijital pazarlama, marka yönetimi, CRM, satış ve kurumsal iletişim gibi alanlarda uçtan uca pazarlama hizmetleri sunar. Her hizmet, markaların iş hedeflerine değer katacak şekilde tasarlanır ve ihtiyaçlara göre özelleştirilebilir.'
-    },
-    {
-        question: 'Hizmet fiyatlandırması nasıl belirlenir?',
-        answer: 'khilonfast\'in hizmet ücretleri, hizmet türüne ve iş birliği modeline göre farklılık gösterir. Aylık sabit ücretli (retainer) ve proje/ürün bazlı fiyatlandırma seçeneklerimiz mevcuttur. Detaylı bilgi için bizimle iletişime geçebilirsiniz.'
-    },
-    {
-        question: 'khilonfast ile çalışma modelim nasıl belirlenir?',
-        answer: 'khilonfast, markaların ihtiyaçlarına göre şekillenen esnek iş birliği modelleri sunar. İster aylık sabit ücretli bir çalışma modeli, ister size özel çözümler ya da belirli ürün bazlı hizmetler tercih edin — pazarlama hedeflerinize en uygun yapıyı birlikte oluşturabiliriz.'
-    },
-    {
-        question: 'Başarı hikayeleriniz var mı?',
-        answer: 'Evet, hizmetlerimizin markalar üzerindeki etkisini gösteren birçok başarı hikayemiz ve müşteri yorumumuz bulunuyor. Detaylı bilgi için bize ulaşabilirsiniz.'
-    },
-    {
-        question: 'Size nasıl ulaşabilirim?',
-        answer: 'khilonfast ile iletişime geçmek için web sitemizdeki iletişim formunu doldurabilir veya bize e-posta ve telefon aracılığıyla doğrudan ulaşabilirsiniz. Sizden haber almayı sabırsızlıkla bekliyoruz!'
-    }
-]
-
-export default function FAQ({ items = defaultFaqs, subtitle }: FAQProps) {
+export default function FAQ({ items, subtitle }: FAQProps) {
+    const { t } = useTranslation();
     const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+    const defaultFaqs = [
+        {
+            question: t('faq.item1.question'),
+            answer: t('faq.item1.answer')
+        },
+        {
+            question: t('faq.item2.question'),
+            answer: t('faq.item2.answer')
+        },
+        {
+            question: t('faq.item3.question'),
+            answer: t('faq.item3.answer')
+        },
+        {
+            question: t('faq.item4.question'),
+            answer: t('faq.item4.answer')
+        },
+        {
+            question: t('faq.item5.question'),
+            answer: t('faq.item5.answer')
+        }
+    ]
+
+    const displayItems = items || defaultFaqs;
 
     const toggleFAQ = (index: number) => {
         setOpenIndex(openIndex === index ? null : index)
@@ -46,19 +50,14 @@ export default function FAQ({ items = defaultFaqs, subtitle }: FAQProps) {
         <section className="faq">
             <div className="container faq-container">
                 <div className="faq-header">
-                    <h2 className="faq-logo">SSS</h2>
+                    <h2 className="faq-logo">{t('faq.title')}</h2>
                     <p className="faq-subtitle">
-                        {subtitle || (
-                            <>
-                                khilonfast hizmetleri hakkında sıkça sorulan soruların yanıtlarını<br />
-                                burada bulabilirsiniz!
-                            </>
-                        )}
+                        {subtitle || t('faq.subtitle')}
                     </p>
                 </div>
 
                 <div className="faq-list">
-                    {items.map((item, index) => (
+                    {displayItems.map((item, index) => (
                         <div
                             key={index}
                             className={`faq-item ${openIndex === index ? 'active' : ''}`}

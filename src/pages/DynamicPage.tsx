@@ -34,6 +34,7 @@ export default function DynamicPage() {
         // For now, let's simulate a fetch or return null
         const fetchPage = async () => {
             setLoading(true);
+            setPageData(null);
             try {
                 // TODO: Replace with real API call
                 // const res = await fetch(`/api/pages/${slug}`);

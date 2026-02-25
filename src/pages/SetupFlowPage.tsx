@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   HiArrowRightOnRectangle,
   HiCheckBadge,
@@ -10,6 +11,7 @@ import {
   HiUsers,
   HiMagnifyingGlass
 } from 'react-icons/hi2'
+import Breadcrumbs from '../components/Breadcrumbs'
 import { setupFlows } from '../data/setupFlows'
 import './SearchConsoleSetup.css'
 
@@ -28,6 +30,8 @@ const stepIcons = [
 ]
 
 export default function SetupFlowPage({ path }: SetupFlowPageProps) {
+  const { t, i18n } = useTranslation('common')
+  const isEn = i18n.language.split('-')[0] === 'en'
   const flow = useMemo(() => setupFlows.find((item) => item.path === path), [path])
 
   const [selectedPathId, setSelectedPathId] = useState<string>(flow?.paths[0]?.id ?? '')
@@ -41,6 +45,7 @@ export default function SetupFlowPage({ path }: SetupFlowPageProps) {
   return (
     <div className="sc-setup-page">
       <div className="container sc-setup-container">
+        <Breadcrumbs items={[{ label: t('header.services'), path: '/#services' }, { label: flow.title }]} />
         <header className="sc-header">
           <h1 className="sc-title">{flow.title}</h1>
           <p className="sc-subtitle">{flow.subtitle}</p>
@@ -48,7 +53,7 @@ export default function SetupFlowPage({ path }: SetupFlowPageProps) {
           <div className="sc-purpose-box">
             <div className="purpose-header">
               <HiMagnifyingGlass className="purpose-icon" />
-              <h3>Amaç</h3>
+              <h3>{isEn ? 'Goal' : 'Amaç'}</h3>
             </div>
             <p>{flow.purpose}</p>
           </div>
@@ -75,7 +80,7 @@ export default function SetupFlowPage({ path }: SetupFlowPageProps) {
             <div className="decision-icon-box">
               <HiQuestionMarkCircle />
             </div>
-            <h2>Karar Noktası</h2>
+            <h2>{isEn ? 'Decision Point' : 'Karar Noktası'}</h2>
             <p className="decision-question">{flow.decisionQuestion}</p>
 
             <div className="decision-buttons">
@@ -107,7 +112,7 @@ export default function SetupFlowPage({ path }: SetupFlowPageProps) {
                           <Icon />
                         </div>
                         <div className="step-text">
-                          <h3>Adım {idx + 1}</h3>
+                          <h3>{isEn ? `Step ${idx + 1}` : `Adım ${idx + 1}`}</h3>
                           <p>
                             <strong>{step.title}</strong>
                             <br />

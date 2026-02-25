@@ -42,7 +42,7 @@ router.post('/register',
 
             // Generate JWT
             const token = jwt.sign(
-                { id: result.insertId, email },
+                { id: result.insertId, email, role: 'user' },
                 process.env.JWT_SECRET,
                 { expiresIn: '7d' }
             );
@@ -54,7 +54,9 @@ router.post('/register',
                     id: result.insertId,
                     email,
                     first_name,
-                    last_name
+                    last_name,
+                    role: 'user',
+                    must_change_password: false
                 }
             });
         } catch (error) {
@@ -95,7 +97,7 @@ router.post('/login',
 
             // Generate JWT
             const token = jwt.sign(
-                { id: user.id, email: user.email },
+                { id: user.id, email: user.email, role: user.role || 'user' },
                 process.env.JWT_SECRET,
                 { expiresIn: '7d' }
             );
@@ -107,7 +109,9 @@ router.post('/login',
                     id: user.id,
                     email: user.email,
                     first_name: user.first_name,
-                    last_name: user.last_name
+                    last_name: user.last_name,
+                    role: user.role || 'user',
+                    must_change_password: Boolean(user.must_change_password)
                 }
             });
         } catch (error) {
@@ -121,7 +125,7 @@ router.post('/login',
 router.get('/me', authMiddleware, async (req, res) => {
     try {
         const [users] = await db.query(
-            'SELECT id, email, first_name, last_name, phone, created_at FROM users WHERE id = ?',
+            'SELECT id, email, first_name, last_name, phone, role, must_change_password, created_at FROM users WHERE id = ?',
             [req.user.id]
         );
 

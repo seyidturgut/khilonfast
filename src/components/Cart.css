@@ -5,7 +5,7 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: 4000;
     backdrop-filter: blur(2px);
 }
 
@@ -16,9 +16,9 @@
     width: 450px;
     max-width: 90vw;
     height: 100vh;
-    background: white;
+    background: #ffffff;
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+    z-index: 4100;
     transition: right 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -33,7 +33,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e6edf3;
 }
 
 .cart-header h2 {
@@ -58,7 +58,7 @@
 }
 
 .cart-close:hover {
-    background: #f3f4f6;
+    background: #eef2f6;
     color: #1a3a52;
 }
 
@@ -88,11 +88,11 @@
 }
 
 .cart-item {
-    background: #f9fafb;
+    background: #f6f8fb;
     border-radius: 12px;
     padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e3edf4;
 }
 
 .cart-item-info h3 {
@@ -105,7 +105,7 @@
 .cart-item-price {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #0ea5e9;
+    color: #1e5f8a;
     margin: 0 0 1rem 0;
 }
 
@@ -133,8 +133,8 @@
 
 .cart-footer {
     padding: 1.5rem;
-    border-top: 1px solid #e5e7eb;
-    background: #f9fafb;
+    border-top: 1px solid #e6edf3;
+    background: #f6f8fb;
 }
 
 .cart-total {
@@ -146,14 +146,14 @@
 }
 
 .cart-total strong {
-    color: #0ea5e9;
+    color: #4d6b00;
     font-size: 1.5rem;
 }
 
 .btn-checkout {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    background: linear-gradient(135deg, #1a3a52 0%, #89b004 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -166,15 +166,15 @@
 
 .btn-checkout:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 10px 25px rgba(26, 58, 82, 0.28);
 }
 
 .btn-clear {
     width: 100%;
     padding: 0.75rem;
     background: white;
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
+    color: #1a3a52;
+    border: 1px solid #d7e1e8;
     border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 500;
@@ -183,8 +183,8 @@
 }
 
 .btn-clear:hover {
-    background: #f3f4f6;
-    border-color: #d1d5db;
+    background: #eef2f6;
+    border-color: #cbd5e1;
 }
 
 @media (max-width: 768px) {

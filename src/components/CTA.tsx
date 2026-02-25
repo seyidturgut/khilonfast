@@ -1,20 +1,25 @@
+import { useTranslation } from 'react-i18next'
 import './CTA.css'
 
 export default function CTA() {
+    const { i18n } = useTranslation('common')
+    const isEn = i18n.language.split('-')[0] === 'en'
+
     return (
         <section className="cta">
             <div className="container cta-container">
                 <div className="cta-content">
                     <h2 className="cta-title">
-                        İşletmenizin Potansiyeline<br />
-                        khilonfast ile Ulaşın!
+                        {isEn ? 'Unlock Your Business Potential' : 'İşletmenizin Potansiyeline'}<br />
+                        {isEn ? 'with khilonfast!' : 'khilonfast ile Ulaşın!'}
                     </h2>
                     <p className="cta-description">
-                        Size özel yaklaşımımızla, işletmenizin somut sonuçlar elde etmesine ve
-                        rakiplerinizin önüne geçmesine yardımcı oluyoruz.
+                        {isEn
+                            ? 'With a custom growth model, we help your business deliver measurable outcomes and outperform competitors.'
+                            : 'Size özel yaklaşımımızla, işletmenizin somut sonuçlar elde etmesine ve rakiplerinizin önüne geçmesine yardımcı oluyoruz.'}
                     </p>
                     <button className="btn btn-cta">
-                        Bize Ulaşın
+                        {isEn ? 'Contact Us' : 'Bize Ulaşın'}
                     </button>
                 </div>
 

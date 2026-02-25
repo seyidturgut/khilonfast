@@ -2,6 +2,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiMail, HiLockClosed } from 'react-icons/hi';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
 
 export default function Login() {
@@ -9,13 +10,19 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login, user } = useAuth();
+    const { login, googleLogin, user } = useAuth();
     const navigate = useNavigate();
 
     // Redirect if already logged in
     useEffect(() => {
         if (user) {
-            navigate('/dashboard');
+            if (user.role === 'admin') {
+                navigate('/admin');
+            } else if (user.must_change_password) {
+                navigate('/dashboard?tab=password&forcePasswordChange=true');
+            } else {
+                navigate('/dashboard');
+            }
         }
     }, [user, navigate]);
 
@@ -25,10 +32,29 @@ export default function Login() {
         setLoading(true);
 
         try {
-            await login(email, password);
-            navigate('/dashboard');
+            const loggedInUser = await login(email, password);
+            if (loggedInUser.role === 'admin') {
+                navigate('/admin');
+            } else if (loggedInUser.must_change_password) {
+                navigate('/dashboard?tab=password&forcePasswordChange=true');
+            } else {
+                navigate('/dashboard');
+            }
         } catch (err: any) {
             setError(err.message || 'Giriş başarısız');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleCredential = async (credential: string) => {
+        setError('');
+        setLoading(true);
+        try {
+            await googleLogin(credential);
+            navigate('/dashboard');
+        } catch (err: any) {
+            setError(err.message || 'Google ile giriş başarısız');
         } finally {
             setLoading(false);
         }
@@ -77,8 +103,15 @@ export default function Login() {
                         </button>
                     </form>
 
+                    <div className="auth-divider">
+                        <span>veya</span>
+                    </div>
+                    <div className="auth-google">
+                        <GoogleLoginButton onCredential={handleGoogleCredential} />
+                    </div>
+
                     <p className="auth-link">
-                        Hesabınız yok mu? <Link to="/register">Kayıt Ol</Link>
+                        Hesabınız yok mu? <Link to="/kayil-ol">Kayıt Ol</Link>
                     </p>
                 </div>
             </div>

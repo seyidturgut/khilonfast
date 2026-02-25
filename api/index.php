@@ -44,11 +44,14 @@ switch ($controller) {
     case 'profile':
         require_once __DIR__ . '/routes/profile.php';
         break;
+    case 'company':
+        require_once __DIR__ . '/routes/company.php';
+        break;
     case 'admin':
         require_once __DIR__ . '/routes/admin.php';
         break;
     case 'health':
-        sendResponse(['status' => 'ok', 'message' => 'Khilonfast PHP API is running']);
+        sendResponse(['status' => 'ok', 'message' => 'khilonfast PHP API is running']);
         break;
     default:
         sendResponse(['error' => 'API Endpoint not found: ' . $path], 404);

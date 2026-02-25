@@ -12,7 +12,6 @@ interface Page {
 
 export default function PagesList() {
     const [pages, setPages] = useState<Page[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Mock data for now, actual API integration later
@@ -21,7 +20,6 @@ export default function PagesList() {
             { id: 2, title: 'Blog: Dijital Pazarlama', slug: 'blog/dijital-pazarlama', is_active: true },
             { id: 3, title: 'Kampanya Sayfası', slug: 'landing/yaz-kampanyasi', is_active: false },
         ]);
-        setLoading(false);
     }, []);
 
     return (
@@ -34,7 +32,8 @@ export default function PagesList() {
             </div>
 
             <div className="card" style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '780px' }}>
                     <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                         <tr>
                             <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 600 }}>Başlık</th>
@@ -64,7 +63,7 @@ export default function PagesList() {
                                         <a href={`/${page.slug}`} target="_blank" rel="noreferrer" style={{ padding: '8px', color: '#6b7280', cursor: 'pointer' }} title="Görüntüle">
                                             <HiExternalLink size={18} />
                                         </a>
-                                        <Link to={`/admin/pages/edit/${page.id}`} style={{ padding: '8px', color: '#3b82f6', cursor: 'pointer' }} title="Düzenle">
+                                        <Link to={`/admin/pages/edit/${page.id}`} style={{ padding: '8px', color: '#1e5f8a', cursor: 'pointer' }} title="Düzenle">
                                             <HiPencil size={18} />
                                         </Link>
                                         <button style={{ padding: '8px', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer' }} title="Sil">
@@ -76,6 +75,7 @@ export default function PagesList() {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </AdminLayout>
     );

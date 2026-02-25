@@ -102,12 +102,12 @@ export default function PageBuilder() {
     const getDefaultBlockData = (type: string): any => {
         const defaults: Record<string, any> = {
             hero: {
-                subtitle: 'KHILONFAST PAZARLAMA ÇÖZÜMLERİ',
+                subtitle: 'khilonfast PAZARLAMA ÇÖZÜMLERİ',
                 title: 'Yeni Sayfanız',
                 titleHighlight: 'Buraya Başlık!',
                 description: 'Açıklama metni buraya gelecek...',
                 button1Text: 'Hemen Başlayın',
-                button1Link: '#contact',
+                button1Link: '/iletisim',
                 button2Text: 'Daha Fazla Bilgi',
                 button2Link: '#info'
             },
@@ -124,7 +124,7 @@ export default function PageBuilder() {
                 title: 'Harekete Geçin!',
                 description: 'Açıklama metni',
                 buttonText: 'Bize Ulaşın',
-                buttonLink: '#contact'
+                buttonLink: '/iletisim'
             },
             faq: {
                 subtitle: 'Sıkça sorulan sorular',
@@ -469,7 +469,7 @@ export default function PageBuilder() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)',
+                        background: 'linear-gradient(135deg, #1a3a52 0%, #89b004 100%)',
                         border: 'none',
                         padding: '0.75rem 1.5rem',
                         borderRadius: '10px',
@@ -600,9 +600,9 @@ export default function PageBuilder() {
                                     style={{
                                         position: 'relative',
                                         border: isSelected
-                                            ? '2px solid #0ea5e9'
+                                            ? '2px solid #1a3a52'
                                             : isHovered
-                                                ? '2px dashed #0ea5e9'
+                                                ? '2px dashed #1a3a52'
                                                 : '2px solid transparent',
                                         transition: 'all 0.2s',
                                         cursor: 'pointer'
@@ -680,7 +680,7 @@ export default function PageBuilder() {
 
                 .form-control:focus {
                     outline: none;
-                    border-color: #0ea5e9;
+                    border-color: #1a3a52;
                     box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
                 }
 
@@ -701,7 +701,7 @@ export default function PageBuilder() {
                     background: rgba(14, 165, 233, 0.1);
                     border: 1px solid rgba(14, 165, 233, 0.2);
                     border-radius: 4px;
-                    color: #0ea5e9;
+                    color: #1e5f8a;
                     cursor: pointer;
                     transition: all 0.2s;
                     display: flex;

@@ -1,0 +1,122 @@
+.admin-layout * {
+    color: inherit;
+}
+
+.admin-layout {
+    color: #1f2937;
+}
+
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6 {
+    color: #1a3a52 !important;
+}
+
+.admin-layout p,
+.admin-layout label,
+.admin-layout td,
+.admin-layout th,
+.admin-layout small {
+    color: #475569;
+}
+
+.admin-layout .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-layout .btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.admin-layout .btn-primary {
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5570 100%);
+    color: #ffffff !important;
+    box-shadow: 0 10px 20px rgba(26, 58, 82, 0.2);
+}
+
+.admin-layout .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(26, 58, 82, 0.28);
+}
+
+.admin-layout .btn-secondary {
+    background: #ffffff;
+    color: #1a3a52 !important;
+    border-color: #cbd5e1;
+}
+
+.admin-layout .card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06) !important;
+}
+
+.admin-layout table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.admin-layout table th {
+    background: #f8fafc !important;
+    color: #64748b !important;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 700;
+}
+
+.admin-layout table td {
+    color: #1f2937 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.admin-layout .form-control,
+.admin-layout input,
+.admin-layout textarea,
+.admin-layout select {
+    width: 100%;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px;
+    padding: 0.72rem 0.75rem;
+    font-size: 0.95rem;
+}
+
+.admin-layout .form-control:focus,
+.admin-layout input:focus,
+.admin-layout textarea:focus,
+.admin-layout select:focus {
+    outline: none;
+    border-color: #1a3a52 !important;
+    box-shadow: 0 0 0 3px rgba(26, 58, 82, 0.15);
+}
+
+.admin-layout input::placeholder,
+.admin-layout textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+.admin-layout a {
+    color: #1e5f8a;
+}
+
+.admin-layout a:hover {
+    color: #174d71;
+}

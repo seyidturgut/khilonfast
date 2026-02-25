@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
     HiMagnifyingGlass,
     HiQuestionMarkCircle,
@@ -10,29 +11,37 @@ import {
     HiCodeBracket,
     HiCheckBadge
 } from 'react-icons/hi2'
+import Breadcrumbs from '../components/Breadcrumbs'
 import './SearchConsoleSetup.css'
 
 export default function SearchConsoleSetup() {
+    const { t, i18n } = useTranslation('common')
+    const isEn = i18n.language.split('-')[0] === 'en'
     const [path, setPath] = useState<'yes' | 'no' | null>(null)
 
     return (
         <div className="sc-setup-page">
             <div className="container sc-setup-container">
+                <Breadcrumbs items={[{ label: t('header.services'), path: '/#services' }, { label: isEn ? 'Google Search Console Setup Flow' : 'Google Search Console Kurulum Akışı' }]} />
                 {/* Header Section */}
                 <header className="sc-header">
-                    <h1 className="sc-title">Google Search Console Kurulum Akışı</h1>
+                    <h1 className="sc-title">{isEn ? 'Google Search Console Setup Flow' : 'Google Search Console Kurulum Akışı'}</h1>
                     <p className="sc-subtitle">
-                        Web sitenizin Google arama sonuçlarındaki görünürlüğünü analiz etmek ve teknik hataları izleyebilmek için Search Console kurulumu yapılır.
+                        {isEn
+                            ? 'Set up Search Console to monitor your website visibility in Google Search and track technical issues.'
+                            : 'Web sitenizin Google arama sonuçlarındaki görünürlüğünü analiz etmek ve teknik hataları izleyebilmek için Search Console kurulumu yapılır.'}
                     </p>
 
                     <div className="sc-purpose-box">
                         <div className="purpose-header">
                             <HiMagnifyingGlass className="purpose-icon" />
-                            <h3>Amaç</h3>
+                            <h3>{isEn ? 'Goal' : 'Amaç'}</h3>
                         </div>
                         <p>
-                            Web sitenizin Google arama sonuçlarındaki görünürlüğünü analiz etmek ve teknik hataları izleyebilmek için Search Console kurulumu yapılır.
-                            <strong> GTM kurulumu zorunludur.</strong>
+                            {isEn
+                                ? 'Search Console setup helps monitor search visibility and technical issues on your website.'
+                                : 'Web sitenizin Google arama sonuçlarındaki görünürlüğünü analiz etmek ve teknik hataları izleyebilmek için Search Console kurulumu yapılır.'}
+                            <strong>{isEn ? ' GTM setup is required.' : ' GTM kurulumu zorunludur.'}</strong>
                         </p>
                     </div>
 
@@ -41,7 +50,7 @@ export default function SearchConsoleSetup() {
                             <div className="video-container">
                                 <iframe
                                     src="https://player.vimeo.com/video/1128164782"
-                                    title="khilonfast | Google Search Console Yetkilendirme Rehberi"
+                                    title={isEn ? 'khilonfast | Google Search Console Authorization Guide' : 'khilonfast | Google Search Console Yetkilendirme Rehberi'}
                                     width="100%"
                                     height="100%"
                                     frameBorder="0"
@@ -59,21 +68,21 @@ export default function SearchConsoleSetup() {
                         <div className="decision-icon-box">
                             <HiQuestionMarkCircle />
                         </div>
-                        <h2>Karar Noktası</h2>
-                        <p className="decision-question">Google Search Console hesabınız var mı?</p>
+                        <h2>{isEn ? 'Decision Point' : 'Karar Noktası'}</h2>
+                        <p className="decision-question">{isEn ? 'Do you already have a Google Search Console account?' : 'Google Search Console hesabınız var mı?'}</p>
 
                         <div className="decision-buttons">
                             <button
                                 className={`btn-decision btn-yes ${path === 'yes' ? 'active' : ''}`}
                                 onClick={() => setPath('yes')}
                             >
-                                EVET, Hesabım Var
+                                {isEn ? 'YES, I Have an Account' : 'EVET, Hesabım Var'}
                             </button>
                             <button
                                 className={`btn-decision btn-no ${path === 'no' ? 'active' : ''}`}
                                 onClick={() => setPath('no')}
                             >
-                                HAYIR, Hesabım Yok
+                                {isEn ? 'NO, I Do Not Have an Account' : 'HAYIR, Hesabım Yok'}
                             </button>
                         </div>
                     </div>
@@ -82,29 +91,29 @@ export default function SearchConsoleSetup() {
                     <div className="sc-path-viewport">
                         {path === 'yes' && (
                             <div className="path-content animate-fade-in">
-                                <div className="path-header yes">EVET, Hesabım Var</div>
+                                <div className="path-header yes">{isEn ? 'YES, I Have an Account' : 'EVET, Hesabım Var'}</div>
                                 <div className="steps-container">
                                     <div className="sc-step-card">
                                         <div className="step-icon-wrap"><HiArrowRightOnRectangle /></div>
                                         <div className="step-text">
-                                            <h3>Adım 1</h3>
-                                            <p>Search Console hesabınıza giriş yapın.</p>
+                                            <h3>{isEn ? 'Step 1' : 'Adım 1'}</h3>
+                                            <p>{isEn ? 'Sign in to your Search Console account.' : 'Search Console hesabınıza giriş yapın.'}</p>
                                         </div>
                                     </div>
                                     <div className="step-connector"></div>
                                     <div className="sc-step-card">
                                         <div className="step-icon-wrap"><HiUserPlus /></div>
                                         <div className="step-text">
-                                            <h3>Adım 2</h3>
-                                            <p>"Kullanıcı Ekle" menüsünden KhilonFast e-posta adresini ekleyin.</p>
+                                            <h3>{isEn ? 'Step 2' : 'Adım 2'}</h3>
+                                            <p>{isEn ? 'Add the khilonfast email via the "Add User" menu.' : '"Kullanıcı Ekle" menüsünden khilonfast e-posta adresini ekleyin.'}</p>
                                         </div>
                                     </div>
                                     <div className="step-connector"></div>
                                     <div className="sc-step-card">
                                         <div className="step-icon-wrap"><HiShieldCheck /></div>
                                         <div className="step-text">
-                                            <h3>Adım 3</h3>
-                                            <p>GTM kurulumu tamamlandıysa ek bir aksiyona gerek yoktur.</p>
+                                            <h3>{isEn ? 'Step 3' : 'Adım 3'}</h3>
+                                            <p>{isEn ? 'If GTM is already installed, no additional action is required.' : 'GTM kurulumu tamamlandıysa ek bir aksiyona gerek yoktur.'}</p>
                                         </div>
                                     </div>
                                     <div className="step-connector"></div>
@@ -112,8 +121,8 @@ export default function SearchConsoleSetup() {
                                         <div className="completion-content">
                                             <HiCheckBadge className="completion-icon" />
                                             <div>
-                                                <h3>Kurulum Tamamlandı</h3>
-                                                <p>KhilonFast, site performans ve indeksleme verilerinize erişebilir.</p>
+                                                <h3>{isEn ? 'Setup Completed' : 'Kurulum Tamamlandı'}</h3>
+                                                <p>{isEn ? 'khilonfast can now access your site performance and indexing data.' : 'khilonfast, site performans ve indeksleme verilerinize erişebilir.'}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -123,29 +132,29 @@ export default function SearchConsoleSetup() {
 
                         {path === 'no' && (
                             <div className="path-content animate-fade-in">
-                                <div className="path-header no">HAYIR, Hesabım Yok</div>
+                                <div className="path-header no">{isEn ? 'NO, I Do Not Have an Account' : 'HAYIR, Hesabım Yok'}</div>
                                 <div className="steps-container">
                                     <div className="sc-step-card">
                                         <div className="step-icon-wrap"><HiUsers /></div>
                                         <div className="step-text">
-                                            <h3>Adım 1</h3>
-                                            <p>KhilonFast, uygun paket kapsamında sizin adınıza Search Console hesabı oluşturur.</p>
+                                            <h3>{isEn ? 'Step 1' : 'Adım 1'}</h3>
+                                            <p>{isEn ? 'khilonfast creates a Search Console account for you within the selected package scope.' : 'khilonfast, uygun paket kapsamında sizin adınıza Search Console hesabı oluşturur.'}</p>
                                         </div>
                                     </div>
                                     <div className="step-connector"></div>
                                     <div className="sc-step-card">
                                         <div className="step-icon-wrap"><HiDocumentText /></div>
                                         <div className="step-text">
-                                            <h3>Adım 2</h3>
-                                            <p>Oluşturulan mülk (property) için doğrulama (verify) kodu sağlanır.</p>
+                                            <h3>{isEn ? 'Step 2' : 'Adım 2'}</h3>
+                                            <p>{isEn ? 'A verification code is provided for the created property.' : 'Oluşturulan mülk (property) için doğrulama (verify) kodu sağlanır.'}</p>
                                         </div>
                                     </div>
                                     <div className="step-connector"></div>
                                     <div className="sc-step-card">
                                         <div className="step-icon-wrap"><HiCodeBracket /></div>
                                         <div className="step-text">
-                                            <h3>Adım 3</h3>
-                                            <p>Bu kodu web sitenizin anasayfasındaki <code>&lt;head&gt;</code> alanına ekleyin.</p>
+                                            <h3>{isEn ? 'Step 3' : 'Adım 3'}</h3>
+                                            <p>{isEn ? 'Add this code to the <code>&lt;head&gt;</code> section of your homepage.' : <>Bu kodu web sitenizin anasayfasındaki <code>&lt;head&gt;</code> alanına ekleyin.</>}</p>
                                         </div>
                                     </div>
                                     <div className="step-connector"></div>
@@ -153,8 +162,8 @@ export default function SearchConsoleSetup() {
                                         <div className="completion-content">
                                             <HiCheckBadge className="completion-icon" />
                                             <div>
-                                                <h3>Kurulum Tamamlandı</h3>
-                                                <p>Search Console kurulumu tamamlanır ve site verileriniz izlenmeye başlanır.</p>
+                                                <h3>{isEn ? 'Setup Completed' : 'Kurulum Tamamlandı'}</h3>
+                                                <p>{isEn ? 'Search Console setup is completed and your site data starts being monitored.' : 'Search Console kurulumu tamamlanır ve site verileriniz izlenmeye başlanır.'}</p>
                                             </div>
                                         </div>
                                     </div>

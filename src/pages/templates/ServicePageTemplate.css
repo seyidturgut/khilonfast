@@ -68,12 +68,21 @@
     position: relative;
 }
 
+.hero-image-container.no-badge {
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
 .hero-main-img {
     display: block;
     width: 100%;
     background: transparent;
     border-radius: var(--radius-xl);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+}
+
+.hero-main-img.no-badge-image {
+    box-shadow: none;
 }
 
 .hero-main-video {
@@ -253,6 +262,18 @@
     color: var(--primary-color);
 }
 
+@media (max-width: 768px) {
+    .circular-badge {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .circular-badge {
+        display: none;
+    }
+}
+
 /* Video Showcase (Reuse styles from Sectoral or similar) */
 .video-showcase {
     padding: 100px 0;
@@ -398,10 +419,25 @@
 }
 
 .pricing-card-linear.popular {
-    border: 2px solid var(--primary-color);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 30px 60px rgba(26, 58, 82, 0.1);
-    transform: scale(1.05);
+    transform: none;
     z-index: 2;
+}
+
+.pricing-card-linear .card-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card-linear .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card-linear .card-footer {
+    margin-top: auto;
 }
 
 .popular-badge {
@@ -784,15 +820,20 @@
    Items 1-3: span 4 each (3 items * 4 = 12)
    Items 4-5: span 6 each (2 items * 6 = 12)
 */
-.approach-card-linear:nth-child(1),
-.approach-card-linear:nth-child(2),
-.approach-card-linear:nth-child(3) {
+.approach-grid-linear.count-5 .approach-card-linear:nth-child(1),
+.approach-grid-linear.count-5 .approach-card-linear:nth-child(2),
+.approach-grid-linear.count-5 .approach-card-linear:nth-child(3) {
     grid-column: span 4;
 }
 
-.approach-card-linear:nth-child(4),
-.approach-card-linear:nth-child(5) {
+.approach-grid-linear.count-5 .approach-card-linear:nth-child(4),
+.approach-grid-linear.count-5 .approach-card-linear:nth-child(5) {
     grid-column: span 6;
+}
+
+/* 6-card layout: stable 3x2 grid */
+.approach-grid-linear.count-6 .approach-card-linear {
+    grid-column: span 4;
 }
 
 
@@ -889,7 +930,7 @@
         grid-column: span 1;
     }
 
-    .approach-card-linear:nth-child(5) {
+    .approach-grid-linear.count-5 .approach-card-linear:nth-child(5) {
         grid-column: span 2;
         /* Center last item alone */
     }
@@ -1022,6 +1063,27 @@
 
     .service-title {
         font-size: 2.5rem;
+    }
+
+    .service-hero-visual {
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-image-container {
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    .hero-main-img,
+    .hero-main-video {
+        margin: 0 auto;
+    }
+
+    .hero-main-img.hero-main-img-content-production {
+        width: 100%;
+        transform-origin: center center;
     }
 
     .section-title-large {
@@ -1212,11 +1274,93 @@
     background-color: #bef264;
 }
 
+.download-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 4200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.download-modal {
+    width: min(540px, 100%);
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(26, 58, 82, 0.12);
+    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.3);
+    padding: 24px;
+}
+
+.download-modal-title {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 800;
+}
+
+.download-modal-desc {
+    margin: 0 0 16px;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.download-modal-preview {
+    width: 100%;
+    height: min(65vh, 720px);
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #f8fafc;
+    margin-bottom: 14px;
+}
+
+.download-modal-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.download-modal-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.download-modal-actions .btn-service-primary,
+.download-modal-actions .btn-pkg {
+    text-align: center;
+    min-height: 46px;
+}
+
+.download-modal-close {
+    margin-top: 12px;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--primary-color);
+    font-weight: 700;
+    padding: 12px;
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
 
     .auth-cards-grid,
     .auth-cards-grid.cols-3 {
         grid-template-columns: 1fr;
+    }
+
+    .download-modal-actions {
+        flex-direction: column;
+    }
+
+    .download-modal-preview {
+        height: 56vh;
     }
 }
 

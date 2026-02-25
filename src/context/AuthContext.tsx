@@ -7,13 +7,16 @@ interface User {
     first_name: string;
     last_name: string;
     role?: 'user' | 'admin' | 'editor';
+    must_change_password?: boolean;
 }
 
 interface AuthContextType {
     user: User | null;
     token: string | null;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<User>;
     register: (data: RegisterData) => Promise<void>;
+    googleLogin: (credential: string) => Promise<void>;
+    activateToken: (token: string) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
     loading: boolean;
@@ -50,9 +53,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (token) {
             loadUser();
         } else {
+            setUser(null);
             setLoading(false);
         }
-    }, []);
+    }, [token]);
 
     const loadUser = async () => {
         try {
@@ -66,7 +70,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
-    const login = async (email: string, password: string) => {
+    const login = async (email: string, password: string): Promise<User> => {
         try {
             const response = await authAPI.login({ email, password });
             const { token: newToken, user: userData } = response.data;
@@ -74,9 +78,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setToken(newToken);
             setUser(userData);
             localStorage.setItem('token', newToken);
+            return userData;
         } catch (error: any) {
             console.error('Login error:', error);
-            throw new Error(error.response?.data?.error || 'Login failed');
+            if (error?.response?.data?.error) {
+                throw new Error(error.response.data.error);
+            }
+
+            if (error?.code === 'ERR_NETWORK') {
+                throw new Error('Sunucuya baglanilamadi. Backend calisiyor olmali (localhost:3002).');
+            }
+
+            throw new Error('Giris basarisiz');
         }
     };
 
@@ -94,6 +107,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
+    const googleLogin = async (credential: string) => {
+        try {
+            const response = await authAPI.google({ credential });
+            const { token: newToken, user: userData } = response.data;
+
+            setToken(newToken);
+            setUser(userData);
+            localStorage.setItem('token', newToken);
+        } catch (error: any) {
+            console.error('Google login error:', error);
+            throw new Error(error.response?.data?.error || 'Google ile giriş başarısız');
+        }
+    };
+
+    const activateToken = async (newToken: string) => {
+        setLoading(true);
+        setToken(newToken);
+        localStorage.setItem('token', newToken);
+        try {
+            const response = await authAPI.getMe();
+            setUser(response.data.user);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const logout = () => {
         setUser(null);
         setToken(null);
@@ -105,6 +144,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         token,
         login,
         register,
+        googleLogin,
+        activateToken,
         logout,
         isAuthenticated: !!user,
         loading

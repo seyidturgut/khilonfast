@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
     HiChartBar,
     HiKey,
@@ -13,14 +15,24 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function GoogleAds() {
-    const gaConfig = {
+    const { t, i18n } = useTranslation('common')
+    const currentLang = i18n.language.split('-')[0]
+    const isEn = currentLang === 'en'
+    const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
+
+    useEffect(() => {
+        document.title = isEn ? 'Google Ads Management | khilonfast' : 'Google Ads | khilonfast'
+    }, [isEn])
+
+    const trConfig = {
         hero: {
             title: 'Google Reklamcılığı ile Gelirinizi Artırın.',
             subtitle: 'Rakiplerinizin arasında kaybolmayın!',
             description: 'khilonfast ile doğru anahtar kelime stratejileri ve hedeflemelerle markanızı öne çıkarın. Düşük dönüşüm oranlarını, reklam yatırımınızı verimli şekilde kullanarak aşın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/img/google-ads-hero.png',
+            image: '/images/hizmetlerimiz/google-ads/hero.avif',
+            hideBadge: true,
             badgeText: "Google Ads - İşinizi Büyütün!",
             badgeIcon: <HiChartBar />,
             themeColor: '#FEF3C7' // Warm yellow theme
@@ -80,7 +92,7 @@ export default function GoogleAds() {
             tag: '4 Adımda Başarı',
             title: 'Nasıl Çalışır?',
             description: 'Google Ads süreçlerimizle reklam performansınızı zirveye taşıyın. Şeffaf, hızlı ve sonuç odaklı.',
-            videoUrl: 'https://vimeo.com/1131179237?fl=pl&fe=cm', // Using standard GTM video layout or placeholder if specific video missing
+            videoUrl: 'https://player.vimeo.com/video/1131179237', // Using standard GTM video layout or placeholder if specific video missing
             steps: [
                 {
                     stepNumber: 1,
@@ -138,7 +150,7 @@ export default function GoogleAds() {
                     description: 'Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın',
                     icon: <HiKey />,
                     features: [],
-                    buttonText: 'ÜYE OL',
+                    buttonText: 'SATIN AL',
                     details: [
                         {
                             title: 'Kimler İçin Uygun',
@@ -161,7 +173,7 @@ export default function GoogleAds() {
                     isPopular: true,
                     icon: <HiChartBar />,
                     features: [],
-                    buttonText: 'ÜYE OL',
+                    buttonText: 'SATIN AL',
                     details: [
                         {
                             title: 'Kimler İçin Uygun',
@@ -183,7 +195,7 @@ export default function GoogleAds() {
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
                     icon: <HiTrophy />,
                     features: [],
-                    buttonText: 'ÜYE OL',
+                    buttonText: 'SATIN AL',
                     details: [
                         {
                             title: 'Kimler İçin Uygun',
@@ -229,27 +241,27 @@ export default function GoogleAds() {
         faqs: [
             {
                 question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. Khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
+                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
             },
             {
                 question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. Khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.'
+                answer: 'khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.'
             },
             {
                 question: 'khilonfast ile kimler çalışmamalı?',
-                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, Khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, Khilonfast için uygun müşteriler değildir. Bu tür firmalar için, Khilonfast hizmeti uygun olmayabilir.'
+                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir.'
             },
             {
                 question: 'khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için Khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, Khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, Khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, Khilonfast sizin için mükemmel bir seçimdir.'
+                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir.'
             },
             {
                 question: 'khilonfast ile iletişimi nasıl sağlayabilirim?',
-                answer: 'khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, Khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
+                answer: 'khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
             },
             {
                 question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, Khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.'
+                answer: 'khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.'
             },
             {
                 question: 'Go to market stratejisi işletmem için nasıl faydalıdır?',
@@ -261,7 +273,7 @@ export default function GoogleAds() {
             },
             {
                 question: 'Neden khilonfast go to market stratejisi hizmetini tercih etmeliyim?',
-                answer: 'khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, Khilonfast sizin için ideal bir seçimdir.'
+                answer: 'khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için ideal bir seçimdir.'
             },
             {
                 question: 'Go to market stratejisi nasıl oluşturulur?',
@@ -270,5 +282,73 @@ export default function GoogleAds() {
         ]
     }
 
-    return <ServicePageTemplate {...gaConfig} />
+    const enConfig = {
+        hero: {
+            title: 'Scale Revenue with Precision Google Ads',
+            subtitle: 'Outperform competitors with strategy-led campaign execution.',
+            description: 'khilonfast helps you build high-intent keyword systems, smarter targeting, and conversion-focused ad architecture to improve ROAS.',
+            buttonText: 'Start Now',
+            buttonLink: '#pricing',
+            image: '/images/hizmetlerimiz/google-ads/hero.avif',
+            hideBadge: true,
+            badgeText: 'Google Ads. Faster Growth, Measurable Results.',
+            badgeIcon: <HiChartBar />,
+            themeColor: '#FEF3C7'
+        },
+        breadcrumbs: [
+            { label: t('header.services'), path: homeServicesPath },
+            { label: 'Google Ads' }
+        ],
+        videoShowcase: {
+            tag: 'WATCH & LEARN',
+            title: <>Move Your Brand to the <span className="highlight-text">Top of Search</span></>,
+            description: 'Capture demand at the right moment with performance-driven campaign strategy, structured optimization, and transparent reporting.',
+            videoUrl: 'https://www.youtube.com/embed/V-TdlZW40BE'
+        },
+        approachSection: {
+            title: 'Account Audit and Performance Strategy',
+            description: 'We diagnose wasted spend, identify growth levers, and build scalable optimization loops.',
+            items: [
+                { title: 'Professional Account Audit', subtitle: 'Identify Hidden Leaks', description: 'Reveal structural issues, budget inefficiencies, and missed opportunities with a deep account audit.', icon: <HiMagnifyingGlass /> },
+                { title: 'Quality Score Optimization', subtitle: 'Reduce CPC', description: 'Improve ad relevance and landing-page alignment to lower costs and increase impression efficiency.', icon: <HiChartBar /> },
+                { title: 'Conversion Tracking Architecture', subtitle: 'ROI-Driven Decisions', description: 'Measure every meaningful action with clean tracking setup and decision-ready attribution.', icon: <HiPresentationChartLine /> },
+                { title: 'Competitive Intelligence', subtitle: 'Gain Market Edge', description: 'Map competitor strategy and discover actionable angles to improve positioning and CTR.', icon: <HiRocketLaunch /> },
+                { title: 'Continuous Optimization', subtitle: 'Always-On Performance', description: 'We operate through weekly optimization cycles, not set-and-forget campaign management.', icon: <HiSignal /> }
+            ]
+        },
+        processSection: {
+            tag: '4 Steps to Performance',
+            title: 'How It Works?',
+            description: 'A transparent and measurable delivery model built for sustained ad efficiency.',
+            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            steps: [
+                { stepNumber: 1, title: 'Step 1: Audit', description: 'We evaluate account structure, market context, and conversion readiness.', icon: <HiMagnifyingGlass /> },
+                { stepNumber: 2, title: 'Step 2: Strategy & Setup', description: 'Campaign architecture, keyword map, and ad copy frameworks are prepared for launch.', icon: <HiPresentationChartLine /> },
+                { stepNumber: 3, title: 'Step 3: Launch', description: 'Campaigns are launched with verification controls and data integrity checks.', icon: <HiCursorArrowRays /> },
+                { stepNumber: 4, title: 'Step 4: Optimization', description: 'We run iterative A/B optimization to lower acquisition cost and improve conversion rate.', icon: <HiCheckBadge /> }
+            ]
+        },
+        pricingSection: {
+            tag: 'Service Packages',
+            title: 'Google Ads Solutions',
+            description: 'Choose the package aligned with your growth stage and launch with khilonfast.',
+            packages: [
+                { id: 'core', name: 'Core', price: '$799*', period: t('pricing.monthly'), description: 'A strong launch package for first-stage growth.', icon: <HiKey />, features: [], buttonText: t('pricing.buyNow') },
+                { id: 'growth', name: 'Growth', price: '$1,199*', period: t('pricing.monthly'), description: 'Performance package for scaling lead and conversion volume.', isPopular: true, icon: <HiChartBar />, features: [], buttonText: t('pricing.buyNow') },
+                { id: 'ultimate', name: 'Ultimate', price: '$2,149*', period: t('pricing.monthly'), description: 'Advanced package for aggressive growth and market leadership.', icon: <HiTrophy />, features: [], buttonText: t('pricing.buyNow') }
+            ]
+        },
+        testimonial: {
+            quote: 'After partnering with khilonfast, we lowered acquisition costs while doubling conversion volume in a short period.',
+            author: 'Mehmet Demir',
+            role: 'E-commerce Director'
+        },
+        faqs: [
+            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
+            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
+            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+        ]
+    }
+
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-google-ads" />
 }

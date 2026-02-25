@@ -13,7 +13,7 @@
     left: 0;
     right: 0;
     height: 300px;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    background: linear-gradient(135deg, #1a3a52 0%, #89b004 100%);
     opacity: 0.05;
     z-index: 0;
 }
@@ -43,13 +43,13 @@
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, #0ea5e9, #3b82f6, #8b5cf6);
+    background: linear-gradient(90deg, #1a3a52, #2d5570, #89b004);
 }
 
 .dashboard-header h1 {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #1a3a52 0%, #0ea5e9 100%);
+    background: linear-gradient(135deg, #1a3a52 0%, #89b004 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -92,14 +92,14 @@
 }
 
 .tab-button:hover {
-    color: #0ea5e9;
-    background: rgba(14, 165, 233, 0.05);
+    color: #1e5f8a;
+    background: rgba(26, 58, 82, 0.08);
 }
 
 .tab-button.active {
     color: white;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    background: linear-gradient(135deg, #1a3a52 0%, #89b004 100%);
+    box-shadow: 0 4px 12px rgba(26, 58, 82, 0.28);
 }
 
 .tab-button svg {
@@ -129,7 +129,7 @@
     content: '';
     width: 4px;
     height: 2rem;
-    background: linear-gradient(180deg, #0ea5e9, #3b82f6);
+    background: linear-gradient(180deg, #1a3a52, #89b004);
     border-radius: 4px;
 }
 
@@ -175,9 +175,9 @@
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #0ea5e9;
+    border-color: #1a3a52;
     background: white;
-    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+    box-shadow: 0 0 0 4px rgba(26, 58, 82, 0.12);
 }
 
 .form-group input:disabled {
@@ -241,7 +241,7 @@
 .col-id {
     font-family: monospace;
     font-weight: 600;
-    color: #0ea5e9 !important;
+    color: #1e5f8a !important;
 }
 
 .col-date {
@@ -280,8 +280,8 @@
 }
 
 .qty-badge {
-    background: #e0f2fe;
-    color: #0284c7;
+    background: #eef6d9;
+    color: #4d6b00;
     padding: 1px 6px;
     border-radius: 8px;
     font-size: 0.75rem;
@@ -297,6 +297,98 @@
     text-transform: uppercase;
     display: inline-block;
     white-space: nowrap;
+}
+
+/* Purchased Content Library */
+.content-library-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.content-library-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1rem;
+    background: #fbfdff;
+}
+
+.content-library-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.content-library-header h3 {
+    margin: 0;
+    color: #1a3a52;
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.content-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #065f46;
+    background: #d1fae5;
+    border-radius: 999px;
+    padding: 0.3rem 0.6rem;
+    white-space: nowrap;
+}
+
+.content-library-description {
+    margin: 0 0 0.65rem;
+    color: #4b5563;
+    line-height: 1.5;
+    font-size: 0.92rem;
+}
+
+.content-library-features {
+    margin: 0 0 0.8rem 1rem;
+    padding: 0;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.content-library-features li {
+    margin-bottom: 0.32rem;
+}
+
+.content-video-frame {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #dbe3ea;
+    margin-bottom: 0.75rem;
+}
+
+.content-video-frame iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+}
+
+.content-video-placeholder {
+    margin-bottom: 0.75rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 0.9rem;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.content-open-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 700;
+    color: #4d6b00;
+    background: #eef6d9;
+    border-radius: 999px;
+    padding: 0.5rem 0.9rem;
 }
 
 
@@ -339,5 +431,9 @@
 
     .item-price {
         text-align: left;
+    }
+
+    .content-library-grid {
+        grid-template-columns: 1fr;
     }
 }

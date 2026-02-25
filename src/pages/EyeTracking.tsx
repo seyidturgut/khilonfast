@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
     HiBolt,
     HiChartBar,
@@ -6,177 +7,226 @@ import {
     HiArrowTrendingUp,
     HiOutlineEye,
     HiOutlineLightBulb,
-    HiOutlineAcademicCap
+    HiOutlineAcademicCap,
+    HiClock,
+    HiMegaphone,
+    HiUsers,
+    HiRocketLaunch,
+    HiBriefcase
 } from 'react-icons/hi2'
-import ServicePageTemplate from './templates/ServicePageTemplate'
+import ServicePageTemplate, { ServicePageProps } from './templates/ServicePageTemplate'
 
 export default function EyeTracking() {
-    const eyeTrackingConfig = {
+    const { t, i18n } = useTranslation('common')
+    const isEn = i18n.language.split('-')[0] === 'en'
+
+    const eyeTrackingConfig: ServicePageProps = {
         hero: {
-            title: 'Eye Tracking Sosyal Medya Reklam Analizi',
-            subtitle: (
-                <>
-                    Eye Tracking + AI ile;<br />
-                    Kazanan Kreatifi Yayına Alın,<br />
-                    ROI Riskini Azaltın
-                </>
-            ),
-            description: 'Focus, Cognitive Demand, Engagement, Memory skorlarını anında öğrenin. Sponsorlu gönderilerinizde hangi görselin daha fazla dikkat çekeceğini yayına girmeden önce keşfedin.',
-            buttonText: 'Hemen Başlayın',
+            title: t('eyeTracking.hero.title'),
+            subtitle: '',
+            description: t('eyeTracking.hero.description'),
+            buttonText: t('pricing.buyNow'),
             buttonLink: '#pricing',
             image: '/img/eye-tracking-hero.png',
-            videoUrl: 'https://www.youtube.com/embed/fiHpDDF440M',
+            videoUrl: 'https://www.youtube.com/embed/fiHpDDF440M?autoplay=1&mute=1&playsinline=1&rel=0',
             hideBadge: true,
-            badgeText: "Veriye Dayalı Analiz",
+            badgeText: t('eyeTracking.hero.badge'),
             badgeIcon: <HiBolt />,
             themeColor: '#f9fafb'
         },
         breadcrumbs: [
-            { label: 'Hizmetlerimiz', path: '/#services' },
-            { label: 'Eye Tracking Reklam Analizi' }
+            { label: t('header.home'), path: '/' },
+            { label: t('header.products'), path: '#' },
+            { label: t('eyeTracking.hero.title') }
         ],
         videoShowcase: {
-            tag: 'Dakikalar İçinde Kazanan Kreatifi Bulun',
+            tag: t('eyeTracking.videoShowcase.tag'),
             title: (
                 <>
-                    Reklam Performansınızı
-                    <span className="highlight"> AI ve Eye Tracking</span> ile Ölçün
+                    {t('eyeTracking.videoShowcase.title').split('AI ve Eye Tracking')[0]}
+                    <span className="highlight"> AI ve Eye Tracking</span>
+                    {t('eyeTracking.videoShowcase.title').split('AI ve Eye Tracking')[1]}
                 </>
             ),
-            description: 'Görsel analiz ile kreatif performansınızı güçlendirin. Harcanan bütçenin karşılığını alıp almayacağınızı tahmin etmek yerine, doğrudan bilimsel verilere dayanın.',
-            videoUrl: 'https://vimeo.com/1131181115'
+            description: t('eyeTracking.videoShowcase.description'),
+            videoUrl: 'https://player.vimeo.com/video/1131181115'
+        },
+        approachSection: {
+            tag: t('eyeTracking.approach.tag'),
+            title: t('eyeTracking.approach.title'),
+            description: t('eyeTracking.approach.description'),
+            items: [
+                {
+                    title: t('eyeTracking.approach.items.roi.title'),
+                    subtitle: t('eyeTracking.approach.items.roi.subtitle'),
+                    description: t('eyeTracking.approach.items.roi.desc'),
+                    icon: <HiChartBar />
+                },
+                {
+                    title: t('eyeTracking.approach.items.creative.title'),
+                    subtitle: t('eyeTracking.approach.items.creative.subtitle'),
+                    description: t('eyeTracking.approach.items.creative.desc'),
+                    icon: <HiMegaphone />
+                },
+                {
+                    title: t('eyeTracking.approach.items.tests.title'),
+                    subtitle: t('eyeTracking.approach.items.tests.subtitle'),
+                    description: t('eyeTracking.approach.items.tests.desc'),
+                    icon: <HiClock />
+                },
+                {
+                    title: t('eyeTracking.approach.items.cmo.title'),
+                    subtitle: t('eyeTracking.approach.items.cmo.subtitle'),
+                    description: t('eyeTracking.approach.items.cmo.desc'),
+                    icon: <HiBriefcase />
+                },
+                {
+                    title: t('eyeTracking.approach.items.growth.title'),
+                    subtitle: t('eyeTracking.approach.items.growth.subtitle'),
+                    description: t('eyeTracking.approach.items.growth.desc'),
+                    icon: <HiRocketLaunch />
+                },
+                {
+                    title: t('eyeTracking.approach.items.ceo.title'),
+                    subtitle: t('eyeTracking.approach.items.ceo.subtitle'),
+                    description: t('eyeTracking.approach.items.ceo.desc'),
+                    icon: <HiUsers />
+                }
+            ]
         },
         featuresSection: {
-            tag: 'Analiz Skorları',
-            title: '4 Kritik Skorla Kreatif Performansınızı Ölçün',
-            description: 'Görsellerinizin her bir öğesini insan gözünün algısına göre puanlıyoruz.',
+            tag: t('eyeTracking.pricing.tag'),
+            title: t('eyeTracking.hero.title'),
+            description: t('eyeTracking.hero.description'),
             features: [
                 {
-                    title: 'Focus (Odak)',
-                    description: 'Görselin ne kadar anlaşılır olduğunu gösterir. Yüksek skor, net ve temiz bir mesaj demektir.',
+                    title: t('eyeTracking.features.focus.title'),
+                    description: t('eyeTracking.features.focus.desc'),
                     icon: <HiOutlineEye />
                 },
                 {
-                    title: 'Cognitive Demand',
-                    description: 'Karmaşıklık düzeyi. Düşük skor, daha kolay bir tüketim ve daha hızlı algı sağlar.',
+                    title: t('eyeTracking.features.cognitive.title'),
+                    description: t('eyeTracking.features.cognitive.desc'),
                     icon: <HiOutlineLightBulb />
                 },
                 {
-                    title: 'Engagement (İlgi)',
-                    description: 'İlgi ve heyecan tahmini. Yüksek skor, daha fazla etkileşim olasılığını simgeler.',
+                    title: t('eyeTracking.features.engagement.title'),
+                    description: t('eyeTracking.features.engagement.desc'),
                     icon: <HiSparkles />
                 },
                 {
-                    title: 'Memory (Bellek)',
-                    description: 'Akılda kalıcılık. Yüksek skor, görselin hatırlanma olasılığını artırır.',
+                    title: t('eyeTracking.features.memory.title'),
+                    description: t('eyeTracking.features.memory.desc'),
                     icon: <HiOutlineAcademicCap />
                 }
             ]
         },
         processSection: {
-            tag: 'Nasıl Çalışır?',
-            title: 'Analiz Süreci Çok Basit',
-            description: 'Görselinizi yükleyin ve dakikalar içinde kapsamlı raporunuzu alın.',
+            tag: t('eyeTracking.process.tag'),
+            title: t('eyeTracking.process.title'),
+            description: t('eyeTracking.process.description'),
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Görselinizi Yükleyin',
-                    description: 'Sponsorlu gönderi/post görselinizi sürükleyip bırakın.',
+                    title: t('eyeTracking.process.steps.upload.title'),
+                    description: t('eyeTracking.process.steps.upload.desc'),
                     icon: <HiCloudArrowUp />
                 },
                 {
                     stepNumber: 2,
-                    title: 'AI Analizi',
-                    description: 'Eye Tracking modeli heatmap ve skorları anında hesaplar.',
+                    title: t('eyeTracking.process.steps.ai.title'),
+                    description: t('eyeTracking.process.steps.ai.desc'),
                     icon: <HiBolt />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Sonuç & Öneri',
-                    description: 'Güçlü/zayıf alanları ve iyileştirme checklist’ini içeren PDF’i alın.',
+                    title: t('eyeTracking.process.steps.result.title'),
+                    description: t('eyeTracking.process.steps.result.desc'),
                     icon: <HiChartBar />
                 }
             ]
         },
+        authorizationSection: {
+            title: t('eyeTracking.authorization.title'),
+            description: t('eyeTracking.authorization.description'),
+            cards: [
+                {
+                    title: t('eyeTracking.authorization.card.title'),
+                    description: t('eyeTracking.authorization.card.desc'),
+                    highlightText: t('eyeTracking.authorization.card.highlight'),
+                    buttonText: t('eyeTracking.authorization.card.button'),
+                    buttonLink: '/Gorsel_Reklam_Analiz_raporu.pdf',
+                    theme: 'light'
+                }
+            ]
+        },
         pricingSection: {
-            tag: 'Planlar',
-            title: 'Size Uygun Paketi Seçin',
-            description: 'Her analiz sonunda güçlü/zayıf yönler ve uygulanabilir öneriler sunulur.',
+            tag: t('eyeTracking.pricing.tag'),
+            title: t('eyeTracking.pricing.title'),
+            description: t('eyeTracking.pricing.description'),
             packages: [
                 {
                     id: 'starter',
+                    productKey: 'eye-starter',
                     name: 'Starter',
                     price: '1.000TL',
-                    period: 'ay',
-                    description: 'Tekli görsel analizi için ideal başlangıç.',
+                    period: t('pricing.monthly'),
+                    description: isEn
+                        ? 'An ideal starting point for single-creative analysis.'
+                        : 'Tekli gorsel analizi icin ideal baslangic.',
                     icon: <HiBolt />,
                     features: [
-                        '1 Görsel Analizi',
-                        'Detaylı Skor Raporu',
-                        'Heatmap Görünümü',
-                        'Temel İyileştirme Önerileri'
+                        isEn ? '1 Creative Analysis' : '1 Gorsel Analizi',
+                        isEn ? 'Detailed Score Report' : 'Detayli Skor Raporu',
+                        isEn ? 'Heatmap View' : 'Heatmap Gorunumu',
+                        isEn ? 'Baseline Optimization Recommendations' : 'Temel Iyilestirme Onerileri'
                     ],
-                    buttonText: 'Satın Al',
-                    buttonLink: '/#contact'
+                    buttonText: t('pricing.buyNow'),
+                    buttonLink: isEn ? '/en/contact' : '/iletisim'
                 },
                 {
                     id: 'growth',
+                    productKey: 'eye-growth',
                     name: 'Growth',
                     price: '2.700TL',
-                    period: 'ay',
-                    description: 'Küçük ekipler ve düzenli kampanya yürütenler için.',
+                    period: t('pricing.monthly'),
+                    description: t('eyeTracking.pricing.plans.growth.desc'),
                     icon: <HiArrowTrendingUp />,
                     isPopular: true,
                     features: [
-                        '3 Görsel Analizi',
-                        'Öncelikli Analiz Sırası',
-                        'A/B Test Öncesi Ölçüm',
-                        'Sektörel Karşılaştırma'
+                        isEn ? '3 Creative Analyses' : '3 Gorsel Analizi',
+                        isEn ? 'Priority Analysis Queue' : 'Oncelikli Analiz Sirasi',
+                        isEn ? 'Pre A/B Test Measurement' : 'A/B Test Oncesi Olcum',
+                        isEn ? 'Sector Benchmarking' : 'Sektorel Karsilastirma'
                     ],
-                    buttonText: 'Satın Al',
-                    buttonLink: '/#contact'
+                    buttonText: t('pricing.buyNow'),
+                    buttonLink: isEn ? '/en/contact' : '/iletisim'
                 },
                 {
                     id: 'pro',
+                    productKey: 'eye-pro',
                     name: 'Pro',
                     price: '4.000TL',
-                    period: 'ay',
-                    description: 'Yoğun kampanya dönemleri ve ajanslar için profesyonel çözüm.',
+                    period: t('pricing.monthly'),
+                    description: t('eyeTracking.pricing.plans.pro.desc'),
                     icon: <HiSparkles />,
                     features: [
-                        '5 Görsel Analizi',
-                        'Gelişmiş ROI Analizi',
-                        'Stratejik Danışmanlık Desteği',
-                        'Hızlı Onay Süreci'
+                        isEn ? '5 Creative Analyses' : '5 Gorsel Analizi',
+                        isEn ? 'Advanced ROI Analysis' : 'Gelismis ROI Analizi',
+                        isEn ? 'Strategic Advisory Support' : 'Stratejik Danismanlik Destegi',
+                        isEn ? 'Fast Approval Workflow' : 'Hizli Onay Sureci'
                     ],
-                    buttonText: 'Satın Al',
-                    buttonLink: '/#contact'
+                    buttonText: t('pricing.buyNow'),
+                    buttonLink: isEn ? '/en/contact' : '/iletisim'
                 }
             ]
         },
         testimonial: {
-            quote: "Eye Tracking analizi ile ROI riskimizi minimize etik. Yayına çıkmadan önce kazanan görseli bilmek bütçemizi çok daha verimli kullanmamızı sağladı.",
-            author: "Deniz Erten",
-            role: "E-ticaret Direktörü"
+            quote: t('eyeTracking.testimonial.quote'),
+            author: t('eyeTracking.testimonial.author'),
+            role: t('eyeTracking.testimonial.role')
         },
-        faqs: [
-            {
-                question: 'Neden Khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'Khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır.'
-            },
-            {
-                question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede zaman kaybına yol açan toplantıları ortadan kaldırarak daha üst düzey hizmet sunabiliyoruz.'
-            },
-            {
-                question: 'Khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'Dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan, veriye dayalı kararlar almayı seven ve yeni nesil araçları kullanmaya istekli firmalar için Khilonfast mükemmel bir iş ortağıdır.'
-            },
-            {
-                question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'Satın alım sonrası size doldurmanız gereken formlar iletilir. Bu formlar doldurulduktan sonra ekibimiz analizleri yapar, kurulumları tamamlar ve süreci başlatarak periyodik raporlar sunar.'
-            }
-        ]
+        faqs: t('eyeTracking.faqs', { returnObjects: true }) as any
     }
 
     return <ServicePageTemplate {...eyeTrackingConfig} />

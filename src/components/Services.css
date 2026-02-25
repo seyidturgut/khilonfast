@@ -274,14 +274,14 @@
 .service-title-modern {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-secondary);
+    color: #15324c;
     margin-bottom: var(--space-md);
     line-height: 1.4;
 }
 
 .service-desc-modern {
     font-size: 0.9375rem;
-    color: var(--color-text-secondary);
+    color: #3f4c5a;
     line-height: 1.7;
     margin-bottom: var(--space-lg);
     flex: 1;
@@ -291,19 +291,21 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
-    background: transparent;
-    border: none;
-    color: var(--color-primary);
+    background: rgba(197, 214, 61, 0.18);
+    border: 1px solid rgba(21, 50, 76, 0.18);
+    color: #15324c;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    padding: 0;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
     transition: all var(--transition-base);
     align-self: flex-start;
 }
 
 .service-btn-modern:hover {
-    color: var(--color-primary-dark);
+    color: #15324c;
+    background: rgba(197, 214, 61, 0.35);
     gap: var(--space-md);
 }
 

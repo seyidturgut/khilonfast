@@ -1,4 +1,6 @@
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
     HiShoppingCart,
     HiKey,
@@ -11,9 +13,12 @@ import Cart from '../../components/Cart'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
 import './ServicePageTemplate.css'
+import trCommon from '../../locales/tr/common.json'
+import enCommon from '../../locales/en/common.json'
 
 export interface PricingPackage {
     id: string;
+    productKey?: string;
     name: string;
     price: string;
     period: string;
@@ -155,11 +160,174 @@ export interface ServicePageProps {
         description: string;
         features?: string[];
     };
+    serviceKey?: string;
+    disableApiHeroTextOverride?: boolean;
 }
 
 export default function ServicePageTemplate(props: ServicePageProps) {
+    const { t, i18n } = useTranslation('common');
+    const API_BASE = import.meta.env.VITE_API_URL || '/api';
+    const currentLang = i18n.language.split('-')[0];
+    const langPrefix = currentLang === 'en' ? '/en' : '';
+    const trSlugs = trCommon.slugs as Record<string, string>;
+    const enSlugs = enCommon.slugs as Record<string, string>;
     const { addToCart } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [downloadModalUrl, setDownloadModalUrl] = useState<string | null>(null);
+    const [dynamicPackages, setDynamicPackages] = useState<PricingPackage[]>(props.serviceKey ? [] : props.pricingSection.packages);
+    const [dynamicHero, setDynamicHero] = useState(props.hero);
+
+    const resolveHeroVideoUrl = (rawValue?: string | null) => {
+        const value = String(rawValue || '').trim();
+        if (!value) return null;
+
+        if (/^https?:\/\//i.test(value)) {
+            const vimeoMatch = value.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+            if (vimeoMatch?.[1]) {
+                return `https://player.vimeo.com/video/${vimeoMatch[1]}?h=880a1387d8&badge=0&autopause=0&player_id=0&app_id=58479`;
+            }
+            return value;
+        }
+
+        const idMatch = value.match(/(\d{6,})/);
+        if (!idMatch?.[1]) return null;
+
+        return `https://player.vimeo.com/video/${idMatch[1]}?h=880a1387d8&badge=0&autopause=0&player_id=0&app_id=58479`;
+    };
+
+    // Keep UI text state in sync when language changes.
+    useEffect(() => {
+        setDynamicHero(props.hero);
+        setDynamicPackages(props.serviceKey ? [] : props.pricingSection.packages);
+    }, [i18n.language, props.serviceKey]);
+
+    useEffect(() => {
+        if (props.serviceKey) {
+            const fetchPackages = async () => {
+                try {
+                    const fetchByLang = async (lang: string) => {
+                        const res = await fetch(`${API_BASE}/products/key/${props.serviceKey}?lang=${lang}`);
+                        if (!res.ok) return null;
+                        const data = await res.json();
+                        return data?.product || null;
+                    };
+
+                    // Primary text source should always be current locale.
+                    // TR fallback is only for package/price continuity.
+                    const primaryProduct = await fetchByLang(currentLang);
+                    const fallbackProduct = currentLang === 'tr' ? null : await fetchByLang('tr');
+                    const product = primaryProduct || fallbackProduct;
+
+                    if (product) {
+                        const resolvedTitle = props.disableApiHeroTextOverride
+                            ? undefined
+                            : (primaryProduct?.name || fallbackProduct?.name || undefined);
+                        const resolvedDescription = props.disableApiHeroTextOverride
+                            ? undefined
+                            : (primaryProduct?.description || fallbackProduct?.description || undefined);
+                        const resolvedImage =
+                            primaryProduct?.hero_image ||
+                            fallbackProduct?.hero_image ||
+                            undefined;
+                        const resolvedVideo =
+                            resolveHeroVideoUrl(primaryProduct?.hero_vimeo_id) ||
+                            resolveHeroVideoUrl(fallbackProduct?.hero_vimeo_id) ||
+                            undefined;
+
+                        setDynamicHero(prev => ({
+                            ...prev,
+                            title: resolvedTitle || prev.title,
+                            description: resolvedDescription || prev.description,
+                            image: resolvedImage || prev.image,
+                            videoUrl: resolvedVideo || prev.videoUrl
+                        }));
+
+                        const primaryPackageMap = new Map<string, any>(
+                            Array.isArray(primaryProduct?.packages)
+                                ? primaryProduct.packages.map((p: any) => [p.product_key, p])
+                                : []
+                        );
+                        const packageSource =
+                            Array.isArray(primaryProduct?.packages) && primaryProduct.packages.length > 0
+                                ? primaryProduct.packages
+                                : (Array.isArray(fallbackProduct?.packages) ? fallbackProduct.packages : []);
+
+                        if (Array.isArray(packageSource) && packageSource.length > 0) {
+                            const packages = packageSource.map((pkg: any) => {
+                                const localizedPkg = currentLang === 'en'
+                                    ? (primaryPackageMap.get(pkg.product_key) || pkg)
+                                    : pkg;
+
+                                return ({
+                                id: pkg.product_key,
+                                productKey: pkg.product_key,
+                                fullName: localizedPkg.name,
+                                name: localizedPkg.name?.includes('-') ? localizedPkg.name.split('-').pop()?.trim() : localizedPkg.name,
+                                price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: pkg.currency, maximumFractionDigits: 0 }).format(pkg.price) + '*',
+                                period: pkg.duration_days ? (currentLang === 'tr' ? `${pkg.duration_days} Gün` : `${pkg.duration_days} Days`) : t('pricing.monthly'),
+                                description: localizedPkg.description || props.pricingSection.description,
+                                features: localizedPkg.features ? localizedPkg.features.split('\n') : [],
+                                isPopular: pkg.product_key.includes('growth'),
+                                buttonText: t('pricing.buyNow'),
+                                icon: props.pricingSection.packages.find(p => p.id === 'core')?.icon
+                                });
+                            });
+                            setDynamicPackages(packages);
+                        } else if (typeof product.price !== 'undefined' && product.price !== null) {
+                            const textProduct = primaryProduct || fallbackProduct || product;
+                            const priceProduct = fallbackProduct || primaryProduct || product;
+                            const fallbackPackage: PricingPackage = {
+                                id: priceProduct.product_key || props.heroPriceCard?.packageId || 'single',
+                                productKey: priceProduct.product_key || undefined,
+                                name: textProduct.name || props.pricingSection.packages[0]?.name || 'Package',
+                                price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', {
+                                    style: 'currency',
+                                    currency: priceProduct.currency || 'TRY',
+                                    maximumFractionDigits: 0
+                                }).format(Number(priceProduct.price)) + '*',
+                                period: priceProduct.duration_days
+                                    ? (currentLang === 'tr' ? `${priceProduct.duration_days} Gün` : `${priceProduct.duration_days} Days`)
+                                    : t('pricing.monthly'),
+                                description: textProduct.description || props.pricingSection.description,
+                                features: textProduct.features ? String(textProduct.features).split('\n') : [],
+                                buttonText: t('pricing.buyNow'),
+                                icon: props.pricingSection.packages[0]?.icon
+                            };
+                            setDynamicPackages([fallbackPackage]);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch packages:", err);
+                }
+            };
+            fetchPackages();
+        }
+    }, [props.serviceKey, props.disableApiHeroTextOverride, i18n.language]);
+
+    const displayPackages = props.serviceKey ? dynamicPackages : props.pricingSection.packages;
+
+    const localizeInternalPath = (path?: string) => {
+        if (!path) return path;
+        if (path.startsWith('#') || /^https?:\/\//.test(path)) return path;
+
+        const normalized = path.replace(/^\/en/, '').replace(/^\/+/, '').replace(/\/+$/, '');
+        const matchedKey =
+            Object.keys(trSlugs).find((k) => trSlugs[k] === normalized) ||
+            Object.keys(enSlugs).find((k) => enSlugs[k] === normalized);
+
+        const targetSlug = matchedKey
+            ? (currentLang === 'en' ? enSlugs[matchedKey] : trSlugs[matchedKey])
+            : normalized;
+
+        if (!targetSlug) return currentLang === 'en' ? '/en' : '/';
+        return `${langPrefix}/${targetSlug}`.replace(/\/{2,}/g, '/');
+    };
+
+    const localizedBreadcrumbs = props.breadcrumbs.map((item) => ({
+        ...item,
+        path: localizeInternalPath(item.path)
+    }));
+    const contactPath = `${langPrefix}/${currentLang === 'en' ? enSlugs.contact : trSlugs.contact}`.replace(/\/{2,}/g, '/');
 
     // Handle add to cart
     const handleAddToCart = (pkg: PricingPackage) => {
@@ -172,7 +340,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 'training': 'b2b-training'
             };
 
-            const productKey = productKeyMap[pkg.id] || pkg.id;
+            const productKey = pkg.productKey || productKeyMap[pkg.id] || pkg.id;
 
             // Parse price correctly - remove all non-numeric characters except comma
             // Turkish format: $9.900 means 9900, $14.900 means 14900
@@ -183,7 +351,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 id: pkg.id,
                 product_id: 0, // Will be mapped by backend using product_key
                 product_key: productKey, // Use mapped product key
-                name: pkg.name,
+                name: (pkg as any).fullName || pkg.name, // Use full name if available
                 description: pkg.description,
                 price: priceNum,
                 currency: pkg.price.includes('$') ? 'USD' : 'TRY'
@@ -238,41 +406,50 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [props.processSection]);
 
+    useEffect(() => {
+        if (!downloadModalUrl) return;
+        const handleEsc = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setDownloadModalUrl(null);
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [downloadModalUrl]);
+
     const standardProcessSteps: ProcessStep[] = [
         {
             stepNumber: 1,
-            title: 'Satın Al',
-            description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+            title: t('process.steps.buy.title'),
+            description: t('process.steps.buy.description'),
             icon: <HiShoppingCart />
         },
         {
             stepNumber: 2,
-            title: 'Yetkilendir',
-            description: 'khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için tıklayın>>',
+            title: t('process.steps.auth.title'),
+            description: t('process.steps.auth.description'),
             icon: <HiKey />
         },
         {
             stepNumber: 3,
-            title: 'Brief Ver',
-            description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+            title: t('process.steps.brief.title'),
+            description: t('process.steps.brief.description'),
             icon: <HiClipboardDocumentList />
         },
         {
             stepNumber: 4,
-            title: 'Analiz',
-            description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+            title: t('process.steps.analysis.title'),
+            description: t('process.steps.analysis.description'),
             icon: <HiMagnifyingGlass />
         },
         {
             stepNumber: 5,
-            title: 'Onay',
-            description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+            title: t('process.steps.approval.title'),
+            description: t('process.steps.approval.description'),
             icon: <HiCheckBadge />
         }
     ];
 
     const heroPricePackage = props.heroPriceCard
-        ? props.pricingSection.packages.find((pkg) => pkg.id === props.heroPriceCard?.packageId) || props.pricingSection.packages[0]
+        ? displayPackages.find((pkg) => pkg.id === props.heroPriceCard?.packageId) || displayPackages[0]
         : null;
     const isHeroPriceOnly = Boolean(props.heroPriceCard?.priceOnly);
 
@@ -297,47 +474,58 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         );
     };
 
+    const handleAuthorizationActionClick = (
+        event: MouseEvent<HTMLAnchorElement>,
+        buttonLink?: string
+    ) => {
+        if (!buttonLink) return;
+        if (/\.pdf(\?|#|$)/i.test(buttonLink)) {
+            event.preventDefault();
+            setDownloadModalUrl(buttonLink);
+        }
+    };
+
     return (
         <div className="page-container service-template-page">
             <section className="service-hero">
-                <Breadcrumbs items={props.breadcrumbs} />
+                <Breadcrumbs items={localizedBreadcrumbs} />
                 <div className="container service-hero-container">
                     <div className="service-hero-grid">
                         <div className="service-hero-text">
-                            <h1 className="service-title">{props.hero.title}</h1>
-                            <h2 className="service-subtitle">{props.hero.subtitle}</h2>
-                            <p className="service-description">{props.hero.description}</p>
+                            <h1 className="service-title">{dynamicHero.title}</h1>
+                            <h2 className="service-subtitle">{dynamicHero.subtitle}</h2>
+                            <p className="service-description">{dynamicHero.description}</p>
                             <div className="service-hero-actions">
-                                <a href={props.hero.buttonLink} className="btn-service-primary">{props.hero.buttonText}</a>
+                                <a href={dynamicHero.buttonLink} className="btn-service-primary">{dynamicHero.buttonText}</a>
                             </div>
                         </div>
                         <div className={`service-hero-visual ${isHeroPriceOnly ? 'price-only' : ''}`}>
                             {!isHeroPriceOnly && (
-                                <div className={`hero-image-container ${props.hero.imageContainerClassName || ''}`}>
-                                    {props.hero.videoUrl ? (
+                                <div className={`hero-image-container ${dynamicHero.hideBadge ? 'no-badge' : ''} ${dynamicHero.imageContainerClassName || ''}`}>
+                                    {dynamicHero.videoUrl ? (
                                         <iframe
-                                            src={props.hero.videoUrl}
-                                            title={props.hero.title}
+                                            src={dynamicHero.videoUrl}
+                                            title={dynamicHero.title}
                                             className="hero-main-video"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                             allowFullScreen
                                         />
                                     ) : (
-                                        <img src={props.hero.image} alt={props.hero.title} className={`hero-main-img ${props.hero.imageClassName || ''}`} />
+                                        <img src={dynamicHero.image} alt={dynamicHero.title} className={`hero-main-img ${dynamicHero.hideBadge ? 'no-badge-image' : ''} ${dynamicHero.imageClassName || ''}`} />
                                     )}
-                                    {!props.hero.hideBadge && (
+                                    {!dynamicHero.hideBadge && (
                                         <div className="circular-badge">
-                                            <div className={`badge-text-wrapper ${props.hero.disableBadgeAnimation ? 'no-animation' : ''}`}>
+                                            <div className={`badge-text-wrapper ${dynamicHero.disableBadgeAnimation ? 'no-animation' : ''}`}>
                                                 <svg viewBox="0 0 100 100" className="badge-svg">
                                                     <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
                                                     <text className="badge-text">
                                                         <textPath xlinkHref="#circlePath">
-                                                            {props.hero.badgeText}
+                                                            {dynamicHero.badgeText}
                                                         </textPath>
                                                     </text>
                                                 </svg>
                                             </div>
-                                            <div className="badge-icon">{props.hero.badgeIcon}</div>
+                                            <div className="badge-icon">{dynamicHero.badgeIcon}</div>
                                         </div>
                                     )}
                                 </div>
@@ -370,7 +558,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                             onClick={() => handleAddToCart(heroPricePackage)}
                                             className="btn-pkg btn-pkg-primary hero-price-btn"
                                         >
-                                            {heroPricePackage.buttonText || 'Satın Al'}
+                                            {heroPricePackage.buttonText || t('pricing.buyNow')}
                                         </button>
                                     </div>
                                 </div>
@@ -434,7 +622,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
             }
 
             {/* Split Layout: Single Pricing + Comparison Table Side-by-Side */}
-            {!isHeroPriceOnly && (props.pricingSection.packages.length === 1 && props.comparisonTable ? (
+            {!isHeroPriceOnly && (displayPackages.length === 1 && props.comparisonTable ? (
                 <section className="service-pricing-split" id="pricing">
                     <div className="container">
                         <div className="section-header text-center">
@@ -446,9 +634,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                         <div className="split-layout-grid">
                             {/* Left: Single Layout Pricing Card */}
                             <div className="split-pricing-col">
-                                {props.pricingSection.packages.map((pkg) => (
+                                {displayPackages.map((pkg) => (
                                     <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''} single-mode`}>
-                                        {props.pricingSection.packages.length > 1 && pkg.isPopular && <div className="popular-badge">En Çok Tercih Edilen</div>}
+                                        {displayPackages.length > 1 && pkg.isPopular && <div className="popular-badge">{t('pricing.popular')}</div>}
                                         <div className="card-header">
                                             <div className="pkg-icon">{pkg.icon}</div>
                                             <h3 className="pkg-name">{pkg.name}</h3>
@@ -475,7 +663,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                                 onClick={() => handleAddToCart(pkg)}
                                                 className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}
                                             >
-                                                {pkg.buttonText || 'Satın Al'}
+                                                {pkg.buttonText || t('pricing.buyNow')}
                                             </button>
                                         </div>
                                     </div>
@@ -548,9 +736,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                             </div>
 
                             <div className="pricing-grid-linear">
-                                {props.pricingSection.packages.map((pkg) => (
+                                {displayPackages.map((pkg) => (
                                     <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''}`}>
-                                        {props.pricingSection.packages.length > 1 && pkg.isPopular && <div className="popular-badge">En Çok Tercih Edilen</div>}
+                                        {displayPackages.length > 1 && pkg.isPopular && <div className="popular-badge">{t('pricing.popular')}</div>}
                                         <div className="card-header">
                                             <div className="pkg-icon">{pkg.icon}</div>
                                             <h3 className="pkg-name">{pkg.name}</h3>
@@ -593,7 +781,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                                 onClick={() => handleAddToCart(pkg)}
                                                 className={`btn-pkg ${pkg.isPopular ? 'btn-pkg-primary' : 'btn-pkg-outline'}`}
                                             >
-                                                {pkg.buttonText || 'Satın Al'}
+                                                {pkg.buttonText || t('pricing.buyNow')}
                                             </button>
                                         </div>
                                     </div>
@@ -728,7 +916,11 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         <p className="auth-card-desc">{card.description}</p>
                                         <p className="auth-card-highlight">{card.highlightText}</p>
                                         <div className="auth-card-action">
-                                            <a href={card.buttonLink || "/#contact"} className="btn-auth">
+                                            <a
+                                                href={card.buttonLink || contactPath}
+                                                className="btn-auth"
+                                                onClick={(e) => handleAuthorizationActionClick(e, card.buttonLink)}
+                                            >
                                                 {card.buttonText}
                                             </a>
                                         </div>
@@ -765,7 +957,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 </div>
                             )}
 
-                            <div className="approach-grid-linear">
+                            <div className={`approach-grid-linear count-${props.approachSection.items.length}`}>
                                 {props.approachSection.items.map((item, idx) => (
                                     <div key={idx} className="approach-card-linear">
                                         <div className="approach-icon-box">
@@ -798,7 +990,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 <h2 className="growth-cta-title">{props.growthCTA.title}</h2>
                                 <p className="growth-cta-description">{props.growthCTA.description}</p>
                                 <div className="growth-cta-actions">
-                                    <a href="/#contact" className="btn-service-primary">Ücretsiz Danışmanlık Alın</a>
+                                    <Link to={contactPath} className="btn-service-primary">{t('common.contactUs')}</Link>
                                 </div>
                             </div>
                             <div className="pattern-overlay"></div>
@@ -806,6 +998,29 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     </section>
                 )
             }
+
+            {downloadModalUrl && (
+                <div className="download-modal-overlay" onClick={() => setDownloadModalUrl(null)}>
+                    <div className="download-modal" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="download-modal-title">{t('common.sampleReport')}</h3>
+                        <p className="download-modal-desc">
+                            {t('common.sampleReportDescription')}
+                        </p>
+                        <div className="download-modal-preview">
+                            <iframe
+                                src={downloadModalUrl}
+                                title={t('common.sampleReportPdfTitle')}
+                                className="download-modal-iframe"
+                            />
+                        </div>
+                        <div className="download-modal-actions">
+                            <a href={downloadModalUrl} download className="btn-service-primary">{t('common.downloadPdf')}</a>
+                            <a href={downloadModalUrl} target="_blank" rel="noreferrer" className="btn-pkg btn-pkg-outline">{t('common.openInNewTab')}</a>
+                        </div>
+                        <button className="download-modal-close" onClick={() => setDownloadModalUrl(null)}>Kapat</button>
+                    </div>
+                </div>
+            )}
 
             <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </div>
