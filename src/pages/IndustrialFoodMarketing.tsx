@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
     HiChartBar,
@@ -13,9 +14,17 @@ import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
 
 export default function IndustrialFoodMarketing() {
     const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const location = useLocation()
+    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
-    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const langPrefix = isEn ? '/en' : ''
+
+    useEffect(() => {
+        const activeLang = i18n.language.split('-')[0]
+        if (activeLang !== currentLang) {
+            void i18n.changeLanguage(currentLang)
+        }
+    }, [currentLang, i18n])
     const path = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
 
     const trConfig = {

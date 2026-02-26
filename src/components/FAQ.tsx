@@ -11,32 +11,34 @@ interface FAQItem {
 interface FAQProps {
     items?: FAQItem[];
     subtitle?: string;
+    tx?: (key: string) => string;
 }
 
-export default function FAQ({ items, subtitle }: FAQProps) {
+export default function FAQ({ items, subtitle, tx }: FAQProps) {
     const { t } = useTranslation();
+    const text = (key: string) => tx?.(key) ?? t(key);
     const [openIndex, setOpenIndex] = useState<number | null>(null)
 
     const defaultFaqs = [
         {
-            question: t('faq.item1.question'),
-            answer: t('faq.item1.answer')
+            question: text('faq.item1.question'),
+            answer: text('faq.item1.answer')
         },
         {
-            question: t('faq.item2.question'),
-            answer: t('faq.item2.answer')
+            question: text('faq.item2.question'),
+            answer: text('faq.item2.answer')
         },
         {
-            question: t('faq.item3.question'),
-            answer: t('faq.item3.answer')
+            question: text('faq.item3.question'),
+            answer: text('faq.item3.answer')
         },
         {
-            question: t('faq.item4.question'),
-            answer: t('faq.item4.answer')
+            question: text('faq.item4.question'),
+            answer: text('faq.item4.answer')
         },
         {
-            question: t('faq.item5.question'),
-            answer: t('faq.item5.answer')
+            question: text('faq.item5.question'),
+            answer: text('faq.item5.answer')
         }
     ]
 
@@ -50,9 +52,9 @@ export default function FAQ({ items, subtitle }: FAQProps) {
         <section className="faq">
             <div className="container faq-container">
                 <div className="faq-header">
-                    <h2 className="faq-logo">{t('faq.title')}</h2>
+                    <h2 className="faq-logo">{text('faq.title')}</h2>
                     <p className="faq-subtitle">
-                        {subtitle || t('faq.subtitle')}
+                        {subtitle || text('faq.subtitle')}
                     </p>
                 </div>
 

@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './Services.css'
 
-export default function Services() {
+export default function Services({ tx }: { tx?: (key: string) => string }) {
     const { t, i18n } = useTranslation('common');
     const currentLang = i18n.language.split('-')[0];
     const langPrefix = currentLang === 'en' ? '/en' : '';
     const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+    const text = (key: string) => tx?.(key) ?? t(key);
 
     return (
         <section id="services" className="services">
             <div className="container">
                 <div className="services-header">
                     <h2 className="services-title">
-                        {t('services.header.title')}
+                        {text('services.header.title')}
                     </h2>
                 </div>
 
@@ -39,11 +40,11 @@ export default function Services() {
                         </div>
 
                         <div className="service-info">
-                            <h3 className="service-title-modern">{t('services.item1.title')}</h3>
-                            <p className="service-desc-modern">{t('services.item1.description')}</p>
+                            <h3 className="service-title-modern">{text('services.item1.title')}</h3>
+                            <p className="service-desc-modern">{text('services.item1.description')}</p>
 
                             <Link to={toLocalized('gtm')} className="service-btn-modern">
-                                <span>{t('common.discover')}</span>
+                                <span>{text('common.discover')}</span>
                                 <HiArrowRight className="btn-arrow-icon" />
                             </Link>
                         </div>
@@ -72,11 +73,11 @@ export default function Services() {
                         </div>
 
                         <div className="service-info">
-                            <h3 className="service-title-modern">{t('services.item2.title')}</h3>
-                            <p className="service-desc-modern">{t('services.item2.description')}</p>
+                            <h3 className="service-title-modern">{text('services.item2.title')}</h3>
+                            <p className="service-desc-modern">{text('services.item2.description')}</p>
 
                             <Link to={toLocalized('contentStrategy')} className="service-btn-modern">
-                                <span>{t('common.discover')}</span>
+                                <span>{text('common.discover')}</span>
                                 <HiArrowRight className="btn-arrow-icon" />
                             </Link>
                         </div>
@@ -97,11 +98,11 @@ export default function Services() {
                         </div>
 
                         <div className="service-info">
-                            <h3 className="service-title-modern">{t('services.item3.title')}</h3>
-                            <p className="service-desc-modern">{t('services.item3.description')}</p>
+                            <h3 className="service-title-modern">{text('services.item3.title')}</h3>
+                            <p className="service-desc-modern">{text('services.item3.description')}</p>
 
                             <Link to={toLocalized('idm')} className="service-btn-modern">
-                                <span>{t('common.discover')}</span>
+                                <span>{text('common.discover')}</span>
                                 <HiArrowRight className="btn-arrow-icon" />
                             </Link>
                         </div>

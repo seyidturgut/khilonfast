@@ -1,5 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import fs from 'fs/promises';
+import path from 'path';
 import db from '../config/database.js';
 import authMiddleware from '../middleware/auth.js';
 import adminMiddleware from '../middleware/admin.js';
@@ -176,6 +178,147 @@ router.post('/settings', async (req, res) => {
 
 // --- PAGE MANAGEMENT (Basic) ---
 
+// GET /api/admin/pages - List pages
+router.get('/pages', async (req, res) => {
+    try {
+        const [pages] = await db.query('SELECT * FROM cms_pages ORDER BY updated_at DESC');
+        res.json(pages);
+    } catch (error) {
+        console.error('Get pages error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/pages/slug/:slug(*) - Get page details by slug
+router.get('/pages/slug/:slug(*)', async (req, res) => {
+    const slug = decodeURIComponent(req.params.slug || '');
+    try {
+        const [rows] = await db.query('SELECT * FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
+        if (!rows.length) return res.status(404).json({ error: 'Page not found' });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page by slug error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/pages/slug/:slug(*)/content - Get page content by slug
+router.get('/pages/slug/:slug(*)/content', async (req, res) => {
+    const slug = decodeURIComponent(req.params.slug || '');
+    try {
+        const [pages] = await db.query('SELECT id FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
+        if (!pages.length) return res.status(404).json({ error: 'Page not found' });
+        const pageId = pages[0].id;
+        const [rows] = await db.query(
+            'SELECT content_json, is_published FROM cms_page_contents WHERE page_id = ? ORDER BY id DESC LIMIT 1',
+            [pageId]
+        );
+        if (!rows.length) return res.json({ content_json: null, is_published: false });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page content by slug error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/pages/slug/:slug(*)/content - Upsert page content by slug
+router.put('/pages/slug/:slug(*)/content', async (req, res) => {
+    const slug = decodeURIComponent(req.params.slug || '');
+    const { title, content_json, is_published = true } = req.body;
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        const [pages] = await connection.query('SELECT id FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
+        let pageId;
+        if (pages.length) {
+            pageId = pages[0].id;
+            if (title) {
+                await connection.query('UPDATE cms_pages SET title = ? WHERE id = ?', [String(title), pageId]);
+            }
+        } else {
+            const [inserted] = await connection.query(
+                'INSERT INTO cms_pages (title, slug, meta_title, meta_description, is_active) VALUES (?, ?, ?, ?, 1)',
+                [String(title || slug), slug, '', '']
+            );
+            pageId = inserted.insertId;
+        }
+
+        await connection.query('DELETE FROM cms_page_contents WHERE page_id = ?', [pageId]);
+        await connection.query(
+            'INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)',
+            [pageId, JSON.stringify(content_json || {}), is_published ? 1 : 0]
+        );
+
+        await connection.commit();
+        res.json({ message: 'Content updated', page_id: pageId });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Upsert page content by slug error:', error);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        connection.release();
+    }
+});
+
+// GET /api/admin/pages/:id - Get page details
+router.get('/pages/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await db.query('SELECT * FROM cms_pages WHERE id = ?', [id]);
+        if (!rows.length) return res.status(404).json({ error: 'Page not found' });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/admin/media/upload-base64 - Save base64 image under public/uploads/cms
+router.post('/media/upload-base64', async (req, res) => {
+    try {
+        const { dataUrl, filename } = req.body || {};
+        if (!dataUrl || typeof dataUrl !== 'string') {
+            return res.status(400).json({ error: 'Missing dataUrl' });
+        }
+
+        const m = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+        if (!m) return res.status(400).json({ error: 'Invalid image data' });
+
+        const mime = m[1].toLowerCase();
+        const base64 = m[2];
+        const extMap = {
+            'image/jpeg': 'jpg',
+            'image/jpg': 'jpg',
+            'image/png': 'png',
+            'image/webp': 'webp',
+            'image/gif': 'gif',
+            'image/avif': 'avif'
+        };
+        const ext = extMap[mime];
+        if (!ext) return res.status(400).json({ error: 'Unsupported image type' });
+
+        const safeBase = String(filename || 'cms-image')
+            .toLowerCase()
+            .replace(/[^a-z0-9-_]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 60) || 'cms-image';
+        const finalName = `${safeBase}-${Date.now()}.${ext}`;
+
+        const projectRoot = path.resolve(process.cwd(), '..');
+        const uploadDir = path.join(projectRoot, 'public', 'uploads', 'cms');
+        await fs.mkdir(uploadDir, { recursive: true });
+
+        const filePath = path.join(uploadDir, finalName);
+        await fs.writeFile(filePath, Buffer.from(base64, 'base64'));
+
+        res.json({ path: `/uploads/cms/${finalName}` });
+    } catch (error) {
+        console.error('Upload base64 media error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // POST /api/admin/pages/create
 router.post('/pages', async (req, res) => {
     const { title, slug, meta_title, meta_description } = req.body;
@@ -187,6 +330,57 @@ router.post('/pages', async (req, res) => {
         res.status(201).json({ id: result.insertId, message: 'Page created' });
     } catch (error) {
         console.error('Create page error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/pages/:id - Update page metadata
+router.put('/pages/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, slug, meta_title, meta_description, is_active } = req.body;
+    try {
+        await db.query(
+            `UPDATE cms_pages
+             SET title = ?, slug = ?, meta_title = ?, meta_description = ?, is_active = ?
+             WHERE id = ?`,
+            [title, slug, meta_title, meta_description, is_active ? 1 : 0, id]
+        );
+        res.json({ message: 'Page updated' });
+    } catch (error) {
+        console.error('Update page error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/pages/:id/content - Get latest page content
+router.get('/pages/:id/content', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await db.query(
+            'SELECT content_json, is_published FROM cms_page_contents WHERE page_id = ? ORDER BY id DESC LIMIT 1',
+            [id]
+        );
+        if (!rows.length) return res.json({ content_json: null, is_published: false });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page content error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/pages/:id/content - Upsert page content
+router.put('/pages/:id/content', async (req, res) => {
+    const { id } = req.params;
+    const { content_json, is_published = true } = req.body;
+    try {
+        await db.query('DELETE FROM cms_page_contents WHERE page_id = ?', [id]);
+        await db.query(
+            'INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)',
+            [id, JSON.stringify(content_json || {}), is_published ? 1 : 0]
+        );
+        res.json({ message: 'Content updated' });
+    } catch (error) {
+        console.error('Update page content error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });

@@ -1,0 +1,387 @@
+[
+  {
+    "id": 27,
+    "page_id": 1,
+    "version": 1,
+    "content_json": {
+      "tr": {
+        "faqs": [
+          {
+            "answer": "Kayıt sonrası erişiminiz kısa sürede aktif edilir ve eğitim modüllerine hemen başlayabilirsiniz.",
+            "question": "Eğitime erişim ne zaman açılır?"
+          },
+          {
+            "answer": "Program hem yönetici seviyesine hem de operasyon ekiplerine uygundur; strateji ve uygulama birlikte ele alınır.",
+            "question": "Eğitim içeriği hangi seviyeye uygundur?"
+          },
+          {
+            "answer": "Evet. İçerik ekip içi kullanım için yapılandırılmıştır ve ortak çalışma akışı sağlar.",
+            "question": "Kurumsal ekipler için uygun mu?"
+          }
+        ],
+        "hero": {
+          "image": "/hero-image.png",
+          "title": "Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi",
+          "subtitle": "Büyüme Odaklı Pazarlama Eğitimi",
+          "badgeText": "10+1 Modül Eğitim",
+          "buttonLink": "#pricing",
+          "buttonText": "Programa Katıl",
+          "description": "Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik"
+        },
+        "testimonial": {
+          "role": "Program Mezunu",
+          "quote": "Eğitim sonrası pazarlama ve satış ekiplerimizin dili aynılaştı; lead kalitesi ve kapanış oranları belirgin şekilde arttı.",
+          "author": "khilonfast Katılımcısı"
+        },
+        "videoShowcase": {
+          "tag": "Eğitim Tanıtımı",
+          "title": "Satışa Giden Yol için Uygulamalı Eğitim Programı",
+          "videoUrl": "https://vimeo.com/1133021053?fl=pl&fe=cm",
+          "description": "Pazarlama stratejisini hedef kitle, değer önerisi ve ölçümleme odaklı kuran bu program; ekiplerinizi satışa daha hızlı taşıyan sistematik bir yöntem sunar."
+        },
+        "pricingSection": {
+          "tag": "Kayıt",
+          "title": "Eğitim Programı",
+          "description": "Eğitime katılarak ekibiniz için büyüme odaklı pazarlama sistemini kurun."
+        },
+        "featuresSection": {
+          "tag": "Program İçeriği",
+          "title": "Eğitimde Yer Alan Modüller",
+          "features": [
+            {
+              "title": "Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası",
+              "description": "Büyüme odaklı pazarlamanın temel çerçevesini kurun ve satışa giden yolu haritalayın."
+            },
+            {
+              "title": "Ödeme Sistemlerinde Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak",
+              "description": "Ödeme sistemleri ekosisteminde karar verici ve onaylayıcı rolleri doğru ayrıştırın."
+            },
+            {
+              "title": "Egzersiz: Hedef Kitle Sorunlarını Not Etmek",
+              "description": "Hedef kitlenin sorunlarını sistematik biçimde not ederek içgörü üretin."
+            },
+            {
+              "title": "Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak",
+              "description": "Ethos, Pathos ve Logos yaklaşımıyla güçlü bir değer önerisi geliştirin."
+            },
+            {
+              "title": "Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj",
+              "description": "Pain point odaklı ve rol bazlı mesajlarla değer önerinizi sistematik hale getirin."
+            },
+            {
+              "title": "Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak",
+              "description": "Mesajınızı doğru zamanda, doğru mecrada ve doğru aşamada konumlandırın."
+            },
+            {
+              "title": "Başlangıç Metrikleri: Büyümenin Sayısal Pusulası",
+              "description": "Büyümeyi ölçmek için başlangıç metriklerini belirleyin ve takip modelini kurun."
+            },
+            {
+              "title": "Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak",
+              "description": "Kazanım, derinleşme ve koruma ekseninde pazarlama hedeflerinizi netleştirin."
+            },
+            {
+              "title": "Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri",
+              "description": "Web sitesi sayfalarının rollerini netleştirerek dönüşüm akışını iyileştirin."
+            },
+            {
+              "title": "Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas",
+              "description": "Lead sonrası süreçte psikoloji, zamanlama ve çok kanallı temas dengesini kurun."
+            },
+            {
+              "title": "İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip",
+              "description": "İlk temastan satış kapanışına kadar iletişim, itiraz yönetimi ve takibi yönetin."
+            }
+          ],
+          "description": "Temelden uygulamaya uzanan, sahada uygulanabilir eğitim akışı."
+        }
+      }
+    },
+    "is_published": 1,
+    "created_at": "2026-02-26T22:31:18.000Z"
+  },
+  {
+    "id": 29,
+    "page_id": 2,
+    "version": 1,
+    "content_json": {
+      "tr": {
+        "faqs": [
+          {
+            "answer": "Kayıt sonrası erişiminiz kısa sürede aktif edilir ve eğitim modüllerine hemen başlayabilirsiniz.",
+            "question": "Eğitime erişim ne zaman açılır?"
+          },
+          {
+            "answer": "Program hem yönetici seviyesine hem de operasyon ekiplerine uygundur; strateji ve uygulama birlikte ele alınır.",
+            "question": "Eğitim içeriği hangi seviyeye uygundur?"
+          },
+          {
+            "answer": "Evet. İçerik ekip içi kullanım için yapılandırılmıştır ve ortak çalışma akışı sağlar.",
+            "question": "Kurumsal ekipler için uygun mu?"
+          }
+        ],
+        "hero": {
+          "image": "/hero-image.png",
+          "title": "Enerji Sektöründe Büyüme Odaklı Pazarlama Eğitimi",
+          "subtitle": "Büyüme Odaklı Pazarlama Eğitimi",
+          "badgeText": "10+1 Modül Eğitim",
+          "buttonLink": "#pricing",
+          "buttonText": "Programa Katıl",
+          "description": "Enerji sektöründe karar verici odaklı pazarlama planlama yaklaşımı"
+        },
+        "testimonial": {
+          "role": "Program Mezunu",
+          "quote": "Eğitim sonrası pazarlama ve satış ekiplerimizin dili aynılaştı; lead kalitesi ve kapanış oranları belirgin şekilde arttı.",
+          "author": "khilonfast Katılımcısı"
+        },
+        "videoShowcase": {
+          "tag": "Eğitim Tanıtımı",
+          "title": "Satışa Giden Yol için Uygulamalı Eğitim Programı",
+          "videoUrl": "https://player.vimeo.com/video/1045939223",
+          "description": "Pazarlama stratejisini hedef kitle, değer önerisi ve ölçümleme odaklı kuran bu program; ekiplerinizi satışa daha hızlı taşıyan sistematik bir yöntem sunar."
+        },
+        "pricingSection": {
+          "tag": "Kayıt",
+          "title": "Eğitim Programı",
+          "description": "Eğitime katılarak ekibiniz için büyüme odaklı pazarlama sistemini kurun."
+        },
+        "featuresSection": {
+          "tag": "Program İçeriği",
+          "title": "Eğitimde Yer Alan Modüller",
+          "features": [
+            {
+              "title": "Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası",
+              "description": "Büyüme odaklı pazarlamanın temel çerçevesini kurun ve satışa giden yolu haritalayın."
+            },
+            {
+              "title": "Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak",
+              "description": "Karar verici ve onaylayıcı rolleri doğru ayrıştırarak hedef kitle analizini netleştirin."
+            },
+            {
+              "title": "Egzersiz: Hedef Kitle Sorunlarını Not Etmek",
+              "description": "Hedef kitlenin sorunlarını sistematik biçimde not ederek içgörü üretin."
+            },
+            {
+              "title": "Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak",
+              "description": "Ethos, Pathos ve Logos yaklaşımıyla güçlü bir değer önerisi geliştirin."
+            },
+            {
+              "title": "Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj",
+              "description": "Pain point odaklı ve rol bazlı mesajlarla değer önerinizi sistematik hale getirin."
+            },
+            {
+              "title": "Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak",
+              "description": "Mesajınızı doğru zamanda, doğru mecrada ve doğru aşamada konumlandırın."
+            },
+            {
+              "title": "Başlangıç Metrikleri: Büyümenin Sayısal Pusulası",
+              "description": "Büyümeyi ölçmek için başlangıç metriklerini belirleyin ve takip modelini kurun."
+            },
+            {
+              "title": "Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak",
+              "description": "Kazanım, derinleşme ve koruma ekseninde pazarlama hedeflerinizi netleştirin."
+            },
+            {
+              "title": "Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri",
+              "description": "Web sitesi sayfalarının rollerini netleştirerek dönüşüm akışını iyileştirin."
+            },
+            {
+              "title": "Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas",
+              "description": "Lead sonrası süreçte psikoloji, zamanlama ve çok kanallı temas dengesini kurun."
+            },
+            {
+              "title": "İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip",
+              "description": "İlk temastan satış kapanışına kadar iletişim, itiraz yönetimi ve takibi yönetin."
+            }
+          ],
+          "description": "Temelden uygulamaya uzanan, sahada uygulanabilir eğitim akışı."
+        }
+      }
+    },
+    "is_published": 1,
+    "created_at": "2026-02-26T22:34:53.000Z"
+  },
+  {
+    "id": 33,
+    "page_id": 12,
+    "version": 1,
+    "content_json": {
+      "tr": {
+        "faqs": [],
+        "hero": {
+          "image": "/images/sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi/hero.avif",
+          "title": "Ödeme Sistemleri İçin",
+          "subtitle": "Tek Noktadan Pazarlama Çözümleri",
+          "badgeText": "Fintech'te Güçlü Büyüme!",
+          "buttonLink": "#pricing",
+          "buttonText": "Çözümleri Keşfedin",
+          "description": "Ödeme sistemlerinde büyümenin sırrını keşfedin. khilonfast ile pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin."
+        },
+        "testimonial": {
+          "role": "Fintech Direktörü",
+          "quote": "Fintech sektörü hata kabul etmez. khilonfast'in ödeme sistemleri konusundaki derin tecrübesi, pazarlama operasyonlarımızı bir üst seviyeye taşıdı.",
+          "author": "Caner Özkan"
+        },
+        "processVideo": {
+          "vimeoUrl": "https://player.vimeo.com/video/1128822985"
+        },
+        "videoShowcase": {
+          "tag": "İzleyin & Öğrenin",
+          "title": "",
+          "vimeoUrl": "https://player.vimeo.com/video/1131185616",
+          "description": "Ödeme sistemlerinde büyümek için doğru adımları atın. İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın."
+        }
+      }
+    },
+    "is_published": 1,
+    "created_at": "2026-02-26T23:12:56.000Z"
+  },
+  {
+    "id": 36,
+    "page_id": 10,
+    "version": 1,
+    "content_json": {
+      "en": {
+        "faqs": [
+          {
+            "answer": "khilonfast; denetim, strateji geliştirme, dijital pazarlama, marka yönetimi, CRM, satış ve kurumsal iletişim gibi alanlarda uçtan uca pazarlama hizmetleri sunar. Her hizmet, markaların iş hedeflerine değer katacak şekilde tasarlanır ve ihtiyaçlara göre özelleştirilebilir.",
+            "question": "khilonfast hangi hizmetleri sunar?"
+          },
+          {
+            "answer": "khilonfast'in hizmet ücretleri, hizmet türüne ve iş birliği modeline göre farklılık gösterir. Aylık sabit ücretli (retainer) ve proje/ürün bazlı fiyatlandırma seçeneklerimiz mevcuttur. Detaylı bilgi için bizimle iletişime geçebilirsiniz.",
+            "question": "Hizmet fiyatlandırması nasıl belirlenir?"
+          },
+          {
+            "answer": "khilonfast, markaların ihtiyaçlarına göre şekillenen esnek iş birliği modelleri sunar. İster aylık sabit ücretli bir çalışma modeli, ister size özel çözümler ya da belirli ürün bazlı hizmetler tercih edin — pazarlama hedeflerinize en uygun yapıyı birlikte oluşturabiliriz.",
+            "question": "khilonfast ile çalışma modelim nasıl belirlenir?"
+          }
+        ],
+        "hero": {
+          "image": "/images/sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi/hero.avif",
+          "title": "For Payment Systems Companies",
+          "subtitle": "One-Stop Marketing Solutions",
+          "badgeText": "Payment Systems Companies Growth Engine",
+          "buttonLink": "#pricing",
+          "buttonText": "Explore Solutions",
+          "description": "Scale payment adoption and retention with khilonfast through an integrated and execution-focused marketing operating model."
+        },
+        "testimonial": {
+          "role": "Commercial Director",
+          "quote": "khilonfast gave us a clear growth framework and execution rhythm that improved both pipeline quality and conversion consistency.",
+          "author": "Caner Özkan"
+        },
+        "processVideo": {
+          "vimeoUrl": "https://player.vimeo.com/video/1128822985"
+        },
+        "videoShowcase": {
+          "tag": "Watch & Learn",
+          "title": "",
+          "vimeoUrl": "https://player.vimeo.com/video/1131185616",
+          "description": "Select the right solution set for your growth stage and activate your marketing operations with confidence."
+        }
+      }
+    },
+    "is_published": 1,
+    "created_at": "2026-02-26T23:13:08.000Z"
+  },
+  {
+    "id": 38,
+    "page_id": 14,
+    "version": 1,
+    "content_json": {
+      "tr": {
+        "faqs": [
+          {
+            "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarını özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.",
+            "question": "Neden khilonfast ile çalışmayı seçmeliyim?"
+          },
+          {
+            "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.",
+            "question": "Neden yüz yüze veya online toplantı yapmıyoruz?"
+          },
+          {
+            "answer": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir.",
+            "question": "khilonfast ile kimler çalışmamalı?"
+          },
+          {
+            "answer": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir.",
+            "question": "khilonfast kimler için ideal bir iş ortağıdır?"
+          },
+          {
+            "answer": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.",
+            "question": "khilonfast ile iletişimi nasıl sağlayabilirim?"
+          },
+          {
+            "answer": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.",
+            "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?"
+          }
+        ],
+        "hero": {
+          "image": "/b2b2.avif",
+          "title": "B2B Firmalar İçin",
+          "subtitle": "Tek Noktadan Pazarlama Çözümleri",
+          "badgeText": "B2B'de Tek Nokta! Etkili Sonuçlar!",
+          "buttonLink": "#pricing",
+          "buttonText": "Hizmetleri Keşfedin",
+          "description": "khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin."
+        },
+        "testimonial": {
+          "role": "CEO, Lidio",
+          "quote": "B2B dünyasında hız ve veri her şeydir. khilonfast'in 360 pazarlama yaklaşımı, gerçek ticari sonuçlar elde etmemizi sağladı.",
+          "author": "Emre Güzer"
+        },
+        "processVideo": {
+          "vimeoUrl": "https://player.vimeo.com/video/1128822985?badge=0&autopause=0&player_id=0&app_id=58479"
+        },
+        "videoShowcase": {
+          "tag": "İzleyin & Öğrenin",
+          "title": "",
+          "vimeoUrl": "https://player.vimeo.com/video/1133021053?badge=0&autopause=0&player_id=0&app_id=58479",
+          "description": "B2B sektöründe büyümek için doğru adımları atın. khilonfast ile pazarlama süreçlerinizi hızla devreye alın."
+        }
+      }
+    },
+    "is_published": 1,
+    "created_at": "2026-02-26T23:16:51.000Z"
+  },
+  {
+    "id": 42,
+    "page_id": 5,
+    "version": 1,
+    "content_json": {
+      "tr": {
+        "faqs": [
+          {
+            "answer": "Kurumsal satışın zorluklarını ve filo yönetiminin hassasiyetlerini biliyoruz. Markanızı sadece bir kiralama firması olarak değil, şirketlerin mobilite operasyon ortağı olarak konumlandırıyoruz.",
+            "question": "Filo kiralama firmaları için neden khilonfast?"
+          }
+        ],
+        "hero": {
+          "image": "/uploads/cms/sektorel-hizmetler-filo-kiralama-firmalari-360-pazarlama-yon-1772149563886.avif",
+          "title": "Filo Kiralama Firmaları İçin",
+          "subtitle": "Tek Noktadan Pazarlama Çözümleri",
+          "badgeText": "Filo Kiralama Pazarlama Üssü • Filo Kiralama Pazarlama Üssü • ",
+          "buttonLink": "#pricing",
+          "buttonText": "Çözümleri Keşfedin",
+          "description": "khilonfast ile Filo Kiralama pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin."
+        },
+        "testimonial": {
+          "role": "Operasyon Direktörü, FleetMaster",
+          "quote": "Kurumsal kiralama süreçlerimizdeki lead kalitesi, khilonfast'in veriye dayalı stratejileriyle gözle görülür şekilde arttı.",
+          "author": "Selim Aydın"
+        },
+        "processVideo": {
+          "vimeoUrl": "https://player.vimeo.com/video/1135520021"
+        },
+        "videoShowcase": {
+          "tag": "İzleyin & Öğrenin",
+          "title": "",
+          "vimeoUrl": "https://player.vimeo.com/video/1135520021",
+          "description": "Filo Kiralama sektöründe büyümek için doğru adımları atın. İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın."
+        }
+      }
+    },
+    "is_published": 1,
+    "created_at": "2026-02-26T23:46:05.000Z"
+  }
+]

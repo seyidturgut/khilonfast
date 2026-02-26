@@ -119,10 +119,6 @@
                     "title": "Tüm Eğitimler",
                     "desc": "Program listesini tek ekranda görüntüleyin"
                 },
-                "growth": {
-                    "title": "Büyüme Odaklı Pazarlama Eğitimi",
-                    "desc": "khilonfast temel büyüme odaklı pazarlama eğitim programı."
-                },
                 "payment": {
                     "title": "Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi",
                     "desc": "Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik."
@@ -1129,14 +1125,14 @@
         "trainings": "egitimler",
         "trainingGrowth": "egitimler/buyume-odakli-pazarlama-egitimi",
         "trainingPayment": "egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi",
-        "trainingB2B": "b2b-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingFintech": "fintech-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingTech": "teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingManufacturing": "uretim-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingEnergy": "enerji-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingDesign": "ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingFleet": "filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingFood": "endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingB2B": "egitimler/b2b-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFintech": "egitimler/fintech-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingTech": "egitimler/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingManufacturing": "egitimler/uretim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingEnergy": "egitimler/enerji-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingDesign": "egitimler/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFleet": "egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFood": "egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
         "maestro": "urunler/maestro-ai",
         "eyeTracking": "hizmetler/eye-tracking-reklam-analizi",
         "login": "giris",

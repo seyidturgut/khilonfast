@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -22,10 +22,18 @@ import enCommon from '../locales/en/common.json';
 
 export default function TrainingProgramPage() {
     const location = useLocation();
-    const { t, i18n } = useTranslation('common');
-    const currentLang = i18n.language.split('-')[0];
+    const { i18n } = useTranslation('common');
+    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
     const isEn = currentLang === 'en';
     const langPrefix = isEn ? '/en' : '';
+    const activeSlugs = (isEn ? enCommon.slugs : trCommon.slugs) as Record<string, string>;
+
+    useEffect(() => {
+        const activeLang = i18n.language.split('-')[0];
+        if (activeLang !== currentLang) {
+            i18n.changeLanguage(currentLang);
+        }
+    }, [currentLang, i18n]);
 
     const trSlugs = trCommon.slugs as Record<string, string>;
     const enSlugs = enCommon.slugs as Record<string, string>;
@@ -57,41 +65,184 @@ export default function TrainingProgramPage() {
     };
 
     const normalizedPath = location.pathname
-        .replace(/^\/en/, '')
+        .replace(/^\/en(\/|$)/, '')
         .replace(/^\/+/, '')
         .replace(/\/+$/, '');
 
-    const matchedTrainingKey = trainingSlugKeys.find(
-        (key) => trSlugs[key] === normalizedPath || enSlugs[key] === normalizedPath
+    const normalizedCandidates = [
+        normalizedPath,
+        normalizedPath.replace(/^(egitimler|trainings)\//, '')
+    ];
+
+    const matchedTrainingKey = trainingSlugKeys.find((key) =>
+        normalizedCandidates.some(
+            (candidate) => trSlugs[key] === candidate || enSlugs[key] === candidate
+        )
     );
 
-    const resolvedTrainingPath = matchedTrainingKey
-        ? `/${trSlugs[matchedTrainingKey]}`
-        : `/${normalizedPath}`;
+    const training = useMemo(() => {
+        if (matchedTrainingKey) {
+            const resolvedPath = `/${trSlugs[matchedTrainingKey]}`;
+            const bySlugKey = trainingPrograms.find((item) => item.path === resolvedPath);
+            if (bySlugKey) return bySlugKey;
+        }
 
-    const training = useMemo(
-        () => trainingPrograms.find((item) => item.path === resolvedTrainingPath) ?? trainingPrograms[0],
-        [resolvedTrainingPath]
-    );
+        const byPath = trainingPrograms.find((item) =>
+            normalizedCandidates.some((candidate) => {
+                const normalizedItem = item.path.replace(/^\/+/, '');
+                const normalizedItemNoPrefix = normalizedItem.replace(/^(egitimler|trainings)\//, '');
+                return candidate === normalizedItem || candidate === normalizedItemNoPrefix;
+            })
+        );
+        return byPath ?? trainingPrograms[0];
+    }, [matchedTrainingKey, normalizedCandidates.join('|'), trSlugs]);
 
     const resolvedSlugKey =
         matchedTrainingKey ??
         trainingSlugKeys.find((key) => `/${trSlugs[key]}` === training.path) ??
         'trainingGrowth';
 
-    const trainingMenuKey = trainingMenuKeyBySlugKey[resolvedSlugKey];
-    const trainingTitle = t(`header.menuItems.trainings.${trainingMenuKey}.title`);
-    const trainingSummary = t(`header.menuItems.trainings.${trainingMenuKey}.desc`);
+    const menuKeyByProductKey: Record<string, string> = {
+        'training-buyume-odakli-pazarlama': 'growth',
+        'training-odeme-sistemlerinde-buyume': 'payment',
+        'training-b2b-sektorunde-buyume': 'b2b',
+        'training-fintech-sektorunde-buyume': 'fintech',
+        'training-teknoloji-yazilim-buyume': 'tech',
+        'training-uretim-sektorunde-buyume': 'manufacturing',
+        'training-enerji-sektorunde-buyume': 'energy',
+        'training-ofis-kurumsal-ic-tasarim-buyume': 'design',
+        'training-filo-kiralama-sektorunde-buyume': 'fleet',
+        'training-endustriyel-gida-sektorunde-buyume': 'food'
+    };
 
-    const isPaymentSystemsTraining =
-        training.path === '/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi';
-    const isFintechTraining = training.path === '/fintech-sektorunde-buyume-odakli-pazarlama-egitimi';
-    const isSoftwareTraining = training.path === '/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi';
-    const isEnergyTraining = training.path === '/enerji-sektorunde-buyume-odakli-pazarlama-egitimi';
-    const isInteriorDesignTraining =
-        training.path === '/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi';
-    const isFleetRentalTraining = training.path === '/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi';
-    const isIndustrialFoodTraining = training.path === '/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi';
+    const trainingMenuKey =
+        menuKeyByProductKey[training.productKey] ??
+        trainingMenuKeyBySlugKey[resolvedSlugKey];
+    const trainingMenuCopy = (isEn ? enCommon.header.menuItems.trainings : trCommon.header.menuItems.trainings) as Record<
+        string,
+        { title: string; desc: string }
+    >;
+    const trainingTitle = trainingMenuCopy?.[trainingMenuKey]?.title ?? training.title;
+    const trainingSummary = trainingMenuCopy?.[trainingMenuKey]?.desc ?? training.summary;
+
+    const cmsSlug = matchedTrainingKey ? trSlugs[matchedTrainingKey] : (normalizedCandidates[0] || '');
+    const cmsSlugEncoded = encodeURIComponent(cmsSlug);
+    const [cmsContent, setCmsContent] = useState<any | null>(null);
+    const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
+    const API_BASE = import.meta.env.VITE_API_URL || '/api';
+    const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
+    const [cmsEditorData, setCmsEditorData] = useState<any | null>(null);
+    const [cmsPageId, setCmsPageId] = useState<number | null>(null);
+    const [cmsSection, setCmsSection] = useState<'hero' | 'video' | 'features' | 'faqs'>('hero');
+    const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
+    const [activeFaqIndex, setActiveFaqIndex] = useState(0);
+    const [cmsSaving, setCmsSaving] = useState(false);
+    const [cmsLoading, setCmsLoading] = useState(false);
+    const [cmsError, setCmsError] = useState('');
+    const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
+
+    useEffect(() => {
+        const fetchCms = async () => {
+            if (!cmsSlug) return;
+            try {
+                const res = await fetch(`${API_BASE}/pages/slug/${cmsSlugEncoded}?lang=${currentLang}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data?.content) setCmsContent(data.content);
+            } catch {
+                // ignore CMS failures and fallback to static content
+            }
+        };
+        fetchCms();
+    }, [cmsSlug, currentLang, API_BASE]);
+
+    useEffect(() => {
+        const fetchAdminCms = async () => {
+            if (!canShowCms || !cmsSlug) return;
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            setCmsLoading(true);
+            setCmsError('');
+            try {
+                const pagesRes = await fetch(`${API_BASE}/admin/pages`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!pagesRes.ok) {
+                    const errTxt = await pagesRes.text();
+                    setCmsError(`Admin sayfaları okunamadı (${pagesRes.status}): ${errTxt}`);
+                    return;
+                }
+                const pages = await pagesRes.json();
+                const normalizedCmsSlug = String(cmsSlug || '').replace(/^\/+/, '');
+                let page = (pages || []).find((p: any) => String(p?.slug || '').replace(/^\/+/, '') === normalizedCmsSlug);
+
+                if (!page?.id) {
+                    const createRes = await fetch(`${API_BASE}/admin/pages`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            title: trainingTitle || normalizedCmsSlug,
+                            slug: normalizedCmsSlug,
+                            meta_title: '',
+                            meta_description: ''
+                        })
+                    });
+                    if (!createRes.ok) {
+                        const errTxt = await createRes.text();
+                        setCmsError(`Admin sayfası oluşturulamadı (${createRes.status}): ${errTxt}`);
+                        return;
+                    }
+                    const created = await createRes.json();
+                    page = { id: created?.id };
+                }
+
+                setCmsPageId(Number(page.id));
+                const res = await fetch(`${API_BASE}/admin/pages/${page.id}/content`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!res.ok && res.status !== 404) {
+                    const errTxt = await res.text();
+                    setCmsError(`Admin CMS içeriği okunamadı (${res.status}): ${errTxt}`);
+                    return;
+                }
+                if (res.ok) {
+                    const data = await res.json();
+                    let raw: any = null;
+                    if (data?.content_json) {
+                        if (typeof data.content_json === 'string') {
+                            try {
+                                raw = JSON.parse(data.content_json);
+                            } catch {
+                                raw = null;
+                            }
+                        } else if (typeof data.content_json === 'object') {
+                            raw = data.content_json;
+                        }
+                    }
+                    if (raw && typeof raw === 'object') {
+                        setCmsAllContent(raw);
+                        setCmsEditorData(raw[currentLang] || null);
+                    }
+                }
+            } catch {
+                setCmsError('Admin CMS içeriği okunamadı.');
+            } finally {
+                setCmsLoading(false);
+            }
+        };
+        fetchAdminCms();
+    }, [canShowCms, cmsSlug, currentLang, API_BASE]);
+
+    const isPaymentSystemsTraining = training.productKey === 'training-odeme-sistemlerinde-buyume';
+    const isFintechTraining = training.productKey === 'training-fintech-sektorunde-buyume';
+    const isSoftwareTraining = training.productKey === 'training-teknoloji-yazilim-buyume';
+    const isEnergyTraining = training.productKey === 'training-enerji-sektorunde-buyume';
+    const isInteriorDesignTraining = training.productKey === 'training-ofis-kurumsal-ic-tasarim-buyume';
+    const isFleetRentalTraining = training.productKey === 'training-filo-kiralama-sektorunde-buyume';
+    const isIndustrialFoodTraining = training.productKey === 'training-endustriyel-gida-sektorunde-buyume';
 
     const defaultFeatures = isEn
         ? [
@@ -268,9 +419,9 @@ export default function TrainingProgramPage() {
         isFleetRentalTraining ||
         isIndustrialFoodTraining;
 
-    const checkoutPath = `${langPrefix}/${t('slugs.checkout')}`.replace(/\/{2,}/g, '/');
+    const checkoutPath = `${langPrefix}/${activeSlugs.checkout ?? ''}`.replace(/\/{2,}/g, '/');
 
-    const config = {
+    const baseConfig = {
         hero: {
             title: trainingTitle,
             subtitle: isEn ? 'Growth-Focused Marketing Training Program' : 'Büyüme Odaklı Pazarlama Eğitimi',
@@ -282,7 +433,7 @@ export default function TrainingProgramPage() {
             badgeIcon: <HiAcademicCap />
         },
         breadcrumbs: [
-            { label: isEn ? 'Trainings' : 'Eğitimlerimiz', path: `/${t('slugs.trainings')}` },
+            { label: isEn ? 'Trainings' : 'Eğitimlerimiz', path: `/${activeSlugs.trainings ?? ''}` },
             { label: trainingTitle }
         ],
         videoShowcase: {
@@ -291,9 +442,12 @@ export default function TrainingProgramPage() {
             description: isEn
                 ? 'This program builds a scalable growth system around audience strategy, value proposition, and performance measurement to accelerate your team\'s sales outcomes.'
                 : 'Pazarlama stratejisini hedef kitle, değer önerisi ve ölçümleme odaklı kuran bu program; ekiplerinizi satışa daha hızlı taşıyan sistematik bir yöntem sunar.',
-            videoUrl: isPaymentSystemsTraining
-                ? 'https://vimeo.com/showcase/12025562/embed2'
-                : 'https://player.vimeo.com/video/1045939223'
+            videoUrl: ({
+                'training-odeme-sistemlerinde-buyume': 'https://vimeo.com/1133021053?fl=pl&fe=cm',
+                'training-b2b-sektorunde-buyume': 'https://vimeo.com/1133021053?fl=pl&fe=cm',
+                'training-fintech-sektorunde-buyume': 'https://vimeo.com/1135500461?share=copy&fl=sv&fe=ci',
+                'training-teknoloji-yazilim-buyume': 'https://vimeo.com/1135504861'
+            } as Record<string, string>)[training.productKey] || 'https://player.vimeo.com/video/1045939223'
         },
         featuresSection: {
             tag: isEn ? 'Program Content' : 'Program İçeriği',
@@ -373,5 +527,533 @@ export default function TrainingProgramPage() {
         ]
     };
 
-    return <ServicePageTemplate {...config} serviceKey={training.productKey} disableApiHeroTextOverride />;
+    const useOrFallback = (value: any, fallback: any) =>
+        value !== undefined && value !== null && value !== '' ? value : fallback;
+
+    const config = cmsContent
+        ? {
+            ...baseConfig,
+            hero: {
+                ...baseConfig.hero,
+                title: useOrFallback(cmsContent?.hero?.title, baseConfig.hero.title),
+                subtitle: useOrFallback(cmsContent?.hero?.subtitle, baseConfig.hero.subtitle),
+                description: useOrFallback(cmsContent?.hero?.description, baseConfig.hero.description),
+                buttonText: useOrFallback(cmsContent?.hero?.buttonText, baseConfig.hero.buttonText),
+                buttonLink: useOrFallback(cmsContent?.hero?.buttonLink, baseConfig.hero.buttonLink),
+                badgeText: useOrFallback(cmsContent?.hero?.badgeText, baseConfig.hero.badgeText),
+                image: useOrFallback(cmsContent?.hero?.image, baseConfig.hero.image)
+            },
+            videoShowcase: {
+                ...baseConfig.videoShowcase,
+                tag: useOrFallback(cmsContent?.videoShowcase?.tag, baseConfig.videoShowcase.tag),
+                title: <>{useOrFallback(cmsContent?.videoShowcase?.title, baseConfig.videoShowcase.title)}</>,
+                description: useOrFallback(cmsContent?.videoShowcase?.description, baseConfig.videoShowcase.description),
+                videoUrl: useOrFallback(cmsContent?.videoShowcase?.videoUrl, baseConfig.videoShowcase.videoUrl)
+            },
+            featuresSection: {
+                ...baseConfig.featuresSection,
+                tag: useOrFallback(cmsContent?.featuresSection?.tag, baseConfig.featuresSection?.tag),
+                title: useOrFallback(cmsContent?.featuresSection?.title, baseConfig.featuresSection?.title),
+                description: useOrFallback(cmsContent?.featuresSection?.description, baseConfig.featuresSection?.description),
+                features: Array.isArray(cmsContent?.featuresSection?.features) && cmsContent.featuresSection.features.length > 0
+                    ? cmsContent.featuresSection.features.map((f: any, idx: number) => ({
+                        title: f.title,
+                        description: f.description,
+                        icon: (baseConfig.featuresSection?.features?.[idx]?.icon) || baseConfig.featuresSection?.features?.[0]?.icon
+                    }))
+                    : baseConfig.featuresSection?.features
+            },
+            pricingSection: {
+                ...baseConfig.pricingSection,
+                tag: useOrFallback(cmsContent?.pricingSection?.tag, baseConfig.pricingSection.tag),
+                title: useOrFallback(cmsContent?.pricingSection?.title, baseConfig.pricingSection.title),
+                description: useOrFallback(cmsContent?.pricingSection?.description, baseConfig.pricingSection.description)
+            },
+            testimonial: {
+                ...baseConfig.testimonial,
+                quote: useOrFallback(cmsContent?.testimonial?.quote, baseConfig.testimonial.quote),
+                author: useOrFallback(cmsContent?.testimonial?.author, baseConfig.testimonial.author),
+                role: useOrFallback(cmsContent?.testimonial?.role, baseConfig.testimonial.role)
+            },
+            faqs: Array.isArray(cmsContent?.faqs) && cmsContent.faqs.length > 0 ? cmsContent.faqs : baseConfig.faqs
+        }
+        : baseConfig;
+
+    const defaultEditorData = {
+        hero: {
+            title: baseConfig.hero.title,
+            subtitle: String(baseConfig.hero.subtitle),
+            description: baseConfig.hero.description,
+            buttonText: baseConfig.hero.buttonText,
+            buttonLink: baseConfig.hero.buttonLink,
+            badgeText: baseConfig.hero.badgeText,
+            image: baseConfig.hero.image
+        },
+        videoShowcase: {
+            tag: baseConfig.videoShowcase.tag,
+            title: isEn ? 'Applied Training Program Built for Revenue Outcomes' : 'Satışa Giden Yol için Uygulamalı Eğitim Programı',
+            description: baseConfig.videoShowcase.description,
+            videoUrl: baseConfig.videoShowcase.videoUrl
+        },
+        featuresSection: {
+            tag: baseConfig.featuresSection.tag,
+            title: baseConfig.featuresSection.title,
+            description: baseConfig.featuresSection.description,
+            features: (baseConfig.featuresSection.features || []).map((f: any) => ({ title: f.title, description: f.description }))
+        },
+        pricingSection: {
+            tag: baseConfig.pricingSection.tag,
+            title: baseConfig.pricingSection.title,
+            description: baseConfig.pricingSection.description
+        },
+        testimonial: {
+            quote: baseConfig.testimonial.quote,
+            author: baseConfig.testimonial.author,
+            role: baseConfig.testimonial.role
+        },
+        faqs: baseConfig.faqs
+    };
+
+    useEffect(() => {
+        if (!isCmsMode) return;
+        if (!cmsEditorData) {
+            setCmsEditorData(defaultEditorData);
+            return;
+        }
+        setCmsContent(cmsEditorData);
+    }, [isCmsMode, cmsEditorData, currentLang]);
+
+    useEffect(() => {
+        const count = Array.isArray(cmsEditorData?.featuresSection?.features)
+            ? cmsEditorData.featuresSection.features.length
+            : 0;
+        if (count === 0) {
+            setActiveFeatureIndex(0);
+            return;
+        }
+        if (activeFeatureIndex > count - 1) {
+            setActiveFeatureIndex(count - 1);
+        }
+    }, [cmsEditorData?.featuresSection?.features, activeFeatureIndex]);
+
+    useEffect(() => {
+        const count = Array.isArray(cmsEditorData?.faqs) ? cmsEditorData.faqs.length : 0;
+        if (count === 0) {
+            setActiveFaqIndex(0);
+            return;
+        }
+        if (activeFaqIndex > count - 1) {
+            setActiveFaqIndex(count - 1);
+        }
+    }, [cmsEditorData?.faqs, activeFaqIndex]);
+
+    const updateFeature = (index: number, field: 'title' | 'description', value: string) => {
+        setCmsEditorData((prev: any) => {
+            const base = prev || defaultEditorData;
+            const features = Array.isArray(base?.featuresSection?.features)
+                ? [...base.featuresSection.features]
+                : [];
+            const current = features[index] || { title: '', description: '' };
+            features[index] = { ...current, [field]: value };
+            return {
+                ...base,
+                featuresSection: {
+                    ...(base.featuresSection || {}),
+                    features
+                }
+            };
+        });
+    };
+
+    const addFeature = () => {
+        setCmsEditorData((prev: any) => {
+            const base = prev || defaultEditorData;
+            const features = Array.isArray(base?.featuresSection?.features)
+                ? [...base.featuresSection.features]
+                : [];
+            features.push({ title: '', description: '' });
+            return {
+                ...base,
+                featuresSection: {
+                    ...(base.featuresSection || {}),
+                    features
+                }
+            };
+        });
+    };
+
+    const removeFeature = (index: number) => {
+        setCmsEditorData((prev: any) => {
+            const base = prev || defaultEditorData;
+            const features = Array.isArray(base?.featuresSection?.features)
+                ? base.featuresSection.features.filter((_: any, i: number) => i !== index)
+                : [];
+            return {
+                ...base,
+                featuresSection: {
+                    ...(base.featuresSection || {}),
+                    features
+                }
+            };
+        });
+    };
+
+    const updateFaq = (index: number, field: 'question' | 'answer', value: string) => {
+        setCmsEditorData((prev: any) => {
+            const base = prev || defaultEditorData;
+            const faqs = Array.isArray(base?.faqs) ? [...base.faqs] : [];
+            const current = faqs[index] || { question: '', answer: '' };
+            faqs[index] = { ...current, [field]: value };
+            return { ...base, faqs };
+        });
+    };
+
+    const addFaq = () => {
+        setCmsEditorData((prev: any) => {
+            const base = prev || defaultEditorData;
+            const faqs = Array.isArray(base?.faqs) ? [...base.faqs] : [];
+            faqs.push({ question: '', answer: '' });
+            return { ...base, faqs };
+        });
+    };
+
+    const removeFaq = (index: number) => {
+        setCmsEditorData((prev: any) => {
+            const base = prev || defaultEditorData;
+            const faqs = Array.isArray(base?.faqs) ? base.faqs.filter((_: any, i: number) => i !== index) : [];
+            return { ...base, faqs };
+        });
+    };
+
+    const handleCmsSave = async () => {
+        if (!canShowCms || !cmsSlug || !cmsEditorData) return;
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setCmsError('Kaydetmek için admin girişi gerekli.');
+            return;
+        }
+        setCmsSaving(true);
+        setCmsError('');
+        try {
+            const nextAll = {
+                ...(cmsAllContent || {}),
+                [currentLang]: cmsEditorData
+            };
+            let nextPageId = cmsPageId;
+            if (!nextPageId) {
+                const createRes = await fetch(`${API_BASE}/admin/pages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: trainingTitle || cmsSlug,
+                        slug: cmsSlug,
+                        meta_title: '',
+                        meta_description: ''
+                    })
+                });
+                if (!createRes.ok) {
+                    const errTxt = await createRes.text();
+                    setCmsError(`Sayfa oluşturulamadı (${createRes.status}): ${errTxt}`);
+                    return;
+                }
+                const created = await createRes.json();
+                nextPageId = Number(created?.id || 0);
+                if (!nextPageId) {
+                    setCmsError('Sayfa oluşturuldu ama ID alınamadı.');
+                    return;
+                }
+                setCmsPageId(nextPageId);
+            }
+
+            const res = await fetch(`${API_BASE}/admin/pages/${nextPageId}/content`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    content_json: nextAll,
+                    is_published: true
+                })
+            });
+            if (!res.ok) {
+                const errTxt = await res.text();
+                setCmsError(`Kaydetme başarısız (${res.status}): ${errTxt}`);
+                return;
+            }
+            setCmsAllContent(nextAll);
+            setCmsContent(cmsEditorData);
+        } catch {
+            setCmsError('Kaydetme başarısız oldu.');
+        } finally {
+            setCmsSaving(false);
+        }
+    };
+
+    const handleCmsImageUpload = async (file?: File) => {
+        if (!file) return;
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setCmsError('Upload için admin girişi gerekli.');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/admin/media/upload-base64`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        dataUrl: String(reader.result || ''),
+                        filename: `${cmsSlug.replace(/\//g, '-')}-${currentLang}`
+                    })
+                });
+                if (!res.ok) {
+                    setCmsError('Görsel upload başarısız oldu.');
+                    return;
+                }
+                const data = await res.json();
+                setCmsEditorData((prev: any) => ({
+                    ...(prev || defaultEditorData),
+                    hero: {
+                        ...((prev || defaultEditorData).hero || {}),
+                        image: data.path || ''
+                    }
+                }));
+            } catch {
+                setCmsError('Görsel upload başarısız oldu.');
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+    return (
+        <>
+            <ServicePageTemplate
+                {...config}
+                serviceKey={training.productKey}
+                disableApiHeroTextOverride
+                cmsMode={canShowCms}
+                onCmsEditSection={(section) => setCmsSection(section)}
+            />
+            {canShowCms && (
+                <div style={{
+                    position: 'fixed',
+                    top: 90,
+                    right: 16,
+                    width: 400,
+                    maxHeight: 'calc(100vh - 120px)',
+                    overflowY: 'auto',
+                    background: '#f8fafc',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: 14,
+                    boxShadow: '0 18px 40px rgba(15,23,42,0.15)',
+                    zIndex: 9999,
+                    padding: 14
+                }}>
+                    <div style={{ fontWeight: 800, marginBottom: 10, color: '#0f172a' }}>
+                        CMS Editor ({currentLang.toUpperCase()})
+                    </div>
+                    <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
+                        {(['hero', 'video', 'features', 'faqs'] as const).map((section) => (
+                            <button
+                                key={section}
+                                type="button"
+                                onClick={() => setCmsSection(section)}
+                                style={{
+                                    border: '1px solid #cbd5e1',
+                                    borderRadius: 999,
+                                    padding: '6px 10px',
+                                    background: cmsSection === section ? '#0f172a' : '#fff',
+                                    color: cmsSection === section ? '#fff' : '#0f172a',
+                                    fontWeight: 700,
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {section === 'hero' ? 'Hero' : section === 'video' ? 'Video' : section === 'features' ? 'Ozellikler' : 'SSS'}
+                            </button>
+                        ))}
+                    </div>
+                    {cmsLoading && <div style={{ fontSize: 13, marginBottom: 8 }}>Yükleniyor...</div>}
+                    {cmsError && <div style={{ fontSize: 13, color: '#b91c1c', marginBottom: 8 }}>{cmsError}</div>}
+                    <div style={{ display: 'grid', gap: 8 }}>
+                        {cmsSection === 'hero' && (
+                            <>
+                                <input
+                                    placeholder="Hero Baslik"
+                                    value={cmsEditorData?.hero?.title || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), hero: { ...(p?.hero || {}), title: e.target.value } }))}
+                                />
+                                <input
+                                    placeholder="Hero Alt Baslik"
+                                    value={cmsEditorData?.hero?.subtitle || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), hero: { ...(p?.hero || {}), subtitle: e.target.value } }))}
+                                />
+                                <textarea
+                                    placeholder="Hero Aciklama"
+                                    rows={3}
+                                    value={cmsEditorData?.hero?.description || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), hero: { ...(p?.hero || {}), description: e.target.value } }))}
+                                />
+                                <input
+                                    placeholder="Hero Gorsel URL"
+                                    value={cmsEditorData?.hero?.image || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), hero: { ...(p?.hero || {}), image: e.target.value } }))}
+                                />
+                                <input type="file" accept="image/*" onChange={(e) => handleCmsImageUpload(e.target.files?.[0])} />
+                            </>
+                        )}
+
+                        {cmsSection === 'video' && (
+                            <>
+                                <input
+                                    placeholder="Video Etiket"
+                                    value={cmsEditorData?.videoShowcase?.tag || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), videoShowcase: { ...(p?.videoShowcase || {}), tag: e.target.value } }))}
+                                />
+                                <input
+                                    placeholder="Video Baslik"
+                                    value={cmsEditorData?.videoShowcase?.title || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), videoShowcase: { ...(p?.videoShowcase || {}), title: e.target.value } }))}
+                                />
+                                <input
+                                    placeholder="Video URL"
+                                    value={cmsEditorData?.videoShowcase?.videoUrl || ''}
+                                    onChange={(e) => setCmsEditorData((p: any) => ({ ...(p || defaultEditorData), videoShowcase: { ...(p?.videoShowcase || {}), videoUrl: e.target.value } }))}
+                                />
+                            </>
+                        )}
+
+                        {cmsSection === 'features' && (
+                            <>
+                                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+                                    {(cmsEditorData?.featuresSection?.features || []).map((_: any, idx: number) => (
+                                        <button
+                                            key={`feature-tab-${idx}`}
+                                            type="button"
+                                            onClick={() => setActiveFeatureIndex(idx)}
+                                            style={{
+                                                border: '1px solid #cbd5e1',
+                                                borderRadius: 999,
+                                                padding: '4px 8px',
+                                                background: idx === activeFeatureIndex ? '#0f172a' : '#fff',
+                                                color: idx === activeFeatureIndex ? '#fff' : '#0f172a',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {idx + 1}
+                                        </button>
+                                    ))}
+                                </div>
+                                {Array.isArray(cmsEditorData?.featuresSection?.features) && cmsEditorData.featuresSection.features.length > 0 && (
+                                    <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, padding: 10, display: 'grid', gap: 8, background: '#fff' }}>
+                                        <input
+                                            placeholder="Ozellik Baslik"
+                                            value={cmsEditorData.featuresSection.features[activeFeatureIndex]?.title || ''}
+                                            onChange={(e) => updateFeature(activeFeatureIndex, 'title', e.target.value)}
+                                        />
+                                        <textarea
+                                            placeholder="Ozellik Aciklama"
+                                            rows={3}
+                                            value={cmsEditorData.featuresSection.features[activeFeatureIndex]?.description || ''}
+                                            onChange={(e) => updateFeature(activeFeatureIndex, 'description', e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFeature(activeFeatureIndex)}
+                                            style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 10px', cursor: 'pointer' }}
+                                        >
+                                            Secili Ozelligi Sil
+                                        </button>
+                                    </div>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={addFeature}
+                                    style={{ background: '#334155', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 10px', cursor: 'pointer' }}
+                                >
+                                    Ozellik Ekle
+                                </button>
+                            </>
+                        )}
+
+                        {cmsSection === 'faqs' && (
+                            <>
+                                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+                                    {(cmsEditorData?.faqs || []).map((_: any, idx: number) => (
+                                        <button
+                                            key={`faq-tab-${idx}`}
+                                            type="button"
+                                            onClick={() => setActiveFaqIndex(idx)}
+                                            style={{
+                                                border: '1px solid #cbd5e1',
+                                                borderRadius: 999,
+                                                padding: '4px 8px',
+                                                background: idx === activeFaqIndex ? '#0f172a' : '#fff',
+                                                color: idx === activeFaqIndex ? '#fff' : '#0f172a',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {idx + 1}
+                                        </button>
+                                    ))}
+                                </div>
+                                {Array.isArray(cmsEditorData?.faqs) && cmsEditorData.faqs.length > 0 && (
+                                    <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, padding: 10, display: 'grid', gap: 8, background: '#fff' }}>
+                                        <input
+                                            placeholder="Soru"
+                                            value={cmsEditorData.faqs[activeFaqIndex]?.question || ''}
+                                            onChange={(e) => updateFaq(activeFaqIndex, 'question', e.target.value)}
+                                        />
+                                        <textarea
+                                            placeholder="Cevap"
+                                            rows={4}
+                                            value={cmsEditorData.faqs[activeFaqIndex]?.answer || ''}
+                                            onChange={(e) => updateFaq(activeFaqIndex, 'answer', e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFaq(activeFaqIndex)}
+                                            style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 10px', cursor: 'pointer' }}
+                                        >
+                                            Secili SSS Sil
+                                        </button>
+                                    </div>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={addFaq}
+                                    style={{ background: '#334155', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 10px', cursor: 'pointer' }}
+                                >
+                                    SSS Ekle
+                                </button>
+                            </>
+                        )}
+
+                        <button
+                            onClick={handleCmsSave}
+                            disabled={cmsSaving}
+                            style={{
+                                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: 8,
+                                padding: '11px 12px',
+                                cursor: 'pointer',
+                                opacity: cmsSaving ? 0.7 : 1,
+                                fontWeight: 700
+                            }}
+                        >
+                            {cmsSaving ? 'Kaydediliyor...' : 'Kaydet'}
+                        </button>
+                    </div>
+                </div>
+            )}
+        </>
+    );
 }

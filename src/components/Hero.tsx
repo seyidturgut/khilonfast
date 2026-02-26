@@ -5,7 +5,14 @@ import { Link } from 'react-router-dom'
 
 // Slides data now managed via translations
 
-export default function Hero() {
+type HeroContentOverrides = {
+    subtitle?: string;
+    title?: string;
+    titleHighlight?: string;
+    description?: string;
+};
+
+export default function Hero({ content }: { content?: HeroContentOverrides }) {
     const { t, i18n } = useTranslation('common');
     const currentLang = i18n.language.split('-')[0];
     const prefix = currentLang === 'en' ? '/en' : '';
@@ -17,12 +24,12 @@ export default function Hero() {
 
             <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
                 <div className="hero-content">
-                    <span className="hero-subtitle">{t('hero.subtitle')}</span>
+                    <span className="hero-subtitle">{content?.subtitle || t('hero.subtitle')}</span>
                     <h1 className="hero-title">
-                        {t('hero.title')}<br />
-                        <span className="text-highlight">{t('hero.titleHighlight')}</span>
+                        {content?.title || t('hero.title')}<br />
+                        <span className="text-highlight">{content?.titleHighlight || t('hero.titleHighlight')}</span>
                     </h1>
-                    <p className="hero-description">{t('hero.description')}</p>
+                    <p className="hero-description">{content?.description || t('hero.description')}</p>
                     <div className="hero-actions">
                         <Link to={toLocalized('gtm')} className="btn btn-primary">{t('common.startNow')}</Link>
                         <Link to={toLocalized('idm')} className="btn btn-secondary">{t('header.services')}</Link>

@@ -120,9 +120,9 @@ export default function IntegratedDigitalMarketing() {
             ]
         },
         processSection: {
-            tag: t('serviceIDM.process.tag'),
-            title: t('serviceIDM.process.title'),
-            description: t('serviceIDM.process.description'),
+            tag: t('serviceIDM.authorization.card2.title'),
+            title: t('serviceIDM.authorization.card2.title'),
+            description: t('serviceIDM.authorization.card2.desc'),
             videoUrl: 'https://player.vimeo.com/video/1131179237',
             steps: [
                 {

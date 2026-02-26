@@ -56,6 +56,9 @@ import SettingsPage from './pages/admin/Settings'
 import ProductList from './pages/admin/ProductList'
 import ProductEditor from './pages/admin/ProductEditor'
 import UsersPage from './pages/admin/Users'
+import PagesList from './pages/admin/Pages'
+import PageBuilder from './pages/admin/PageBuilder'
+import TrainingContentEditor from './pages/admin/TrainingContentEditor'
 
 const slugsTr = trCommon.slugs as Record<string, string>
 const slugsEn = enCommon.slugs as Record<string, string>
@@ -82,7 +85,7 @@ function RequireAdmin({ children }: { children: ReactElement }) {
 
 function MainContent() {
     const location = useLocation();
-    const routeLang = location.pathname.startsWith('/en') ? 'en' : 'tr';
+    const routeLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
     const isAdminRoute = location.pathname.startsWith('/admin');
     const knownRoutePatterns = [
         '/',
@@ -252,6 +255,14 @@ function MainContent() {
                     <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/courses/odeme-sistemlerinde-buyume-odakli-pazarlama" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/b2b-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/b2b-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/fintech-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/fintech-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/uretim-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/uretim-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/enerji-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/enerji-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi-copy" element={<Navigate to="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path={`/${slugsTr.maestro}`} element={<MaestroAI />} />
                     <Route path="/hizmetlerimiz/maestro-ai" element={<Navigate to="/urunler/maestro-ai" replace />} />
@@ -263,6 +274,7 @@ function MainContent() {
                         <Route key={flow.path} path={flow.path} element={<SetupFlowPage path={flow.path} />} />
                     ))}
                     <Route path={`/${slugsTr.trainings}`} element={<Trainings />} />
+                    <Route path={`/${slugsTr.trainings}/:id`} element={<TrainingProgramPage />} />
                     {trainingPrograms.map((program) => (
                         <Route key={program.path} path={program.path} element={<TrainingProgramPage />} />
                     ))}
@@ -286,6 +298,10 @@ function MainContent() {
                     <Route path="/admin/products" element={<RequireAdmin><ProductList /></RequireAdmin>} />
                     <Route path="/admin/products/new" element={<RequireAdmin><ProductEditor /></RequireAdmin>} />
                     <Route path="/admin/products/edit/:id" element={<RequireAdmin><ProductEditor /></RequireAdmin>} />
+                    <Route path="/admin/pages" element={<RequireAdmin><PagesList /></RequireAdmin>} />
+                    <Route path="/admin/pages/new" element={<RequireAdmin><PageBuilder /></RequireAdmin>} />
+                    <Route path="/admin/pages/edit/:id" element={<RequireAdmin><PageBuilder /></RequireAdmin>} />
+                    <Route path="/admin/training-pages/*" element={<RequireAdmin><TrainingContentEditor /></RequireAdmin>} />
                     <Route path="/admin/users" element={<RequireAdmin><UsersPage /></RequireAdmin>} />
                     <Route path="*" element={<LegacyWordpressPage />} />
                 </Routes>

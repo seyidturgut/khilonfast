@@ -71,7 +71,10 @@ export default function ProductSlugResolver() {
     const [resolvedElement, setResolvedElement] = useState<JSX.Element | null>(null)
     const [loading, setLoading] = useState(true)
 
-    const currentLang = useMemo(() => (location.pathname.startsWith('/en') ? 'en' : 'tr'), [location.pathname])
+    const currentLang = useMemo(
+        () => (location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'),
+        [location.pathname]
+    )
 
     useEffect(() => {
         let cancelled = false

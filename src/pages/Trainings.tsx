@@ -1,25 +1,33 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { HiAcademicCap, HiArrowRight } from 'react-icons/hi2';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import './Trainings.css';
+import trCommon from '../locales/tr/common.json';
+import enCommon from '../locales/en/common.json';
 
 export default function Trainings() {
-    const { t, i18n } = useTranslation('common');
-    const currentLang = i18n.language.split('-')[0];
+    const { t } = useTranslation('common');
+    const location = useLocation();
+    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    const slugs = (currentLang === 'en' ? enCommon.slugs : trCommon.slugs) as Record<string, string>;
+    const langPrefix = currentLang === 'en' ? '/en' : '';
 
     const trainingPrograms = [
-        { path: '/egitimler/buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.growth.title'), summary: t('header.menuItems.trainings.growth.desc') },
-        { path: '/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.payment.title'), summary: t('header.menuItems.trainings.payment.desc') },
-        { path: '/b2b-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.b2b.title'), summary: t('header.menuItems.trainings.b2b.desc') },
-        { path: '/fintech-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.fintech.title'), summary: t('header.menuItems.trainings.fintech.desc') },
-        { path: '/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.tech.title'), summary: t('header.menuItems.trainings.tech.desc') },
-        { path: '/uretim-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.manufacturing.title'), summary: t('header.menuItems.trainings.manufacturing.desc') },
-        { path: '/enerji-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.energy.title'), summary: t('header.menuItems.trainings.energy.desc') },
-        { path: '/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.design.title'), summary: t('header.menuItems.trainings.design.desc') },
-        { path: '/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.fleet.title'), summary: t('header.menuItems.trainings.fleet.desc') },
-        { path: '/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi', title: t('header.menuItems.trainings.food.title'), summary: t('header.menuItems.trainings.food.desc') }
-    ];
+        { slugKey: 'trainingPayment', menuKey: 'payment' },
+        { slugKey: 'trainingB2B', menuKey: 'b2b' },
+        { slugKey: 'trainingFintech', menuKey: 'fintech' },
+        { slugKey: 'trainingTech', menuKey: 'tech' },
+        { slugKey: 'trainingManufacturing', menuKey: 'manufacturing' },
+        { slugKey: 'trainingEnergy', menuKey: 'energy' },
+        { slugKey: 'trainingDesign', menuKey: 'design' },
+        { slugKey: 'trainingFleet', menuKey: 'fleet' },
+        { slugKey: 'trainingFood', menuKey: 'food' }
+    ].map(({ slugKey, menuKey }) => ({
+        path: `${langPrefix}/${slugs[slugKey] ?? ''}`.replace(/\/{2,}/g, '/'),
+        title: t(`header.menuItems.trainings.${menuKey}.title`),
+        summary: t(`header.menuItems.trainings.${menuKey}.desc`)
+    }));
 
     return (
         <div className="page-container trainings-page">
@@ -47,7 +55,7 @@ export default function Trainings() {
                                 </div>
                                 <h3>{program.title}</h3>
                                 <p>{program.summary}</p>
-                                <Link to={program.path.startsWith('/en') ? program.path : (currentLang === 'en' ? `/en${program.path}` : program.path)} className="training-link">
+                                <Link to={program.path} className="training-link">
                                     {t('trainingsPage.list.open', 'Eğitimi Aç')} <HiArrowRight />
                                 </Link>
                             </article>

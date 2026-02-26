@@ -8,6 +8,7 @@ import paymentRoutes from './routes/payment.js';
 import profileRoutes from './routes/profile.js';
 import companyRoutes from './routes/company.js';
 import adminRoutes from './routes/admin.js';
+import pagesRoutes from './routes/pages.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/company', companyRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/pages', pagesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

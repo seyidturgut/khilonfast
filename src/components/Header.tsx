@@ -35,14 +35,17 @@ export default function Header() {
     const enSlugs = enCommon.slugs as Record<string, string>
     const location = useLocation()
     const navigate = useNavigate()
-    const currentLang = location.pathname.startsWith('/en') ? 'en' : 'tr'
+    const isEnglishPath = location.pathname === '/en' || location.pathname.startsWith('/en/')
+    const currentLang = isEnglishPath ? 'en' : 'tr'
+    const localeCommon = currentLang === 'en' ? enCommon : trCommon
     const langPrefix = currentLang === 'en' ? '/en' : ''
-    const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
+    const activeSlugs = currentLang === 'en' ? enSlugs : trSlugs
+    const toLocalized = (key: string) => `${langPrefix}/${activeSlugs[key] ?? ''}`.replace(/\/{2,}/g, '/')
 
     const switchLanguagePath = (targetLang: 'tr' | 'en', pathname: string) => {
-        const isEnglishPath = pathname.startsWith('/en')
+        const isEnglishPath = pathname === '/en' || pathname.startsWith('/en/')
         const cleanPath = pathname
-            .replace(/^\/en/, '')
+            .replace(/^\/en(\/|$)/, '')
             .replace(/^\/+/, '')
             .replace(/\/+$/, '')
 
@@ -96,21 +99,21 @@ export default function Header() {
         { icon: HiEnvelope, title: t('header.menuItems.services.email.title'), desc: t('header.menuItems.services.email.desc'), path: toLocalized('b2bEmail') }
     ]
 
+    const sectoralMenuCopy = localeCommon.header.menuItems.sectoral as Record<string, { title: string; desc: string }>
     const sectoralServices = [
-        { icon: HiBriefcase, title: t('header.menuItems.sectoral.b2b.title'), desc: t('header.menuItems.sectoral.b2b.desc'), path: toLocalized('sectoralB2B') },
-        { icon: HiCreditCard, title: t('header.menuItems.sectoral.payment.title'), desc: t('header.menuItems.sectoral.payment.desc'), path: toLocalized('sectoralPayment') },
-        { icon: HiRocketLaunch, title: t('header.menuItems.sectoral.food.title'), desc: t('header.menuItems.sectoral.food.desc'), path: toLocalized('sectoralFood') },
-        { icon: HiPresentationChartLine, title: t('header.menuItems.sectoral.fintech.title'), desc: t('header.menuItems.sectoral.fintech.desc'), path: toLocalized('sectoralFintech') },
-        { icon: HiCommandLine, title: t('header.menuItems.sectoral.tech.title'), desc: t('header.menuItems.sectoral.tech.desc'), path: toLocalized('sectoralTech') },
-        { icon: HiBolt, title: t('header.menuItems.sectoral.energy.title'), desc: t('header.menuItems.sectoral.energy.desc'), path: toLocalized('sectoralEnergy') },
-        { icon: HiPaintBrush, title: t('header.menuItems.sectoral.design.title'), desc: t('header.menuItems.sectoral.design.desc'), path: toLocalized('sectoralDesign') },
-        { icon: HiTruck, title: t('header.menuItems.sectoral.fleet.title'), desc: t('header.menuItems.sectoral.fleet.desc'), path: toLocalized('sectoralFleet') },
-        { icon: HiWrench, title: t('header.menuItems.sectoral.manufacturing.title'), desc: t('header.menuItems.sectoral.manufacturing.desc'), path: toLocalized('sectoralManufacturing') }
+        { icon: HiBriefcase, title: sectoralMenuCopy.b2b.title, desc: sectoralMenuCopy.b2b.desc, path: toLocalized('sectoralB2B') },
+        { icon: HiCreditCard, title: sectoralMenuCopy.payment.title, desc: sectoralMenuCopy.payment.desc, path: toLocalized('sectoralPayment') },
+        { icon: HiRocketLaunch, title: sectoralMenuCopy.food.title, desc: sectoralMenuCopy.food.desc, path: toLocalized('sectoralFood') },
+        { icon: HiPresentationChartLine, title: sectoralMenuCopy.fintech.title, desc: sectoralMenuCopy.fintech.desc, path: toLocalized('sectoralFintech') },
+        { icon: HiCommandLine, title: sectoralMenuCopy.tech.title, desc: sectoralMenuCopy.tech.desc, path: toLocalized('sectoralTech') },
+        { icon: HiBolt, title: sectoralMenuCopy.energy.title, desc: sectoralMenuCopy.energy.desc, path: toLocalized('sectoralEnergy') },
+        { icon: HiPaintBrush, title: sectoralMenuCopy.design.title, desc: sectoralMenuCopy.design.desc, path: toLocalized('sectoralDesign') },
+        { icon: HiTruck, title: sectoralMenuCopy.fleet.title, desc: sectoralMenuCopy.fleet.desc, path: toLocalized('sectoralFleet') },
+        { icon: HiWrench, title: sectoralMenuCopy.manufacturing.title, desc: sectoralMenuCopy.manufacturing.desc, path: toLocalized('sectoralManufacturing') }
     ]
 
     const trainingMenuItems = [
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.all.title'), desc: t('header.menuItems.trainings.all.desc'), path: toLocalized('trainings') },
-        { icon: HiAcademicCap, title: t('header.menuItems.trainings.growth.title'), desc: t('header.menuItems.trainings.growth.desc'), path: toLocalized('trainingGrowth') },
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.payment.title'), desc: t('header.menuItems.trainings.payment.desc'), path: toLocalized('trainingPayment') },
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.b2b.title'), desc: t('header.menuItems.trainings.b2b.desc'), path: toLocalized('trainingB2B') },
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.fintech.title'), desc: t('header.menuItems.trainings.fintech.desc'), path: toLocalized('trainingFintech') },
@@ -143,6 +146,13 @@ export default function Header() {
         localStorage.setItem('i18nextLng', targetLang)
         navigate(`${newPath}${location.search}${location.hash}`)
     }
+
+    useEffect(() => {
+        const activeLang = i18n.language.split('-')[0]
+        if (activeLang !== currentLang) {
+            void i18n.changeLanguage(currentLang)
+        }
+    }, [currentLang, i18n])
 
     useEffect(() => {
         const handleScroll = () => {
