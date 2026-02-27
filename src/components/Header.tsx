@@ -207,6 +207,12 @@ export default function Header() {
     }, [closeMobileMenu])
 
     useEffect(() => {
+        const openCart = () => setCartOpen(true)
+        window.addEventListener('khilon:open-cart', openCart as EventListener)
+        return () => window.removeEventListener('khilon:open-cart', openCart as EventListener)
+    }, [])
+
+    useEffect(() => {
         const handleDocumentClick = (event: MouseEvent) => {
             if (!activeDropdown) return
             if (window.innerWidth <= 968) return

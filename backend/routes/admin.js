@@ -400,10 +400,29 @@ router.get('/products', async (req, res) => {
 
 // POST /api/admin/products - Create new product
 router.post('/products', async (req, res) => {
-    const {
-        product_key, name, description, price, currency, category,
-        type = 'service', duration_days = null, access_content_url = null, features = null
-    } = req.body;
+    const data = req.body || {};
+    const product_key = String(data.product_key || '').trim();
+    const name = String(data.name || '').trim();
+    const description = String(data.description || '');
+    const price = Number(data.price || 0);
+    const currency = String(data.currency || 'TRY').trim().toUpperCase();
+    const category = String(data.category || 'hizmetler').trim();
+    const type = String(data.type || 'service').trim();
+    const duration_days = data.duration_days === '' || data.duration_days == null
+        ? null
+        : Number(data.duration_days);
+    const access_content_url = data.access_content_url || data.accessContentUrl || data.content_url || null;
+    const features = data.features ?? null;
+
+    if (!product_key || !name) {
+        return res.status(400).json({ error: 'Ürün key ve ürün adı zorunludur.' });
+    }
+    if (!Number.isFinite(price)) {
+        return res.status(400).json({ error: 'Geçerli bir fiyat girin.' });
+    }
+    if (duration_days !== null && !Number.isFinite(duration_days)) {
+        return res.status(400).json({ error: 'Geçerli bir süre (gün) girin.' });
+    }
 
     try {
         const [result] = await db.query(
@@ -424,10 +443,33 @@ router.post('/products', async (req, res) => {
 
 // PUT /api/admin/products/:id - Update product
 router.put('/products/:id', async (req, res) => {
-    const {
-        name, description, price, currency, category, is_active,
-        type, duration_days, access_content_url, features
-    } = req.body;
+    const data = req.body || {};
+    const name = String(data.name || '').trim();
+    const description = String(data.description || '');
+    const price = Number(data.price || 0);
+    const currency = String(data.currency || 'TRY').trim().toUpperCase();
+    const category = String(data.category || 'hizmetler').trim();
+    const is_active = data.is_active ? 1 : 0;
+    const type = String(data.type || 'service').trim();
+    const duration_days = data.duration_days === '' || data.duration_days == null
+        ? null
+        : Number(data.duration_days);
+    const access_content_url = data.access_content_url || data.accessContentUrl || data.content_url || null;
+    const features = data.features ?? null;
+    const productId = Number(req.params.id);
+
+    if (!productId) {
+        return res.status(400).json({ error: 'Geçersiz ürün id.' });
+    }
+    if (!name) {
+        return res.status(400).json({ error: 'Ürün adı zorunludur.' });
+    }
+    if (!Number.isFinite(price)) {
+        return res.status(400).json({ error: 'Geçerli bir fiyat girin.' });
+    }
+    if (duration_days !== null && !Number.isFinite(duration_days)) {
+        return res.status(400).json({ error: 'Geçerli bir süre (gün) girin.' });
+    }
 
     try {
         await db.query(
@@ -435,12 +477,12 @@ router.put('/products/:id', async (req, res) => {
             name=?, description=?, price=?, currency=?, category=?, is_active=?,
             type=?, duration_days=?, access_content_url=?, features=?
             WHERE id=?`,
-            [name, description, price, currency, category, is_active, type, duration_days, access_content_url, features, req.params.id]
+            [name, description, price, currency, category, is_active, type, duration_days, access_content_url, features, productId]
         );
         res.json({ message: 'Ürün güncellendi.' });
     } catch (error) {
         console.error('Update product error:', error);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: 'Ürün güncellenemedi.' });
     }
 });
 

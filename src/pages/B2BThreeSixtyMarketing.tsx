@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -11,13 +11,17 @@ import {
     HiMagnifyingGlass
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import { useCart } from '../context/CartContext'
 
 export default function B2BThreeSixtyMarketing() {
     const { t, i18n } = useTranslation('common')
     const location = useLocation()
+    const { addToCart } = useCart()
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
     const langPrefix = isEn ? '/en' : ''
+    const API_BASE = import.meta.env.VITE_API_URL || '/api'
+    const [packageMap, setPackageMap] = useState<Record<string, any>>({})
 
     useEffect(() => {
         const activeLang = i18n.language.split('-')[0]
@@ -26,6 +30,49 @@ export default function B2BThreeSixtyMarketing() {
         }
     }, [currentLang, i18n])
     const path = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
+
+    useEffect(() => {
+        const fetchPackages = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/products/key/service-b2b-360?lang=${currentLang}`)
+                if (!res.ok) return
+                const data = await res.json()
+                const packages = Array.isArray(data?.product?.packages) ? data.product.packages : []
+                const mapped: Record<string, any> = {}
+                for (const pkg of packages) {
+                    const key = String(pkg?.product_key || '')
+                    if (key.endsWith('-core')) mapped.core = pkg
+                    else if (key.endsWith('-growth')) mapped.growth = pkg
+                    else if (key.endsWith('-ultimate')) mapped.ultimate = pkg
+                }
+                setPackageMap(mapped)
+            } catch (err) {
+                console.error('Failed to load B2B package map:', err)
+            }
+        }
+        void fetchPackages()
+    }, [API_BASE, currentLang])
+
+    const fallbackIdmPath = useMemo(() => path('idm'), [currentLang, i18n.language])
+
+    const handlePackageBuy = (tier: 'core' | 'growth' | 'ultimate') => {
+        const pkg = packageMap[tier]
+        if (!pkg) {
+            window.location.href = fallbackIdmPath
+            return
+        }
+        const priceNum = Number(pkg.price)
+        addToCart({
+            id: String(pkg.product_key || `service-b2b-360-${tier}`),
+            product_id: 0,
+            product_key: String(pkg.product_key || `service-b2b-360-${tier}`),
+            name: String(pkg.name || (tier === 'core' ? 'Core' : tier === 'growth' ? 'Growth' : 'Ultimate')),
+            description: String(pkg.description || ''),
+            price: Number.isFinite(priceNum) ? priceNum : 0,
+            currency: String(pkg.currency || 'TRY')
+        })
+        window.dispatchEvent(new Event('khilon:open-cart'))
+    }
 
     const trConfig = {
         hero: {
@@ -138,7 +185,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen KOBİ'ler.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('core')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
                                     </div>
                                 </div>
 
@@ -151,7 +198,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Dijitalde büyümeye yatırım yapan işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('growth')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
                                     </div>
                                 </div>
 
@@ -164,7 +211,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Rekabette öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('ultimate')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
                                     </div>
                                 </div>
                             </div>
@@ -419,21 +466,21 @@ export default function B2BThreeSixtyMarketing() {
                                     <h3>Core</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Launch quickly with a lean execution setup focused on traction.</p>
                                     <div style={{ textAlign: 'center' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('core')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
                                     </div>
                                 </div>
                                 <div className='sectoral-card' style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
                                     <h3>Growth</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Scale demand generation and conversion performance with stronger orchestration.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('growth')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
                                     </div>
                                 </div>
                                 <div className='sectoral-card' style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
                                     <h3>Ultimate</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Operate a full-spectrum growth system with strategic and executional depth.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('ultimate')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
                                     </div>
                                 </div>
                             </div>

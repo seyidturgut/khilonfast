@@ -47,6 +47,9 @@ switch ($controller) {
     case 'company':
         require_once __DIR__ . '/routes/company.php';
         break;
+    case 'pages':
+        require_once __DIR__ . '/routes/pages.php';
+        break;
     case 'admin':
         require_once __DIR__ . '/routes/admin.php';
         break;

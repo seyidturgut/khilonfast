@@ -12,6 +12,7 @@ import { useCart } from '../../context/CartContext'
 import Cart from '../../components/Cart'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
+import { parseLocalizedPrice } from '../../utils/price'
 import './ServicePageTemplate.css'
 import trCommon from '../../locales/tr/common.json'
 import enCommon from '../../locales/en/common.json'
@@ -819,10 +820,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
             const productKey = pkg.productKey || productKeyMap[pkg.id] || pkg.id;
 
-            // Parse price correctly - remove all non-numeric characters except comma
-            // Turkish format: $9.900 means 9900, $14.900 means 14900
-            const priceStr = pkg.price.replace(/[^0-9,]/g, ''); // Remove $, *, dots, spaces
-            const priceNum = parseFloat(priceStr.replace(',', '.')); // Convert comma to dot for decimal
+            const priceNum = parseLocalizedPrice(pkg.price)
 
             addToCart({
                 id: pkg.id,

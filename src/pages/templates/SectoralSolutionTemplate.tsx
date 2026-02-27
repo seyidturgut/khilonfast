@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
 import { useCart } from '../../context/CartContext'
+import { parseLocalizedPrice } from '../../utils/price'
 import { HiCheck } from 'react-icons/hi2'
 import './SectoralSolutionTemplate.css'
 
@@ -311,8 +312,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
     }, [props.serviceKey, i18n.language]);
 
     const handleAddToCart = (pkg: any) => {
-        const priceStr = pkg.price.replace(/[^0-9,]/g, '');
-        const priceNum = parseFloat(priceStr.replace(',', '.'));
+        const priceNum = parseLocalizedPrice(pkg.price);
 
         addToCart({
             id: pkg.id,
@@ -323,6 +323,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
             price: priceNum,
             currency: pkg.price.includes('$') ? 'USD' : 'TRY'
         });
+        window.dispatchEvent(new Event('khilon:open-cart'));
     };
 
     const handleCmsImageUpload = async (file?: File) => {

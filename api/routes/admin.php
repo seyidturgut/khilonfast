@@ -55,15 +55,15 @@ function frontendSlugMapByKey()
         'service-seo' => ['tr' => 'hizmetlerimiz/seo-yonetimi', 'en' => 'services/seo-management'],
         'service-content-production' => ['tr' => 'hizmetlerimiz/icerik-uretimi', 'en' => 'services/content-production'],
         'service-b2b-email' => ['tr' => 'hizmetlerimiz/b2b-email-pazarlama', 'en' => 'services/b2b-email-marketing'],
-        'service-b2b-360' => ['tr' => 'sektorel-hizmetler/b2b-360-pazarlama-yonetimi', 'en' => 'sectoral-services/b2b-360-marketing-management'],
-        'service-payment-systems' => ['tr' => 'sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi', 'en' => 'sectoral-services/payment-systems-marketing-management'],
-        'service-industrial-food' => ['tr' => 'sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi', 'en' => 'sectoral-services/industrial-food-chef-solutions-marketing-management'],
-        'service-fintech-360' => ['tr' => 'sektorel-hizmetler/fintech-360-pazarlama-yonetimi', 'en' => 'sectoral-services/fintech-360-marketing-management'],
-        'service-tech-software' => ['tr' => 'sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi', 'en' => 'sectoral-services/technology-software-360-marketing-management'],
-        'service-energy' => ['tr' => 'sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi', 'en' => 'sectoral-services/energy-companies-360-marketing-management'],
-        'service-interior-design' => ['tr' => 'sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi', 'en' => 'sectoral-services/office-corporate-interior-design-360-marketing-management'],
-        'service-fleet-rental' => ['tr' => 'sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi', 'en' => 'sectoral-services/fleet-rental-companies-360-marketing-management'],
-        'service-manufacturing' => ['tr' => 'sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi', 'en' => 'sectoral-services/manufacturing-companies-360-marketing-management'],
+        'service-b2b-360' => ['tr' => 'sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/b2b-companies-360-marketing-management'],
+        'service-payment-systems' => ['tr' => 'sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/payment-systems-companies-360-marketing-management'],
+        'service-industrial-food' => ['tr' => 'sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/industrial-food-and-chef-solutions-companies-360-marketing-management'],
+        'service-fintech-360' => ['tr' => 'sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/fintech-companies-360-marketing-management'],
+        'service-tech-software' => ['tr' => 'sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/technology-and-software-companies-360-marketing-management'],
+        'service-energy' => ['tr' => 'sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/energy-companies-360-marketing-management'],
+        'service-interior-design' => ['tr' => 'sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/office-and-corporate-interior-design-companies-360-marketing-management'],
+        'service-fleet-rental' => ['tr' => 'sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/fleet-rental-companies-360-marketing-management'],
+        'service-manufacturing' => ['tr' => 'sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/manufacturing-companies-360-marketing-management'],
         'service-maestro-ai' => ['tr' => 'urunler/maestro-ai', 'en' => 'products/maestro-ai'],
         'service-eye-tracking' => ['tr' => 'hizmetler/eye-tracking-reklam-analizi', 'en' => 'services/eye-tracking-ad-analysis'],
     ];
@@ -503,6 +503,133 @@ if ($action === 'users' && $method === 'GET' && !empty($id) && $subAction === 'o
     sendResponse($out);
 }
 
+// CMS Pages (Admin)
+if ($action === 'pages') {
+    if ($method === 'GET' && empty($id)) {
+        $stmt = $db->query("SELECT * FROM cms_pages ORDER BY updated_at DESC");
+        sendResponse($stmt->fetchAll());
+    } elseif ($method === 'GET' && !empty($id) && empty($subAction)) {
+        $stmt = $db->prepare("SELECT * FROM cms_pages WHERE id = ? LIMIT 1");
+        $stmt->execute([(int)$id]);
+        $page = $stmt->fetch();
+        if (!$page) sendResponse(['error' => 'Page not found'], 404);
+        sendResponse($page);
+    } elseif ($method === 'POST' && empty($id)) {
+        try {
+            $data = getJsonBody();
+            $title = trim((string)($data['title'] ?? ''));
+            $slug = normalizeSlugValue($data['slug'] ?? '');
+            $metaTitle = trim((string)($data['meta_title'] ?? ''));
+            $metaDescription = trim((string)($data['meta_description'] ?? ''));
+
+            if ($title === '' || $slug === '') {
+                sendResponse(['error' => 'title ve slug zorunludur.'], 400);
+            }
+
+            $stmt = $db->prepare("INSERT INTO cms_pages (title, slug, meta_title, meta_description, is_active) VALUES (?, ?, ?, ?, 1)");
+            $stmt->execute([$title, $slug, $metaTitle, $metaDescription]);
+            sendResponse(['id' => (int)$db->lastInsertId(), 'message' => 'Page created'], 201);
+        } catch (Exception $e) {
+            sendResponse(['error' => 'Sayfa oluşturulamadı: ' . $e->getMessage()], 500);
+        }
+    } elseif ($method === 'PUT' && !empty($id) && empty($subAction)) {
+        try {
+            $data = getJsonBody();
+            $title = trim((string)($data['title'] ?? ''));
+            $slug = normalizeSlugValue($data['slug'] ?? '');
+            $metaTitle = trim((string)($data['meta_title'] ?? ''));
+            $metaDescription = trim((string)($data['meta_description'] ?? ''));
+            $isActive = isset($data['is_active']) ? (int)!!$data['is_active'] : 1;
+
+            if ($title === '' || $slug === '') {
+                sendResponse(['error' => 'title ve slug zorunludur.'], 400);
+            }
+
+            $stmt = $db->prepare("UPDATE cms_pages SET title = ?, slug = ?, meta_title = ?, meta_description = ?, is_active = ? WHERE id = ?");
+            $stmt->execute([$title, $slug, $metaTitle, $metaDescription, $isActive, (int)$id]);
+            sendResponse(['message' => 'Page updated']);
+        } catch (Exception $e) {
+            sendResponse(['error' => 'Sayfa güncellenemedi: ' . $e->getMessage()], 500);
+        }
+    } elseif ($method === 'GET' && !empty($id) && $subAction === 'content') {
+        $stmt = $db->prepare("SELECT content_json, is_published FROM cms_page_contents WHERE page_id = ? ORDER BY id DESC LIMIT 1");
+        $stmt->execute([(int)$id]);
+        $row = $stmt->fetch();
+        if (!$row) sendResponse(['content_json' => null, 'is_published' => false]);
+        sendResponse($row);
+    } elseif ($method === 'PUT' && !empty($id) && $subAction === 'content') {
+        try {
+            $data = getJsonBody();
+            $contentJson = $data['content_json'] ?? [];
+            $isPublished = isset($data['is_published']) ? (int)!!$data['is_published'] : 1;
+
+            $stmt = $db->prepare("DELETE FROM cms_page_contents WHERE page_id = ?");
+            $stmt->execute([(int)$id]);
+
+            $stmt = $db->prepare("INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)");
+            $stmt->execute([(int)$id, json_encode($contentJson, JSON_UNESCAPED_UNICODE), $isPublished]);
+
+            sendResponse(['message' => 'Content updated']);
+        } catch (Exception $e) {
+            sendResponse(['error' => 'İçerik güncellenemedi: ' . $e->getMessage()], 500);
+        }
+    }
+}
+
+// CMS Media (Admin)
+if ($action === 'media' && $method === 'POST' && $id === 'upload-base64') {
+    try {
+        $data = getJsonBody();
+        $dataUrl = (string)($data['dataUrl'] ?? '');
+        $filename = (string)($data['filename'] ?? 'cms-image');
+        if ($dataUrl === '') {
+            sendResponse(['error' => 'Missing dataUrl'], 400);
+        }
+
+        if (!preg_match('/^data:(image\\/[a-zA-Z0-9.+-]+);base64,(.+)$/', $dataUrl, $m)) {
+            sendResponse(['error' => 'Invalid image data'], 400);
+        }
+
+        $mime = strtolower($m[1]);
+        $base64 = $m[2];
+        $extMap = [
+            'image/jpeg' => 'jpg',
+            'image/jpg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/gif' => 'gif',
+            'image/avif' => 'avif'
+        ];
+        $ext = $extMap[$mime] ?? null;
+        if (!$ext) sendResponse(['error' => 'Unsupported image type'], 400);
+
+        $safeBase = preg_replace('/[^a-z0-9\\-_]+/i', '-', strtolower($filename));
+        $safeBase = trim((string)$safeBase, '-');
+        if ($safeBase === '') $safeBase = 'cms-image';
+        $safeBase = substr($safeBase, 0, 60);
+        $finalName = $safeBase . '-' . time() . '.' . $ext;
+
+        $uploadDir = __DIR__ . '/../../uploads/cms';
+        if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+            sendResponse(['error' => 'Upload directory create failed'], 500);
+        }
+
+        $binary = base64_decode($base64, true);
+        if ($binary === false) {
+            sendResponse(['error' => 'Invalid base64 payload'], 400);
+        }
+
+        $targetPath = rtrim($uploadDir, '/') . '/' . $finalName;
+        if (file_put_contents($targetPath, $binary) === false) {
+            sendResponse(['error' => 'File write failed'], 500);
+        }
+
+        sendResponse(['path' => '/uploads/cms/' . $finalName]);
+    } catch (Exception $e) {
+        sendResponse(['error' => 'Upload failed: ' . $e->getMessage()], 500);
+    }
+}
+
 // Products (Admin)
 if ($action === 'products') {
     if ($method === 'POST' && $id === 'upload-hero-image') {
@@ -583,7 +710,20 @@ if ($action === 'products') {
         sendResponse($stmt->fetchAll());
     } elseif ($method === 'POST') {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = getJsonBody();
+            if (empty($data)) {
+                sendResponse(['error' => 'Geçersiz veya boş istek verisi.'], 400);
+            }
+
+            $productKey = trim((string)($data['product_key'] ?? ''));
+            $name = trim((string)($data['name'] ?? ''));
+            $description = (string)($data['description'] ?? '');
+            $currency = strtoupper(trim((string)($data['currency'] ?? 'TRY')));
+            $category = trim((string)($data['category'] ?? 'hizmetler'));
+            $type = trim((string)($data['type'] ?? 'service'));
+            if ($productKey === '' || $name === '') {
+                sendResponse(['error' => 'Ürün key ve ürün adı zorunludur.'], 400);
+            }
             $accessContentUrl = $data['access_content_url'] ?? $data['accessContentUrl'] ?? $data['content_url'] ?? null;
             $features = $data['features'] ?? null;
             $isActive = isset($data['is_active']) ? (int) !!$data['is_active'] : 1;
@@ -595,8 +735,8 @@ if ($action === 'products') {
             $heroImage = normalizeHeroMediaPath($data['hero_image'] ?? null);
             $heroImageEn = normalizeHeroMediaPath($data['hero_image_en'] ?? null);
             [$slugTr, $slugEn] = resolveProductSlugs(
-                $data['product_key'] ?? '',
-                $data['category'] ?? '',
+                $productKey,
+                $category,
                 $data['slug'] ?? '',
                 $data['slug_en'] ?? '',
                 $parentId,
@@ -605,20 +745,20 @@ if ($action === 'products') {
 
             $stmt = $db->prepare("INSERT INTO products (product_key, slug, slug_en, name, name_en, description, description_en, features, features_en, price, currency, category, is_active, type, duration_days, access_content_url, parent_id, meta_title, meta_title_en, meta_description, meta_description_en, hero_vimeo_id, hero_vimeo_id_en, hero_image, hero_image_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
-                $data['product_key'],
+                $productKey,
                 $slugTr ?: null,
                 $slugEn ?: null,
-                $data['name'],
+                $name,
                 $data['name_en'] ?? null,
-                $data['description'],
+                $description,
                 $data['description_en'] ?? null,
                 $features,
                 $data['features_en'] ?? null,
                 $price,
-                $data['currency'],
-                $data['category'],
+                $currency,
+                $category,
                 $isActive,
-                $data['type'] ?? 'service',
+                $type,
                 $durationDays,
                 $accessContentUrl,
                 $parentId,
@@ -637,7 +777,27 @@ if ($action === 'products') {
         }
     } elseif ($method === 'PUT' && !empty($id)) {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = getJsonBody();
+            if (empty($data)) {
+                sendResponse(['error' => 'Geçersiz veya boş istek verisi.'], 400);
+            }
+
+            $productKey = trim((string)($data['product_key'] ?? ''));
+            $name = trim((string)($data['name'] ?? ''));
+            $description = (string)($data['description'] ?? '');
+            $currency = strtoupper(trim((string)($data['currency'] ?? 'TRY')));
+            $category = trim((string)($data['category'] ?? 'hizmetler'));
+            $type = trim((string)($data['type'] ?? 'service'));
+            if ($name === '') {
+                sendResponse(['error' => 'Ürün adı zorunludur.'], 400);
+            }
+
+            if ($productKey === '') {
+                $kStmt = $db->prepare("SELECT product_key FROM products WHERE id = ? LIMIT 1");
+                $kStmt->execute([(int)$id]);
+                $existing = $kStmt->fetch();
+                $productKey = trim((string)($existing['product_key'] ?? ''));
+            }
             $accessContentUrl = $data['access_content_url'] ?? $data['accessContentUrl'] ?? $data['content_url'] ?? null;
             $features = $data['features'] ?? null;
             $isActive = isset($data['is_active']) ? (int) !!$data['is_active'] : 1;
@@ -649,8 +809,8 @@ if ($action === 'products') {
             $heroImage = normalizeHeroMediaPath($data['hero_image'] ?? null);
             $heroImageEn = normalizeHeroMediaPath($data['hero_image_en'] ?? null);
             [$slugTr, $slugEn] = resolveProductSlugs(
-                $data['product_key'] ?? '',
-                $data['category'] ?? '',
+                $productKey,
+                $category,
                 $data['slug'] ?? '',
                 $data['slug_en'] ?? '',
                 $parentId,
@@ -659,17 +819,17 @@ if ($action === 'products') {
 
             $stmt = $db->prepare("UPDATE products SET name=?, name_en=?, description=?, description_en=?, features=?, features_en=?, price=?, currency=?, category=?, is_active=?, type=?, duration_days=?, access_content_url=?, parent_id=?, slug=?, slug_en=?, meta_title=?, meta_title_en=?, meta_description=?, meta_description_en=?, hero_vimeo_id=?, hero_vimeo_id_en=?, hero_image=?, hero_image_en=? WHERE id=?");
             $stmt->execute([
-                $data['name'],
+                $name,
                 $data['name_en'] ?? null,
-                $data['description'],
+                $description,
                 $data['description_en'] ?? null,
                 $features,
                 $data['features_en'] ?? null,
                 $price,
-                $data['currency'],
-                $data['category'],
+                $currency,
+                $category,
                 $isActive,
-                $data['type'] ?? 'service',
+                $type,
                 $durationDays,
                 $accessContentUrl,
                 $parentId,
