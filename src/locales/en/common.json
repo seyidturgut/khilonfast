@@ -78,39 +78,39 @@
             },
             "sectoral": {
                 "b2b": {
-                    "title": "360 Marketing Management for B2B Companies",
+                    "title": "360° Marketing Management for B2B Companies",
                     "desc": "Integrated B2B marketing solutions"
                 },
                 "fintech": {
-                    "title": "360 Marketing for FinTech Companies",
+                    "title": "360° Marketing Management for FinTech Companies",
                     "desc": "Financial technology-oriented solutions"
                 },
                 "food": {
-                    "title": "Industrial Food & Chef Solutions",
+                    "title": "360° Marketing Management for Industrial Food & Chef Solutions Companies",
                     "desc": "360 marketing specific to the food sector"
                 },
                 "payment": {
-                    "title": "360 Marketing Management for Payment Systems",
+                    "title": "360° Marketing Management for Payment Systems Companies",
                     "desc": "Fintech-oriented strategic solutions"
                 },
                 "tech": {
-                    "title": "360 Marketing Management for Tech & Software Companies",
+                    "title": "360° Marketing Management for Technology & Software Companies",
                     "desc": "SaaS and software-oriented solutions"
                 },
                 "energy": {
-                    "title": "360 Marketing Management for Energy Companies",
+                    "title": "360° Marketing Management for Energy Companies",
                     "desc": "Energy and technology-oriented solutions"
                 },
                 "design": {
-                    "title": "Marketing Management for Office & Corporate Interior Design",
+                    "title": "360° Marketing Management for Office & Corporate Interior Design Companies",
                     "desc": "Architectural and corporate design solutions"
                 },
                 "fleet": {
-                    "title": "360 Marketing Management for Fleet Rental Companies",
+                    "title": "360° Marketing Management for Fleet Rental Companies",
                     "desc": "Corporate mobility and fleet solutions"
                 },
                 "manufacturing": {
-                    "title": "360 Marketing Management for Manufacturing Companies",
+                    "title": "360° Marketing Management for Manufacturing Companies",
                     "desc": "Industrial and production-oriented solutions"
                 }
             },
@@ -1004,13 +1004,13 @@
         "seo": "services/seo-management",
         "contentProduction": "services/content-production",
         "b2bEmail": "services/b2b-email-marketing",
-        "sectoralB2B": "sectoral-services/b2b-360-marketing-management",
-        "sectoralPayment": "sectoral-services/payment-systems-marketing-management",
-        "sectoralFood": "sectoral-services/industrial-food-chef-solutions-marketing-management",
-        "sectoralFintech": "sectoral-services/fintech-360-marketing-management",
-        "sectoralTech": "sectoral-services/technology-software-360-marketing-management",
+        "sectoralB2B": "sectoral-services/b2b-companies-360-marketing-management",
+        "sectoralPayment": "sectoral-services/payment-systems-companies-360-marketing-management",
+        "sectoralFood": "sectoral-services/industrial-food-and-chef-solutions-companies-360-marketing-management",
+        "sectoralFintech": "sectoral-services/fintech-companies-360-marketing-management",
+        "sectoralTech": "sectoral-services/technology-and-software-companies-360-marketing-management",
         "sectoralEnergy": "sectoral-services/energy-companies-360-marketing-management",
-        "sectoralDesign": "sectoral-services/office-corporate-interior-design-360-marketing-management",
+        "sectoralDesign": "sectoral-services/office-and-corporate-interior-design-companies-360-marketing-management",
         "sectoralFleet": "sectoral-services/fleet-rental-companies-360-marketing-management",
         "sectoralManufacturing": "sectoral-services/manufacturing-companies-360-marketing-management",
         "trainings": "trainings",

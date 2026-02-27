@@ -78,39 +78,39 @@
             },
             "sectoral": {
                 "b2b": {
-                    "title": "B2B Firmalar İçin 360 Pazarlama Yönetimi",
+                    "title": "B2B Firmalar İçin 360° Pazarlama Yönetimi",
                     "desc": "Bütünleşik B2B pazarlama çözümleri"
                 },
                 "fintech": {
-                    "title": "FinTech Firmaları İçin 360 Pazarlama",
+                    "title": "FinTech Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Finansal teknoloji odaklı çözümler"
                 },
                 "food": {
-                    "title": "Endüstriyel Gıda & Şef Çözümleri",
+                    "title": "Endüstriyel Gıda & Şef Çözümleri Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Gıda sektörüne özel 360 pazarlama"
                 },
                 "payment": {
-                    "title": "Ödeme Sistemleri İçin 360 Pazarlama Yönetimi",
+                    "title": "Ödeme Sistemleri Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Fintech odaklı stratejik çözümler"
                 },
                 "tech": {
-                    "title": "Teknoloji & Yazılım Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Teknoloji & Yazılım Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "SaaS and software-oriented solutions"
                 },
                 "energy": {
-                    "title": "Enerji Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Enerji Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Enerji ve teknoloji odaklı çözümler"
                 },
                 "design": {
-                    "title": "Ofis & Kurumsal İç Tasarım Sektörü İçin Pazarlama Yönetimi",
+                    "title": "Ofis & Kurumsal İç Tasarım Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Mimari ve kurumsal tasarım çözümleri"
                 },
                 "fleet": {
-                    "title": "Filo Kiralama Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Filo Kiralama Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Kurumsal mobilite ve filo çözümleri"
                 },
                 "manufacturing": {
-                    "title": "Üretim Sektörü Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Üretim Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Endüstriyel ve üretim odaklı çözümler"
                 }
             },
@@ -1113,15 +1113,15 @@
         "seo": "hizmetlerimiz/seo-yonetimi",
         "contentProduction": "hizmetlerimiz/icerik-uretimi",
         "b2bEmail": "hizmetlerimiz/b2b-email-pazarlama",
-        "sectoralB2B": "sektorel-hizmetler/b2b-360-pazarlama-yonetimi",
-        "sectoralPayment": "sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi",
-        "sectoralFood": "sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi",
-        "sectoralFintech": "sektorel-hizmetler/fintech-360-pazarlama-yonetimi",
-        "sectoralTech": "sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi",
-        "sectoralEnergy": "sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi",
-        "sectoralDesign": "sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi",
-        "sectoralFleet": "sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi",
-        "sectoralManufacturing": "sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi",
+        "sectoralB2B": "sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralPayment": "sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFood": "sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFintech": "sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralTech": "sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralEnergy": "sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralDesign": "sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFleet": "sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralManufacturing": "sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi",
         "trainings": "egitimler",
         "trainingGrowth": "egitimler/buyume-odakli-pazarlama-egitimi",
         "trainingPayment": "egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi",

@@ -29,7 +29,7 @@ export default function IndustrialFoodMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Endüstriyel Gıda & Şef Çözümleri Firmaları İçin',
+            title: 'Endüstriyel Gıda & Şef Çözümleri Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Pazarlama Çözümleri',
             description: 'khilonfast ile Endüstriyel Gıda ve Şef Çözümleri sektöründe fark yaratacak pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
@@ -324,7 +324,7 @@ export default function IndustrialFoodMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For Industrial Food & Chef Solution Companies`,
+            title: `360° Marketing Management for Industrial Food & Chef Solutions Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale B2B demand generation in food with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

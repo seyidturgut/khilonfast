@@ -30,7 +30,7 @@ export default function FintechMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'FinTech Firmaları İçin',
+            title: 'FinTech Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile FinTech pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -321,7 +321,7 @@ export default function FintechMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For FinTech Companies`,
+            title: `360° Marketing Management for FinTech Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale fintech customer growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

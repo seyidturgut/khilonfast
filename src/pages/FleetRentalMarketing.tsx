@@ -30,7 +30,7 @@ export default function FleetRentalMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Filo Kiralama Firmaları İçin',
+            title: 'Filo Kiralama Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile Filo Kiralama pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -320,7 +320,7 @@ export default function FleetRentalMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For Fleet Rental Companies`,
+            title: `360° Marketing Management for Fleet Rental Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale fleet demand and conversion growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

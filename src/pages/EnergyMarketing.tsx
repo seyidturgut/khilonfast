@@ -30,7 +30,7 @@ export default function EnergyMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Enerji Firmaları İçin',
+            title: 'Enerji Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile Enerji Sektörü pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -320,7 +320,7 @@ export default function EnergyMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For Energy Companies`,
+            title: `360° Marketing Management for Energy Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale energy market growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

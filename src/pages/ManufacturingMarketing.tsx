@@ -30,7 +30,7 @@ export default function ManufacturingMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Üretim Sektörü İçin',
+            title: 'Üretim Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile Üretim Sektörü pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -320,7 +320,7 @@ export default function ManufacturingMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For Manufacturing Companies`,
+            title: `360° Marketing Management for Manufacturing Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale manufacturing demand growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

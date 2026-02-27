@@ -100,15 +100,24 @@ function MainContent() {
         '/hizmetlerimiz/seo-yonetimi',
         '/hizmetlerimiz/icerik-uretimi',
         '/hizmetlerimiz/b2b-email-pazarlama',
+        '/sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/b2b-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi',
-        '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi',
-        '/sektorel-hizmetler/fintech-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/fintech-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/teknoloji-yazilim-firmalari-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi',
         '/hizmetlerimiz/buyume-odakli-pazarlama-egitimi',
         '/egitimler/buyume-odakli-pazarlama-egitimi',
         '/courses/odeme-sistemlerinde-buyume-odakli-pazarlama',
@@ -217,15 +226,24 @@ function MainContent() {
                         <Route path="hizmetlerimiz/seo-yonetimi" element={<SeoService />} />
                         <Route path="hizmetlerimiz/icerik-uretimi" element={<ContentProduction />} />
                         <Route path="hizmetlerimiz/b2b-email-pazarlama" element={<B2BEmailMarketing />} />
-                        <Route path="sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<B2BThreeSixtyMarketing />} />
-                        <Route path="sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi" element={<PaymentSystemsMarketing />} />
-                        <Route path="sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi" element={<IndustrialFoodMarketing />} />
-                        <Route path="sektorel-hizmetler/fintech-360-pazarlama-yonetimi" element={<FintechMarketing />} />
-                        <Route path="sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi" element={<SoftwareMarketing />} />
-                        <Route path="sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi" element={<EnergyMarketing />} />
-                        <Route path="sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi" element={<InteriorDesignMarketing />} />
-                        <Route path="sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
-                        <Route path="sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
+                        <Route path="sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi" element={<B2BThreeSixtyMarketing />} />
+                        <Route path="sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi" element={<PaymentSystemsMarketing />} />
+                        <Route path="sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi" element={<IndustrialFoodMarketing />} />
+                        <Route path="sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi" element={<FintechMarketing />} />
+                        <Route path="sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi" element={<SoftwareMarketing />} />
+                        <Route path="sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi" element={<EnergyMarketing />} />
+                        <Route path="sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi" element={<InteriorDesignMarketing />} />
+                        <Route path="sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
+                        <Route path="sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
+                        <Route path="sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralB2B}`} replace />} />
+                        <Route path="sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralPayment}`} replace />} />
+                        <Route path="sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFood}`} replace />} />
+                        <Route path="sektorel-hizmetler/fintech-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFintech}`} replace />} />
+                        <Route path="sektorel-hizmetler/teknoloji-yazilim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralTech}`} replace />} />
+                        <Route path="sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralEnergy}`} replace />} />
+                        <Route path="sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralDesign}`} replace />} />
+                        <Route path="sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFleet}`} replace />} />
+                        <Route path="sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralManufacturing}`} replace />} />
                         <Route path="urunler/maestro-ai" element={<MaestroAI />} />
                         <Route path="hizmetler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
                     </Route>
@@ -252,6 +270,15 @@ function MainContent() {
                     <Route path={`/${slugsTr.sectoralDesign}`} element={<InteriorDesignMarketing />} />
                     <Route path={`/${slugsTr.sectoralFleet}`} element={<FleetRentalMarketing />} />
                     <Route path={`/${slugsTr.sectoralManufacturing}`} element={<ManufacturingMarketing />} />
+                    <Route path="/sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralB2B}`} replace />} />
+                    <Route path="/sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralPayment}`} replace />} />
+                    <Route path="/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFood}`} replace />} />
+                    <Route path="/sektorel-hizmetler/fintech-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFintech}`} replace />} />
+                    <Route path="/sektorel-hizmetler/teknoloji-yazilim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralTech}`} replace />} />
+                    <Route path="/sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralEnergy}`} replace />} />
+                    <Route path="/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralDesign}`} replace />} />
+                    <Route path="/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFleet}`} replace />} />
+                    <Route path="/sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralManufacturing}`} replace />} />
                     <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/courses/odeme-sistemlerinde-buyume-odakli-pazarlama" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />

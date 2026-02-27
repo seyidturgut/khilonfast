@@ -29,7 +29,7 @@ export default function B2BThreeSixtyMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'B2B Firmalar İçin',
+            title: 'B2B Firmalar İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
@@ -342,7 +342,7 @@ export default function B2BThreeSixtyMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For B2B Companies`,
+            title: `360° Marketing Management for B2B Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale B2B pipeline growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

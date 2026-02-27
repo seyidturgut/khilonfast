@@ -30,7 +30,7 @@ export default function PaymentSystemsMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Ödeme Sistemleri İçin',
+            title: 'Ödeme Sistemleri Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'Ödeme sistemlerinde büyümenin sırrını keşfedin. khilonfast ile pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -313,7 +313,7 @@ export default function PaymentSystemsMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For Payment Systems Companies`,
+            title: `360° Marketing Management for Payment Systems Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale payment adoption and retention with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',

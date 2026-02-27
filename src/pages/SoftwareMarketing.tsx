@@ -30,7 +30,7 @@ export default function SoftwareMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Teknoloji & Yazılım Firmaları İçin',
+            title: 'Teknoloji & Yazılım Firmaları İçin 360° Pazarlama Yönetimi',
             subtitle: 'Tek Noktadan Pazarlama Çözümleri',
             description: 'khilonfast ile Teknoloji & Yazılım pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -320,7 +320,7 @@ export default function SoftwareMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For Technology & Software Companies`,
+            title: `360° Marketing Management for Technology & Software Companies`,
             subtitle: 'One-Stop Marketing Solutions',
             description: `Scale SaaS and software growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
