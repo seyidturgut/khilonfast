@@ -1,10 +1,11 @@
-import express from 'express';
+import express from 'express'; // trigger restart
 import db from '../config/database.js';
+import cacheMiddleware from '../middleware/cache.js';
 
 const router = express.Router();
 
 // Get all products
-router.get('/', async (req, res) => {
+router.get('/', cacheMiddleware(3600), async (req, res) => {
     try {
         const [products] = await db.query(
             'SELECT * FROM products WHERE is_active = TRUE ORDER BY category, id'
@@ -17,7 +18,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get product by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', cacheMiddleware(3600), async (req, res) => {
     try {
         const [products] = await db.query('SELECT * FROM products WHERE id = ?', [req.params.id]);
 
@@ -33,7 +34,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Get product by key
-router.get('/key/:key', async (req, res) => {
+router.get('/key/:key', cacheMiddleware(3600), async (req, res) => {
     try {
         const lang = req.query.lang === 'en' ? 'en' : 'tr';
         const key = req.params.key;

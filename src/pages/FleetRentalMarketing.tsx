@@ -30,8 +30,13 @@ export default function FleetRentalMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Filo Kiralama Firmaları İçin 360° Pazarlama Yönetimi',
-            subtitle: 'Tek Noktadan Pazarlama Çözümleri',
+            title: (
+                <>
+                    Filo Kiralama Firmaları İçin<br />
+                    Tek Noktadan Pazarlama Çözümleri
+                </>
+            ),
+            subtitle: '',
             description: 'khilonfast ile Filo Kiralama pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
             buttonLink: '#pricing',
@@ -57,8 +62,13 @@ export default function FleetRentalMarketing() {
             vimeoUrl: 'https://player.vimeo.com/video/1135520021'
         },
         tabsSection: {
-            tag: 'Filo Kiralama Sektörü İçin',
-            title: '360° Stratejik Pazarlama Çözümleri',
+            tag: '',
+            title: (
+                <>
+                    Filo Kiralama Sektörü İçin<br />
+                    360° Stratejik Pazarlama Çözümleri
+                </>
+            ),
             description1: 'Kurumsal mobilite dünyasında markanızı zirveye taşıyacak adımları atın.',
             description2: 'İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın.',
             tabs: [
@@ -105,7 +115,7 @@ export default function FleetRentalMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('maestro')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -135,11 +145,11 @@ export default function FleetRentalMarketing() {
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ border: '1px solid #eef2d0' }}>
                                     <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Pazarlama faaliyetlerine hızlıca başlamaya odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Filo Kiralama sektörü markaları için pazarlama faaliyetlerine hızlıca başlamaya ve sonuç almaya odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital görünürlük ve temel lead generation.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Hızlı kurulum ve operasyonel odak.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Yerel ve orta ölçekli kiralama firmaları.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital pazarlama süreçlerinizi hızlıca devreye alır ve operasyonel yüklerden kurtarır.</li>
+                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> Ekstra toplantılar veya ekip kurma derdi olmadan pazarlama faaliyetlerine hemen başlayabilir, sonuçları kısa sürede görebilirsiniz.</li>
+                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Zaman ve kaynak yönetimini sadeleştirmek isteyen küçük ve orta ölçekli işletmeler.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -147,11 +157,11 @@ export default function FleetRentalMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
                                     <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Büyümeye ve kurumsal portföy genişletmeye odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Filo Kiralama sektörü markaları için büyümeye ve derinlemesine pazarlama çözümlerine odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Sürekli kurumsal talep akışını sağlar.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Veriye dayalı büyüme ve pazar genişletme.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Ulusal çapta hizmet veren kiralama markaları.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital varlığınızı genişletmek ve müşteri tabanınızı büyütmek için dengeli ve sürdürülebilir çözümler sunar.</li>
+                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> İşletmenizin pazarlama etkisini artırarak, büyümeye odaklanmanızı sağlar ve rakiplerinize karşı avantaj kazandırır.</li>
+                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Dijital pazarlamada bir adım ileri gitmek isteyen ve büyümeye yatırım yapmayı hedefleyen işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -159,14 +169,14 @@ export default function FleetRentalMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
                                     <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Sektörel liderlik ve marka prestijine odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Filo Kiralama sektörü markaları için pazarlama süreçlerini en üst seviyeye taşıyan ve marka gücünü maksimize eden çözümlere odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Tam kapsamlı pazar hakimiyeti ve otorite.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Sektör trendlerini belirleyen liderlik stratejisi.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Global veya pazar lideri kiralama devleri.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm pazarlama kanallarını entegre ederek güçlü bir marka stratejisi oluşturur ve kalıcı bir etki yaratır.</li>
+                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> Pazarda lider konuma gelmenizi sağlayacak tam kapsamlı bir strateji ile yüksek seviyede rekabet avantajı sunar.</li>
+                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Tam donanımlı bir pazarlama stratejisiyle sektörde öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <Link to={path('idm')} className="sectoral-btn" style={{ display: 'block', width: '100%', padding: '12px', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -299,7 +309,7 @@ export default function FleetRentalMarketing() {
             role: "Operasyon Direktörü, FleetMaster"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1135520021"
+            vimeoUrl: "https://player.vimeo.com/video/1128822985"
         },
         faqs: [
             {
@@ -321,7 +331,7 @@ export default function FleetRentalMarketing() {
         hero: {
             ...trConfig.hero,
             title: `360° Marketing Management for Fleet Rental Companies`,
-            subtitle: 'One-Stop Marketing Solutions',
+            subtitle: '',
             description: `Scale fleet demand and conversion growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
             badgeText: 'Fleet Rental Companies Growth Engine'
@@ -380,7 +390,7 @@ export default function FleetRentalMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>
@@ -516,5 +526,5 @@ export default function FleetRentalMarketing() {
         } : {})
     }
 
-    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fleet-rental" />
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fleet-rental" disableApiHeroTextOverride={true} disableApiPackages={true} />
 }

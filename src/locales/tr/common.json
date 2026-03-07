@@ -1,8 +1,8 @@
 {
     "pricing": {
-        "monthly": "Ay",
+        "monthly": "ay",
         "buyNow": "Satın Al",
-        "popular": "En Çok Tercih Edilen"
+        "popular": "POPÜLER"
     },
     "process": {
         "steps": {
@@ -229,6 +229,11 @@
             "description": "Markanızın vizyonu, değerleri ve hedefleri ile uyumlu özel pazarlama stratejileri sunarak maksimum etki ve başarı sağlıyoruz."
         }
     },
+    "potentialCTA": {
+        "title": "İşletmenizin Potansiyeline khilonfast ile Ulaşın!",
+        "description": "Size özel yaklaşımımızla, işletmenizin somut sonuçlar elde etmesine ve rakiplerinizin önüne geçmesine yardımcı oluyoruz.",
+        "button": "Bize Ulaşın"
+    },
     "services": {
         "header": {
             "title": "İşletmeniz İçin Kapsamlı Pazarlama Çözümleri"
@@ -317,12 +322,12 @@
             }
         },
         "quote": {
-            "title": "Dijital çağın hızına uyum sağlamayın,",
-            "highlight": "onu yönetmeyi öğrenin!"
+            "title": "Dijital çağın hızına uyum sağlamakla kalmayın;",
+            "highlight": "onu stratejik gücünüzle yönetin."
         },
         "model": {
             "title": "Hizmet Modelimiz",
-            "description": "khilonfast olarak hizmet modelimizi işletmelerin sadece ihtiyaçlarına değil, aynı zamanda büyüme potansiyellerine göre tasarladık.",
+            "description": "khilonfast, işletmelerin pazarlama süreçlerini kolaylaştırmak için tasarlanmış, üyelik temelli bir hizmet modeli sunar. Bu modelle, ajans ve ekip yönetimi yükünden kurtulurken işinizin büyümesi için gerekli strateji ve uygulama hizmetlerini tek elden alabilirsiniz.",
             "sub1": {
                 "title": "Analiz Odaklı",
                 "desc": "Her sürece derinlemesine bir analizle başlar, işletmenizin dijital röntgenini çekeriz. Mevcut durumunuzu anlayıp eksikleri gideririz."
@@ -537,14 +542,14 @@
             "badge": "Yapay Zeka Gücü"
         },
         "videoShowcase": {
-            "tag": "B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "tag": "Pazarlama Ekipleri için Yapay Zeka Asistanı",
             "title": "Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
-            "description": "B2B sektörü için oluşturulmuş; CRM’den PR’a, pazar araştırmasından dijital pazarlamaya kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür."
+            "description": "CRM’den PR’a, pazar araştırmasından dijital pazarlamaya kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür."
         },
         "features": {
             "tag": "Temel Yetenekler",
             "title": "Neden Maestro AI?",
-            "description": "B2B dünyasının karmaşık yapısını anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "description": "Pazarlama süreçlerinin karmaşık yapısını anlayan ve buna uygun çözümler üreten bir stratejist.",
             "items": {
                 "disciplines": {
                     "title": "Farklı Disiplinler Bir Arada",
@@ -552,11 +557,11 @@
                 },
                 "speed": {
                     "title": "Hız Kazandırır",
-                    "desc": "Toplantılar, araştırmalar, yıllar ile oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    "desc": "Toplantılar, araştırmalar ve uzun öğrenme süreçleriyle oluşacak deneyim kazanımını hızlandırır."
                 },
                 "strategist": {
                     "title": "Bilge Stratejist",
-                    "desc": "Endüstriyel Gıda & Şef Çözümleri Sektörü Pazarlama konularında eğitimli"
+                    "desc": "Pazarlama, büyüme ve karar destek süreçlerinde eğitimli"
                 },
                 "results": {
                     "title": "Sonuç Odaklı",
@@ -564,11 +569,11 @@
                 },
                 "memory": {
                     "title": "Bellek",
-                    "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak, turnover nedeniyle bilginin kaybolmasını engeller."
+                    "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz. Kurumsal hafızayı koruyarak, turnover nedeniyle bilginin kaybolmasını engeller."
                 },
                 "guidance": {
-                    "title": "Sektöre Özel Yönlendirme",
-                    "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    "title": "Doğru Yönlendirme",
+                    "desc": "Veri ve bağlama göre sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
                 },
                 "analysis": {
                     "title": "Tarafsız Analiz",
@@ -583,7 +588,7 @@
         "process": {
             "tag": "İşleyiş Süreci",
             "title": "Maestro AI Nasıl Çalışır?",
-            "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "description": "Maestro AI ile pazarlama stratejilerinizi güçlendirin.",
             "steps": {
                 "question": {
                     "title": "Soru",
@@ -606,15 +611,31 @@
         "pricing": {
             "tag": "Planlar",
             "title": "Size Uygun Planı Seçin",
-            "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "description": "Maestro AI ile pazarlama stratejilerinizi güçlendirin.",
             "plans": {
                 "kredili": {
                     "name": "Kredili Maestro",
-                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın."
+                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
+                    "for": {
+                        "title": "Kimler İçin Uygun",
+                        "desc": "Orta ölçekli işletmelerin dijital pazarlama stratejilerini büyütmek ve optimize etmek isteyenler için idealdir. Daha fazla içerik, genişletilmiş reklam bütçesi ve daha gelişmiş raporlama içerir."
+                    },
+                    "why": {
+                        "title": "Neden Tercih Edilmeli",
+                        "desc": "Daha geniş kitlelere ulaşmak ve dijital pazarlama faaliyetlerinizi artırmak için gelişmiş bir çözümdür. Aylık raporlar ve performans izleme ile işletmenizin dijital görünürlüğünü artırın."
+                    }
                 },
                 "growth": {
                     "name": "Sınırsız Maestro",
-                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın."
+                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
+                    "for": {
+                        "title": "Kimler İçin Uygun",
+                        "desc": "Orta ölçekli işletmelerin dijital pazarlama stratejilerini büyütmek ve optimize etmek isteyenler için idealdir. Daha fazla içerik, genişletilmiş reklam bütçesi ve daha gelişmiş raporlama içerir."
+                    },
+                    "why": {
+                        "title": "Neden Tercih Edilmeli",
+                        "desc": "Daha geniş kitlelere ulaşmak ve dijital pazarlama faaliyetlerinizi artırmak için gelişmiş bir çözümdür. Aylık raporlar ve performans izleme ile işletmenizin dijital görünürlüğünü artırın."
+                    }
                 }
             }
         },
@@ -835,7 +856,7 @@
             "growth": {
                 "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
                 "forWho": "Kimler İçin Uygun",
-                "forWhoDesc": "Gelişmiş dijital, içerik ve pazarlama otomasyonu ile satış stratejisiyle büyümeyi hedefleyen orta ölçekli işletmeler için ideal.",
+                "forWhoDesc": "Gelişmiş bir dijital, içerik ve pazarlama otomasyonu, satış stratejisi ile büyümeyi hedefleyen orta ölçekli işletmeler için ideal.",
                 "why": "Neden Tercih Edilmeli",
                 "whyDesc": "Gelişmiş dijital, içerik, pazarlama otomasyonu stratejisi ve satış scripti sayesinde markanızı bir üst seviyeye taşıyın."
             },
@@ -844,7 +865,7 @@
                 "forWho": "Kimler İçin Uygun",
                 "forWhoDesc": "Kapsamlı strateji, marka kimliği ve satış hunisi tasarımıyla kalıcı rekabet avantajı isteyen firmalar için ideal.",
                 "why": "Neden Tercih Edilmeli",
-                "whyDesc": "Growth paketine ek olarak; kurumsal kimlik tasarımı ve satış hunisi şablonlarıyla markanızın gücünü artırın."
+                "whyDesc": "Growth paketine ek olarak; kurumsal kimlik tasarımı, satış hunisi şablonları ile markanızın gücünü artırın."
             }
         },
         "comparison": {
@@ -875,20 +896,20 @@
             "description": "Sadece birkaç adımda pazara giriş stratejinizi oluşturun. Tüm adımlar şeffaf, hızlı ve ölçülebilir şekilde tasarlandı.",
             "steps": {
                 "buy": {
-                    "title": "Adım 1: Satın Al",
+                    "title": "Satın Al",
                     "desc": "İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar."
                 },
                 "brief": {
-                    "title": "Adım 2: Brief Ver",
+                    "title": "Brief Ver",
                     "desc": "Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur."
                 },
                 "analysis": {
-                    "title": "Adım 3: Analiz",
+                    "title": "Analiz",
                     "desc": "khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar."
                 },
                 "approval": {
-                    "title": "Adım 4: Onay",
-                    "desc": "De-brief raporunun onaylanması ile hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
+                    "title": "Onay",
+                    "desc": "De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
                 }
             }
         },
@@ -1005,7 +1026,7 @@
         },
         "pricing": {
             "tag": "Hizmet Paketleri",
-            "title": "360° Dijital Pazarlama Yönetimi",
+            "title": "Bütünleşik Dijital Pazarlama Çözümleri",
             "description": "Tüm pazarlama ihtiyaçlarınızı tek bir yerden karşılayarak operasyonel yüklerden kurtulun.",
             "core": {
                 "desc": "Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.",
@@ -1134,7 +1155,7 @@
         "trainingFleet": "egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
         "trainingFood": "egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
         "maestro": "urunler/maestro-ai",
-        "eyeTracking": "hizmetler/eye-tracking-reklam-analizi",
+        "eyeTracking": "urunler/eye-tracking-reklam-analizi",
         "login": "giris",
         "register": "kayil-ol",
         "dashboard": "dashboard",

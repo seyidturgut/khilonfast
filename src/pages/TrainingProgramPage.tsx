@@ -142,6 +142,17 @@ export default function TrainingProgramPage() {
     const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
 
     useEffect(() => {
+        setCmsContent(null);
+        setCmsAllContent(null);
+        setCmsEditorData(null);
+        setCmsPageId(null);
+        setCmsError('');
+        setActiveFeatureIndex(0);
+        setActiveFaqIndex(0);
+        setCmsSection('hero');
+    }, [cmsSlug, currentLang]);
+
+    useEffect(() => {
         const fetchCms = async () => {
             if (!cmsSlug) return;
             try {
@@ -237,12 +248,16 @@ export default function TrainingProgramPage() {
     }, [canShowCms, cmsSlug, currentLang, API_BASE]);
 
     const isPaymentSystemsTraining = training.productKey === 'training-odeme-sistemlerinde-buyume';
+    const isB2BTraining = training.productKey === 'training-b2b-sektorunde-buyume';
+    const isManufacturingTraining = training.productKey === 'training-uretim-sektorunde-buyume';
     const isFintechTraining = training.productKey === 'training-fintech-sektorunde-buyume';
     const isSoftwareTraining = training.productKey === 'training-teknoloji-yazilim-buyume';
     const isEnergyTraining = training.productKey === 'training-enerji-sektorunde-buyume';
     const isInteriorDesignTraining = training.productKey === 'training-ofis-kurumsal-ic-tasarim-buyume';
     const isFleetRentalTraining = training.productKey === 'training-filo-kiralama-sektorunde-buyume';
     const isIndustrialFoodTraining = training.productKey === 'training-endustriyel-gida-sektorunde-buyume';
+    const lockVideoShowcaseContent = isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining;
+    const lockFeaturesSectionContent = isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining;
 
     const defaultFeatures = isEn
         ? [
@@ -410,6 +425,64 @@ export default function TrainingProgramPage() {
             }
         ];
 
+    const paymentTrainingFeatures = [
+        {
+            title: 'Giriş\nSatışa Giden\nYolun Haritası',
+            description: 'Pazarlama insanla başlar ve doğru akışla güçlenir. Bu derste, pazarlamayı 6 adımda ölçülebilir ve tekrar edilebilir hale getiriyoruz. Hedef kitlenizi anlamayı öğrenin, stratejinizi netleştirin ve satış yolculuğunuz için güçlü bir başlangıç yapın.',
+            icon: <HiRocketLaunch />
+        },
+        {
+            title: 'Hedef Kitle\nKarar Verici ve Onaylayıcıyı Doğru Okumak',
+            description: 'Satış sürecinde başarı, rolleri doğru anlamaktan geçer. Bu derste CEO, CFO, CTO ve e-ticaret yöneticisinin karar dinamiklerini inceliyoruz. Mesajınızı her role uyarlamayı öğrenin ve ödeme sistemlerinde satış sürecinizi daha etkili hale getirin.',
+            icon: <HiUserGroup />
+        },
+        {
+            title: 'Egzersiz\nHedef Kitle Sorunlarını\nNot Etmek',
+            description: 'Hedef kitlenizin sorunlarını anlamak, güçlü bir pazarlamanın temelidir. Bu bölümde kısa bir egzersizle kendi kitlenizin ihtiyaçlarını ve çözüm önerilerinizi netleştiriyorsunuz. Öğrendiklerinizi değer önerisi kurgusuna taşıyarak sonraki adım için hazır hale geliyorsunuz.',
+            icon: <HiPencilSquare />
+        },
+        {
+            title: 'Değer Önerisi\nEthos, Pathos, Logos ile Fark Yaratmak',
+            description: 'Satış önerisi özellikleri anlatır, değer önerisi ise farkı gösterir. Bu bölümde Ethos, Pathos, Logos çerçevesini pazarlama mesajlarına nasıl taşıyacağınızı öğreniyorsunuz. Güveni, duyguyu ve mantığı bir araya getirerek mesajlarınızı daha etkili hale getiriyorsunuz.',
+            icon: <HiPresentationChartLine />
+        },
+        {
+            title: 'Değer Önerisini Kurmak\nPain Point ve\nRol Bazlı Mesaj',
+            description: 'Güçlü bir değer önerisi fikirle değil, sistematik bir kurguyla oluşur. Bu bölümde pain point, çözüm ve Ethos-Pathos-Logos üçlüsünü tablo yöntemiyle uyguluyoruz. CFO, CTO gibi farklı rollere göre mesaj özelleştirmeyi öğrenerek satış sürecinizi güçlendiriyorsunuz.',
+            icon: <HiPuzzlePiece />
+        },
+        {
+            title: 'Satış Hunisi\nMesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+            description: 'Satış hunisi, potansiyel müşterinin farkındalıktan satın almaya uzanan yolculuğunu anlatır. Bu bölümde TOFU, MOFU, BOFU yapısını inceliyoruz. Her aşama için en etkili mesajı ve içeriği nasıl seçeceğinizi öğrenerek doğru zaman-doğru mecra uyumunu kuruyorsunuz.',
+            icon: <HiFunnel />
+        },
+        {
+            title: 'Başlangıç Metrikleri\nBüyümenin Sayısal Pusulası',
+            description: 'Pazarlamanın gerçek başlangıcı fikirler değil, metriklerdir. Bu bölümde CAC, LTV, LTV/CAC oranı, ROAS ve ROI kavramlarını ele alıyoruz. Karar süreçlerini güçlendiren ortak bir dil oluşturmayı öğrenerek pazarlama yatırımlarınızı daha stratejik yönetiyorsunuz.',
+            icon: <HiChartBar />
+        },
+        {
+            title: 'Pazarlamanın\nÜç Net Hedefi\nKazanmak, Derinleşmek, Korumak',
+            description: 'Her pazarlama faaliyeti üç temel amaca hizmet eder: yeni müşteri kazanmak, mevcut müşteriyle derinleşmek ve kaybı önlemek. Bu bölümde bu üç hedefin finansal etkilerini inceliyoruz. Hangi aksiyonun hangi katkıyı sağladığını görerek stratejinizi daha net şekillendiriyorsunuz.',
+            icon: <HiBolt />
+        },
+        {
+            title: 'Web Siteleri\nWeb Sitesindeki\nSayfaların Görevleri',
+            description: 'Web sitesi yalnızca dijital bir vitrin değil, dönüşümün merkezi bir aracıdır. Bu bölümde ana sayfa, ürün, kategori, blog ve landing page yapılarının rolünü ve A/B testleriyle nasıl optimize edileceğini inceliyoruz. Bu dersten sonra: Web sitesindeki her sayfanın işlevini ve müşteri yolculuğundaki yerini kavrayabilir, landing page kurgularında Pathos-Ethos-Logos dengesini nasıl kullanacağınızı görebilirsiniz.',
+            icon: <HiGlobeAlt />
+        },
+        {
+            title: 'Lead Sonrası Akış\nPsikoloji, Zamanlama ve\nÇok Kanallı Temas',
+            description: 'Lead geldikten sonra dönüşümün kaderi hızlı ve doğru temasla belirlenir. Bu bölümde beynin karar yorgunluğu, ilk 5 dakikanın önemi ve Pathos-Ethos-Logos sıralı iletişimi üzerinden lead yönetimini ele alıyoruz. Bu dersten sonra: Lead sonrası sürecin psikolojik dinamiklerini kavrayabilir, zamanlama ve çok kanallı temasın dönüşüm oranlarına etkisini görebilirsiniz.',
+            icon: <HiComputerDesktop />
+        },
+        {
+            title: 'İlk Temastan Satışa\nEtkili İletişim, İtiraz\nYönetimi ve Takip',
+            description: 'Satış süreci üç temel aşamadan oluşur: etkili giriş, hizmet sunumu ve kapanış. Bu bölümde SPIN soruları, itiraz yönetimi ve takip adımlarını ele alıyoruz. Müşteri ihtiyaçlarını açığa çıkarmayı, itirazları fırsata çevirmeyi ve görüşmeleri sistematik biçimde tamamlamayı öğreniyorsunuz.',
+            icon: <HiChatBubbleLeftRight />
+        }
+    ];
+
     const shouldUseAdvancedFeatures =
         isPaymentSystemsTraining ||
         isFintechTraining ||
@@ -438,24 +511,346 @@ export default function TrainingProgramPage() {
         ],
         videoShowcase: {
             tag: isEn ? 'Program Overview' : 'Eğitim Tanıtımı',
-            title: <>{isEn ? 'Applied Training Program Built for Revenue Outcomes' : 'Satışa Giden Yol için Uygulamalı Eğitim Programı'}</>,
-            description: isEn
-                ? 'This program builds a scalable growth system around audience strategy, value proposition, and performance measurement to accelerate your team\'s sales outcomes.'
-                : 'Pazarlama stratejisini hedef kitle, değer önerisi ve ölçümleme odaklı kuran bu program; ekiplerinizi satışa daha hızlı taşıyan sistematik bir yöntem sunar.',
+            title: (
+                <>
+                    {isPaymentSystemsTraining
+                        ? 'Ödeme Sistemlerinde'
+                        : isB2BTraining
+                            ? 'B2B Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isManufacturingTraining
+                            ? 'Üretim Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isEnergyTraining
+                            ? 'Enerji Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isFintechTraining
+                            ? 'Fintech Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isIndustrialFoodTraining
+                            ? 'Endüstriyel Gıda Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isFleetRentalTraining
+                            ? 'Filo Kiralama Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isSoftwareTraining
+                            ? 'Teknoloji & Yazılım Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isInteriorDesignTraining
+                            ? 'Ofis & Kurumsal İç Tasarım Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile'
+                        : isEn
+                            ? 'Applied Training Program Built for Revenue Outcomes'
+                            : 'Satışa Giden Yol için Uygulamalı Eğitim Programı'}
+                    {isPaymentSystemsTraining ? <br /> : null}
+                    {isPaymentSystemsTraining ? 'Bütünleşik Dijital Pazarlama Eğitimi ile' : null}
+                    {isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining ? <br /> : null}
+                    {isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining ? 'Başarıya Ulaşın' : null}
+                </>
+            ),
+            description: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+                ? 'Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.'
+                : isEn
+                    ? 'This program builds a scalable growth system around audience strategy, value proposition, and performance measurement to accelerate your team\'s sales outcomes.'
+                    : 'Pazarlama stratejisini hedef kitle, değer önerisi ve ölçümleme odaklı kuran bu program; ekiplerinizi satışa daha hızlı taşıyan sistematik bir yöntem sunar.',
             videoUrl: ({
-                'training-odeme-sistemlerinde-buyume': 'https://vimeo.com/1133021053?fl=pl&fe=cm',
-                'training-b2b-sektorunde-buyume': 'https://vimeo.com/1133021053?fl=pl&fe=cm',
-                'training-fintech-sektorunde-buyume': 'https://vimeo.com/1135500461?share=copy&fl=sv&fe=ci',
-                'training-teknoloji-yazilim-buyume': 'https://vimeo.com/1135504861'
+                'training-odeme-sistemlerinde-buyume': 'https://vimeo.com/1131284512?fl=pl&fe=cm',
+                'training-b2b-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es',
+                'training-fintech-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es',
+                'training-teknoloji-yazilim-buyume': 'https://vimeo.com/1135504861',
+                'training-uretim-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es',
+                'training-enerji-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es',
+                'training-ofis-kurumsal-ic-tasarim-buyume': 'https://youtu.be/4nYmBbZZ-es',
+                'training-endustriyel-gida-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es',
+                'training-filo-kiralama-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es'
             } as Record<string, string>)[training.productKey] || 'https://player.vimeo.com/video/1045939223'
         },
         featuresSection: {
             tag: isEn ? 'Program Content' : 'Program İçeriği',
-            title: isEn ? 'Modules Included in the Training' : 'Eğitimde Yer Alan Modüller',
-            description: isEn
-                ? 'A field-ready curriculum designed to move teams from strategy to execution.'
-                : 'Temelden uygulamaya uzanan, sahada uygulanabilir eğitim akışı.',
-            features: shouldUseAdvancedFeatures ? advancedFeatures : defaultFeatures
+            title: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+                ? 'Büyüme Odaklı Pazarlama Programı'
+                : isEn
+                    ? 'Modules Included in the Training'
+                    : 'Eğitimde Yer Alan Modüller',
+            description: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+                ? 'Pazarlama yatırımınızın geri dönüşünü artırın!'
+                : isEn
+                    ? 'A field-ready curriculum designed to move teams from strategy to execution.'
+                    : 'Temelden uygulamaya uzanan, sahada uygulanabilir eğitim akışı.',
+            features: isPaymentSystemsTraining ? paymentTrainingFeatures : (shouldUseAdvancedFeatures ? advancedFeatures : defaultFeatures),
+            compact: isPaymentSystemsTraining,
+            introBlock: isPaymentSystemsTraining
+                ? {
+                    title: 'Eğitim İçeriği',
+                    description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                    paragraphs: [
+                        'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, ödeme sistemleri sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                        'Eğitim boyunca:'
+                    ],
+                    bullets: [
+                        'Hedef kitleyi rol bazında (CEO, CFO, CTO, e-ticaret yöneticisi) nasıl okuyabileceğinizi',
+                        'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                        'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                        'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                        'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                    ],
+                    note: 'Bu seri; ödeme sistemleri CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                    listTitle: 'Program Modülleri',
+                    listItems: [
+                        'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                        'Ödeme Sistemlerinde Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                        'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                        'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                        'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                        'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                        'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                        'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                        'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                        'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                        'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                    ]
+                }
+                : isB2BTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, B2B sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, CTO, satın alma ve operasyon yöneticileri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; B2B sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'B2B Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isManufacturingTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, üretim sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, CTO, satın alma ve operasyon yöneticileri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; üretim sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Üretim Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isInteriorDesignTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, ofis ve kurumsal iç tasarım sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, satın alma, proje ve operasyon yöneticileri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; ofis ve kurumsal iç tasarım sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Ofis & Kurumsal İç Tasarım Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isEnergyTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, enerji sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, CTO, satın alma ve operasyon yöneticileri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; enerji sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Enerji Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isSoftwareTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, teknoloji ve yazılım sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CTO, ürün, satın alma ve büyüme ekipleri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; teknoloji ve yazılım sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Teknoloji & Yazılım Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isFintechTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, fintech sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, CTO, ürün ve büyüme ekipleri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; fintech sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Fintech Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isIndustrialFoodTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, endüstriyel gıda sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, satın alma, operasyon ve kanal yöneticileri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; endüstriyel gıda sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Endüstriyel Gıda Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : isFleetRentalTraining
+                    ? {
+                        title: 'Eğitim İçeriği',
+                        description: 'Kapsamlı ve uygulamalı derslerle pazarlama yeteneklerinizi bir üst seviyeye taşıyın.',
+                        paragraphs: [
+                            'Bu eğitim serisi, pazarlamayı ürün ya da teknolojiyle değil, doğrudan hedef kitleyle başlatan sistematik bir çerçeve sunar. Deneyimli CMO Bora Işık’ın perspektifiyle hazırlanmış bu 10+1 bölümlük program, filo kiralama sektöründeki tüm pazarlama ve satış profesyonellerine yönelik tasarlanmıştır.',
+                            'Eğitim boyunca:'
+                        ],
+                        bullets: [
+                            'Hedef kitleyi rol bazında (CEO, CFO, satın alma, operasyon ve mobilite yöneticileri) nasıl okuyabileceğinizi',
+                            'Güçlü değer ve satış önerilerini nasıl kurgulayabileceğinizi',
+                            'Mesajları satış hunisi aşamalarına ve mecralara nasıl uyarlayabileceğinizi',
+                            'Pazarlamanın temel metriklerini (CAC, LTV, ROAS, ROI) nasıl değerlendirebileceğinizi',
+                            'Lead sonrası akışı, satış görüşmelerini ve müşteri deneyimi yönetimini tek bir akış içinde bütüncül olarak ele alırsınız.'
+                        ],
+                        note: 'Bu seri; filo kiralama sektörü CEO/CMO/CSO’ları için stratejik bir bakış açısı, orta ve başlangıç düzeyindeki satış ve pazarlama yönetici ve uzmanları için ise uygulamaya dönük pratik uygulamalar sunar.',
+                        listTitle: 'Program Modülleri',
+                        listItems: [
+                            'Büyüme Odaklı Pazarlamaya Giriş: Satışa Giden Yolun Haritası',
+                            'Filo Kiralama Sektöründe Hedef Kitle: Karar Verici ve Onaylayıcıyı Doğru Okumak',
+                            'Egzersiz: Hedef Kitle Sorunlarını Not Etmek',
+                            'Değer Önerisi: Ethos, Pathos, Logos ile Fark Yaratmak',
+                            'Değer Önerisini Sistematik Kurmak: Pain Point ve Rol Bazlı Mesaj',
+                            'Satış Hunisi: Mesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
+                            'Başlangıç Metrikleri: Büyümenin Sayısal Pusulası',
+                            'Pazarlamanın Üç Net Hedefi: Kazanmak, Derinleşmek, Korumak',
+                            'Web Sitesi ile Büyümek: Web Sitesindeki Sayfaların Görevleri',
+                            'Lead Sonrası Akış: Psikoloji, Zamanlama ve Çok Kanallı Temas',
+                            'İlk Temastan Satışa: Etkili İletişim, İtiraz Yönetimi ve Takip'
+                        ]
+                    }
+                : undefined
         },
         pricingSection: {
             tag: isEn ? 'Registration' : 'Kayıt',
@@ -496,7 +891,75 @@ export default function TrainingProgramPage() {
         },
         heroPriceCard: {
             packageId: training.productKey,
-            priceOnly: true
+            priceOnly: true,
+            ...(isPaymentSystemsTraining
+                ? {
+                    name: 'Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi',
+                    description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
+                    price: '5000TL',
+                    period: '',
+                    features: [
+                        'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                        'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                    ]
+                }
+                : isB2BTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isManufacturingTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isInteriorDesignTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isEnergyTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isSoftwareTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isFintechTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isIndustrialFoodTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : isFleetRentalTraining
+                    ? {
+                        features: [
+                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+                        ]
+                    }
+                : {})
         },
         testimonial: {
             quote: isEn
@@ -524,7 +987,88 @@ export default function TrainingProgramPage() {
                     ? 'Yes. The structure is optimized for team-based adoption and cross-functional execution.'
                     : 'Evet. İçerik ekip içi kullanım için yapılandırılmıştır ve ortak çalışma akışı sağlar.'
             }
-        ]
+        ],
+        audienceTabsSection: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+            ? {
+                title: 'Bu Eğitim Kimler İçin?',
+                tabs: [
+                    {
+                        label: 'CEO',
+                        reasonTitle: 'Neden Bu Eğitim?',
+                        reason: 'Şirketin büyüme yol haritasını anlamak ve pazarlama-satış uyumunu en üst seviyede görmek için.',
+                        outcomeTitle: 'Ne Kazanacaklar?',
+                        outcome: 'Daha net karar alma ve stratejik yatırımlar için ölçülebilir pazarlama verileriyle donanırlar.'
+                    },
+                    {
+                        label: 'CMO',
+                        reasonTitle: 'Neden Bu Eğitim?',
+                        reason: 'Pazarlama bütçesini en verimli şekilde kullanmak ve ROAS/ROI metriklerini iyileştirmek için.',
+                        outcomeTitle: 'Ne Kazanacaklar?',
+                        outcome: 'Veri odaklı kampanyalar oluşturma, hedef kitleye özel mesajlar geliştirme ve satış hunisini optimize etme becerisi kazanırlar.'
+                    },
+                    {
+                        label: 'CSO',
+                        reasonTitle: 'Neden Bu Eğitim?',
+                        reason: 'Satış ekibinin pazarlama hunisinden gelen lead’leri daha yüksek oranda kapatmasını sağlamak için.',
+                        outcomeTitle: 'Ne Kazanacaklar?',
+                        outcome: 'Pazarlama ve satış arasındaki dil birliğini sağlar, itiraz yönetimi ve etkili takip teknikleriyle donanırlar.'
+                    },
+                    {
+                        label: 'Pazarlama ve Satış Yöneticileri',
+                        reasonTitle: 'Neden Bu Eğitim?',
+                        reason: 'Ekiplerini ortak bir hedef doğrultusunda yönetmek ve bütünleşik bir büyüme stratejisi uygulamak için.',
+                        outcomeTitle: 'Ne Kazanacaklar?',
+                        outcome: 'Liderlik becerilerini geliştirir, performans metriklerini yorumlayarak ekiplerine yol gösterir ve motive ederler.'
+                    },
+                    {
+                        label: 'Pazarlama ve Satış Uzmanları',
+                        reasonTitle: 'Neden Bu Eğitim?',
+                        reason: 'Ekiplerini ortak bir hedef doğrultusunda yönetmek ve bütünleşik bir büyüme stratejisi uygulamak için.',
+                        outcomeTitle: 'Ne Kazanacaklar?',
+                        outcome: 'Liderlik becerilerini geliştirir, performans metriklerini yorumlayarak ekiplerine yol gösterir ve motive ederler.'
+                    }
+                ]
+            }
+            : undefined,
+        approachSection: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+            ? {
+                compact: true,
+                items: [
+                    {
+                        title: 'Satışa\nGiden Yol',
+                        subtitle: '',
+                        description: 'Müşteri kazanımına giden ilk adımları keşfederek pazarlama ve büyüme odaklı giriş stratejilerini öğrenirsiniz.',
+                        image: isFleetRentalTraining ? '/fleet-rental-hero.png' : isB2BTraining ? '/b2b2.avif' : isIndustrialFoodTraining ? '/industrial-food-hero.png' : isFintechTraining ? '/fintech-hero.png' : isSoftwareTraining ? '/software-hero.png' : isEnergyTraining ? '/energy-hero.png' : isInteriorDesignTraining ? '/interior-design-hero.png' : '/growth_strategies_handshake.png',
+                        buttonText: 'Satın Al',
+                        buttonLink: '#pricing'
+                    },
+                    {
+                        title: 'Strateji, Hedef Kitle Ve\nDeğer Önerisi',
+                        subtitle: '',
+                        description: 'Doğru mesajları oluşturmayı ve hedef kitleye net bir değer önerisiyle ulaşmayı keşfedersiniz.',
+                        image: isFleetRentalTraining ? '/innovation_difference.png' : isB2BTraining ? '/innovation_difference.png' : isIndustrialFoodTraining ? '/about-hero.png' : isFintechTraining ? '/innovation_difference.png' : isSoftwareTraining ? '/innovation_difference.png' : isEnergyTraining ? '/about-hero.png' : isInteriorDesignTraining ? '/about-hero.png' : isManufacturingTraining ? '/manufacturing-hero.png' : '/data_driven_marketing.png',
+                        buttonText: 'Satın Al',
+                        buttonLink: '#pricing'
+                    },
+                    {
+                        title: 'Ölçüm Ve\nHedefler',
+                        subtitle: '',
+                        description: 'Başarıyı belirleyen metrikleri analiz ederek, büyüme odaklı pazarlama stratejilerini şekillendirmeyi öğrenirsiniz.',
+                        image: isFleetRentalTraining ? '/data_driven_marketing.png' : isB2BTraining ? '/data_driven_marketing.png' : isIndustrialFoodTraining ? '/why-khilon.png' : isFintechTraining ? '/data_driven_marketing.png' : isSoftwareTraining ? '/data_driven_marketing.png' : isEnergyTraining ? '/why-khilon.png' : isInteriorDesignTraining ? '/why-khilon.png' : '/potential-cta.png',
+                        buttonText: 'Satın Al',
+                        buttonLink: '#pricing'
+                    },
+                    {
+                        title: 'Dijital Altyapı\nVe Satış',
+                        subtitle: '',
+                        description: 'Dijital altyapıdan lead toplamaya ve satışa kadar tüm süreci uçtan uca pazarlama-satış entegrasyonuyla görürsünüz.',
+                        image: isFleetRentalTraining ? '/service-model.png' : isB2BTraining ? '/service-model.png' : isIndustrialFoodTraining ? '/service-model.png' : isFintechTraining ? '/service-model.png' : isSoftwareTraining ? '/service-model.png' : isEnergyTraining ? '/service-model.png' : isInteriorDesignTraining ? '/service-model.png' : isManufacturingTraining ? '/service-model.png' : '/hero-image.png',
+                        buttonText: 'Satın Al',
+                        buttonLink: '#pricing'
+                    }
+                ]
+            }
+            : undefined
     };
 
     const useOrFallback = (value: any, fallback: any) =>
@@ -545,23 +1089,40 @@ export default function TrainingProgramPage() {
             },
             videoShowcase: {
                 ...baseConfig.videoShowcase,
-                tag: useOrFallback(cmsContent?.videoShowcase?.tag, baseConfig.videoShowcase.tag),
-                title: <>{useOrFallback(cmsContent?.videoShowcase?.title, baseConfig.videoShowcase.title)}</>,
-                description: useOrFallback(cmsContent?.videoShowcase?.description, baseConfig.videoShowcase.description),
-                videoUrl: useOrFallback(cmsContent?.videoShowcase?.videoUrl, baseConfig.videoShowcase.videoUrl)
+                tag: lockVideoShowcaseContent
+                    ? baseConfig.videoShowcase.tag
+                    : useOrFallback(cmsContent?.videoShowcase?.tag, baseConfig.videoShowcase.tag),
+                title: lockVideoShowcaseContent
+                    ? baseConfig.videoShowcase.title
+                    : <>{useOrFallback(cmsContent?.videoShowcase?.title, baseConfig.videoShowcase.title)}</>,
+                description: lockVideoShowcaseContent
+                    ? baseConfig.videoShowcase.description
+                    : useOrFallback(cmsContent?.videoShowcase?.description, baseConfig.videoShowcase.description),
+                videoUrl: lockVideoShowcaseContent
+                    ? baseConfig.videoShowcase.videoUrl
+                    : useOrFallback(cmsContent?.videoShowcase?.videoUrl, baseConfig.videoShowcase.videoUrl)
             },
             featuresSection: {
                 ...baseConfig.featuresSection,
-                tag: useOrFallback(cmsContent?.featuresSection?.tag, baseConfig.featuresSection?.tag),
-                title: useOrFallback(cmsContent?.featuresSection?.title, baseConfig.featuresSection?.title),
-                description: useOrFallback(cmsContent?.featuresSection?.description, baseConfig.featuresSection?.description),
-                features: Array.isArray(cmsContent?.featuresSection?.features) && cmsContent.featuresSection.features.length > 0
-                    ? cmsContent.featuresSection.features.map((f: any, idx: number) => ({
-                        title: f.title,
-                        description: f.description,
-                        icon: (baseConfig.featuresSection?.features?.[idx]?.icon) || baseConfig.featuresSection?.features?.[0]?.icon
-                    }))
-                    : baseConfig.featuresSection?.features
+                tag: lockFeaturesSectionContent
+                    ? baseConfig.featuresSection?.tag
+                    : useOrFallback(cmsContent?.featuresSection?.tag, baseConfig.featuresSection?.tag),
+                title: lockFeaturesSectionContent
+                    ? baseConfig.featuresSection?.title
+                    : useOrFallback(cmsContent?.featuresSection?.title, baseConfig.featuresSection?.title),
+                description: lockFeaturesSectionContent
+                    ? baseConfig.featuresSection?.description
+                    : useOrFallback(cmsContent?.featuresSection?.description, baseConfig.featuresSection?.description),
+                compact: baseConfig.featuresSection?.compact,
+                features: lockFeaturesSectionContent
+                    ? baseConfig.featuresSection?.features
+                    : Array.isArray(cmsContent?.featuresSection?.features) && cmsContent.featuresSection.features.length > 0
+                        ? cmsContent.featuresSection.features.map((f: any, idx: number) => ({
+                            title: f.title,
+                            description: f.description,
+                            icon: (baseConfig.featuresSection?.features?.[idx]?.icon) || baseConfig.featuresSection?.features?.[0]?.icon
+                        }))
+                        : baseConfig.featuresSection?.features
             },
             pricingSection: {
                 ...baseConfig.pricingSection,

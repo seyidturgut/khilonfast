@@ -19,7 +19,7 @@ export interface TabConfig {
 
 export interface SectoralSolutionProps {
     hero: {
-        title: string;
+        title: ReactNode | string;
         subtitle: string;
         description: string;
         buttonText: string;
@@ -43,7 +43,7 @@ export interface SectoralSolutionProps {
     };
     tabsSection: {
         tag: string;
-        title: string;
+        title: ReactNode | string;
         description1: string;
         description2: string;
         tabs: TabConfig[];
@@ -65,6 +65,8 @@ export interface SectoralSolutionProps {
         description: string;
     };
     serviceKey?: string;
+    disableApiHeroTextOverride?: boolean;
+    disableApiPackages?: boolean;
 }
 
 export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
@@ -113,7 +115,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
 
     const defaultEditorData = {
         hero: {
-            title: dynamicHero.title,
+            title: typeof dynamicHero.title === 'string' ? dynamicHero.title : '',
             subtitle: dynamicHero.subtitle,
             description: dynamicHero.description,
             image: dynamicHero.image,
@@ -197,7 +199,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                             Authorization: `Bearer ${token}`
                         },
                         body: JSON.stringify({
-                            title: dynamicHero.title || cmsSlug,
+                            title: typeof dynamicHero.title === 'string' ? dynamicHero.title : cmsSlug,
                             slug: cmsSlug,
                             meta_title: '',
                             meta_description: ''
@@ -266,7 +268,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
     }, [cmsEditorData?.faqs, activeFaqIndex]);
 
     useEffect(() => {
-        if (props.serviceKey) {
+        if (props.serviceKey && !props.disableApiPackages) {
             const fetchPackages = async () => {
                 try {
                     const fetchByLang = async (lang: string) => {
@@ -380,7 +382,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                         Authorization: `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        title: dynamicHero.title || cmsSlug,
+                        title: typeof dynamicHero.title === 'string' ? dynamicHero.title : cmsSlug,
                         slug: cmsSlug,
                         meta_title: '',
                         meta_description: ''
@@ -417,6 +419,14 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                     ? cmsContent[currentLang]
                     : cmsContent;
             if (!localizedCms) return dynamicHero;
+
+            if (props.disableApiHeroTextOverride) {
+                return {
+                    ...dynamicHero,
+                    image: useOrFallback(localizedCms?.hero?.image, dynamicHero.image)
+                };
+            }
+
             return {
                 ...dynamicHero,
                 title: useOrFallback(localizedCms?.hero?.title, dynamicHero.title),
@@ -501,7 +511,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
         const tab = props.tabsSection.tabs.find(t => t.id === activeTab)
         if (!tab) return null;
 
-        if (tab.id === 'packages' && props.serviceKey && dynamicPackages.length > 0) {
+        if (tab.id === 'packages' && props.serviceKey && !props.disableApiPackages && dynamicPackages.length > 0) {
             return (
                 <div className="sectoral-tabs-content">
                     <div style={{ textAlign: 'center', marginBottom: '25px' }}>
@@ -544,7 +554,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
             );
         }
 
-        if (tab.id === 'packages' && props.serviceKey && dynamicPackages.length === 0) {
+        if (tab.id === 'packages' && props.serviceKey && !props.disableApiPackages && dynamicPackages.length === 0) {
             return (
                 <div className="sectoral-tabs-content">
                     <div style={{ textAlign: 'center', marginBottom: '20px' }}>
@@ -643,8 +653,8 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
             <section className="sectoral-tabs-section" id="pricing">
                 <div className="container">
                     <div className="pricing-header" style={{ marginBottom: '40px', textAlign: 'center' }}>
-                        <span className="showcase-tag" style={{ display: 'inline-block', marginBottom: '10px' }}>{props.tabsSection.tag}</span>
-                        <h2 className="pricing-title" style={{ fontSize: '2.5rem', fontWeight: '800', color: '#1a3a52', marginBottom: '20px' }}>
+                        <h2 className="section-title-large" style={{ color: '#1a3a52', marginBottom: '20px' }}>
+                            <span className="showcase-tag" style={{ display: 'block', marginBottom: '10px' }}>{props.tabsSection.tag}</span>
                             {props.tabsSection.title}
                         </h2>
                         <p className="pricing-description" style={{ fontSize: '1.15rem', color: '#4b5563', maxWidth: '800px', margin: '0 auto 15px' }}>

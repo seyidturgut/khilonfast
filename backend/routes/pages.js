@@ -1,10 +1,11 @@
 import express from 'express';
 import db from '../config/database.js';
+import cacheMiddleware from '../middleware/cache.js';
 
 const router = express.Router();
 
 // Public: Get published page content by slug
-router.get('/slug/:slug(*)', async (req, res) => {
+router.get('/slug/:slug(*)', cacheMiddleware(3600), async (req, res) => {
     const slug = decodeURIComponent(req.params.slug || '');
     const lang = (req.query.lang || 'tr').toString().toLowerCase();
 

@@ -5,12 +5,16 @@ import {
     HiKey,
     HiTrophy,
     HiMagnifyingGlass,
-    HiChatBubbleLeftRight,
     HiUserGroup,
     HiCheckBadge,
     HiPresentationChartLine,
     HiRocketLaunch,
-    HiSignal
+    HiShoppingCart,
+    HiClipboardDocumentList,
+    HiGlobeAlt,
+    HiArrowTrendingUp,
+    HiChartPie,
+    HiSparkles
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
@@ -52,77 +56,118 @@ export default function SocialMediaAds() {
             videoUrl: 'https://www.youtube.com/embed/1rp63c8i-20'
         },
         approachSection: {
-            title: 'Stratejik Kampanya Yönetimi',
-            description: 'Doğru platform, doğru hedefleme, maksimum etkileşim.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'khilonfast Yaklaşımı' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'Her adımda sürdürülebilir büyüme odaklı çalışıyoruz.' }),
             items: [
                 {
-                    title: 'Platform Analizi',
-                    subtitle: 'Kanal Seçimi',
-                    description: 'Markanız için en doğru sosyal medya kanallarını (Meta, LinkedIn, TikTok) analiz ediyor ve bütçenizi oraya yönlendiriyoruz.',
-                    icon: <HiMagnifyingGlass />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360 Derece Bakış Açısı' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Bütünleşik Strateji' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'Her detayı bütünsel bir bakış açısıyla inceliyoruz.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'Hedef Kitle Optimizasyonu',
-                    subtitle: 'Nokta Atışı Erişim',
-                    description: 'Demografik ve davranışsal verilerle doğru kişilere doğru mesajla ulaşmanızı sağlıyor, boşa harcamayı önlüyoruz.',
-                    icon: <HiUserGroup />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Büyüme Odaklı Stratejiler' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performans Yönetimi' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'Hedeflerinizi hızlıca yakalamak için büyümenizi ölçümlüyoruz.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Kreatif Denetim',
-                    subtitle: 'Görsel Etki',
-                    description: 'Reklam görsellerinizin ve metinlerinizin performansını analiz ediyor, tıklama oranlarını (CTR) artıracak öneriler sunuyoruz.',
-                    icon: <HiChatBubbleLeftRight />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Veri Odaklı Pazarlama' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Geniş İçgörüler' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'Kanıtlanmış verilerle risk almadan hareket ediyoruz.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'Veri Odaklı Yönetim',
-                    subtitle: 'Ölçülebilir Başarı',
-                    description: 'Her etkileşimi ve dönüşümü takip ediyor, kampanyaları veriye dayalı içgörülerle optimize ediyoruz.',
-                    icon: <HiPresentationChartLine />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'İnovasyon ile Fark' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Yenilikçi Teknikler' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Sektördeki en modern teknoloji araçlarıyla rakiplerden ayrışın.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Remarketing',
-                    subtitle: 'Tekrar Hedefleme',
-                    description: 'Sitenizi ziyaret eden ancak satın almayan kullanıcıları tekrar hedefleyerek dönüşüm şansını artırıyoruz.',
-                    icon: <HiSignal />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Stratejik İş Ortağı' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Uzun Vadeli Başarı' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'Müşterilerimizi kısa süreli değil uzun dönemli hedeflerle destekliyoruz.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
         processSection: {
-            tag: '4 Adımda Sosyal Medya',
-            title: 'Nasıl Çalışır?',
-            description: 'Sosyal medya varlığınızı güçlendirmek için izlediğimiz kanıtlanmış yol haritası.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            tag: 'Nasıl Çalışır?',
+            title: 'Hizmet Süreci',
+            description: 'Sosyal medya varlığınızı güçlendirmek için izlediğimiz 5 adımlı yol haritası.',
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Adım 1: Analiz & Persona',
-                    description: 'Hedef kitlenizi ve rakiplerinizi analiz eder, ideal müşteri profilini (persona) oluştururuz.',
-                    icon: <HiMagnifyingGlass />
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Adım 2: Medya Planı',
-                    description: 'Hangi platformda, ne zaman ve nasıl reklam çıkılacağını belirleyen stratejik planı hazırlarız.',
-                    icon: <HiPresentationChartLine />
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Adım 3: Kampanya Kurulumu',
-                    description: 'Görselleri ve metinleri hazırlar, reklam setlerini oluşturur ve yayına alırız.',
-                    icon: <HiRocketLaunch />
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Adım 4: Rapor & Scale',
-                    description: 'Sonuçları analiz eder, başarılı kampanyaları ölçeklendirir (scale) ve düzenli raporlarız.',
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    stepNumber: 5,
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
                     icon: <HiCheckBadge />
+                }
+            ]
+        },
+        authorizationSection: {
+            title: "Sosyal Medya Hesapları Yetkilendirme Adımları",
+            description: "Aldığınız hizmet paketine uygun olarak, aşağıda yer alan sosyal medya platformlarının yetkilendirme adımlarını bulabilirsiniz. Bu adımlar, kampanyalarınızın doğru platformlarda etkin biçimde yönetilmesi için gereklidir.",
+            cards: [
+                {
+                    title: "LinkedIn Reklamları",
+                    description: "Hizmeti başlatmak için LinkedIn Ads erişimlerini tanımlayın.",
+                    highlightText: "B2B hedef kitlenizle doğru temas noktalarında buluşun.",
+                    buttonText: "KEŞFET",
+                    buttonLink: "/linkedin-reklamlari-kurulum-akisi-khilonfast",
+                    theme: "light" as const
+                },
+                {
+                    title: "TikTok Reklamları",
+                    description: "Hizmeti başlatmak için TikTok For Business kurulumunu tamamlayın.",
+                    highlightText: "Z kuşağı ve dinamik kitlelere yaratıcı içeriklerle ulaşın.",
+                    buttonText: "KEŞFET",
+                    buttonLink: "/tiktok-kurulum-akisi",
+                    theme: "dark" as const
+                },
+                {
+                    title: "Meta (Facebook & Instagram) Reklamları",
+                    description: "Hizmeti başlatmak için Meta Business Suite erişimlerini tanımlayın.",
+                    highlightText: "Geniş kitlelere ulaşarak marka bilinirliğinizi ve satışlarınızı artırın.",
+                    buttonText: "KEŞFET",
+                    buttonLink: "/meta-facebook-instagram-reklamlari-kurulum-akisi",
+                    theme: "light" as const
                 }
             ]
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
-            title: 'Platform Odaklı Paketler',
-            description: 'khilonfast ile Meta, LinkedIn ve TikTok reklamlarınızı tek bir noktadan profesyonelce yönetin.',
+            title: 'Sosyal Medya Reklam Çözümleri',
+            description: 'Markanızı sosyal medyada büyütmek için en uygun adımları atın. khilonfast ile sosyal medya reklam kampanyalarınızı hemen başlatın. İster yeni başlayın ister genişletmek isteyin, size uygun bir çözüm var.',
             packages: [
                 {
                     id: 'core',
@@ -197,38 +242,43 @@ export default function SocialMediaAds() {
             videoUrl: 'https://www.youtube.com/embed/1rp63c8i-20'
         },
         approachSection: {
-            title: 'Performance-Led Campaign Management',
-            description: 'Right platform, right message, right audience.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'The khilonfast Approach' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'We focus on sustainable growth at every step.' }),
             items: [
                 {
-                    title: 'Channel Intelligence',
-                    subtitle: 'Platform Fit',
-                    description: 'We identify the highest-value platforms for your brand and align media spend with conversion potential.',
-                    icon: <HiMagnifyingGlass />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360-Degree Perspective' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Integrated Strategy' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'We analyze every detail with a holistic perspective.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'Audience Optimization',
-                    subtitle: 'Precision Targeting',
-                    description: 'Behavioral and demographic segmentation ensures your message reaches the people most likely to convert.',
-                    icon: <HiUserGroup />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Growth-Driven Strategies' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performance Management' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'We measure your growth to reach your goals quickly.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Creative Performance Audit',
-                    subtitle: 'CTR Uplift',
-                    description: 'We continuously test visuals and copy to improve click-through rates and lower acquisition costs.',
-                    icon: <HiChatBubbleLeftRight />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Data-Driven Marketing' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Broad Insights' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'We move without risk using proven data.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'Data-Led Optimization',
-                    subtitle: 'Measurable Growth',
-                    description: 'Each conversion signal is tracked and translated into weekly optimization actions.',
-                    icon: <HiPresentationChartLine />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'Making a Difference with Innovation' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Innovative Techniques' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Stand out from competitors with the most modern tech tools in the industry.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Remarketing Systems',
-                    subtitle: 'Recovery Campaigns',
-                    description: 'Re-engage high-intent users who visited but did not convert to maximize return on ad spend.',
-                    icon: <HiSignal />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Strategic Partner' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Long-Term Success' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'We support our clients with long-term goals, not short-term ones.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
@@ -261,6 +311,36 @@ export default function SocialMediaAds() {
                     title: 'Step 4: Reporting & Scale',
                     description: 'We prioritize winners, scale profitable segments, and report progress transparently.',
                     icon: <HiCheckBadge />
+                }
+            ]
+        },
+        authorizationSection: {
+            title: "Social Media Account Authorization Steps",
+            description: "Depending on your service package, find the authorization steps for social media platforms below. These steps are essential for effectively managing your campaigns across the right platforms.",
+            cards: [
+                {
+                    title: "LinkedIn Ads",
+                    description: "Define LinkedIn Ads access to start the service.",
+                    highlightText: "Meet your B2B audience at the right touchpoints.",
+                    buttonText: "EXPLORE",
+                    buttonLink: "/linkedin-reklamlari-kurulum-akisi-khilonfast",
+                    theme: "light" as const
+                },
+                {
+                    title: "TikTok Ads",
+                    description: "Complete TikTok For Business setup to start the service.",
+                    highlightText: "Reach Gen Z and dynamic audiences with creative content.",
+                    buttonText: "EXPLORE",
+                    buttonLink: "/tiktok-kurulum-akisi",
+                    theme: "dark" as const
+                },
+                {
+                    title: "Meta (Facebook & Instagram) Ads",
+                    description: "Define Meta Business Suite access to start the service.",
+                    highlightText: "Increase brand awareness and sales by reaching broad audiences.",
+                    buttonText: "EXPLORE",
+                    buttonLink: "/meta-facebook-instagram-reklamlari-kurulum-akisi",
+                    theme: "light" as const
                 }
             ]
         },
@@ -314,5 +394,5 @@ export default function SocialMediaAds() {
         ]
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-social-ads" />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-social-ads" disableApiHeroTextOverride={true} />
 }

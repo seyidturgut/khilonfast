@@ -65,7 +65,7 @@ function frontendSlugMapByKey()
         'service-fleet-rental' => ['tr' => 'sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/fleet-rental-companies-360-marketing-management'],
         'service-manufacturing' => ['tr' => 'sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi', 'en' => 'sectoral-services/manufacturing-companies-360-marketing-management'],
         'service-maestro-ai' => ['tr' => 'urunler/maestro-ai', 'en' => 'products/maestro-ai'],
-        'service-eye-tracking' => ['tr' => 'hizmetler/eye-tracking-reklam-analizi', 'en' => 'services/eye-tracking-ad-analysis'],
+        'service-eye-tracking' => ['tr' => 'urunler/eye-tracking-reklam-analizi', 'en' => 'products/eye-tracking-ad-analysis'],
     ];
 }
 

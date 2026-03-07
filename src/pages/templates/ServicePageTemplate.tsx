@@ -26,6 +26,7 @@ export interface PricingPackage {
     description: string;
     features: (string | ReactNode)[];
     isPopular?: boolean;
+    isPremium?: boolean;
     buttonText?: string;
     buttonLink?: string;
     icon?: ReactNode;
@@ -76,7 +77,10 @@ export interface ApproachItem {
     title: string;
     subtitle: string;
     description: string;
-    icon: ReactNode;
+    icon?: ReactNode;
+    image?: string;
+    buttonText?: string;
+    buttonLink?: string;
 }
 
 export interface ApproachSection {
@@ -84,8 +88,17 @@ export interface ApproachSection {
     title?: string;
     description?: string;
     items: ApproachItem[];
+    compact?: boolean;
 }
 
+
+export interface BannerSection {
+    title: ReactNode | string;
+    description: ReactNode | string;
+    buttonText?: string;
+    buttonLink?: string;
+    image?: string;
+}
 
 export interface AuthorizationCard {
     title: string;
@@ -100,6 +113,21 @@ export interface AuthorizationSection {
     title: string;
     description: string;
     cards: AuthorizationCard[];
+}
+
+export interface AudienceTabItem {
+    label: string;
+    reasonTitle: string;
+    reason: string;
+    outcomeTitle: string;
+    outcome: string;
+}
+
+export interface AudienceTabsSection {
+    tag?: string;
+    title: string;
+    description?: string;
+    tabs: AudienceTabItem[];
 }
 
 export interface ServicePageProps {
@@ -131,6 +159,16 @@ export interface ServicePageProps {
         title: string;
         description: string;
         features: ServiceFeature[];
+        compact?: boolean;
+        introBlock?: {
+            title: string;
+            description: string;
+            paragraphs?: string[];
+            bullets?: string[];
+            note?: string;
+            listTitle?: string;
+            listItems?: string[];
+        };
     };
     pricingSection: {
         tag: string;
@@ -141,11 +179,20 @@ export interface ServicePageProps {
     heroPriceCard?: {
         packageId?: string;
         priceOnly?: boolean;
+        name?: string;
+        price?: string;
+        period?: string;
+        description?: string;
+        features?: (string | ReactNode)[];
+        buttonText?: string;
+        icon?: ReactNode;
     };
     comparisonTable?: ComparisonTable;
     processSection?: ProcessSection;
+    afterProcessBanner?: BannerSection;
     authorizationSection?: AuthorizationSection;
     approachSection?: ApproachSection;
+    audienceTabsSection?: AudienceTabsSection;
     testimonial: {
         quote: string;
         author: string;
@@ -195,6 +242,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     const [cmsSection, setCmsSection] = useState<'hero' | 'video' | 'features' | 'faqs'>('hero');
     const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
     const [activeFaqIndex, setActiveFaqIndex] = useState(0);
+    const [activeAudienceTabIndex, setActiveAudienceTabIndex] = useState(0);
     const [cmsLoading, setCmsLoading] = useState(false);
     const [cmsSaving, setCmsSaving] = useState(false);
     const [cmsError, setCmsError] = useState('');
@@ -303,6 +351,19 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         },
         faqs: (props.faqs || []).map((f) => ({ question: f.question, answer: f.answer }))
     };
+
+    useEffect(() => {
+        setCmsContent(null);
+        setCmsAllContent(null);
+        setCmsEditorData(null);
+        setCmsPageId(null);
+        setCmsError('');
+        setActiveFeatureIndex(0);
+        setActiveFaqIndex(0);
+        setActiveAudienceTabIndex(0);
+        setDynamicHero(props.hero);
+        setDynamicPackages(props.serviceKey ? [] : props.pricingSection.packages);
+    }, [cmsSlug, currentLang, props.hero, props.pricingSection.packages, props.serviceKey]);
 
     // Keep UI text state in sync when parent props change (including CMS edits).
     useEffect(() => {
@@ -488,28 +549,32 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     ? (primaryPackageMap.get(pkg.product_key) || pkg)
                                     : pkg;
 
+                                const localPkg = (props.pricingSection.packages.find(p => pkg.product_key.includes(p.id)) || {}) as any;
+
                                 return ({
-                                id: pkg.product_key,
-                                productKey: pkg.product_key,
-                                fullName: localizedPkg.name,
-                                name: localizedPkg.name?.includes('-') ? localizedPkg.name.split('-').pop()?.trim() : localizedPkg.name,
-                                price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: pkg.currency, maximumFractionDigits: 0 }).format(pkg.price) + '*',
-                                period: pkg.duration_days ? (currentLang === 'tr' ? `${pkg.duration_days} Gün` : `${pkg.duration_days} Days`) : t('pricing.monthly'),
-                                description: localizedPkg.description || props.pricingSection.description,
-                                features: localizedPkg.features ? localizedPkg.features.split('\n') : [],
-                                isPopular: pkg.product_key.includes('growth'),
-                                buttonText: t('pricing.buyNow'),
-                                icon: props.pricingSection.packages.find(p => p.id === 'core')?.icon
+                                    ...localPkg,
+                                    id: pkg.product_key,
+                                    productKey: pkg.product_key,
+                                    fullName: localizedPkg.name || localPkg.name,
+                                    name: localPkg.name || (localizedPkg.name?.includes('-') ? localizedPkg.name.split('-').pop()?.trim() : localizedPkg.name),
+                                    price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: pkg.currency, maximumFractionDigits: 0 }).format(pkg.price) + '*',
+                                    period: pkg.duration_days ? (currentLang === 'tr' ? `${pkg.duration_days} Gün` : `${pkg.duration_days} Days`) : (localPkg.period || t('pricing.monthly')),
+                                    description: localizedPkg.description || localPkg.description || props.pricingSection.description,
+                                    features: (localPkg.features && localPkg.features.length > 0) ? localPkg.features : (localizedPkg.features ? localizedPkg.features.split('\n') : []),
+                                    isPopular: pkg.product_key.includes('growth') || localPkg.isPopular,
+                                    buttonText: localPkg.buttonText || t('pricing.buyNow'),
+                                    icon: localPkg.icon || props.pricingSection.packages[0]?.icon
                                 });
                             });
                             setDynamicPackages(packages);
                         } else if (typeof product.price !== 'undefined' && product.price !== null) {
                             const textProduct = primaryProduct || fallbackProduct || product;
                             const priceProduct = fallbackProduct || primaryProduct || product;
+                            const localPkg = props.pricingSection.packages[0] || {} as any;
                             const fallbackPackage: PricingPackage = {
                                 id: priceProduct.product_key || props.heroPriceCard?.packageId || 'single',
                                 productKey: priceProduct.product_key || undefined,
-                                name: textProduct.name || props.pricingSection.packages[0]?.name || 'Package',
+                                name: localPkg.name || textProduct.name || 'Package',
                                 price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', {
                                     style: 'currency',
                                     currency: priceProduct.currency || 'TRY',
@@ -517,11 +582,12 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 }).format(Number(priceProduct.price)) + '*',
                                 period: priceProduct.duration_days
                                     ? (currentLang === 'tr' ? `${priceProduct.duration_days} Gün` : `${priceProduct.duration_days} Days`)
-                                    : t('pricing.monthly'),
-                                description: textProduct.description || props.pricingSection.description,
-                                features: textProduct.features ? String(textProduct.features).split('\n') : [],
-                                buttonText: t('pricing.buyNow'),
-                                icon: props.pricingSection.packages[0]?.icon
+                                    : (localPkg.period || t('pricing.monthly')),
+                                description: localPkg.description || textProduct.description || props.pricingSection.description,
+                                features: (localPkg.features && localPkg.features.length > 0) ? localPkg.features : (textProduct.features ? String(textProduct.features).split('\n') : []),
+                                details: localPkg.details,
+                                buttonText: localPkg.buttonText || t('pricing.buyNow'),
+                                icon: localPkg.icon || props.pricingSection.packages[0]?.icon
                             };
                             setDynamicPackages([fallbackPackage]);
                         }
@@ -532,7 +598,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
             };
             fetchPackages();
         }
-    }, [props.serviceKey, props.disableApiHeroTextOverride, i18n.language]);
+    }, [props.serviceKey, props.disableApiHeroTextOverride, currentLang, t, props.pricingSection.description, props.pricingSection.packages, props.heroPriceCard?.packageId]);
 
     const displayPackages = props.serviceKey ? dynamicPackages : props.pricingSection.packages;
 
@@ -927,6 +993,18 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         ? displayPackages.find((pkg) => pkg.id === props.heroPriceCard?.packageId) || displayPackages[0]
         : null;
     const isHeroPriceOnly = Boolean(props.heroPriceCard?.priceOnly);
+    const displayedHeroPricePackage = heroPricePackage
+        ? {
+            ...heroPricePackage,
+            name: props.heroPriceCard?.name ?? heroPricePackage.name,
+            price: props.heroPriceCard?.price ?? heroPricePackage.price,
+            period: props.heroPriceCard?.period ?? heroPricePackage.period,
+            description: props.heroPriceCard?.description ?? heroPricePackage.description,
+            features: props.heroPriceCard?.features ?? heroPricePackage.features,
+            buttonText: props.heroPriceCard?.buttonText ?? heroPricePackage.buttonText,
+            icon: props.heroPriceCard?.icon ?? heroPricePackage.icon
+        }
+        : null;
 
     const renderBrandText = (text?: string) => {
         if (!text) return text;
@@ -1008,20 +1086,22 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     )}
                                 </div>
                             )}
-                            {heroPricePackage && (
+                            {displayedHeroPricePackage && (
                                 <div className="hero-price-card compact">
                                     <div className="card-header">
-                                        <div className="pkg-icon">{heroPricePackage.icon}</div>
-                                        <h3 className="pkg-name">{heroPricePackage.name}</h3>
+                                        <div className="pkg-icon">{displayedHeroPricePackage.icon}</div>
+                                        <h3 className="pkg-name">{displayedHeroPricePackage.name}</h3>
                                         <div className="pkg-price-wrap">
-                                            <span className="pkg-price">{heroPricePackage.price}</span>
-                                            <span className="pkg-period">/{heroPricePackage.period}</span>
+                                            <span className="pkg-price">{displayedHeroPricePackage.price}</span>
+                                            {displayedHeroPricePackage.period ? (
+                                                <span className="pkg-period">/{displayedHeroPricePackage.period}</span>
+                                            ) : null}
                                         </div>
-                                        <p className="pkg-desc">{heroPricePackage.description}</p>
+                                        <p className="pkg-desc">{displayedHeroPricePackage.description}</p>
                                     </div>
                                     <div className="card-body">
                                         <ul className="pkg-features">
-                                            {heroPricePackage.features.map((f, i) => (
+                                            {displayedHeroPricePackage.features.map((f, i) => (
                                                 <li key={i}>
                                                     <svg viewBox="0 0 20 20" fill="currentColor" className="check-icon">
                                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -1033,10 +1113,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     </div>
                                     <div className="card-footer">
                                         <button
-                                            onClick={() => handleAddToCart(heroPricePackage)}
+                                            onClick={() => handleAddToCart(displayedHeroPricePackage)}
                                             className="btn-pkg btn-pkg-primary hero-price-btn"
                                         >
-                                            {heroPricePackage.buttonText || t('pricing.buyNow')}
+                                            {displayedHeroPricePackage.buttonText || t('pricing.buyNow')}
                                         </button>
                                     </div>
                                 </div>
@@ -1078,7 +1158,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
             {
                 displayFeaturesSection && (
-                    <section className="service-features-linear">
+                    <section className={`service-features-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
                         <div className="container">
                             <div className="section-header text-center">
                                 <div style={{ marginBottom: 10 }}>
@@ -1089,9 +1169,41 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 <p className="section-desc-mid">{displayFeaturesSection.description}</p>
                             </div>
 
-                            <div className="features-grid-linear">
+                            {displayFeaturesSection.introBlock && (
+                                <div className="features-intro-panel">
+                                    <div className="features-intro-copy">
+                                        <h3>{displayFeaturesSection.introBlock.title}</h3>
+                                        <p>{displayFeaturesSection.introBlock.description}</p>
+                                        {(displayFeaturesSection.introBlock.paragraphs || []).map((paragraph, idx) => (
+                                            <p key={idx}>{paragraph}</p>
+                                        ))}
+                                        {Array.isArray(displayFeaturesSection.introBlock.bullets) && displayFeaturesSection.introBlock.bullets.length > 0 && (
+                                            <ul className="features-intro-bullets">
+                                                {displayFeaturesSection.introBlock.bullets.map((bullet, idx) => (
+                                                    <li key={idx}>{bullet}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                        {displayFeaturesSection.introBlock.note && (
+                                            <p className="features-intro-note">{displayFeaturesSection.introBlock.note}</p>
+                                        )}
+                                    </div>
+                                    {Array.isArray(displayFeaturesSection.introBlock.listItems) && displayFeaturesSection.introBlock.listItems.length > 0 && (
+                                        <div className="features-intro-list">
+                                            {displayFeaturesSection.introBlock.listTitle && <h4>{displayFeaturesSection.introBlock.listTitle}</h4>}
+                                            <ol>
+                                                {displayFeaturesSection.introBlock.listItems.map((item, idx) => (
+                                                    <li key={idx}>{item}</li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className={`features-grid-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
                                 {displayFeaturesSection.features.map((feature: ServiceFeature, idx: number) => (
-                                    <div key={idx} className="feature-card-linear">
+                                    <div key={idx} className={`feature-card-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
                                         <div className="feature-icon-box">{feature.icon}</div>
                                         <div className="feature-content-box">
                                             <h3>{feature.title}</h3>
@@ -1105,6 +1217,49 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 )
             }
 
+            {props.audienceTabsSection && props.audienceTabsSection.tabs.length > 0 && (
+                <section className="audience-tabs-section">
+                    <div className="container">
+                        <div className="section-header text-center">
+                            {props.audienceTabsSection.tag && <span className="showcase-tag">{props.audienceTabsSection.tag}</span>}
+                            <h2 className="section-title-large">{props.audienceTabsSection.title}</h2>
+                            {props.audienceTabsSection.description && <p className="section-desc-mid">{props.audienceTabsSection.description}</p>}
+                        </div>
+
+                        <div className="audience-tabs-shell">
+                            <div className="audience-tab-list" role="tablist" aria-label={props.audienceTabsSection.title}>
+                                {props.audienceTabsSection.tabs.map((tab, idx) => (
+                                    <button
+                                        key={tab.label}
+                                        type="button"
+                                        className={`audience-tab-trigger ${idx === activeAudienceTabIndex ? 'active' : ''}`}
+                                        onClick={() => setActiveAudienceTabIndex(idx)}
+                                        role="tab"
+                                        aria-selected={idx === activeAudienceTabIndex}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="audience-tab-panel" role="tabpanel">
+                                <div className="audience-tab-card">
+                                    <span className="audience-tab-kicker">{props.audienceTabsSection.tabs[activeAudienceTabIndex].label}</span>
+                                    <div className="audience-tab-block">
+                                        <h3>{props.audienceTabsSection.tabs[activeAudienceTabIndex].reasonTitle}</h3>
+                                        <p>{props.audienceTabsSection.tabs[activeAudienceTabIndex].reason}</p>
+                                    </div>
+                                    <div className="audience-tab-block">
+                                        <h3>{props.audienceTabsSection.tabs[activeAudienceTabIndex].outcomeTitle}</h3>
+                                        <p>{props.audienceTabsSection.tabs[activeAudienceTabIndex].outcome}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* Split Layout: Single Pricing + Comparison Table Side-by-Side */}
             {!isHeroPriceOnly && (displayPackages.length === 1 && props.comparisonTable ? (
                 <section className="service-pricing-split" id="pricing">
@@ -1117,10 +1272,11 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
                         <div className="split-layout-grid">
                             {/* Left: Single Layout Pricing Card */}
-                            <div className="split-pricing-col">
+                            <div className={`pricing-grid-linear ${displayPackages.length <= 2 ? 'centered-grid' : ''}`}>
                                 {displayPackages.map((pkg) => (
-                                    <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''} single-mode`}>
+                                    <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''} ${pkg.isPremium ? 'premium' : ''}`}>
                                         {displayPackages.length > 1 && pkg.isPopular && <div className="popular-badge">{t('pricing.popular')}</div>}
+                                        {displayPackages.length > 1 && pkg.isPremium && <div className="premium-badge">PREMIUM</div>}
                                         <div className="card-header">
                                             <div className="pkg-icon">{pkg.icon}</div>
                                             <h3 className="pkg-name">{pkg.name}</h3>
@@ -1219,10 +1375,11 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 <p className="section-desc-mid">{props.pricingSection.description}</p>
                             </div>
 
-                            <div className="pricing-grid-linear">
+                            <div className={`pricing-grid-linear ${displayPackages.length <= 2 ? 'centered-grid' : ''}`}>
                                 {displayPackages.map((pkg) => (
-                                    <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''}`}>
+                                    <div key={pkg.id} className={`pricing-card-linear ${pkg.isPopular ? 'popular' : ''} ${pkg.isPremium ? 'premium' : ''}`}>
                                         {displayPackages.length > 1 && pkg.isPopular && <div className="popular-badge">{t('pricing.popular')}</div>}
+                                        {displayPackages.length > 1 && pkg.isPremium && <div className="premium-badge">PREMIUM</div>}
                                         <div className="card-header">
                                             <div className="pkg-icon">{pkg.icon}</div>
                                             <h3 className="pkg-name">{pkg.name}</h3>
@@ -1238,10 +1395,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                                     {pkg.details.map((detail, i) => (
                                                         <div key={i} className="pkg-detail-item">
                                                             <div className="pkg-detail-header">
+                                                                {detail.icon && <span className="pkg-detail-icon">{detail.icon}</span>}
                                                                 <span className="pkg-detail-title">{detail.title}</span>
                                                             </div>
                                                             <div className="pkg-detail-content">
-                                                                {detail.icon && <div className="pkg-detail-icon">{detail.icon}</div>}
                                                                 <p className="pkg-detail-desc">{detail.description}</p>
                                                             </div>
                                                         </div>
@@ -1349,7 +1506,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 </div>
 
                                 {/* Steps */}
-                                {standardProcessSteps.map((step, idx) => (
+                                {(props.processSection.steps || standardProcessSteps).map((step, idx) => (
                                     <div key={idx} className="process-card-horizontal">
                                         <div className="step-number">{step.stepNumber}</div>
                                         <div className="process-icon-box-horizontal">
@@ -1379,6 +1536,22 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    </section>
+                )
+            }
+
+            {
+                props.afterProcessBanner && (
+                    <section className="service-after-process-banner">
+                        <div className="container">
+                            <div className="apb-content">
+                                <h2 className="apb-title">{props.afterProcessBanner.title}</h2>
+                                <p className="apb-desc">{props.afterProcessBanner.description}</p>
+                            </div>
+                            <svg className="apb-bg-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 0 C22.4 0 0 22.4 0 50 L20 50 C20 33.4 33.4 20 50 20 C66.6 20 80 33.4 80 50 L100 50 C100 22.4 77.6 0 50 0 Z" fill="currentColor" />
+                            </svg>
                         </div>
                     </section>
                 )
@@ -1430,34 +1603,52 @@ export default function ServicePageTemplate(props: ServicePageProps) {
             </section>
 
             {
-                props.approachSection && (
+                props.approachSection && (() => {
+                    const approachSection = props.approachSection;
+
+                    return (
                     <section className="service-approach-linear">
                         <div className="container">
-                            {(props.approachSection.title || props.approachSection.tag) && (
+                            {(approachSection.title || approachSection.tag) && (
                                 <div className="section-header text-center">
-                                    {props.approachSection.tag && <span className="showcase-tag">{props.approachSection.tag}</span>}
-                                    {props.approachSection.title && <h2 className="section-title-large">{renderBrandText(props.approachSection.title)}</h2>}
-                                    {props.approachSection.description && <p className="section-desc-mid">{props.approachSection.description}</p>}
+                                    {approachSection.tag && <span className="showcase-tag">{approachSection.tag}</span>}
+                                    {approachSection.title && <h2 className="section-title-large">{renderBrandText(approachSection.title)}</h2>}
+                                    {approachSection.description && <p className="section-desc-mid">{approachSection.description}</p>}
                                 </div>
                             )}
 
-                            <div className={`approach-grid-linear count-${props.approachSection.items.length}`}>
-                                {props.approachSection.items.map((item, idx) => (
-                                    <div key={idx} className="approach-card-linear">
-                                        <div className="approach-icon-box">
-                                            {item.icon}
-                                        </div>
+                            <div className={`approach-grid-linear count-${approachSection.items.length} ${approachSection.compact ? 'compact' : ''}`}>
+                                {approachSection.items.map((item, idx) => (
+                                    <div key={idx} className={`approach-card-linear ${approachSection.compact ? 'compact' : ''}`}>
+                                        {item.image && (
+                                            <div className="approach-image-box">
+                                                <img src={item.image} alt={item.title} className="approach-image" />
+                                            </div>
+                                        )}
+                                        {item.icon && !item.image && (
+                                            <div className="approach-icon-box">
+                                                {item.icon}
+                                            </div>
+                                        )}
                                         <div className="approach-content">
                                             <h3 className="approach-title">{item.title}</h3>
                                             <h4 className="approach-subtitle">{renderBrandText(item.subtitle)}</h4>
                                             <p className="approach-desc">{item.description}</p>
+                                            {item.buttonText && (
+                                                <div className="approach-action">
+                                                    <a href={item.buttonLink || '#pricing'} className="approach-btn">
+                                                        {item.buttonText}
+                                                    </a>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </section>
-                )
+                    );
+                })()
             }
 
             {

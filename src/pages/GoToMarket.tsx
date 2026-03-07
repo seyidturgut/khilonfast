@@ -156,7 +156,7 @@ export default function GoToMarket() {
             tag: t('serviceGTM.process.tag'),
             title: t('serviceGTM.process.title'),
             description: t('serviceGTM.process.description'),
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            videoUrl: 'https://vimeo.com/1131179237?fl=pl&fe=cm',
             steps: [
                 {
                     stepNumber: 1,
@@ -192,31 +192,36 @@ export default function GoToMarket() {
                     title: t('serviceGTM.approach.360.title'),
                     subtitle: t('serviceGTM.approach.360.subtitle'),
                     description: t('serviceGTM.approach.360.desc'),
-                    icon: <HiGlobeAlt />
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
                     title: t('serviceGTM.approach.growth.title'),
                     subtitle: t('serviceGTM.approach.growth.subtitle'),
                     description: t('serviceGTM.approach.growth.desc'),
-                    icon: <HiArrowTrendingUp />
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
                     title: t('serviceGTM.approach.data.title'),
                     subtitle: t('serviceGTM.approach.data.subtitle'),
                     description: t('serviceGTM.approach.data.desc'),
-                    icon: <HiChartPie />
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
                     title: t('serviceGTM.approach.innovation.title'),
                     subtitle: t('serviceGTM.approach.innovation.subtitle'),
                     description: t('serviceGTM.approach.innovation.desc'),
-                    icon: <HiSparkles />
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
                     title: t('serviceGTM.approach.partner.title'),
                     subtitle: t('serviceGTM.approach.partner.subtitle'),
                     description: t('serviceGTM.approach.partner.desc'),
-                    icon: <HiUserGroup />
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },

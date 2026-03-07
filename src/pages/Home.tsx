@@ -8,12 +8,14 @@ import Services from '../components/Services'
 import Features from '../components/Features'
 import Pricing from '../components/Pricing'
 import FAQ from '../components/FAQ'
+import PotentialCTA from '../components/PotentialCTA'
 
 const HOME_TEXT_KEYS = [
   'hero.subtitle', 'hero.title', 'hero.titleHighlight', 'hero.description',
   'about.title', 'about.description', 'about.item1', 'about.item2', 'about.item3',
   'solutions.header.title', 'solutions.item1.title', 'solutions.item1.description', 'solutions.item2.title', 'solutions.item2.description', 'solutions.item3.title', 'solutions.item3.description',
   'services.header.title', 'services.item1.title', 'services.item1.description', 'services.item2.title', 'services.item2.description', 'services.item3.title', 'services.item3.description',
+  'potentialCTA.title', 'potentialCTA.description', 'potentialCTA.button',
   'features.title', 'features.description', 'features.list1', 'features.list2',
   'pages.home.pricing.titleLine1', 'pages.home.pricing.titleLine2', 'pages.home.pricing.description', 'pages.home.pricing.cta',
   'faq.title', 'faq.subtitle',
@@ -146,6 +148,7 @@ export default function Home() {
       <Hero content={{ subtitle: tx('hero.subtitle'), title: tx('hero.title'), titleHighlight: tx('hero.titleHighlight'), description: tx('hero.description') }} />
       <About content={{ title: tx('about.title'), description: tx('about.description'), item1: tx('about.item1'), item2: tx('about.item2'), item3: tx('about.item3') }} />
       <Solutions tx={tx} />
+      <PotentialCTA tx={tx} />
       <Services tx={tx} />
       <Features tx={tx} />
       <Pricing tx={tx} />

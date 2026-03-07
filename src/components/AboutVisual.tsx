@@ -6,7 +6,7 @@ const AboutVisual: React.FC = () => {
             <div className="about-image-glow" />
             <img
                 src="/images/about/visual.png"
-                alt="khilonfast Digital Strategy Visual"
+                alt="khilonfast dijital strateji ve pazarlama planlamasını temsil eden görsel"
                 className="about-image"
                 style={{
                     width: '100%',

@@ -11,7 +11,7 @@ export const productPrograms: ProductProgram[] = [
         summary: 'B2B sektörü için özelleştirilmiş yapay zeka pazarlama stratejisti.'
     },
     {
-        path: '/hizmetler/eye-tracking-reklam-analizi',
+        path: '/urunler/eye-tracking-reklam-analizi',
         title: 'Eye Tracking Reklam Analizi',
         summary: 'AI + Eye Tracking ile yaratıcı performans analizi ve ROI risk azaltma.'
     }

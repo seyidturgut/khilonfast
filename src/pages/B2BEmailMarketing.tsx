@@ -3,14 +3,20 @@ import { useTranslation } from 'react-i18next'
 import {
     HiEnvelope,
     HiUsers,
-    HiInboxArrowDown,
     HiSparkles,
     HiChartPie,
     HiPresentationChartLine,
     HiKey,
     HiChartBar,
     HiTrophy,
-    HiCommandLine
+    HiUserGroup,
+    HiRocketLaunch,
+    HiShoppingCart,
+    HiClipboardDocumentList,
+    HiMagnifyingGlass,
+    HiCheckBadge,
+    HiGlobeAlt,
+    HiArrowTrendingUp
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
@@ -31,7 +37,9 @@ export default function B2BEmailMarketing() {
             description: 'khilonfast ile hedef kitlenizi etkileyen e-posta kampanyaları oluşturun. Kişiselleştirilmiş içeriklerle açılma oranlarınızı artırın ve düşük tıklama oranlarını geride bırakın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/b2b-email-pazarlama/hero.png',
+            image: '/images/hizmetlerimiz/b2b-email-pazarlama/TR_B2BEmailMarketing.avif',
+            imageClassName: 'hero-main-img-content-production',
+            imageContainerClassName: 'hero-image-container-content-production',
             hideBadge: true,
             badgeText: 'Doğru Kitleye Ulaşın! Etkileşimi Artırın!',
             badgeIcon: <HiEnvelope />,
@@ -52,72 +60,93 @@ export default function B2BEmailMarketing() {
             videoUrl: 'https://www.youtube.com/embed/FgRlnrHHnSk'
         },
         approachSection: {
-            title: 'Stratejik Email Kampanya Yönetimi',
-            description: 'Etkili e-posta kampanyaları ile doğru kitleye ulaşın.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'khilonfast Yaklaşımı' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'Her adımda sürdürülebilir büyüme odaklı çalışıyoruz.' }),
             items: [
                 {
-                    title: 'İdeal Müşteri Hedefleme',
-                    subtitle: 'Segmentasyon',
-                    description: 'Sektör, unvan ve şirket büyüklüğü bazlı derinlemesine segmentasyonla mesajınızı sadece ilgili kişilere iletiyoruz.',
-                    icon: <HiUsers />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360 Derece Bakış Açısı' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Bütünleşik Strateji' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'Her detayı bütünsel bir bakış açısıyla inceliyoruz.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'Kişiselleştirilmiş İçerik',
-                    subtitle: 'Dinamik Mesajlar',
-                    description: 'Yapay zeka destekli dinamik değişkenler kullanarak her alıcıya ismiyle ve sektörüyle hitap eden özel içerikler hazırlıyoruz.',
-                    icon: <HiSparkles />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Büyüme Odaklı Stratejiler' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performans Yönetimi' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'Hedeflerinizi hızlıca yakalamak için büyümenizi ölçümlüyoruz.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Performans Analizi',
-                    subtitle: 'Anlık Takip',
-                    description: 'Açılma, tıklama ve dönüşüm oranlarını anlık olarak takip ediyor, kampanyaları veriye göre optimize ediyoruz.',
-                    icon: <HiChartPie />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Veri Odaklı Pazarlama' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Geniş İçgörüler' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'Kanıtlanmış verilerle risk almadan hareket ediyoruz.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'Otomasyon Kurguları',
-                    subtitle: 'Zaman Tasarrufu',
-                    description: 'Hoş geldin serileri, terk edilmiş sepet hatırlatmaları gibi otomatik senaryolarla müşteriyi sıcak tutuyoruz.',
-                    icon: <HiCommandLine />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'İnovasyon ile Fark' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Yenilikçi Teknikler' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Sektördeki en modern teknoloji araçlarıyla rakiplerden ayrışın.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Deliverability (İletim)',
-                    subtitle: 'Inbox Garantisi',
-                    description: 'Spam filtrelerine takılmadan, mesajlarınızın doğrudan gelen kutusuna düşmesini sağlayacak teknik altyapıyı kuruyoruz.',
-                    icon: <HiInboxArrowDown />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Stratejik İş Ortağı' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Uzun Vadeli Başarı' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'Müşterilerimizi kısa süreli değil uzun dönemli hedeflerle destekliyoruz.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
         processSection: {
-            tag: '4 Adımda E-Posta',
-            title: 'Nasıl Çalışır?',
-            description: 'Soğuk leadleri sıcak satış fırsatlarına dönüştüren sürecimiz.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            tag: 'Nasıl Çalışır?',
+            title: 'Hizmet Süreci',
+            description: 'Operasyonunuzu başarıya ulaştırmak için izlediğimiz 5 adımlı yol haritası.',
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Adım 1: Data Hazırlığı',
-                    description: 'Mevcut listenizi temizler, segmentlere ayırır veya yeni hedef kitle datası oluştururuz.',
-                    icon: <HiUsers />
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Adım 2: Tasarım & İçerik',
-                    description: 'Mobil uyumlu şablonlar tasarlar ve ikna edici metinleri yazarız.',
-                    icon: <HiSparkles />
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Adım 3: Gönderim & Test',
-                    description: 'A/B testleri yaparak en iyi performans veren başlık ve saatleri belirler, gönderimi yaparız.',
-                    icon: <HiEnvelope />
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Adım 4: Raporlama',
-                    description: 'Hangi firmaların ilgilendiğini gösteren detaylı raporu sunar, aksiyon planı çıkarırız.',
-                    icon: <HiPresentationChartLine />
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    stepNumber: 5,
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    icon: <HiCheckBadge />
                 }
             ]
+        },
+        afterProcessBanner: {
+            title: (
+                <>
+                    khilonfast ile<br />
+                    E-posta Kampanyalarınızı<br />
+                    Kişiselleştirin!
+                </>
+            ),
+            description: 'Kişiselleştirilmiş, etkili içeriklerle e-posta açılma ve tıklama oranlarınızı artırın. khilonfast ile doğru hedeflemelerle düşük dönüşüm oranlarını aşın ve hedef kitlenizle etkili iletişim kurun.'
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
@@ -132,7 +161,19 @@ export default function B2BEmailMarketing() {
                     description: 'Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.',
                     icon: <HiKey />,
                     features: [],
-                    buttonText: t('pricing.buyNow')
+                    buttonText: t('pricing.buyNow'),
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Küçük işletmeler ve B2B pazarlama süreçlerine yeni adım atan firmalar için idealdir.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Düşük maliyetle başlayarak, sınırlı bir kitleye doğrudan ulaşma imkanı sunar. Bu paket, küçük firmalar için verimli ve ekonomik bir çözüm sağlar.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ]
                 },
                 {
                     id: 'growth',
@@ -143,7 +184,19 @@ export default function B2BEmailMarketing() {
                     isPopular: true,
                     icon: <HiChartBar />,
                     features: [],
-                    buttonText: t('pricing.buyNow')
+                    buttonText: t('pricing.buyNow'),
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: '5.000 e-posta ile daha etkili ve geniş çaplı pazarlama kampanyaları yapmak isteyen işletmeler için idealdir.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Daha geniş veri tabanıyla daha fazla potansiyel müşteriye ulaşmayı hedefleyen işletmeler için güçlü bir destek sağlar. Dijital pazarlamayı desteklemek için idealdir.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ]
                 },
                 {
                     id: 'ultimate',
@@ -153,7 +206,19 @@ export default function B2BEmailMarketing() {
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
                     icon: <HiTrophy />,
                     features: [],
-                    buttonText: t('pricing.buyNow')
+                    buttonText: t('pricing.buyNow'),
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: '10.000 e-posta ile müşteri kitlesini genişletmek isteyen firmalar için mükemmel bir çözümdür.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Yüksek hacimde müşteri datası ile güçlü ve optimize edilmiş kampanyalar düzenlemek isteyen firmalar için maksimum verimlilik sağlar.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ]
                 }
             ]
         },
@@ -166,11 +231,7 @@ export default function B2BEmailMarketing() {
             { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
             { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
             { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ],
-        growthCTA: {
-            title: 'Müşteri Listenizi Değere Dönüştürün!',
-            description: 'Atıl bekleyen e-posta listelerinizi aktif satış kanallarına dönüştürüyoruz. Hemen khilonfast uzmanlığıyla tanışın.'
-        }
+        ]
     }
 
     const enConfig = {
@@ -180,7 +241,9 @@ export default function B2BEmailMarketing() {
             description: 'khilonfast builds high-converting outbound and nurture email systems that improve open rates, increase reply quality, and accelerate sales cycles.',
             buttonText: t('common.startNow'),
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/b2b-email-pazarlama/hero.png',
+            image: '/images/hizmetlerimiz/b2b-email-pazarlama/TR_B2BEmailMarketing.avif',
+            imageClassName: 'hero-main-img-content-production',
+            imageContainerClassName: 'hero-image-container-content-production',
             hideBadge: true,
             badgeText: 'Reach the Right Buyer at the Right Time',
             badgeIcon: <HiEnvelope />,
@@ -201,38 +264,43 @@ export default function B2BEmailMarketing() {
             videoUrl: 'https://www.youtube.com/embed/FgRlnrHHnSk'
         },
         approachSection: {
-            title: 'Strategic B2B Email Operations',
-            description: 'Message-market fit, campaign discipline, and consistent optimization.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'The khilonfast Approach' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'We focus on sustainable growth at every step.' }),
             items: [
                 {
-                    title: 'Audience Segmentation',
-                    subtitle: 'ICP Precision',
-                    description: 'We segment by industry, role, and company profile to match messaging with buyer intent.',
-                    icon: <HiUsers />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360-Degree Perspective' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Integrated Strategy' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'We analyze every detail with a holistic perspective.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'Personalized Messaging',
-                    subtitle: 'Dynamic Relevance',
-                    description: 'Dynamic content frameworks personalize each message for stronger response quality.',
-                    icon: <HiSparkles />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Growth-Driven Strategies' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performance Management' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'We measure your growth to reach your goals quickly.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Performance Analytics',
-                    subtitle: 'Live Insights',
-                    description: 'Open, click, and reply metrics drive continuous iteration and campaign improvements.',
-                    icon: <HiChartPie />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Data-Driven Marketing' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Broad Insights' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'We move without risk using proven data.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'Automation Flows',
-                    subtitle: 'Scalable Outreach',
-                    description: 'Automated sequences keep opportunities warm without sacrificing personalization quality.',
-                    icon: <HiCommandLine />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'Making a Difference with Innovation' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Innovative Techniques' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Stand out from competitors with the most modern tech tools in the industry.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Deliverability Engineering',
-                    subtitle: 'Inbox Placement',
-                    description: 'Technical setup and domain hygiene ensure your emails reach inboxes, not spam folders.',
-                    icon: <HiInboxArrowDown />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Strategic Partner' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Long-Term Success' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'We support our clients with long-term goals, not short-term ones.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
@@ -247,6 +315,16 @@ export default function B2BEmailMarketing() {
                 { stepNumber: 3, title: 'Step 3: Delivery & Testing', description: 'A/B testing identifies best-performing subjects, timing, and message variants.', icon: <HiEnvelope /> },
                 { stepNumber: 4, title: 'Step 4: Reporting', description: 'You receive actionable reports that prioritize next steps for pipeline growth.', icon: <HiPresentationChartLine /> }
             ]
+        },
+        afterProcessBanner: {
+            title: (
+                <>
+                    Personalize Your<br />
+                    Email Campaigns<br />
+                    with khilonfast!
+                </>
+            ),
+            description: 'Increase your email open and click rates with personalized, effective content. Overcome low conversion rates with precise targeting and communicate efficiently with your audience using khilonfast.'
         },
         pricingSection: {
             tag: 'Service Packages',
@@ -267,12 +345,8 @@ export default function B2BEmailMarketing() {
             { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
             { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
             { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ],
-        growthCTA: {
-            title: 'Turn Dormant Lists Into Revenue',
-            description: 'Activate your existing database with a disciplined B2B email engine designed by khilonfast.'
-        }
+        ]
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-email" />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-email" disableApiHeroTextOverride={true} />
 }

@@ -76,8 +76,13 @@ export default function B2BThreeSixtyMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'B2B Firmalar İçin 360° Pazarlama Yönetimi',
-            subtitle: 'Tek Noktadan Pazarlama Çözümleri',
+            title: (
+                <>
+                    B2B Firmalar İçin<br />
+                    Tek Noktadan Pazarlama Çözümleri
+                </>
+            ),
+            subtitle: '',
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
             buttonLink: '#pricing',
@@ -148,7 +153,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -390,7 +395,7 @@ export default function B2BThreeSixtyMarketing() {
         hero: {
             ...trConfig.hero,
             title: `360° Marketing Management for B2B Companies`,
-            subtitle: 'One-Stop Marketing Solutions',
+            subtitle: '',
             description: `Scale B2B pipeline growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
             badgeText: 'B2B Companies Growth Engine'
@@ -449,7 +454,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>
@@ -585,5 +590,5 @@ export default function B2BThreeSixtyMarketing() {
         } : {})
     }
 
-    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-360" />
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-360" disableApiHeroTextOverride={true} disableApiPackages={true} />
 }

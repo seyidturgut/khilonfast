@@ -25,48 +25,46 @@ export const setupFlows: SetupFlow[] = [
   {
     path: '/google-analytics-kurulum-akisi',
     title: 'Google Analytics Kurulum Akışı',
-    subtitle:
-      'Ziyaretçi verilerinin, hedef kitle davranışlarının ve dönüşüm metriklerinin takip edilmesi için Google Analytics entegrasyonu gereklidir.',
-    purpose:
-      'Web sitenizdeki kullanıcı davranışlarını ölçmek, dönüşümleri takip etmek ve pazarlama performansını veriye dayalı yönetmek için Google Analytics kurulumu yapılır.',
+    subtitle: 'Ziyaretçi Verilerini Takip Etmeye Başlayın',
+    purpose: 'Ziyaretçi verilerinin, hedef kitle davranışlarının ve dönüşüm metriklerinin takip edilmesi için Google Analytics entegrasyonu gereklidir. GTM kurulumu bu adım için önkoşuldur.',
     decisionQuestion: 'Google Analytics hesabınız var mı?',
-    videoUrl: 'https://player.vimeo.com/video/1128164075',
+    videoUrl: 'https://player.vimeo.com/video/1133021892',
     paths: [
       {
         id: 'yes',
         label: 'EVET, HESABIM VAR',
         steps: [
           {
-            title: 'Google Analytics hesabınıza giriş yapın',
-            description: 'Hesap veya property seviyesinde Erişim Yönetimi alanına geçin.'
+            title: "Google Analytics'e Giriş Yapın",
+            description: 'Mevcut Google Analytics hesabınıza giriş yapın.'
           },
           {
-            title: 'Kullanıcı Ekle adımını açın',
-            description: 'khilonfast ekibinin e-posta adresini kullanıcı olarak ekleyin.'
+            title: 'KhilonFast Kullanıcısını Ekleyin',
+            description: 'Yönetici (Admin) bölümünde ads@khilon.com e-posta adresini kullanıcı olarak ekleyin.'
           },
           {
-            title: 'Gerekli erişim izinlerini verin',
-            description: 'Analiz ve raporlama için gereken görüntüleme/yönetim yetkilerini tanımlayın.'
+            title: 'GTM Entegrasyonunu Kontrol Edin',
+            description: 'GTM yetkisi zaten paylaşıldıysa ek bir işlem gerekmez. KhilonFast ekibi GTM üzerinden gerekli etiketleri ekleyecektir.'
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',
-        completionDescription: 'khilonfast, Google Analytics verilerinizi analiz etmeye başlayabilir.'
+        completionDescription: 'Google Analytics kurulumunuz başarıyla tamamlandı. khilonfast, verilerinizi analiz etmeye başlayabilir.'
       },
       {
         id: 'no',
         label: 'HAYIR, HESABIM YOK',
         steps: [
           {
-            title: 'khilonfast sizin adınıza GA4 yapısını oluşturur',
-            description: 'Uygun paket kapsamında Google Analytics hesabı ve property kurulumu yapılır.'
+            title: 'Yeni Analytics Hesabı Oluşturulur',
+            description: 'KhilonFast sizin adınıza bir Analytics hesabı oluşturur. Google hesabınıza ait e-posta adresiniz gereklidir.'
           },
           {
-            title: 'GA4 Measurement ID paylaşılır',
-            description: 'Kurulum için gerekli izleme kimliği tarafınıza iletilir.'
+            title: 'GTM Entegrasyonu Yapılır',
+            description: 'Oluşturulan takip kodu GTM üzerinden entegre edilir. GA4 ölçüm kimliği GTM\'e eklenir.'
           },
           {
-            title: 'GTM entegrasyonu tamamlanır',
-            description: 'GA4 config tag Google Tag Manager üzerinden eklenerek veri akışı başlatılır.'
+            title: 'Kod Çalışmasını Kontrol Edin',
+            description: 'Web sitenizde kodun doğru şekilde çalıştığını kontrol edin.'
           }
         ],
         completionTitle: 'Kurulum Tamamlandı',

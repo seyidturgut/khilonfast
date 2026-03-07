@@ -10,7 +10,9 @@ import {
     HiChartBar,
     HiCloudArrowUp,
     HiQueueList,
-    HiCommandLine
+    HiCommandLine,
+    HiUserGroup,
+    HiRocketLaunch
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
@@ -23,13 +25,7 @@ export default function MaestroAI() {
     const maestroConfig = {
         hero: {
             title: t('maestroAI.hero.title'),
-            subtitle: (
-                <>
-                    {t('maestroAI.hero.subtitle').split('\n').map((line, i) => (
-                        <span key={i}>{line}<br /></span>
-                    ))}
-                </>
-            ),
+            subtitle: '',
             description: t('maestroAI.hero.description'),
             buttonText: t('pricing.buyNow'),
             buttonLink: '#pricing',
@@ -147,24 +143,22 @@ export default function MaestroAI() {
                     price: '1.200TL',
                     period: t('pricing.monthly'),
                     description: t('maestroAI.pricing.plans.kredili.desc'),
-                    icon: <HiStar />,
-                    features: [
-                        ...(currentLang === 'en'
-                            ? [
-                                'Ideal for growth-stage teams',
-                                'Digital marketing strategy optimization',
-                                'Expanded reporting content',
-                                'Content and media budget planning',
-                                'Sector-focused growth tracking'
-                            ]
-                            : [
-                                'Orta ölçekli işletmeler için ideal',
-                                'Dijital pazarlama strateji optimize',
-                                'Genişletilmiş raporlama içeriği',
-                                'İçerik ve reklam bütçe planlama',
-                                'Sektörel gelişim takibi'
-                            ])
+                    icon: <HiChartBar />,
+                    isPopular: true,
+                    // Use details structure for for/why sections
+                    details: [
+                        {
+                            title: t('maestroAI.pricing.plans.kredili.for.title'),
+                            description: t('maestroAI.pricing.plans.kredili.for.desc'),
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: t('maestroAI.pricing.plans.kredili.why.title'),
+                            description: t('maestroAI.pricing.plans.kredili.why.desc'),
+                            icon: <HiRocketLaunch />
+                        }
                     ],
+                    features: [],
                     buttonText: t('pricing.buyNow'),
                     buttonLink: contactPath
                 },
@@ -175,25 +169,21 @@ export default function MaestroAI() {
                     price: '2.000TL',
                     period: t('pricing.monthly'),
                     description: t('maestroAI.pricing.plans.growth.desc'),
-                    icon: <HiBolt />,
-                    isPopular: true,
-                    features: [
-                        ...(currentLang === 'en'
-                            ? [
-                                'Reach wider audiences',
-                                'Monthly reporting and performance tracking',
-                                'Stronger digital visibility',
-                                'Advanced strategy management',
-                                'Continuous campaign optimization'
-                            ]
-                            : [
-                                'Daha geniş kitlelere ulaşım',
-                                'Aylık raporlar ve performans izleme',
-                                'Dijital görünürlük artışı',
-                                'Gelişmiş strateji yönetimi',
-                                'Sürekli kampanya optimizasyonu'
-                            ])
+                    icon: <HiSparkles />,
+                    isPremium: true,
+                    details: [
+                        {
+                            title: t('maestroAI.pricing.plans.growth.for.title'),
+                            description: t('maestroAI.pricing.plans.growth.for.desc'),
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: t('maestroAI.pricing.plans.growth.why.title'),
+                            description: t('maestroAI.pricing.plans.growth.why.desc'),
+                            icon: <HiRocketLaunch />
+                        }
                     ],
+                    features: [],
                     buttonText: t('pricing.buyNow'),
                     buttonLink: contactPath
                 }
@@ -208,5 +198,5 @@ export default function MaestroAI() {
     }
 
 
-    return <ServicePageTemplate {...maestroConfig} serviceKey="service-maestro-ai" />
+    return <ServicePageTemplate {...maestroConfig} />
 }

@@ -194,7 +194,7 @@ export default function About() {
                         </div>
                         <div className="about-visual">
                             <div className="image-frame">
-                                <img src="/about-hero.png" alt="khilonfast Vision" />
+                                <img src="/images/about/1-1.avif" alt="khilonfast strateji ve pazarlama vizyonunu temsil eden ekip görseli" />
                             </div>
                         </div>
                     </div>
@@ -208,24 +208,46 @@ export default function About() {
                     <div className="birth-grid">
                         <div className="birth-card">
                             <div className="birth-image">
-                                <img src="/khilon-birth-1.png" alt={tx('aboutPage.birth.card1.title')} />
+                                <img src="/images/about/Gelenekselden-Dijitale.avif" alt="Gelenekselden Dijitale" />
                             </div>
-                            <h3>{tx('aboutPage.birth.card1.title')}</h3>
-                            <p>{tx('aboutPage.birth.card1.desc')}</p>
+                            <h3>Gelenekselden Dijitale</h3>
+                            <p>
+                                20 yılı aşkın deneyimimiz, şirketlerin pazarlama yaklaşımlarında köklü değişiklikler gerektiğini gösterdi. Geleneksel yöntemlerin hız ve verimlilik açısından yetersiz olduğunu fark ederek, Khilonfast’ı oluşturduk. Amacımız, firmaların pazarlama sorunlarına yenilikçi ve hızlı çözümler sunarak:
+                                <ul style={{ marginTop: '10px', paddingLeft: '20px' }}>
+                                    <li>Bilinirliklerini artırmak</li>
+                                    <li>Büyümelerini desteklemek</li>
+                                    <li>Mevcut müşterilerinin hizmetlerden daha fazla yararlanmalarını sağlamak</li>
+                                </ul>
+                            </p>
                         </div>
                         <div className="birth-card">
                             <div className="birth-image">
-                                <img src="/khilon-birth-2.png" alt={tx('aboutPage.birth.card2.title')} />
+                                <img src="/images/about/Yenilik-ve-Hiz.avif" alt="Yenilik ve Hız" />
                             </div>
-                            <h3>{tx('aboutPage.birth.card2.title')}</h3>
-                            <p>{tx('aboutPage.birth.card2.desc')}</p>
+                            <h3>Yenilik ve Hız</h3>
+                            <p>
+                                Khilonfast, iş dünyasının hızını yöneten bir iş ortağıdır. Yavaş süreçlerin maliyetini bilerek, hizmetlerini iş dünyasının hızına ve değişen dinamiklerine uygun şekilde tasarlar. Kuruluşundan itibaren şu değerlerle fark yaratır:
+                                <ul style={{ marginTop: '10px', paddingLeft: '20px' }}>
+                                    <li><strong>Yenilik:</strong> Stratejik, modern ve yaratıcı çözümlerle işletmeleri hedeflerine ulaştırmak.</li>
+                                    <li><strong>Hız:</strong> Hızlı aksiyon alarak iş süreçlerini kolaylaştırmak.</li>
+                                    <li><strong>Sonuç Odaklılık:</strong> Ölçülebilir ve sürdürülebilir başarılar sağlamak.</li>
+                                </ul>
+                            </p>
                         </div>
                         <div className="birth-card">
                             <div className="birth-image">
-                                <img src="/khilon-birth-3.png" alt={tx('aboutPage.birth.card3.title')} />
+                                <img src="/images/about/ilham-veri.avif" alt="İlham Verici Bir Yolculuk" />
                             </div>
-                            <h3>{tx('aboutPage.birth.card3.title')}</h3>
-                            <p>{tx('aboutPage.birth.card3.desc')}</p>
+                            <h3>İlham Verici Bir Yolculuk</h3>
+                            <p>
+                                Khilonfast, geleneksel yöntemlerin sınırlarını zorlayarak modern işletmelerin ihtiyaçlarına cevap vermek amacıyla kurulmuştur. İlham kaynağımız:
+                                <ul style={{ marginTop: '10px', paddingLeft: '20px' }}>
+                                    <li><strong>Hızlı büyüme:</strong> İşletmelerin daha hızlı büyümesini sağlamak</li>
+                                    <li><strong>Geniş kitlelere ulaşma:</strong> Daha geniş bir kitleye erişim imkânı sunmak</li>
+                                    <li><strong>Sürdürülebilir başarı:</strong> Başarılarını sürdürülebilir kılmak</li>
+                                </ul>
+                                Müşterilerimizle birlikte bu yolculukta başarı hikayeleri yazmaya devam ediyoruz.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -241,7 +263,7 @@ export default function About() {
             {/* Service Model Section */}
             <section className="about-model">
                 <div className="container">
-                    <div className="about-grid">
+                    <div className="about-model-top">
                         <div className="about-text-content">
                             <h2 className="section-title">{tx('aboutPage.model.title')}</h2>
                             <p className="section-description">
@@ -258,8 +280,49 @@ export default function About() {
                                 </div>
                             </div>
                         </div>
-                        <div className="about-visual">
-                            <img src="/service-model.png" alt="Service Model" className="rounded-img" />
+                        <div className="about-visual model-hero-visual">
+                            <img src="/service-model.png" alt="khilonfast üyelik temelli strateji ve pazarlama hizmet modeli görseli" className="rounded-img" />
+                        </div>
+                    </div>
+                    <div className="model-detail-panel">
+                        <div className="model-detail-card">
+                            <h3>Strateji ve Pazarlama Hizmetleri</h3>
+                            <p>
+                                Khilonfast, işletmelere üyelik temelli bir modelle pazarlama stratejisi ve uygulama
+                                hizmetleri sunarak ajans ve ekip yönetimi yükünü ortadan kaldırır.
+                            </p>
+                        </div>
+
+                        <div className="model-detail-grid">
+                            <div className="model-detail-item">
+                                <h4>Strateji Hizmetleri</h4>
+                                <p>Şirketiniz için sektöre özel, kısa ve uzun vadeli hedeflerinize uygun pazarlama stratejisi oluşturma.</p>
+                            </div>
+                            <div className="model-detail-item">
+                                <h4>Pazarlama Hizmetleri</h4>
+                                <ul>
+                                    <li>Hazırlanan stratejiyi uygulama ve yönetme desteği.</li>
+                                    <li>Uyelik sistemiyle sektöre özel paketler veya a la carte hizmet seçenekleri sunma.</li>
+                                    <li>Tüm süreçleri sizin adınıza yöneterek hedeflerinize ulaşmanızı sağlama.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div className="model-benefits-box">
+                            <h4>Neden Üyelik Modeli?</h4>
+                            <div className="model-benefits-grid">
+                                <div><strong>Kolaylık:</strong> Pazarlama ekibi veya ajans yönetme derdi olmadan tüm süreci biz üstleniyoruz.</div>
+                                <div><strong>Esneklik:</strong> Hizmetlerimizi, ihtiyaçlarınıza göre şekillendirebilirsiniz.</div>
+                                <div><strong>Devamlılık:</strong> Başarılı bir stratejiyle başlayan süreç, tek elden yönetilerek büyümeye devam eder.</div>
+                                <div><strong>Hız:</strong> Hedeflerinize ulaşmanız için gerekli tüm kaynakları hızla mobilize ederiz.</div>
+                            </div>
+                        </div>
+
+                        <div className="model-closing-note">
+                            <p>
+                                khilonfast ile iş birliğine başladığınızda, işinizin büyümesine uygun bir strateji oluşturulur ve bu strateji,
+                                pazarlama süreçlerinizin her aşamasında desteklenir. Sadece neye ihtiyacınız olduğunu seçin; biz gerisini hallederiz.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -277,28 +340,49 @@ export default function About() {
                             <div className="why-stats-grid">
                                 <div className="why-stat-item">
                                     <HiChartBar className="stat-icon" />
-                                    <h4>{tx('aboutPage.why.stat1.title')}</h4>
-                                    <p>{tx('aboutPage.why.stat1.desc')}</p>
+                                    <h4>Hız ve Uzmanlık</h4>
+                                    <p className="why-stat-intro">
+                                        khilonfast, iş dünyasında hızın her şey olduğunu bilir. İşlerinizi tam zamanında, yüksek bir
+                                        profesyonellik standardıyla teslim ediyoruz.
+                                    </p>
+                                    <ul>
+                                        <li><strong>Hızlı Teslimat:</strong> Pazarlama projelerinizin zamanında hayata geçmesini sağlıyoruz.</li>
+                                        <li><strong>Uzman Kadro:</strong> 20 yılı aşkın tecrübemizle, her sektöre uygun yaratıcı ve stratejik çözümler sunuyoruz.</li>
+                                    </ul>
                                 </div>
                                 <div className="why-stat-item">
                                     <HiRocketLaunch className="stat-icon" />
-                                    <h4>{tx('aboutPage.why.stat2.title')}</h4>
-                                    <p>{tx('aboutPage.why.stat2.desc')}</p>
+                                    <h4>Kapsamlılık ve Özelleştirme</h4>
+                                    <p className="why-stat-intro">
+                                        Her işletme farklıdır; bu yüzden çözümlerimizi size özel olarak tasarlarız.
+                                    </p>
+                                    <ul>
+                                        <li><strong>Kapsamlı Yaklaşım:</strong> Stratejiden uygulamaya, her aşamada tam destek sağlıyoruz.</li>
+                                        <li><strong>Özelleştirilmiş Çözümler:</strong> İşletmenizin hedeflerine, sektörüne ve ihtiyaçlarına uygun stratejiler geliştiriyoruz.</li>
+                                    </ul>
                                 </div>
                                 <div className="why-stat-item">
                                     <HiSparkles className="stat-icon" />
-                                    <h4>{tx('aboutPage.why.stat3.title')}</h4>
-                                    <p>{tx('aboutPage.why.stat3.desc')}</p>
+                                    <h4>Bizden Ne Bekleyebilirsiniz?</h4>
+                                    <ul>
+                                        <li><strong>Sonuç Odaklılık:</strong> Ölçülebilir sonuçlarla işinizin büyümesini destekliyoruz.</li>
+                                        <li><strong>Uzun Vadeli İş Birliği:</strong> Sadece bugünü değil, geleceğinizi de planlıyoruz.</li>
+                                        <li><strong>Şeffaflık ve Güven:</strong> İş süreçlerinde açık iletişim ve net bir yaklaşımla çalışıyoruz.</li>
+                                    </ul>
                                 </div>
                                 <div className="why-stat-item">
                                     <HiMagnifyingGlass className="stat-icon" />
-                                    <h4>{tx('aboutPage.why.stat4.title')}</h4>
-                                    <p>{tx('aboutPage.why.stat4.desc')}</p>
+                                    <h4>Rakiplerden Farkımız</h4>
+                                    <ul>
+                                        <li><strong>Strateji ve Yürütmenin Bütünleşik Yaklaşımı:</strong> Strateji oluşturmakla kalmıyor, bu stratejilerin sahada uygulanmasını da eksiksiz bir şekilde yönetiyoruz.</li>
+                                        <li><strong>Sektöre Özel Çözümler:</strong> Her sektörün ihtiyaçlarına uygun, deneyimle desteklenmiş uygulamalar sunuyoruz.</li>
+                                        <li><strong>Hızlı ve Ölçeklenebilir Hizmetler:</strong> İhtiyaçlarınıza göre kolayca uyarlanabilir çözümler sağlıyoruz.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                         <div className="about-visual">
-                            <img src="/images/about/visual.png" alt="Why khilonfast" className="floating-img" />
+                            <img src="/images/about/visual.png" alt="khilonfast strateji ve yürütme yaklaşımını anlatan görsel" className="floating-img" />
                         </div>
                     </div>
                 </div>
@@ -324,28 +408,44 @@ export default function About() {
                                 <div className="not-item">
                                     <div className="not-icon"><HiXMark /></div>
                                     <div className="not-text">
-                                        <h4>{tx('aboutPage.notFor.item1.title')}</h4>
-                                        <p>{tx('aboutPage.notFor.item1.desc')}</p>
+                                        <h4>Geleneksel Çalışmayı Tercih Eden İşletmeler</h4>
+                                        <ul>
+                                            <li><strong>Toplantı Talep Edenler:</strong> Toplantı vazgeçilmezse, Khilonfast sizin için uygun olmayabilir.</li>
+                                            <li><strong>Net Hedeflerden Kaçınanlar:</strong> Çalışma sürecimizin başında net ve somut hedefler belirlemeniz gereklidir. Belirsiz hedeflerle çalışmak istiyorsanız, Khilonfast uygun bir iş ortağı olmayabilir.</li>
+                                            <li><strong>Sözlü İletişimi Tercih Edenler:</strong> Tüm iletişim ve taleplerin yazılı olması, süreçlerin hızlı ve doğru yönetimi için şarttır. Sözlü iletişimi tercih ediyorsanız, Khilonfast sizin için uygun olmayabilir.</li>
+                                        </ul>
                                     </div>
                                 </div>
                                 <div className="not-item">
                                     <div className="not-icon"><HiXMark /></div>
                                     <div className="not-text">
-                                        <h4>{tx('aboutPage.notFor.item2.title')}</h4>
-                                        <p>{tx('aboutPage.notFor.item2.desc')}</p>
+                                        <h4>Modern Yaklaşımlara Uyum Sağlayamayanlar</h4>
+                                        <p className="not-text-intro">
+                                            khilonfast'ın hızlı ve uzman odaklı hizmet anlayışı, aşağıdaki yaklaşımlarla uyumlu olmayabilir:
+                                        </p>
+                                        <ul>
+                                            <li><strong>Uzman Önerilerini Dikkate Almayanlar:</strong> Eğer süreçlerin yalnızca kendi yöntemlerinizle ilerlemesini talep ediyorsanız, bu yaklaşım iş birliğimizle uyuşmayabilir.</li>
+                                            <li><strong>Verilere Değil, Hislere Dayalı Karar Verenler:</strong> Stratejilerimizi somut verilere ve analitik sonuçlara dayandırırız. His ve sezgilere göre ilerlemek isteyenler için bu çalışma tarzı uygun olmayabilir.</li>
+                                        </ul>
                                     </div>
                                 </div>
                                 <div className="not-item">
                                     <div className="not-icon"><HiXMark /></div>
                                     <div className="not-text">
-                                        <h4>{tx('aboutPage.notFor.item3.title')}</h4>
-                                        <p>{tx('aboutPage.notFor.item3.desc')}</p>
+                                        <h4>Nazik ve Net: İş Yapış Biçimimiz</h4>
+                                        <p className="not-text-intro">
+                                            khilonfast, iş birliğine başlarken her iki tarafın da başarılı olmasını sağlayacak bir uyum arar. Eğer yukarıdaki yaklaşımlardan biri çalışma tarzınıza daha yakınsa, bu durum iş birliğimizin verimli olmasını zorlaştırabilir.
+                                        </p>
+                                        <ul>
+                                            <li><strong>Net ve Şeffaf:</strong> Hizmetlerimizi, bizimle uyumlu bir şekilde iş yapmak isteyen firmalara sunuyoruz.</li>
+                                            <li><strong>Stratejik İş Ortağı:</strong> Karşılıklı güven ve anlayışla daha hızlı ve sürdürülebilir başarılar elde edilebilir.</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="about-visual">
-                            <img src="/not-suitable.png" alt="Not for everyone" className="rounded-img shadow-lg" />
+                            <img src="/not-suitable.png" alt="khilonfast çalışma biçimine uygun olmayan iş yapış modellerini anlatan görsel" className="rounded-img shadow-lg" />
                         </div>
                     </div>
                 </div>

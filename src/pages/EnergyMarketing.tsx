@@ -30,8 +30,13 @@ export default function EnergyMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Enerji Firmaları İçin 360° Pazarlama Yönetimi',
-            subtitle: 'Tek Noktadan Pazarlama Çözümleri',
+            title: (
+                <>
+                    Enerji Firmaları İçin<br />
+                    Tek Noktadan Pazarlama Çözümleri
+                </>
+            ),
+            subtitle: '',
             description: 'khilonfast ile Enerji Sektörü pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
             buttonLink: '#pricing',
@@ -57,8 +62,13 @@ export default function EnergyMarketing() {
             vimeoUrl: 'https://player.vimeo.com/video/1135512097'
         },
         tabsSection: {
-            tag: 'Enerji Sektörü için',
-            title: '360° Stratejik Pazarlama Çözümleri',
+            tag: '',
+            title: (
+                <>
+                    Enerji Sektörü için<br />
+                    360° Stratejik Pazarlama Çözümleri
+                </>
+            ),
             description1: 'Enerji sektöründe büyümek ve fark yaratmak için doğru adımları atın.',
             description2: 'İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın.',
             tabs: [
@@ -105,7 +115,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('maestro')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -135,11 +145,11 @@ export default function EnergyMarketing() {
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ border: '1px solid #eef2d0' }}>
                                     <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Pazarlama faaliyetlerine hızlıca başlamaya odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Enerji sektörü markaları için pazarlama faaliyetlerine hızlıca başlamaya ve sonuç almaya odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Süreçleri hızlıca devreye alır.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Ekip kurma derdi olmadan hemen başlayın.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen enerji firmaları.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital pazarlama süreçlerinizi hızlıca devreye alır ve operasyonel yüklerden kurtarır.</li>
+                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> Ekstra toplantılar veya ekip kurma derdi olmadan pazarlama faaliyetlerine hemen başlayabilir, sonuçları kısa sürede görebilirsiniz.</li>
+                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Zaman ve kaynak yönetimini sadeleştirmek isteyen küçük ve orta ölçekli işletmeler.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -147,11 +157,11 @@ export default function EnergyMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
                                     <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Büyümeye ve derinlemesine çözümlere odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Enerji sektörü markaları için büyümeye ve derinlemesine pazarlama çözümlerine odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Sürekli lead akışını sağlar.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> İşletme etkisini artırarak rekabet avantajı sağlar.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Sektörde payını artırmak isteyen enerji markaları.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital varlığınızı genişletmek ve müşteri tabanınızı büyütmek için dengeli ve sürdürülebilir çözümler sunar.</li>
+                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> İşletmenizin pazarlama etkisini artırarak, büyümeye odaklanmanızı sağlar ve rakiplerinize karşı avantaj kazandırır.</li>
+                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Dijital pazarlamada bir adım ileri gitmek isteyen ve büyümeye yatırım yapmayı hedefleyen işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -159,14 +169,14 @@ export default function EnergyMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
                                     <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Marka gücünü maksimize eden en üst seviye çözümlere odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Enerji sektörü markaları için pazarlama süreçlerini en üst seviyeye taşıyan ve marka gücünü maksimize eden çözümlere odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm kanalları entegre eden bütünsel marka stratejisi.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Sektörde otorite inşa eden tam kapsamlı strateji.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Pazar liderliğini hedefleyen enerji devleri.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm pazarlama kanallarını entegre ederek güçlü bir marka stratejisi oluşturur ve kalıcı bir etki yaratır.</li>
+                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> Pazarda lider konuma gelmenizi sağlayacak tam kapsamlı bir strateji ile yüksek seviyede rekabet avantajı sunar.</li>
+                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Tam donanımlı bir pazarlama stratejisiyle sektörde öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -299,7 +309,7 @@ export default function EnergyMarketing() {
             role: "Pazarlama Müdürü, SolarTech Enerji"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1135512097"
+            vimeoUrl: "https://player.vimeo.com/video/1128822985"
         },
         faqs: [
             {
@@ -321,7 +331,7 @@ export default function EnergyMarketing() {
         hero: {
             ...trConfig.hero,
             title: `360° Marketing Management for Energy Companies`,
-            subtitle: 'One-Stop Marketing Solutions',
+            subtitle: '',
             description: `Scale energy market growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
             badgeText: 'Energy Companies Growth Engine'
@@ -380,7 +390,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>
@@ -516,5 +526,5 @@ export default function EnergyMarketing() {
         } : {})
     }
 
-    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-energy" />
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-energy" disableApiHeroTextOverride={true} disableApiPackages={true} />
 }

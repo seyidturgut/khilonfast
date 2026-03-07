@@ -9,8 +9,13 @@ import {
     HiChartBar,
     HiTrophy,
     HiCursorArrowRays,
-    HiDocumentText,
-    HiUser
+    HiUserGroup,
+    HiRocketLaunch,
+    HiShoppingCart,
+    HiClipboardDocumentList,
+    HiGlobeAlt,
+    HiArrowTrendingUp,
+    HiChartPie
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
@@ -55,69 +60,80 @@ export default function ContentProduction() {
             videoUrl: 'https://www.youtube.com/embed/zfz5tG3i5ck'
         },
         approachSection: {
-            title: 'Stratejik İçerik Üretimi',
-            description: 'Doğru içeriklerle hedef kitlenize ulaşın.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'khilonfast Yaklaşımı' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'Her adımda sürdürülebilir büyüme odaklı çalışıyoruz.' }),
             items: [
                 {
-                    title: 'SEO Uyumlu Üretim',
-                    subtitle: 'Arama Motoru Dostu',
-                    description: 'Arama motorlarında üst sıralarda yer almanızı sağlayacak anahtar kelime, başlık ve meta optimizasyonlarını yapıyoruz.',
-                    icon: <HiMagnifyingGlass />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360 Derece Bakış Açısı' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Bütünleşik Strateji' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'Her detayı bütünsel bir bakış açısıyla inceliyoruz.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'Yaratıcı Metin Yazarlığı',
-                    subtitle: 'Özgün Hikayeler',
-                    description: 'Hedef kitlenizi harekete geçirecek, ikna edici ve markanızın diline uygun özgün metinler hazırlıyoruz.',
-                    icon: <HiSparkles />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Büyüme Odaklı Stratejiler' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performans Yönetimi' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'Hedeflerinizi hızlıca yakalamak için büyümenizi ölçümlüyoruz.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Kalite Güvencesi',
-                    subtitle: 'Editöryal Kontrol',
-                    description: 'Tüm içeriklerimiz uzman editör kontrolünden geçerek yazım, imla ve anlam bütünlüğü açısından denetlenir.',
-                    icon: <HiCheckBadge />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Veri Odaklı Pazarlama' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Geniş İçgörüler' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'Kanıtlanmış verilerle risk almadan hareket ediyoruz.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'İnsan Dokunuşu',
-                    subtitle: '%100 Orijinal',
-                    description: 'Yapay zeka araçlarını sadece yardımcı olarak kullanır, içeriklerinizin ruhunu ve özgünlüğünü insan yaratıcılığıyla koruruz.',
-                    icon: <HiUser />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'İnovasyon ile Fark' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Yenilikçi Teknikler' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Sektördeki en modern teknoloji araçlarıyla rakiplerden ayrışın.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Tutarlı Ton',
-                    subtitle: 'Marka Sesi',
-                    description: 'Markanızın kurumsal kimliğine ve iletişim diline uygun, tutarlı bir ses tonuyla içeriklerinizi kurgularız.',
-                    icon: <HiDocumentText />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Stratejik İş Ortağı' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Uzun Vadeli Başarı' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'Müşterilerimizi kısa süreli değil uzun dönemli hedeflerle destekliyoruz.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
         processSection: {
-            tag: '4 Adımda Üretim',
-            title: 'Nasıl Çalışır?',
-            description: 'Kusursuz içerik üretimi için işleyen çarklarımız.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            tag: 'Nasıl Çalışır?',
+            title: 'Hizmet Süreci',
+            description: 'İçerik üretim stratejinizi hayata geçirmek için izlediğimiz 5 adımlı yol haritası.',
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Adım 1: Brief',
-                    description: 'İhtiyaçlarınızı, konu başlıklarını ve beklentilerinizi netleştiren bir brief oluştururuz.',
-                    icon: <HiPencilSquare />
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Adım 2: Yazım',
-                    description: 'Konusunda uzman yazarlarımız, belirlenen stratejiye uygun olarak içerikleri hazırlar.',
-                    icon: <HiCursorArrowRays />
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Adım 3: Editör Kontrolü',
-                    description: 'Üretilen içerikler editörlerimiz tarafından SEO, dil ve kalite açısından denetlenir.',
-                    icon: <HiMagnifyingGlass />
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Adım 4: Teslim & Yayın',
-                    description: 'Onaylanan içerikler yayına hazır formatta (veya direkt siteye yüklenerek) teslim edilir.',
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    stepNumber: 5,
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
                     icon: <HiCheckBadge />
                 }
             ]
@@ -135,7 +151,19 @@ export default function ContentProduction() {
                     description: 'Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.',
                     icon: <HiKey />,
                     features: [],
-                    buttonText: t('pricing.buyNow')
+                    buttonText: t('pricing.buyNow'),
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Küçük işletmeler ve dijital pazarlamaya yeni başlayanlar.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Dijital pazarlamayı düşük bütçe ve minimal riskle keşfetmek için ideal.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ]
                 },
                 {
                     id: 'growth',
@@ -146,7 +174,19 @@ export default function ContentProduction() {
                     isPopular: true,
                     icon: <HiChartBar />,
                     features: [],
-                    buttonText: t('pricing.buyNow')
+                    buttonText: t('pricing.buyNow'),
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Daha geniş bir kitleye hitap etmek isteyen işletmeler.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Daha fazla içerik ve stratejik planlama isteyen işletmeler için uygundur.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ]
                 },
                 {
                     id: 'ultimate',
@@ -156,7 +196,19 @@ export default function ContentProduction() {
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
                     icon: <HiTrophy />,
                     features: [],
-                    buttonText: t('pricing.buyNow')
+                    buttonText: t('pricing.buyNow'),
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Pazarda hakimiyet kurmayı hedefleyen büyük işletmeler.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Profesyonel içerik ve kapsamlı strateji ile maksimum etkileşim sağlar.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ]
                 }
             ]
         },
@@ -169,7 +221,29 @@ export default function ContentProduction() {
             { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
             { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
             { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ]
+        ],
+        authorizationSection: {
+            title: "İçerik Üretimi Yetkilendirme Adımları",
+            description: "Hizmet paketine uygun olarak, aşağıda yer alan platformların yetkilendirme adımlarını bulabilirsiniz. Bu adımlar, içerik stratejinizin doğru verilerle beslenmesi için gereklidir.",
+            cards: [
+                {
+                    title: "Google Search Console Yetkilendirme",
+                    description: "Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.",
+                    highlightText: "Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.",
+                    buttonText: "KEŞFET",
+                    buttonLink: "/hizmetlerimiz/google-search-console-kurulum-akisi",
+                    theme: "light" as const
+                },
+                {
+                    title: "Google Analytics Yetkilendirme",
+                    description: "Detaylı analiz için Google Analytics erişimlerini tanımlayın.",
+                    highlightText: "Analiz süreçlerinizin ölçüm doğruluğunu artırın.",
+                    buttonText: "KEŞFET",
+                    buttonLink: "/google-analytics-kurulum-akisi",
+                    theme: "dark" as const
+                }
+            ]
+        }
     }
 
     const enConfig = {
@@ -203,38 +277,43 @@ export default function ContentProduction() {
             videoUrl: 'https://www.youtube.com/embed/zfz5tG3i5ck'
         },
         approachSection: {
-            title: 'Strategic Content Engine',
-            description: 'Create with intent, publish with consistency, optimize for growth.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'The khilonfast Approach' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'We focus on sustainable growth at every step.' }),
             items: [
                 {
-                    title: 'SEO-Led Production',
-                    subtitle: 'Search Visibility',
-                    description: 'Keyword architecture, metadata, and content structure are designed to improve rankings and discoverability.',
-                    icon: <HiMagnifyingGlass />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360-Degree Perspective' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Integrated Strategy' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'We analyze every detail with a holistic perspective.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'Conversion Copywriting',
-                    subtitle: 'Message Precision',
-                    description: 'Compelling narratives aligned with your buyer journey increase trust and conversion potential.',
-                    icon: <HiSparkles />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Growth-Driven Strategies' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performance Management' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'We measure your growth to reach your goals quickly.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Editorial QA',
-                    subtitle: 'Quality Assurance',
-                    description: 'Every asset is reviewed for clarity, consistency, and strategic alignment before publication.',
-                    icon: <HiCheckBadge />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Data-Driven Marketing' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Broad Insights' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'We move without risk using proven data.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'Human-Led Creativity',
-                    subtitle: 'Brand Authenticity',
-                    description: 'AI supports speed, while human editorial judgment protects originality and brand voice.',
-                    icon: <HiUser />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'Making a Difference with Innovation' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Innovative Techniques' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Stand out from competitors with the most modern tech tools in the industry.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Voice Consistency',
-                    subtitle: 'Brand Integrity',
-                    description: 'We maintain a unified tone across channels to strengthen recognition and trust.',
-                    icon: <HiDocumentText />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Strategic Partner' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Long-Term Success' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'We support our clients with long-term goals, not short-term ones.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
@@ -269,8 +348,30 @@ export default function ContentProduction() {
             { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
             { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
             { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ]
+        ],
+        authorizationSection: {
+            title: "Content Production Authorization Steps",
+            description: "In accordance with your service package, you can find the authorization steps for the platforms below.",
+            cards: [
+                {
+                    title: "Google Search Console Authorization",
+                    description: "Add Google Search Console permissions for a detailed content strategy.",
+                    highlightText: "Improve your performance by analyzing your organic visibility.",
+                    buttonText: "EXPLORE",
+                    buttonLink: "/en/services/google-search-console-setup-flow",
+                    theme: "light" as const
+                },
+                {
+                    title: "Google Analytics Authorization",
+                    description: "Define Google Analytics access for detailed analysis.",
+                    highlightText: "Increase the measurement accuracy of your analysis processes.",
+                    buttonText: "EXPLORE",
+                    buttonLink: "/en/google-analytics-setup-flow",
+                    theme: "dark" as const
+                }
+            ]
+        }
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-production" />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-production" disableApiHeroTextOverride={true} />
 }

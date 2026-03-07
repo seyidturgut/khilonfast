@@ -30,8 +30,13 @@ export default function PaymentSystemsMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Ödeme Sistemleri Firmaları İçin 360° Pazarlama Yönetimi',
-            subtitle: 'Tek Noktadan Pazarlama Çözümleri',
+            title: (
+                <>
+                    Ödeme Sistemleri İçin<br />
+                    Tek Noktadan Pazarlama Çözümleri
+                </>
+            ),
+            subtitle: '',
             description: 'Ödeme sistemlerinde büyümenin sırrını keşfedin. khilonfast ile pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
             buttonLink: '#pricing',
@@ -58,7 +63,12 @@ export default function PaymentSystemsMarketing() {
         },
         tabsSection: {
             tag: 'Ödeme Sistemleri İçin',
-            title: '360° Stratejik Pazarlama Çözümleri',
+            title: (
+                <>
+                    Ödeme Sistemleri İçin<br />
+                    360° Stratejik Pazarlama Çözümleri
+                </>
+            ),
             description1: 'Ödeme sistemlerinde büyümek için doğru adımları atın.',
             description2: 'İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın.',
             tabs: [
@@ -104,7 +114,7 @@ export default function PaymentSystemsMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -134,11 +144,11 @@ export default function PaymentSystemsMarketing() {
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ border: '1px solid #eef2d0' }}>
                                     <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Ödeme sistemleri markaları için pazarlama faaliyetlerine hızlıca başlamaya odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Ödeme sistemleri markaları için pazarlama faaliyetlerine hızlıca başlamayı ve sonuç almaya odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Süreçleri hızlıca devreye alır ve operasyonel yükten kurtarır.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Ekip kurma derdi olmadan hemen başlayın.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen KOBİ'ler.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital pazarlama süreçlerinizi hızlıca devreye alır ve operasyonel yüklerden kurtarır.</li>
+                                        <li><HiCheck /> <strong>Fark:</strong> Ekstra toplantılar veya ekip kurma derdi olmadan pazarlama faaliyetlerine hemen başlayabilir, sonuçları kısa sürede görebilirsiniz.</li>
+                                        <li><HiCheck /> <strong>Uygun:</strong> Zaman ve kaynak yönetimini sadeleştirmek isteyen küçük ve orta ölçekli işletmeler.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -146,11 +156,11 @@ export default function PaymentSystemsMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
                                     <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Ödeme sistemleri markaları için büyümeye ve derinlemesine çözümlere odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Ödeme sistemleri markaları için büyümeye ve derinlemesine pazarlama çözümlerine odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Kullanıcı tabanınızı sürdürülebilir büyütür.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> İşletme etkisini artırarak rekabet avantajı sağlar.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Dijitalde büyümeye yatırım yapan işletmeler.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital varlığınızı genişletmek ve müşteri tabanınızı büyütmek için dengeli ve sürdürülebilir çözümler sunar.</li>
+                                        <li><HiCheck /> <strong>Fark:</strong> İşletmenizin pazarlama etkisini artırarak, büyümeye odaklanmanızı sağlar ve rakiplerinize karşı avantaj kazandırır.</li>
+                                        <li><HiCheck /> <strong>Uygun:</strong> Dijital pazarlamada bir adım ileri gitmek isteyen ve büyümeye yatırım yapmayı hedefleyen işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -158,11 +168,11 @@ export default function PaymentSystemsMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
                                     <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Marka gücünü maksimize eden en üst seviye çözümlere odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>Ödeme sistemleri markaları için pazarlama süreçlerini en üst seviyeye taşıyan ve marka gücünü maksimize eden çözümlere odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm kanalları entegre eden marka stratejisi.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Sektörde lider konuma getiren tam kapsamlı strateji.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Rekabette öne çıkmak isteyen büyük işletmeler.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm pazarlama kanallarını entegre ederek güçlü bir marka stratejisi oluşturur ve kalıcı bir etki yaratır.</li>
+                                        <li><HiCheck /> <strong>Fark:</strong> Pazarda lider konuma gelmenizi sağlayacak tam kapsamlı bir strateji ile yüksek seviyede rekabet avantajı sunar.</li>
+                                        <li><HiCheck /> <strong>Uygun:</strong> Tam donanımlı bir pazarlama stratejisiyle sektörde öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -314,7 +324,7 @@ export default function PaymentSystemsMarketing() {
         hero: {
             ...trConfig.hero,
             title: `360° Marketing Management for Payment Systems Companies`,
-            subtitle: 'One-Stop Marketing Solutions',
+            subtitle: '',
             description: `Scale payment adoption and retention with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
             badgeText: 'Payment Systems Companies Growth Engine'
@@ -373,7 +383,7 @@ export default function PaymentSystemsMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>
@@ -509,5 +519,5 @@ export default function PaymentSystemsMarketing() {
         } : {})
     }
 
-    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-payment-systems" />
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-payment-systems" disableApiHeroTextOverride={true} disableApiPackages={true} />
 }

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
 import db from '../config/database.js';
+import { clearCache } from '../middleware/cache.js';
 import authMiddleware from '../middleware/auth.js';
 import adminMiddleware from '../middleware/admin.js';
 
@@ -163,6 +164,7 @@ router.post('/settings', async (req, res) => {
                 );
             }
             await connection.commit();
+            clearCache(); // Clear all cache when settings change
             res.json({ message: 'Settings updated successfully' });
         } catch (err) {
             await connection.rollback();
@@ -251,6 +253,7 @@ router.put('/pages/slug/:slug(*)/content', async (req, res) => {
         );
 
         await connection.commit();
+        clearCache(); // Clear all cache when page content changes
         res.json({ message: 'Content updated', page_id: pageId });
     } catch (error) {
         await connection.rollback();
@@ -327,6 +330,7 @@ router.post('/pages', async (req, res) => {
             'INSERT INTO cms_pages (title, slug, meta_title, meta_description) VALUES (?, ?, ?, ?)',
             [title, slug, meta_title, meta_description]
         );
+        clearCache();
         res.status(201).json({ id: result.insertId, message: 'Page created' });
     } catch (error) {
         console.error('Create page error:', error);
@@ -345,6 +349,7 @@ router.put('/pages/:id', async (req, res) => {
              WHERE id = ?`,
             [title, slug, meta_title, meta_description, is_active ? 1 : 0, id]
         );
+        clearCache();
         res.json({ message: 'Page updated' });
     } catch (error) {
         console.error('Update page error:', error);
@@ -378,6 +383,7 @@ router.put('/pages/:id/content', async (req, res) => {
             'INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)',
             [id, JSON.stringify(content_json || {}), is_published ? 1 : 0]
         );
+        clearCache();
         res.json({ message: 'Content updated' });
     } catch (error) {
         console.error('Update page content error:', error);
@@ -431,6 +437,7 @@ router.post('/products', async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [product_key, name, description, price, currency, category, type, duration_days, access_content_url, features]
         );
+        clearCache();
         res.status(201).json({ id: result.insertId, message: 'Ürün başarıyla oluşturuldu.' });
     } catch (error) {
         console.error('Create product error:', error);
@@ -479,6 +486,7 @@ router.put('/products/:id', async (req, res) => {
             WHERE id=?`,
             [name, description, price, currency, category, is_active, type, duration_days, access_content_url, features, productId]
         );
+        clearCache();
         res.json({ message: 'Ürün güncellendi.' });
     } catch (error) {
         console.error('Update product error:', error);
@@ -490,6 +498,7 @@ router.put('/products/:id', async (req, res) => {
 router.delete('/products/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM products WHERE id = ?', [req.params.id]);
+        clearCache();
         res.json({ message: 'Ürün silindi.' });
     } catch (error) {
         console.error('Delete product error:', error);

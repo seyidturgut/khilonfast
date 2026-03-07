@@ -9,6 +9,7 @@ import { useAuth } from './context/AuthContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import SeoHead from './components/SeoHead'
 import Home from './pages/Home'
 import GoToMarket from './pages/GoToMarket'
 import ContentStrategy from './pages/ContentStrategy'
@@ -168,6 +169,7 @@ function MainContent() {
 
     return (
         <>
+            <SeoHead />
             <ScrollToTop />
             {!isAdminRoute && !isLegacyRoute && <Header />}
             <main
@@ -245,11 +247,13 @@ function MainContent() {
                         <Route path="sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFleet}`} replace />} />
                         <Route path="sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralManufacturing}`} replace />} />
                         <Route path="urunler/maestro-ai" element={<MaestroAI />} />
-                        <Route path="hizmetler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
+                        <Route path="urunler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
                     </Route>
 
                     {/* Turkish Routes (Default) */}
                     <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Navigate to="/" replace />} />
+                    <Route path="/elementor-696" element={<Navigate to="/" replace />} />
                     <Route path={`/${slugsTr.about}`} element={<About />} />
                     <Route path="/nasil-calisir" element={<Navigate to="/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi" replace />} />
                     <Route path={`/${slugsTr.howItWorks}`} element={<HowItWorks />} />
@@ -294,7 +298,8 @@ function MainContent() {
                     <Route path={`/${slugsTr.maestro}`} element={<MaestroAI />} />
                     <Route path="/hizmetlerimiz/maestro-ai" element={<Navigate to="/urunler/maestro-ai" replace />} />
                     <Route path="/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy" element={<Navigate to="/urunler/maestro-ai" replace />} />
-                    <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<EyeTracking />} />
+                    <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />
+                    <Route path="/hizmetler/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />
                     <Route path={`/${slugsTr.eyeTracking}`} element={<EyeTracking />} />
                     <Route path="/hizmetlerimiz/google-search-console-kurulum-akisi" element={<SearchConsoleSetup />} />
                     {setupFlows.map((flow) => (
