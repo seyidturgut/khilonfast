@@ -91,7 +91,7 @@ export default function FintechMarketing() {
                                     <h3 style={{ color: '#1b3d2d', fontSize: '1.6rem' }}>FinTech Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p style={{ color: '#1b3d2d', fontWeight: '500' }}>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('trainingGrowth')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <Link to={path('trainingFintech')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>

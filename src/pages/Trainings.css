@@ -51,25 +51,61 @@
 .training-card {
     background: #fff;
     border: 1px solid #e7edf4;
-    border-radius: 18px;
-    padding: 1.25rem;
+    border-radius: 20px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 250px;
-    box-shadow: 0 10px 24px rgba(26, 58, 82, 0.04);
+    box-shadow: 0 4px 20px rgba(26, 58, 82, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.training-card-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: inline-flex;
+.training-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(26, 58, 82, 0.08);
+}
+
+.training-card-image {
+    position: relative;
+    height: 180px;
+    width: 100%;
+}
+
+.training-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.training-card:hover .training-card-image img {
+    transform: scale(1.08);
+}
+
+.training-card-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 36px;
+    height: 36px;
+    background: rgba(212, 240, 77, 0.95);
+    color: #1a3a52;
+    border-radius: 10px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(197, 214, 61, 0.2);
-    color: #1a3a52;
-    margin-bottom: 0.85rem;
+    font-size: 1.2rem;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+
+.training-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
 
 .training-card h3 {
     color: #1a3a52;
@@ -82,17 +118,39 @@
     color: #5b6470;
     font-size: 0.95rem;
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .training-link {
     margin-top: auto;
     text-decoration: none;
+    background: #d4f04d;
     color: #1a3a52;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
     font-weight: 700;
-    display: inline-flex;
+    font-size: 0.95rem;
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
+    justify-content: center;
+    gap: 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.training-link:hover {
+    background: #c5d63d;
+    gap: 0.9rem;
+    transform: translateY(-2px);
+}
+
+.training-link svg {
+    font-size: 1.1rem;
 }
 
 @media (max-width: 1080px) {

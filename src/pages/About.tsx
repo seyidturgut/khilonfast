@@ -382,7 +382,7 @@ export default function About() {
                             </div>
                         </div>
                         <div className="about-visual">
-                            <img src="/images/about/visual.png" alt="khilonfast strateji ve yürütme yaklaşımını anlatan görsel" className="floating-img" />
+                            <img src="/images/about/3-2.webp" alt="khilonfast strateji ve yürütme yaklaşımını anlatan görsel" className="floating-img" />
                         </div>
                     </div>
                 </div>

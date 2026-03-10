@@ -41,6 +41,7 @@ export interface ServiceFeature {
     title: string;
     description: string;
     icon?: ReactNode;
+    image?: string;
 }
 
 export interface ComparisonRow {
@@ -1041,7 +1042,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     return (
         <div className="page-container service-template-page">
             <section className="service-hero">
-                <Breadcrumbs items={localizedBreadcrumbs} />
+                <Breadcrumbs 
+                    items={localizedBreadcrumbs} 
+                    homePath={currentLang === 'en' ? '/en' : '/'} 
+                />
                 <div className="container service-hero-container">
                     <div className="service-hero-grid">
                         <div className="service-hero-text">
@@ -1203,8 +1207,14 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
                             <div className={`features-grid-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
                                 {displayFeaturesSection.features.map((feature: ServiceFeature, idx: number) => (
-                                    <div key={idx} className={`feature-card-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
-                                        <div className="feature-icon-box">{feature.icon}</div>
+                                    <div key={idx} className={`feature-card-linear ${displayFeaturesSection.compact ? 'compact' : ''} ${feature.image ? 'has-image' : ''}`}>
+                                        {feature.image ? (
+                                            <div className="feature-image-box">
+                                                <img src={feature.image} alt={feature.title} />
+                                            </div>
+                                        ) : (
+                                            <div className="feature-icon-box">{feature.icon}</div>
+                                        )}
                                         <div className="feature-content-box">
                                             <h3>{feature.title}</h3>
                                             <p>{feature.description}</p>

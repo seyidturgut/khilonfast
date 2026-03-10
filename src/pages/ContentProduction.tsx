@@ -212,6 +212,28 @@ export default function ContentProduction() {
                 }
             ]
         },
+        comparisonTable: {
+            headers: [
+                { title: 'Core', icon: <HiKey /> },
+                { title: 'Growth', icon: <HiChartBar /> },
+                { title: 'Ultimate', icon: <HiTrophy /> }
+            ],
+            rows: [
+                {
+                    feature: 'Blog Yazısı',
+                    values: ['4 içerik x 750 kelime', '6 içerik x 750 kelime', '8 içerik x 750 kelime']
+                },
+                {
+                    feature: 'Görsel',
+                    values: ['-', true, true]
+                },
+                {
+                    feature: 'Revizyon Hakkı',
+                    values: ['1', '2', '4']
+                }
+            ],
+            note: '(*) KDV hariç.'
+        },
         testimonial: {
             quote: 'İçerik üretimindeki tıkanıklığımızı khilonfast ile aştık. Düzenli ve kaliteli içerikler sayesinde organik trafiğimizde %40 artış gördük.',
             author: 'Zeynep Aydın',

@@ -36,7 +36,7 @@ export default function SeoService() {
             description: 'Doğru anahtar kelime stratejileri ve SEO optimizasyonuyla, khilonfast ile markanızın organik sıralamalarda yükselmesini sağlayın. Hedef kitlenizi büyütün.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/seo-yonetimi/hero.png',
+            image: '/images/hizmetlerimiz/seo-yonetimi/TR_SEOservices.avif',
             hideBadge: true,
             badgeText: "Üst Sıralara Çıkın! Rekabetin Önüne Geçin!",
             badgeIcon: <HiGlobeAlt />,

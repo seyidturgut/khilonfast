@@ -137,6 +137,9 @@ export default function Header() {
     const [cartOpen, setCartOpen] = useState(false)
     const { isAuthenticated } = useAuth()
     const isHome = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/'
+    const useSolidHeader =
+        location.pathname === '/butunlesik-pazarlama-kurulum-akisi' ||
+        location.pathname === '/en/butunlesik-pazarlama-kurulum-akisi'
     const desktopNavRef = useRef<HTMLElement | null>(null)
 
     const handleLanguageChange = (lang: string) => {
@@ -288,7 +291,7 @@ export default function Header() {
     }
 
     return (
-        <header className={`header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
+        <header className={`header ${scrolled || useSolidHeader ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
             <div className="container header-container">
                 <div className="logo">
                     <Link to={currentLang === 'en' ? '/en' : '/'}>

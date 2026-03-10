@@ -18,9 +18,7 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function IntegratedDigitalMarketing() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
-    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const { t } = useTranslation('common')
 
     useEffect(() => {
         document.title = t('serviceIDM.hero.title')
@@ -111,7 +109,7 @@ export default function IntegratedDigitalMarketing() {
                     description: t('serviceIDM.authorization.card1.desc'),
                     highlightText: t('serviceIDM.authorization.card1.highlight'),
                     buttonText: t('common.discover'),
-                    buttonLink: `${langPrefix}/search-ads-google-reklamlari-kurulum-akisi`,
+                    buttonLink: '/butunlesik-pazarlama-kurulum-akisi',
                     theme: 'light' as const
                 },
                 {
@@ -119,7 +117,7 @@ export default function IntegratedDigitalMarketing() {
                     description: t('serviceIDM.authorization.card2.desc'),
                     highlightText: t('serviceIDM.authorization.card2.highlight'),
                     buttonText: t('common.discover'),
-                    buttonLink: `${langPrefix}/google-tag-manager-kurulum-akisi`,
+                    buttonLink: '/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi',
                     theme: 'dark' as const
                 }
             ]

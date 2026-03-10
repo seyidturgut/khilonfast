@@ -177,6 +177,18 @@ export default function SocialMediaAds() {
                     description: 'Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.',
                     icon: <HiKey />,
                     features: [],
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Küçük işletmeler ve dijital pazarlamaya yeni başlayanlar.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Dijital pazarlamayı düşük bütçe ve düşük riskle keşfetmek isteyen, hızlı başlangıç isteyen firmalar için ideal.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ],
                     buttonText: t('pricing.buyNow')
                 },
                 {
@@ -188,6 +200,18 @@ export default function SocialMediaAds() {
                     isPopular: true,
                     icon: <HiChartBar />,
                     features: [],
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Dijital operasyonlarını büyütmeyi hedefleyen orta ölçekli işletmeler.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Gelişmiş hedefleme ve optimizasyon teknikleriyle etkileşimi artırmak ve dönüşüm oranlarını yükseltmek için mükemmel.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ],
                     buttonText: t('pricing.buyNow')
                 },
                 {
@@ -198,7 +222,68 @@ export default function SocialMediaAds() {
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
                     icon: <HiTrophy />,
                     features: [],
+                    details: [
+                        {
+                            title: 'Kimler İçin Uygun',
+                            description: 'Reklam bütçesini en iyi şekilde yönetmek isteyen büyük işletmeler.',
+                            icon: <HiUserGroup />
+                        },
+                        {
+                            title: 'Neden Tercih Edilmeli',
+                            description: 'Agresif büyüme, pazar liderliği veya maksimum getiri için özel bir performans ekibi kurmak için mükemmel.',
+                            icon: <HiRocketLaunch />
+                        }
+                    ],
                     buttonText: t('pricing.buyNow')
+                }
+            ]
+        },
+        comparisonTable: {
+            headers: [
+                { title: 'Core', icon: <HiKey /> },
+                { title: 'Growth', icon: <HiChartBar /> },
+                { title: 'Ultimate', icon: <HiTrophy /> }
+            ],
+            rows: [
+                {
+                    feature: 'Sosyal Medya Reklamları',
+                    values: [
+                        '1 Meta Hesabı',
+                        '2 Hesap (Meta + LinkedIn veya TikTok)',
+                        '3 Hesap (Meta ve/veya LinkedIn ve/veya TikTok)'
+                    ]
+                },
+                {
+                    feature: 'Ek kurulum ücreti',
+                    values: [
+                        'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.',
+                        'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.',
+                        'Aylık paketlerde kurulum ücreti, ilk ay paket ücreti kadar olup sadece ilk ay uygulanır.'
+                    ]
+                },
+                {
+                    feature: 'Kampanya yönetimi',
+                    values: ['2 Kampanya', '4 Kampanya', '6 Kampanya']
+                },
+                {
+                    feature: 'Kampanya optimizasyonu',
+                    values: ['Temel', true, 'Sürekli']
+                },
+                {
+                    feature: 'Performans raporu',
+                    values: [
+                        'E-posta ile, ayda 1 kez raporlama',
+                        'E-posta ile, 2 haftada 1 raporlama',
+                        'E-posta ile, haftada 1 raporlama'
+                    ]
+                },
+                {
+                    feature: 'Reklam Bütçesi Politikası',
+                    values: [
+                        'Reklam bütçesinin %10’u core paket ücretini aşmıyorsa core paket üzerinden fiyatlandırılır; aştığında bir üst paketten fiyatlandırılır.',
+                        'Reklam bütçesinin %10’u growth paket ücretini aşmıyorsa growth paket üzerinden fiyatlandırılır; aştığında bir üst pakete geçilir.',
+                        'Reklam bütçesinin %10’u ultimate paket ücretini aşmıyorsa ultimate paket üzerinden fiyatlandırılır; aşması durumunda ek tutar yüzdesel olarak eklenir ve sonraki aylarda bulunduğu üst paketten fiyatlandırma devam eder.'
+                    ]
                 }
             ]
         },

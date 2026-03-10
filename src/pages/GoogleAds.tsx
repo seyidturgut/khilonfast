@@ -203,7 +203,7 @@ export default function GoogleAds() {
                     description: "Sürecin baştan sona nasıl ilerlediğini adım adım görün.",
                     highlightText: "Doğru brief → net süreç → ölçülebilir sonuçları keşfedin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/google-tag-manager-kurulum-akisi",
+                    buttonLink: "/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi",
                     theme: "dark" as const
                 }
             ]

@@ -14,19 +14,20 @@ export default function Trainings() {
     const langPrefix = currentLang === 'en' ? '/en' : '';
 
     const trainingPrograms = [
-        { slugKey: 'trainingPayment', menuKey: 'payment' },
-        { slugKey: 'trainingB2B', menuKey: 'b2b' },
-        { slugKey: 'trainingFintech', menuKey: 'fintech' },
-        { slugKey: 'trainingTech', menuKey: 'tech' },
-        { slugKey: 'trainingManufacturing', menuKey: 'manufacturing' },
-        { slugKey: 'trainingEnergy', menuKey: 'energy' },
-        { slugKey: 'trainingDesign', menuKey: 'design' },
-        { slugKey: 'trainingFleet', menuKey: 'fleet' },
-        { slugKey: 'trainingFood', menuKey: 'food' }
-    ].map(({ slugKey, menuKey }) => ({
+        { slugKey: 'trainingPayment', menuKey: 'payment', image: '/images/TR_Odeme_Sistemleri-2.avif' },
+        { slugKey: 'trainingB2B', menuKey: 'b2b', image: '/images/TR_Butunlesik.avif' },
+        { slugKey: 'trainingFintech', menuKey: 'fintech', image: '/images/fintech.avif' },
+        { slugKey: 'trainingTech', menuKey: 'tech', image: '/images/teknoloji.avif' },
+        { slugKey: 'trainingManufacturing', menuKey: 'manufacturing', image: '/images/uretim.avif' },
+        { slugKey: 'trainingEnergy', menuKey: 'energy', image: '/images/enerji.avif' },
+        { slugKey: 'trainingDesign', menuKey: 'design', image: '/images/ofis.avif' },
+        { slugKey: 'trainingFleet', menuKey: 'fleet', image: '/images/filo.avif' },
+        { slugKey: 'trainingFood', menuKey: 'food', image: '/images/sef.avif' }
+    ].map(({ slugKey, menuKey, image }) => ({
         path: `${langPrefix}/${slugs[slugKey] ?? ''}`.replace(/\/{2,}/g, '/'),
         title: t(`header.menuItems.trainings.${menuKey}.title`),
-        summary: t(`header.menuItems.trainings.${menuKey}.desc`)
+        summary: t(`header.menuItems.trainings.${menuKey}.desc`),
+        image
     }));
 
     return (
@@ -50,14 +51,19 @@ export default function Trainings() {
                     <div className="trainings-grid">
                         {trainingPrograms.map((program) => (
                             <article key={program.path} className="training-card">
-                                <div className="training-card-icon">
-                                    <HiAcademicCap />
+                                <div className="training-card-image">
+                                    <img src={program.image} alt={program.title} />
+                                    <div className="training-card-badge">
+                                        <HiAcademicCap />
+                                    </div>
                                 </div>
-                                <h3>{program.title}</h3>
-                                <p>{program.summary}</p>
-                                <Link to={program.path} className="training-link">
-                                    {t('trainingsPage.list.open', 'Eğitimi Aç')} <HiArrowRight />
-                                </Link>
+                                <div className="training-card-content">
+                                    <h3>{program.title}</h3>
+                                    <p>{program.summary}</p>
+                                    <Link to={program.path} className="training-link">
+                                        {t('trainingsPage.list.open', 'Eğitimi Aç')} <HiArrowRight />
+                                    </Link>
+                                </div>
                             </article>
                         ))}
                     </div>

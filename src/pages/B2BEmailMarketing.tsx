@@ -37,7 +37,7 @@ export default function B2BEmailMarketing() {
             description: 'khilonfast ile hedef kitlenizi etkileyen e-posta kampanyaları oluşturun. Kişiselleştirilmiş içeriklerle açılma oranlarınızı artırın ve düşük tıklama oranlarını geride bırakın.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/b2b-email-pazarlama/TR_B2BEmailMarketing.avif',
+            image: '/images/hizmetlerimiz/seo-yonetimi/TR_B2BEmailMarketing.avif',
             imageClassName: 'hero-main-img-content-production',
             imageContainerClassName: 'hero-image-container-content-production',
             hideBadge: true,
@@ -222,6 +222,44 @@ export default function B2BEmailMarketing() {
                 }
             ]
         },
+        comparisonTable: {
+            headers: [
+                { title: 'Core', icon: <HiKey /> },
+                { title: 'Growth', icon: <HiChartBar /> },
+                { title: 'Ultimate', icon: <HiTrophy /> }
+            ],
+            rows: [
+                {
+                    feature: 'Veritabanı Miktarı',
+                    values: ['1,000 kişilik data', '5,000 kişilik data', '10,000 kişilik data']
+                },
+                {
+                    feature: 'Email İçerik Üretimi',
+                    values: [
+                        'Temel HTML email tasarımı',
+                        'İleri düzey HTML email tasarımı ve kişiselleştirme',
+                        'İleri düzey HTML email tasarımı ve kişiselleştirme'
+                    ]
+                },
+                {
+                    feature: 'Dönüşüm Optimizasyonu',
+                    values: [
+                        'Temel dönüşüm takip araçları',
+                        'Gelişmiş dönüşüm takip ve analiz',
+                        'Profesyonel dönüşüm analiz ve raporlama'
+                    ]
+                },
+                {
+                    feature: 'Revizyon Hakkı',
+                    values: ['1 revizyon hakkı', '2 revizyon hakkı', '3 revizyon hakkı']
+                },
+                {
+                    feature: 'Gönderim Raporlaması',
+                    values: ['Aylık rapor', 'Aylık rapor', 'Aylık rapor']
+                }
+            ],
+            note: '(*) KDV hariç.'
+        },
         testimonial: {
             quote: "E-posta pazarlamasında doğru hedefleme ile satış döngümüz %30 kısaldı. khilonfast'in B2B tecrübesi gerçekten fark yaratıyor.",
             author: 'Zeynep Aras',
@@ -241,7 +279,7 @@ export default function B2BEmailMarketing() {
             description: 'khilonfast builds high-converting outbound and nurture email systems that improve open rates, increase reply quality, and accelerate sales cycles.',
             buttonText: t('common.startNow'),
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/b2b-email-pazarlama/TR_B2BEmailMarketing.avif',
+            image: '/images/hizmetlerimiz/seo-yonetimi/TR_B2BEmailMarketing.avif',
             imageClassName: 'hero-main-img-content-production',
             imageContainerClassName: 'hero-image-container-content-production',
             hideBadge: true,

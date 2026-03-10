@@ -119,6 +119,10 @@
                     "title": "Tüm Eğitimler",
                     "desc": "Program listesini tek ekranda görüntüleyin"
                 },
+                "growth": {
+                    "title": "Büyüme Odaklı Pazarlama Eğitimi",
+                    "desc": "khilonfast temel büyüme odaklı pazarlama eğitim programı."
+                },
                 "payment": {
                     "title": "Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi",
                     "desc": "Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik."
@@ -1085,7 +1089,7 @@
                 "continuous": "Sürekli",
                 "limited": "Sınırlı",
                 "geoTargeting": "Lokasyon, zaman, cihaz",
-                "demographic": "İnmarket vb. demografik kitle segmentasyonu",
+                "demographic": "remarketing vb. demografik kitle segmentasyonu",
                 "profile1": "1 Meta Hesap",
                 "profile2": "2 Hesap (Meta + Linkedin veya Tiktok)",
                 "profile3": "3 Hesap (Meta ve/veya Linkedin ve/veya Tiktok)",

@@ -429,59 +429,77 @@ export default function TrainingProgramPage() {
         {
             title: 'Giriş\nSatışa Giden\nYolun Haritası',
             description: 'Pazarlama insanla başlar ve doğru akışla güçlenir. Bu derste, pazarlamayı 6 adımda ölçülebilir ve tekrar edilebilir hale getiriyoruz. Hedef kitlenizi anlamayı öğrenin, stratejinizi netleştirin ve satış yolculuğunuz için güçlü bir başlangıç yapın.',
-            icon: <HiRocketLaunch />
+            icon: <HiRocketLaunch />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim00_satia_giden_yolun_haritasi.webp'
         },
         {
             title: 'Hedef Kitle\nKarar Verici ve Onaylayıcıyı Doğru Okumak',
             description: 'Satış sürecinde başarı, rolleri doğru anlamaktan geçer. Bu derste CEO, CFO, CTO ve e-ticaret yöneticisinin karar dinamiklerini inceliyoruz. Mesajınızı her role uyarlamayı öğrenin ve ödeme sistemlerinde satış sürecinizi daha etkili hale getirin.',
-            icon: <HiUserGroup />
+            icon: <HiUserGroup />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim01_hedef_kitle.webp'
         },
         {
             title: 'Egzersiz\nHedef Kitle Sorunlarını\nNot Etmek',
             description: 'Hedef kitlenizin sorunlarını anlamak, güçlü bir pazarlamanın temelidir. Bu bölümde kısa bir egzersizle kendi kitlenizin ihtiyaçlarını ve çözüm önerilerinizi netleştiriyorsunuz. Öğrendiklerinizi değer önerisi kurgusuna taşıyarak sonraki adım için hazır hale geliyorsunuz.',
-            icon: <HiPencilSquare />
+            icon: <HiPencilSquare />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim02_egzersiz.webp'
         },
         {
             title: 'Değer Önerisi\nEthos, Pathos, Logos ile Fark Yaratmak',
             description: 'Satış önerisi özellikleri anlatır, değer önerisi ise farkı gösterir. Bu bölümde Ethos, Pathos, Logos çerçevesini pazarlama mesajlarına nasıl taşıyacağınızı öğreniyorsunuz. Güveni, duyguyu ve mantığı bir araya getirerek mesajlarınızı daha etkili hale getiriyorsunuz.',
-            icon: <HiPresentationChartLine />
+            icon: <HiPresentationChartLine />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim03_deger_onerisi.webp'
         },
         {
             title: 'Değer Önerisini Kurmak\nPain Point ve\nRol Bazlı Mesaj',
             description: 'Güçlü bir değer önerisi fikirle değil, sistematik bir kurguyla oluşur. Bu bölümde pain point, çözüm ve Ethos-Pathos-Logos üçlüsünü tablo yöntemiyle uyguluyoruz. CFO, CTO gibi farklı rollere göre mesaj özelleştirmeyi öğrenerek satış sürecinizi güçlendiriyorsunuz.',
-            icon: <HiPuzzlePiece />
+            icon: <HiPuzzlePiece />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim03_deger_onerisi.webp'
         },
         {
             title: 'Satış Hunisi\nMesajı Zaman, Mecra ve Aşamaya Göre Uyarlamak',
             description: 'Satış hunisi, potansiyel müşterinin farkındalıktan satın almaya uzanan yolculuğunu anlatır. Bu bölümde TOFU, MOFU, BOFU yapısını inceliyoruz. Her aşama için en etkili mesajı ve içeriği nasıl seçeceğinizi öğrenerek doğru zaman-doğru mecra uyumunu kuruyorsunuz.',
-            icon: <HiFunnel />
+            icon: <HiFunnel />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim5-1.webp'
         },
         {
             title: 'Başlangıç Metrikleri\nBüyümenin Sayısal Pusulası',
             description: 'Pazarlamanın gerçek başlangıcı fikirler değil, metriklerdir. Bu bölümde CAC, LTV, LTV/CAC oranı, ROAS ve ROI kavramlarını ele alıyoruz. Karar süreçlerini güçlendiren ortak bir dil oluşturmayı öğrenerek pazarlama yatırımlarınızı daha stratejik yönetiyorsunuz.',
-            icon: <HiChartBar />
+            icon: <HiChartBar />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim6.webp'
         },
         {
             title: 'Pazarlamanın\nÜç Net Hedefi\nKazanmak, Derinleşmek, Korumak',
             description: 'Her pazarlama faaliyeti üç temel amaca hizmet eder: yeni müşteri kazanmak, mevcut müşteriyle derinleşmek ve kaybı önlemek. Bu bölümde bu üç hedefin finansal etkilerini inceliyoruz. Hangi aksiyonun hangi katkıyı sağladığını görerek stratejinizi daha net şekillendiriyorsunuz.',
-            icon: <HiBolt />
+            icon: <HiBolt />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim8.webp'
         },
         {
             title: 'Web Siteleri\nWeb Sitesindeki\nSayfaların Görevleri',
             description: 'Web sitesi yalnızca dijital bir vitrin değil, dönüşümün merkezi bir aracıdır. Bu bölümde ana sayfa, ürün, kategori, blog ve landing page yapılarının rolünü ve A/B testleriyle nasıl optimize edileceğini inceliyoruz. Bu dersten sonra: Web sitesindeki her sayfanın işlevini ve müşteri yolculuğundaki yerini kavrayabilir, landing page kurgularında Pathos-Ethos-Logos dengesini nasıl kullanacağınızı görebilirsiniz.',
-            icon: <HiGlobeAlt />
+            icon: <HiGlobeAlt />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim9.webp'
         },
         {
             title: 'Lead Sonrası Akış\nPsikoloji, Zamanlama ve\nÇok Kanallı Temas',
             description: 'Lead geldikten sonra dönüşümün kaderi hızlı ve doğru temasla belirlenir. Bu bölümde beynin karar yorgunluğu, ilk 5 dakikanın önemi ve Pathos-Ethos-Logos sıralı iletişimi üzerinden lead yönetimini ele alıyoruz. Bu dersten sonra: Lead sonrası sürecin psikolojik dinamiklerini kavrayabilir, zamanlama ve çok kanallı temasın dönüşüm oranlarına etkisini görebilirsiniz.',
-            icon: <HiComputerDesktop />
+            icon: <HiComputerDesktop />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim10.webp'
         },
         {
             title: 'İlk Temastan Satışa\nEtkili İletişim, İtiraz\nYönetimi ve Takip',
             description: 'Satış süreci üç temel aşamadan oluşur: etkili giriş, hizmet sunumu ve kapanış. Bu bölümde SPIN soruları, itiraz yönetimi ve takip adımlarını ele alıyoruz. Müşteri ihtiyaçlarını açığa çıkarmayı, itirazları fırsata çevirmeyi ve görüşmeleri sistematik biçimde tamamlamayı öğreniyorsunuz.',
-            icon: <HiChatBubbleLeftRight />
+            icon: <HiChatBubbleLeftRight />,
+            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim11.webp'
         }
     ];
+
+    const fintechTrainingFeatures = paymentTrainingFeatures.map(item => ({
+        ...item,
+        description: item.description.replace('ödeme sistemlerinde', 'fintech sektöründe')
+    }));
+
+
 
     const shouldUseAdvancedFeatures =
         isPaymentSystemsTraining ||
@@ -506,7 +524,7 @@ export default function TrainingProgramPage() {
             badgeIcon: <HiAcademicCap />
         },
         breadcrumbs: [
-            { label: isEn ? 'Trainings' : 'Eğitimlerimiz', path: `/${activeSlugs.trainings ?? ''}` },
+            { label: isEn ? 'Trainings' : 'Eğitimler', path: `/${activeSlugs.trainings ?? ''}` },
             { label: trainingTitle }
         ],
         videoShowcase: {
@@ -557,20 +575,24 @@ export default function TrainingProgramPage() {
                 'training-filo-kiralama-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es'
             } as Record<string, string>)[training.productKey] || 'https://player.vimeo.com/video/1045939223'
         },
-        featuresSection: {
+        featuresSection: (isB2BTraining || isSoftwareTraining || isManufacturingTraining || isEnergyTraining || isInteriorDesignTraining || isFleetRentalTraining || isIndustrialFoodTraining) ? undefined : {
             tag: isEn ? 'Program Content' : 'Program İçeriği',
-            title: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+            title: isPaymentSystemsTraining || isFintechTraining
                 ? 'Büyüme Odaklı Pazarlama Programı'
                 : isEn
                     ? 'Modules Included in the Training'
                     : 'Eğitimde Yer Alan Modüller',
-            description: isPaymentSystemsTraining || isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining
+            description: isPaymentSystemsTraining || isFintechTraining
                 ? 'Pazarlama yatırımınızın geri dönüşünü artırın!'
                 : isEn
                     ? 'A field-ready curriculum designed to move teams from strategy to execution.'
                     : 'Temelden uygulamaya uzanan, sahada uygulanabilir eğitim akışı.',
-            features: isPaymentSystemsTraining ? paymentTrainingFeatures : (shouldUseAdvancedFeatures ? advancedFeatures : defaultFeatures),
-            compact: isPaymentSystemsTraining,
+            features: isPaymentSystemsTraining 
+                ? paymentTrainingFeatures 
+                : (isFintechTraining 
+                    ? fintechTrainingFeatures 
+                    : (shouldUseAdvancedFeatures ? advancedFeatures : defaultFeatures)),
+            compact: isPaymentSystemsTraining || isFintechTraining,
             introBlock: isPaymentSystemsTraining
                 ? {
                     title: 'Eğitim İçeriği',
@@ -1102,7 +1124,7 @@ export default function TrainingProgramPage() {
                     ? baseConfig.videoShowcase.videoUrl
                     : useOrFallback(cmsContent?.videoShowcase?.videoUrl, baseConfig.videoShowcase.videoUrl)
             },
-            featuresSection: {
+            featuresSection: baseConfig.featuresSection ? {
                 ...baseConfig.featuresSection,
                 tag: lockFeaturesSectionContent
                     ? baseConfig.featuresSection?.tag
@@ -1123,7 +1145,7 @@ export default function TrainingProgramPage() {
                             icon: (baseConfig.featuresSection?.features?.[idx]?.icon) || baseConfig.featuresSection?.features?.[0]?.icon
                         }))
                         : baseConfig.featuresSection?.features
-            },
+            } : undefined,
             pricingSection: {
                 ...baseConfig.pricingSection,
                 tag: useOrFallback(cmsContent?.pricingSection?.tag, baseConfig.pricingSection.tag),
@@ -1156,12 +1178,12 @@ export default function TrainingProgramPage() {
             description: baseConfig.videoShowcase.description,
             videoUrl: baseConfig.videoShowcase.videoUrl
         },
-        featuresSection: {
+        featuresSection: baseConfig.featuresSection ? {
             tag: baseConfig.featuresSection.tag,
             title: baseConfig.featuresSection.title,
             description: baseConfig.featuresSection.description,
             features: (baseConfig.featuresSection.features || []).map((f: any) => ({ title: f.title, description: f.description }))
-        },
+        } : { tag: '', title: '', description: '', features: [] },
         pricingSection: {
             tag: baseConfig.pricingSection.tag,
             title: baseConfig.pricingSection.title,

@@ -34,6 +34,7 @@ import MaestroAI from './pages/MaestroAI'
 import EyeTracking from './pages/EyeTracking'
 import SearchConsoleSetup from './pages/SearchConsoleSetup'
 import SetupFlowPage from './pages/SetupFlowPage'
+import IntegratedMarketingSetupFlow from './pages/IntegratedMarketingSetupFlow'
 import ContactPage from './pages/ContactPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -129,6 +130,7 @@ function MainContent() {
         '/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy',
         '/hizmetler/eye-tracking-reklam-analizi',
         '/hizmetlerimiz/google-search-console-kurulum-akisi',
+        '/butunlesik-pazarlama-kurulum-akisi',
         ...setupFlows.map((flow) => flow.path),
         '/egitimler',
         '/giris',
@@ -302,6 +304,7 @@ function MainContent() {
                     <Route path="/hizmetler/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />
                     <Route path={`/${slugsTr.eyeTracking}`} element={<EyeTracking />} />
                     <Route path="/hizmetlerimiz/google-search-console-kurulum-akisi" element={<SearchConsoleSetup />} />
+                    <Route path="/butunlesik-pazarlama-kurulum-akisi" element={<IntegratedMarketingSetupFlow />} />
                     {setupFlows.map((flow) => (
                         <Route key={flow.path} path={flow.path} element={<SetupFlowPage path={flow.path} />} />
                     ))}
