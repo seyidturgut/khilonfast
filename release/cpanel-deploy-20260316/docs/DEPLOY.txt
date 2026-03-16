@@ -1,0 +1,12 @@
+Khilonfast cPanel deploy paketi
+
+1. public_html klasorunun icindeki tum dosyalari cPanel'de public_html altina yukleyin.
+2. backend_app klasorunu cPanel Node.js App alanina yukleyin.
+3. backend_app/.env.example dosyasini .env olarak kopyalayip production bilgilerinizi girin.
+4. Node.js App startup file olarak server.js secin ve npm install calistirin.
+5. Veritabanini phpMyAdmin'de database/ klasoru altindaki SQL dosyasi ile import edin.
+6. Frontend ve backend ayni domainde calisacaksa API isteklerini /api uzerinden yonlendirin.
+
+Notlar:
+- Bu paket frontend build, backend kodu ve 2026-03-16 tarihine kadar yapilan i18n + SEO + API baglanti duzeltmelerini icerir.
+- Gizli local .env degerleri pakete dahil edilmedi.
