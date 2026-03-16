@@ -57,3 +57,21 @@ export function resolveLocalizedText({
 
     return locale === 'en' ? fallbackEn : fallbackTr
 }
+
+const TURKISH_LEAK_PATTERN = /[çğıöşüÇĞİÖŞÜ]|\b(egitim|eğitim|odeme|ödeme|buyume|büyüme|pazarlama|satis|satış|kurumsal|hedef kitle|değer önerisi|ölçümleme|katıl|satın al)\b/i
+
+export function hasTurkishContentLeak(value: unknown): boolean {
+    if (typeof value === 'string') {
+        return TURKISH_LEAK_PATTERN.test(value)
+    }
+
+    if (Array.isArray(value)) {
+        return value.some((item) => hasTurkishContentLeak(item))
+    }
+
+    if (value && typeof value === 'object') {
+        return Object.values(value as Record<string, unknown>).some((item) => hasTurkishContentLeak(item))
+    }
+
+    return false
+}

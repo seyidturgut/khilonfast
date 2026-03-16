@@ -4,6 +4,19 @@ import cacheMiddleware from '../middleware/cache.js';
 
 const router = express.Router();
 
+function resolvePublicLocalizedContent(rawContent, lang) {
+    if (!rawContent || typeof rawContent !== 'object') return null;
+
+    const hasExplicitLocales = Object.prototype.hasOwnProperty.call(rawContent, 'tr')
+        || Object.prototype.hasOwnProperty.call(rawContent, 'en');
+
+    if (hasExplicitLocales) {
+        return rawContent[lang] || (lang === 'tr' ? rawContent.tr || null : null);
+    }
+
+    return lang === 'tr' ? rawContent : null;
+}
+
 // Public: Get published page content by slug
 router.get('/slug/:slug(*)', cacheMiddleware(3600), async (req, res) => {
     const slug = decodeURIComponent(req.params.slug || '');
@@ -23,13 +36,11 @@ router.get('/slug/:slug(*)', cacheMiddleware(3600), async (req, res) => {
         let content = null;
         const raw = rows[0].content_json;
         if (raw && typeof raw === 'object') {
-            content = raw[lang] || raw;
+            content = resolvePublicLocalizedContent(raw, lang);
         } else {
             try {
                 const parsed = JSON.parse(raw);
-                if (parsed && typeof parsed === 'object') {
-                    content = parsed[lang] || parsed;
-                }
+                content = resolvePublicLocalizedContent(parsed, lang);
             } catch {
                 content = null;
             }
