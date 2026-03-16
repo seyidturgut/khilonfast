@@ -7,8 +7,10 @@ import { useCart } from '../../context/CartContext'
 import { parseLocalizedPrice } from '../../utils/price'
 import { HiCheck } from 'react-icons/hi2'
 import './SectoralSolutionTemplate.css'
+import { resolveLocaleFromPath } from '../../utils/locale'
+import { API_BASE_URL } from '../../config/api'
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = API_BASE_URL;
 
 export interface TabConfig {
     id: string;
@@ -72,7 +74,7 @@ export interface SectoralSolutionProps {
 export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
     const { i18n, t } = useTranslation('common');
     const location = useLocation();
-    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    const currentLang = resolveLocaleFromPath(location.pathname);
     const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
     const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
     const cmsSlug = location.pathname

@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:php-api": "php -S 127.0.0.1:8099 -t .",
+    "check:i18n": "node scripts/check-locale-parity.mjs",
     "seo:generate": "node scripts/generate-seo-assets.mjs",
-    "build": "node scripts/generate-seo-assets.mjs && tsc -b && vite build",
+    "build": "npm run check:i18n && node scripts/generate-seo-assets.mjs && tsc -b && vite build",
     "preview": "vite preview",
     "import:legacy": "node scripts/import-khilon-legacy.mjs"
   },

@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import './Contact.css'
+import { useRouteLocale } from '../utils/locale'
 
 export default function Contact() {
-    const { i18n } = useTranslation('common')
-    const isEn = i18n.language.split('-')[0] === 'en'
+    const { t } = useTranslation('common')
+    const currentLang = useRouteLocale()
+    const isEn = currentLang === 'en'
     const [isSubmitted, setIsSubmitted] = useState(false)
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -21,9 +23,7 @@ export default function Contact() {
                             <span className="gradient-text">{isEn ? 'Project' : 'Konuşalım'}</span>
                         </h2>
                         <p className="contact-text">
-                            {isEn
-                                ? 'We would love to collaborate and bring your ideas to life. Reach out now and get a free consultation.'
-                                : 'Fikirlerinizi hayata geçirmek için sizinle çalışmayı çok isteriz. Hemen iletişime geçin, ücretsiz danışmanlık hizmeti alalım.'}
+                            {t('contact.hero.lead')}
                         </p>
 
                         <div className="contact-details">
@@ -45,7 +45,7 @@ export default function Contact() {
                                 <div className="contact-icon">📍</div>
                                 <div>
                                     <h4>{isEn ? 'Address' : 'Adres'}</h4>
-                                    <p>{isEn ? 'Istanbul, Turkiye' : 'İstanbul, Türkiye'}</p>
+                                    <p>{t('contact.card.location')}</p>
                                 </div>
                             </div>
                         </div>

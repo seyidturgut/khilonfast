@@ -16,10 +16,11 @@ import {
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import ServicePageTemplate from './templates/ServicePageTemplate'
+import { useRouteLocale } from '../utils/locale'
 
 export default function GoToMarket() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const { t } = useTranslation('common')
+    const currentLang = useRouteLocale()
     const langPrefix = currentLang === 'en' ? '/en' : ''
 
     useEffect(() => {

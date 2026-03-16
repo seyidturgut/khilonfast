@@ -2,10 +2,13 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiUser, HiMail, HiLockClosed, HiPhone } from 'react-icons/hi';
+import { useTranslation } from 'react-i18next';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
 export default function Register() {
+    const { t } = useTranslation('common');
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -18,13 +21,16 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
     const { register, googleLogin, user } = useAuth();
     const navigate = useNavigate();
+    const currentLang = useRouteLocale();
+    const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
+    const loginPath = getLocalizedPathByKey(currentLang, 'login');
 
     // Redirect if already logged in
     useEffect(() => {
         if (user) {
-            navigate('/dashboard');
+            navigate(dashboardPath);
         }
-    }, [user, navigate]);
+    }, [dashboardPath, user, navigate]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -38,7 +44,7 @@ export default function Register() {
         setError('');
 
         if (formData.password !== formData.confirm_password) {
-            setError('Şifreler eşleşmiyor');
+            setError(t('authPages.register.errors.passwordMismatch'));
             return;
         }
 
@@ -52,9 +58,9 @@ export default function Register() {
                 password: formData.password,
                 phone: formData.phone?.trim() || undefined
             });
-            navigate('/dashboard');
+            navigate(dashboardPath);
         } catch (err: any) {
-            setError(err.message || 'Kayıt başarısız');
+            setError(err.message || t('authPages.register.errors.default'));
         } finally {
             setLoading(false);
         }
@@ -65,9 +71,9 @@ export default function Register() {
         setLoading(true);
         try {
             await googleLogin(credential);
-            navigate('/dashboard');
+            navigate(dashboardPath);
         } catch (err: any) {
-            setError(err.message || 'Google ile giriş başarısız');
+            setError(err.message || t('authPages.register.errors.google'));
         } finally {
             setLoading(false);
         }
@@ -77,8 +83,8 @@ export default function Register() {
         <div className="auth-page">
             <div className="auth-container">
                 <div className="auth-card auth-card-compact">
-                    <h1>Kayıt Ol</h1>
-                    <p className="auth-subtitle">Yeni hesap oluşturun</p>
+                    <h1>{t('authPages.register.title')}</h1>
+                    <p className="auth-subtitle">{t('authPages.register.subtitle')}</p>
 
                     {error && <div className="auth-error">{error}</div>}
 
@@ -86,7 +92,7 @@ export default function Register() {
                         <div className="form-row">
                             <div className="form-group">
                                 <label htmlFor="first_name">
-                                    <HiUser /> Ad
+                                    <HiUser /> {t('authPages.fields.firstName')}
                                 </label>
                                 <input
                                     type="text"
@@ -95,13 +101,13 @@ export default function Register() {
                                     value={formData.first_name}
                                     onChange={handleChange}
                                     required
-                                    placeholder="Adınız"
+                                    placeholder={t('authPages.placeholders.firstName')}
                                 />
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="last_name">
-                                    <HiUser /> Soyad
+                                    <HiUser /> {t('authPages.fields.lastName')}
                                 </label>
                                 <input
                                     type="text"
@@ -110,14 +116,14 @@ export default function Register() {
                                     value={formData.last_name}
                                     onChange={handleChange}
                                     required
-                                    placeholder="Soyadınız"
+                                    placeholder={t('authPages.placeholders.lastName')}
                                 />
                             </div>
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="email">
-                                <HiMail /> E-posta
+                                <HiMail /> {t('authPages.fields.email')}
                             </label>
                             <input
                                 type="email"
@@ -126,13 +132,13 @@ export default function Register() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                placeholder="ornek@email.com"
+                                placeholder={t('authPages.placeholders.email')}
                             />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="phone">
-                                <HiPhone /> Telefon (Opsiyonel)
+                                <HiPhone /> {t('authPages.fields.phoneOptional')}
                             </label>
                             <input
                                 type="tel"
@@ -140,13 +146,13 @@ export default function Register() {
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleChange}
-                                placeholder="+90 5XX XXX XX XX"
+                                placeholder={t('authPages.placeholders.phone')}
                             />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="password">
-                                <HiLockClosed /> Şifre
+                                <HiLockClosed /> {t('authPages.fields.password')}
                             </label>
                             <input
                                 type="password"
@@ -156,13 +162,13 @@ export default function Register() {
                                 onChange={handleChange}
                                 required
                                 minLength={6}
-                                placeholder="En az 6 karakter"
+                                placeholder={t('authPages.placeholders.password')}
                             />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="confirm_password">
-                                <HiLockClosed /> Şifre (Tekrar)
+                                <HiLockClosed /> {t('authPages.fields.confirmPassword')}
                             </label>
                             <input
                                 type="password"
@@ -172,24 +178,24 @@ export default function Register() {
                                 onChange={handleChange}
                                 required
                                 minLength={6}
-                                placeholder="Şifreyi tekrar girin"
+                                placeholder={t('authPages.placeholders.confirmPassword')}
                             />
                         </div>
 
                         <button type="submit" className="btn-auth-primary" disabled={loading}>
-                            {loading ? 'Kayıt yapılıyor...' : 'Kayıt Ol'}
+                            {loading ? t('authPages.register.loading') : t('authPages.register.submit')}
                         </button>
                     </form>
 
                     <div className="auth-divider">
-                        <span>veya</span>
+                        <span>{t('authPages.or')}</span>
                     </div>
                     <div className="auth-google">
                         <GoogleLoginButton onCredential={handleGoogleCredential} />
                     </div>
 
                     <p className="auth-link">
-                        Zaten hesabınız var mı? <Link to="/giris">Giriş Yap</Link>
+                        {t('authPages.register.switchPrompt')} <Link to={loginPath}>{t('authPages.login.submit')}</Link>
                     </p>
                 </div>
             </div>

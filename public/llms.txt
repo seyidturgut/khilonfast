@@ -11,7 +11,7 @@ khilonfast is a bilingual website for marketing services, sector-specific market
 - Canonical English URLs live under https://khilonfast.com/en/.
 
 ## Discovery and canonical sources
-- Primary sitemap: https://khilonfast.com/sitemap.xml
+- Primary sitemap index: https://khilonfast.com/sitemap.xml
 - Crawl policy: https://khilonfast.com/robots.txt
 - Canonical URLs and alternate languages are published with canonical and hreflang tags in page head markup.
 - If a URL redirects or has a canonical target, prefer the canonical target over the requested URL.

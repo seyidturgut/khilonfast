@@ -3,6 +3,7 @@ import { HiX, HiShoppingCart, HiTrash } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './Cart.css';
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
 interface CartProps {
     isOpen: boolean;
@@ -10,12 +11,11 @@ interface CartProps {
 }
 
 export default function Cart({ isOpen, onClose }: CartProps) {
-    const { t, i18n } = useTranslation('common');
+    useTranslation('common');
     const { items, removeFromCart, getTotalPrice, clearCart } = useCart();
     const navigate = useNavigate();
-    const currentLang = i18n.language.split('-')[0];
-    const langPrefix = currentLang === 'en' ? '/en' : '';
-    const checkoutPath = `${langPrefix}/${t('slugs.checkout')}`.replace(/\/{2,}/g, '/');
+    const currentLang = useRouteLocale();
+    const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout');
 
     const handleCheckout = () => {
         onClose();

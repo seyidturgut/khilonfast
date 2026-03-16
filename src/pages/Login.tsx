@@ -2,16 +2,22 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiMail, HiLockClosed } from 'react-icons/hi';
+import { useTranslation } from 'react-i18next';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
 export default function Login() {
+    const { t } = useTranslation('common');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login, googleLogin, user } = useAuth();
     const navigate = useNavigate();
+    const currentLang = useRouteLocale();
+    const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
+    const registerPath = getLocalizedPathByKey(currentLang, 'register');
 
     // Redirect if already logged in
     useEffect(() => {
@@ -19,12 +25,12 @@ export default function Login() {
             if (user.role === 'admin') {
                 navigate('/admin');
             } else if (user.must_change_password) {
-                navigate('/dashboard?tab=password&forcePasswordChange=true');
+                navigate(`${dashboardPath}?tab=password&forcePasswordChange=true`);
             } else {
-                navigate('/dashboard');
+                navigate(dashboardPath);
             }
         }
-    }, [user, navigate]);
+    }, [dashboardPath, user, navigate]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -36,12 +42,12 @@ export default function Login() {
             if (loggedInUser.role === 'admin') {
                 navigate('/admin');
             } else if (loggedInUser.must_change_password) {
-                navigate('/dashboard?tab=password&forcePasswordChange=true');
+                navigate(`${dashboardPath}?tab=password&forcePasswordChange=true`);
             } else {
-                navigate('/dashboard');
+                navigate(dashboardPath);
             }
         } catch (err: any) {
-            setError(err.message || 'Giriş başarısız');
+            setError(err.message || t('authPages.login.errors.default'));
         } finally {
             setLoading(false);
         }
@@ -52,9 +58,9 @@ export default function Login() {
         setLoading(true);
         try {
             await googleLogin(credential);
-            navigate('/dashboard');
+            navigate(dashboardPath);
         } catch (err: any) {
-            setError(err.message || 'Google ile giriş başarısız');
+            setError(err.message || t('authPages.login.errors.google'));
         } finally {
             setLoading(false);
         }
@@ -64,15 +70,15 @@ export default function Login() {
         <div className="auth-page">
             <div className="auth-container">
                 <div className="auth-card">
-                    <h1>Giriş Yap</h1>
-                    <p className="auth-subtitle">Hesabınıza giriş yapın</p>
+                    <h1>{t('authPages.login.title')}</h1>
+                    <p className="auth-subtitle">{t('authPages.login.subtitle')}</p>
 
                     {error && <div className="auth-error">{error}</div>}
 
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">
                             <label htmlFor="email">
-                                <HiMail /> E-posta
+                                <HiMail /> {t('authPages.fields.email')}
                             </label>
                             <input
                                 type="email"
@@ -80,13 +86,13 @@ export default function Login() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                placeholder="ornek@email.com"
+                                placeholder={t('authPages.placeholders.email')}
                             />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="password">
-                                <HiLockClosed /> Şifre
+                                <HiLockClosed /> {t('authPages.fields.password')}
                             </label>
                             <input
                                 type="password"
@@ -99,19 +105,19 @@ export default function Login() {
                         </div>
 
                         <button type="submit" className="btn-auth-primary" disabled={loading}>
-                            {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+                            {loading ? t('authPages.login.loading') : t('authPages.login.submit')}
                         </button>
                     </form>
 
                     <div className="auth-divider">
-                        <span>veya</span>
+                        <span>{t('authPages.or')}</span>
                     </div>
                     <div className="auth-google">
                         <GoogleLoginButton onCredential={handleGoogleCredential} />
                     </div>
 
                     <p className="auth-link">
-                        Hesabınız yok mu? <Link to="/kayil-ol">Kayıt Ol</Link>
+                        {t('authPages.login.switchPrompt')} <Link to={registerPath}>{t('authPages.register.submit')}</Link>
                     </p>
                 </div>
             </div>

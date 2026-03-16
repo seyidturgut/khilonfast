@@ -23,6 +23,16 @@ if ($method === 'GET') {
 
         // Handle Localization
         if ($lang === 'en') {
+            $usedFallback =
+                empty($product['name_en']) ||
+                empty($product['description_en']) ||
+                empty($product['features_en']) ||
+                empty($product['slug_en']) ||
+                empty($product['meta_title_en']) ||
+                empty($product['meta_description_en']) ||
+                empty($product['hero_vimeo_id_en']) ||
+                empty($product['hero_image_en']);
+
             $product['name'] = !empty($product['name_en']) ? $product['name_en'] : $product['name'];
             $product['description'] = !empty($product['description_en']) ? $product['description_en'] : $product['description'];
             $product['features'] = !empty($product['features_en']) ? $product['features_en'] : $product['features'];
@@ -33,9 +43,14 @@ if ($method === 'GET') {
             $product['hero_image'] = !empty($product['hero_image_en']) ? $product['hero_image_en'] : $product['hero_image'];
 
             foreach ($packages as &$pkg) {
+                $usedFallback = $usedFallback || empty($pkg['name_en']) || empty($pkg['description_en']) || empty($pkg['features_en']);
                 $pkg['name'] = !empty($pkg['name_en']) ? $pkg['name_en'] : $pkg['name'];
                 $pkg['description'] = !empty($pkg['description_en']) ? $pkg['description_en'] : $pkg['description'];
                 $pkg['features'] = !empty($pkg['features_en']) ? $pkg['features_en'] : $pkg['features'];
+            }
+
+            if ($usedFallback) {
+                error_log(sprintf('Localization fallback used for product "%s" (id=%d)', (string) ($product['product_key'] ?? $id), (int) $product['id']));
             }
         }
         $product['packages'] = $packages;

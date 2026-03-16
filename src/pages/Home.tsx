@@ -9,6 +9,8 @@ import Features from '../components/Features'
 import Pricing from '../components/Pricing'
 import FAQ from '../components/FAQ'
 import PotentialCTA from '../components/PotentialCTA'
+import { resolveLocalizedText } from '../utils/localizedContent'
+import { API_BASE_URL } from '../config/api'
 
 const HOME_TEXT_KEYS = [
   'hero.subtitle', 'hero.title', 'hero.titleHighlight', 'hero.description',
@@ -29,7 +31,7 @@ export default function Home() {
   const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
   const isCmsMode = new URLSearchParams(location.search).get('cms') === '1'
   const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'))
-  const API_BASE = import.meta.env.VITE_API_URL || '/api'
+  const API_BASE = API_BASE_URL
 
   const [cmsPageId, setCmsPageId] = useState<number | null>(null)
   const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null)
@@ -55,7 +57,12 @@ export default function Home() {
     return out
   }, [t])
 
-  const tx = (key: string) => cmsTexts?.[key] || t(key)
+  const tx = (key: string) => resolveLocalizedText({
+    locale: currentLang,
+    cmsValue: cmsTexts?.[key],
+    t,
+    localeKey: key
+  })
 
   useEffect(() => {
     const fetchPublicCms = async () => {

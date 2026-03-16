@@ -115,7 +115,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/urunler/maestro-ai-enerji' : '/urunler/maestro-ai-enerji'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -390,7 +390,7 @@ export default function EnergyMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-enerji' : '/urunler/maestro-ai-enerji'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

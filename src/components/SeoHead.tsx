@@ -10,13 +10,16 @@ type LocaleValue = {
 }
 
 type SeoKind = 'website' | 'about' | 'contact' | 'service' | 'product' | 'course' | 'howto' | 'collection'
+type SeoSection = 'company' | 'services' | 'sectoral' | 'trainings' | 'products' | 'flows'
 
 type SeoEntry = {
+    key?: string
     tr: string
     en?: string
     title: LocaleValue
     description: LocaleValue
     kind: SeoKind
+    section?: SeoSection
 }
 
 type TitleOptions = {
@@ -56,6 +59,7 @@ function composeTitle({ tr, en }: TitleOptions): LocaleValue {
 
 const pageEntries: SeoEntry[] = [
     {
+        key: 'home',
         tr: '/',
         en: '/en',
         title: {
@@ -79,9 +83,11 @@ const pageEntries: SeoEntry[] = [
             tr: trCommon.aboutPage.hero.description,
             en: enCommon.aboutPage.hero.description
         },
-        kind: 'about' as const
+        kind: 'about' as const,
+        section: 'company'
     },
     {
+        key: 'contact',
         tr: `/${trSlugs.contact}`,
         en: `/en/${enSlugs.contact}`,
         title: {
@@ -92,9 +98,11 @@ const pageEntries: SeoEntry[] = [
             tr: trCommon.contact.hero.lead,
             en: enCommon.contact.hero.lead
         },
-        kind: 'contact' as const
+        kind: 'contact' as const,
+        section: 'company'
     },
     {
+        key: 'howItWorks',
         tr: `/${trSlugs.howItWorks}`,
         en: `/en/${enSlugs.howItWorks}`,
         title: {
@@ -105,9 +113,11 @@ const pageEntries: SeoEntry[] = [
             tr: trCommon.howItWorksPage.hero.description,
             en: enCommon.howItWorksPage.hero.description
         },
-        kind: 'howto' as const
+        kind: 'howto' as const,
+        section: 'company'
     },
     {
+        key: 'trainings',
         tr: `/${trSlugs.trainings}`,
         en: `/en/${enSlugs.trainings}`,
         title: {
@@ -118,9 +128,11 @@ const pageEntries: SeoEntry[] = [
             tr: 'Büyüme odaklı pazarlama eğitimleri ile satış, değer önerisi, dönüşüm ve ölçümleme süreçlerini güçlendirin.',
             en: 'Strengthen sales, value proposition, conversion, and measurement with growth-focused marketing trainings.'
         },
-        kind: 'collection' as const
+        kind: 'collection' as const,
+        section: 'trainings'
     },
     {
+        key: 'gtm',
         tr: `/${trSlugs.gtm}`,
         en: `/en/${enSlugs.gtm}`,
         title: composeTitle({
@@ -131,9 +143,11 @@ const pageEntries: SeoEntry[] = [
             tr: trCommon.serviceGTM.videoShowcase.description,
             en: enCommon.serviceGTM.seo.description
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'contentStrategy',
         tr: `/${trSlugs.contentStrategy}`,
         en: `/en/${enSlugs.contentStrategy}`,
         title: composeTitle({
@@ -144,9 +158,11 @@ const pageEntries: SeoEntry[] = [
             tr: trServiceMenu.content.desc,
             en: enServiceMenu.content.desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'idm',
         tr: `/${trSlugs.idm}`,
         en: `/en/${enSlugs.idm}`,
         title: composeTitle({
@@ -157,9 +173,11 @@ const pageEntries: SeoEntry[] = [
             tr: trCommon.serviceIDM.videoShowcase.description,
             en: enCommon.serviceIDM.videoShowcase.description
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'googleAds',
         tr: `/${trSlugs.googleAds}`,
         en: `/en/${enSlugs.googleAds}`,
         title: composeTitle({
@@ -170,9 +188,11 @@ const pageEntries: SeoEntry[] = [
             tr: trServiceMenu.ads.desc,
             en: enServiceMenu.ads.desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'socialAds',
         tr: `/${trSlugs.socialAds}`,
         en: `/en/${enSlugs.socialAds}`,
         title: composeTitle({
@@ -183,9 +203,11 @@ const pageEntries: SeoEntry[] = [
             tr: trServiceMenu.social.desc,
             en: enServiceMenu.social.desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'seo',
         tr: `/${trSlugs.seo}`,
         en: `/en/${enSlugs.seo}`,
         title: composeTitle({
@@ -196,9 +218,11 @@ const pageEntries: SeoEntry[] = [
             tr: trServiceMenu.seo.desc,
             en: enServiceMenu.seo.desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'contentProduction',
         tr: `/${trSlugs.contentProduction}`,
         en: `/en/${enSlugs.contentProduction}`,
         title: composeTitle({
@@ -209,9 +233,11 @@ const pageEntries: SeoEntry[] = [
             tr: trServiceMenu.production.desc,
             en: enServiceMenu.production.desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     {
+        key: 'b2bEmail',
         tr: `/${trSlugs.b2bEmail}`,
         en: `/en/${enSlugs.b2bEmail}`,
         title: composeTitle({
@@ -222,7 +248,8 @@ const pageEntries: SeoEntry[] = [
             tr: trServiceMenu.email.desc,
             en: enServiceMenu.email.desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'services' as const
     },
     ...([
         { key: 'sectoralB2B', menu: 'b2b' },
@@ -235,6 +262,7 @@ const pageEntries: SeoEntry[] = [
         { key: 'sectoralFleet', menu: 'fleet' },
         { key: 'sectoralManufacturing', menu: 'manufacturing' }
     ] as const).map(({ key, menu }) => ({
+        key,
         tr: `/${trSlugs[key]}`,
         en: `/en/${enSlugs[key]}`,
         title: composeTitle({
@@ -245,7 +273,8 @@ const pageEntries: SeoEntry[] = [
             tr: trSectoralMenu[menu].desc,
             en: enSectoralMenu[menu].desc
         },
-        kind: 'service' as const
+        kind: 'service' as const,
+        section: 'sectoral' as const
     })),
     ...([
         { key: 'trainingGrowth', menu: 'growth' },
@@ -259,6 +288,7 @@ const pageEntries: SeoEntry[] = [
         { key: 'trainingFleet', menu: 'fleet' },
         { key: 'trainingFood', menu: 'food' }
     ] as const).map(({ key, menu }) => ({
+        key,
         tr: `/${trSlugs[key]}`,
         en: `/en/${enSlugs[key]}`,
         title: composeTitle({
@@ -269,9 +299,11 @@ const pageEntries: SeoEntry[] = [
             tr: trTrainingMenu[menu]?.desc || trainingSeoFallbacks[menu]?.trDesc,
             en: enTrainingMenu[menu]?.desc || trainingSeoFallbacks[menu]?.enDesc
         },
-        kind: 'course' as const
+        kind: 'course' as const,
+        section: 'trainings' as const
     })),
     {
+        key: 'maestro',
         tr: `/${trSlugs.maestro}`,
         en: `/en/${enSlugs.maestro}`,
         title: composeTitle({
@@ -282,9 +314,11 @@ const pageEntries: SeoEntry[] = [
             tr: trProductMenu.maestro.desc,
             en: enProductMenu.maestro.desc
         },
-        kind: 'product' as const
+        kind: 'product' as const,
+        section: 'products' as const
     },
     {
+        key: 'eyeTracking',
         tr: `/${trSlugs.eyeTracking}`,
         en: `/en/${enSlugs.eyeTracking}`,
         title: composeTitle({
@@ -295,9 +329,11 @@ const pageEntries: SeoEntry[] = [
             tr: trProductMenu.eyeTracking.desc,
             en: enProductMenu.eyeTracking.desc
         },
-        kind: 'product' as const
+        kind: 'product' as const,
+        section: 'products' as const
     },
     ...setupFlows.map((flow) => ({
+        key: flow.path,
         tr: flow.path,
         title: composeTitle({
             tr: flow.title,
@@ -307,7 +343,8 @@ const pageEntries: SeoEntry[] = [
             tr: flow.purpose,
             en: flow.purpose
         },
-        kind: 'howto' as const
+        kind: 'howto' as const,
+        section: 'flows' as const
     }))
 ]
 
@@ -396,12 +433,14 @@ function ensureJsonLd() {
 }
 
 function buildSchema({
+    entry,
     kind,
     title,
     description,
     canonicalUrl,
     inLanguage
 }: {
+    entry?: SeoEntry
     kind: SeoKind
     title: string
     description: string
@@ -426,7 +465,14 @@ function buildSchema({
     }
 
     const webpageBase = {
-        '@type': kind === 'about' ? 'AboutPage' : kind === 'contact' ? 'ContactPage' : 'WebPage',
+        '@type':
+            kind === 'about'
+                ? 'AboutPage'
+                : kind === 'contact'
+                    ? 'ContactPage'
+                    : kind === 'collection'
+                        ? 'CollectionPage'
+                        : 'WebPage',
         '@id': `${canonicalUrl}#webpage`,
         url: canonicalUrl,
         name: title,
@@ -435,12 +481,18 @@ function buildSchema({
         isPartOf: { '@id': `${SITE_URL}/#website` },
         about: { '@id': `${SITE_URL}/#organization` }
     }
+    const breadcrumbList = {
+        '@type': 'BreadcrumbList',
+        '@id': `${canonicalUrl}#breadcrumb`,
+        itemListElement: buildBreadcrumbItems(entry, canonicalUrl, inLanguage)
+    }
 
     if (kind === 'service') {
         return [
             organization,
             website,
             webpageBase,
+            breadcrumbList,
             {
                 '@type': 'Service',
                 name: title.replace(' | khilonfast', ''),
@@ -457,6 +509,7 @@ function buildSchema({
             organization,
             website,
             webpageBase,
+            breadcrumbList,
             {
                 '@type': 'Product',
                 name: title.replace(' | khilonfast', ''),
@@ -475,6 +528,7 @@ function buildSchema({
             organization,
             website,
             webpageBase,
+            breadcrumbList,
             {
                 '@type': 'Course',
                 name: title.replace(' | khilonfast', ''),
@@ -486,21 +540,188 @@ function buildSchema({
     }
 
     if (kind === 'howto') {
+        const relatedFlow = setupFlows.find((flow) => canonicalUrl === `${SITE_URL}${flow.path}`)
         return [
             organization,
             website,
             webpageBase,
+            breadcrumbList,
             {
                 '@type': 'HowTo',
                 name: title.replace(' | khilonfast', ''),
                 description,
                 url: canonicalUrl,
-                publisher: { '@id': `${SITE_URL}/#organization` }
+                publisher: { '@id': `${SITE_URL}/#organization` },
+                ...(relatedFlow
+                    ? {
+                        step: relatedFlow.paths.flatMap((path, pathIndex) =>
+                            path.steps.map((step, stepIndex) => ({
+                                '@type': 'HowToStep',
+                                position: pathIndex * 10 + stepIndex + 1,
+                                name: step.title,
+                                text: step.description
+                            }))
+                        )
+                    }
+                    : {})
             }
         ]
     }
 
-    return [organization, website, webpageBase]
+    if (kind === 'collection') {
+        return [
+            organization,
+            website,
+            webpageBase,
+            breadcrumbList,
+            {
+                '@type': 'ItemList',
+                '@id': `${canonicalUrl}#itemlist`,
+                itemListElement: buildCollectionItems(entry, inLanguage)
+            }
+        ]
+    }
+
+    return [organization, website, webpageBase, breadcrumbList]
+}
+
+function localizedSectionLabel(section: SeoSection | undefined, inLanguage: string) {
+    const isEnglish = inLanguage === 'en-US'
+    if (section === 'services') return isEnglish ? 'Services' : 'Hizmetlerimiz'
+    if (section === 'sectoral') return isEnglish ? 'Sectoral Services' : 'Sektörel Hizmetler'
+    if (section === 'trainings') return isEnglish ? 'Trainings' : 'Egitimler'
+    if (section === 'products') return isEnglish ? 'Products' : 'Urunler'
+    if (section === 'flows') return isEnglish ? 'Setup Flows' : 'Kurulum Akislari'
+    if (section === 'company') return isEnglish ? 'Company' : 'Kurumsal'
+    return isEnglish ? 'Pages' : 'Sayfalar'
+}
+
+function localizedSectionPath(section: SeoSection | undefined, inLanguage: string) {
+    const isEnglish = inLanguage === 'en-US'
+    if (section === 'services') return isEnglish ? `/en/${enSlugs.home || ''}#services`.replace(/\/+#/, '/#') : '/#services'
+    if (section === 'sectoral') return isEnglish ? `/en/${enSlugs.home || ''}#sectoral-services`.replace(/\/+#/, '/#') : '/#sectoral-services'
+    if (section === 'trainings') return isEnglish ? `/en/${enSlugs.trainings}` : `/${trSlugs.trainings}`
+    if (section === 'products') return isEnglish ? `/en/${enSlugs.maestro}` : `/${trSlugs.maestro}`
+    if (section === 'company') return isEnglish ? '/en/about' : `/${trSlugs.about}`
+    return '/'
+}
+
+function buildBreadcrumbItems(entry: SeoEntry | undefined, canonicalUrl: string, inLanguage: string) {
+    const items = [
+        {
+            '@type': 'ListItem',
+            position: 1,
+            name: SITE_NAME,
+            item: SITE_URL
+        }
+    ]
+
+    const shouldAddSectionCrumb =
+        entry?.section &&
+        entry.tr !== '/' &&
+        !((entry.key === 'trainings' && entry.section === 'trainings') || (entry.key === 'home'))
+
+    if (shouldAddSectionCrumb) {
+        items.push({
+            '@type': 'ListItem',
+            position: 2,
+            name: localizedSectionLabel(entry.section, inLanguage),
+            item: `${SITE_URL}${localizedSectionPath(entry.section, inLanguage).replace(/\/+$/, '') || '/'}`
+        })
+    }
+
+    if (entry?.tr !== '/') {
+        items.push({
+            '@type': 'ListItem',
+            position: items.length + 1,
+            name: entry ? entry.title[inLanguage === 'en-US' ? 'en' : 'tr'].replace(' | khilonfast', '') : SITE_NAME,
+            item: canonicalUrl
+        })
+    }
+
+    return items
+}
+
+function buildCollectionItems(entry: SeoEntry | undefined, inLanguage: string) {
+    if (entry?.key !== 'trainings') return []
+
+    const isEnglish = inLanguage === 'en-US'
+    const menu = isEnglish ? enTrainingMenu : trTrainingMenu
+    const localeSlugs = isEnglish ? enSlugs : trSlugs
+    const routeKeys = [
+        'trainingGrowth',
+        'trainingPayment',
+        'trainingB2B',
+        'trainingFintech',
+        'trainingTech',
+        'trainingManufacturing',
+        'trainingEnergy',
+        'trainingDesign',
+        'trainingFleet',
+        'trainingFood'
+    ] as const
+    const menuKeys = ['growth', 'payment', 'b2b', 'fintech', 'tech', 'manufacturing', 'energy', 'design', 'fleet', 'food'] as const
+
+    return routeKeys.map((key, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${SITE_URL}${isEnglish ? `/en/${localeSlugs[key]}` : `/${localeSlugs[key]}`}`,
+        name: menu[menuKeys[index]]?.title || key
+    }))
+}
+
+function extractFaqSchema(canonicalUrl: string) {
+    const faqItems = Array.from(document.querySelectorAll('.faq-item'))
+        .map((item) => {
+            const question = item.querySelector('.faq-question span')?.textContent?.trim()
+            const answer = item.querySelector('.faq-answer p')?.textContent?.trim()
+            return question && answer
+                ? {
+                    '@type': 'Question',
+                    name: question,
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: answer
+                    }
+                }
+                : null
+        })
+        .filter(Boolean)
+
+    if (!faqItems.length) return []
+
+    return [
+        {
+            '@type': 'FAQPage',
+            '@id': `${canonicalUrl}#faq`,
+            mainEntity: faqItems
+        }
+    ]
+}
+
+function extractVideoSchema(canonicalUrl: string, title: string, description: string) {
+    const seen = new Set<string>()
+    const videos = Array.from(document.querySelectorAll('iframe[src*="youtube.com/embed"], iframe[src*="player.vimeo.com/video"]'))
+        .map((iframe, index) => {
+            const embedUrl = (iframe.getAttribute('src') || '').trim()
+            if (!embedUrl || seen.has(embedUrl)) return null
+            seen.add(embedUrl)
+            const videoTitle = iframe.getAttribute('title')?.trim() || `${title.replace(' | khilonfast', '')} Video ${index + 1}`
+
+            return {
+                '@type': 'VideoObject',
+                '@id': `${canonicalUrl}#video-${index + 1}`,
+                name: videoTitle,
+                description,
+                embedUrl,
+                url: canonicalUrl,
+                thumbnailUrl: DEFAULT_IMAGE,
+                publisher: { '@id': `${SITE_URL}/#organization` }
+            }
+        })
+        .filter(Boolean)
+
+    return videos
 }
 
 export default function SeoHead() {
@@ -549,7 +770,8 @@ export default function SeoHead() {
             inLanguage: isEnglish ? 'en-US' : 'tr-TR',
             alternateLocale: isEnglish ? 'tr_TR' : 'en_US',
             shouldIndex,
-            kind: matchedEntry?.kind || 'website'
+            kind: matchedEntry?.kind || 'website',
+            entry: matchedEntry
         }
     }, [location.pathname])
 
@@ -574,7 +796,8 @@ export default function SeoHead() {
         ensureMeta('description').content = seoState.description
         ensureMeta('og:title', 'property').content = seoState.title
         ensureMeta('og:description', 'property').content = seoState.description
-        ensureMeta('og:type', 'property').content = 'website'
+        ensureMeta('og:type', 'property').content =
+            seoState.kind === 'product' ? 'product' : 'website'
         ensureMeta('og:url', 'property').content = seoState.canonicalUrl
         ensureMeta('og:site_name', 'property').content = SITE_NAME
         ensureMeta('og:locale', 'property').content = seoState.locale
@@ -585,21 +808,36 @@ export default function SeoHead() {
         ensureMeta('twitter:description').content = seoState.description
         ensureMeta('twitter:image').content = DEFAULT_IMAGE
 
+        const baseGraph = buildSchema({
+            entry: seoState.entry,
+            kind: seoState.kind,
+            title: seoState.title,
+            description: seoState.description,
+            canonicalUrl: seoState.canonicalUrl,
+            inLanguage: seoState.inLanguage
+        })
+        const domFaqGraph = extractFaqSchema(seoState.canonicalUrl)
+        const domVideoGraph = extractVideoSchema(seoState.canonicalUrl, seoState.title, seoState.description)
+
         ensureJsonLd().textContent = JSON.stringify(
             {
                 '@context': 'https://schema.org',
-                '@graph': buildSchema({
-                    kind: seoState.kind,
-                    title: seoState.title,
-                    description: seoState.description,
-                    canonicalUrl: seoState.canonicalUrl,
-                    inLanguage: seoState.inLanguage
-                })
+                '@graph': [...baseGraph, ...domFaqGraph, ...domVideoGraph]
             },
             null,
             2
         )
-    }, [seoState])
+
+        if (import.meta.env.DEV && seoState.shouldIndex) {
+            const h1Count = document.querySelectorAll('main h1').length
+            if (h1Count !== 1) {
+                console.warn('[seo] Expected exactly one <h1> on indexable page', {
+                    pathname: location.pathname,
+                    h1Count
+                })
+            }
+        }
+    }, [location.pathname, seoState])
 
     return null
 }

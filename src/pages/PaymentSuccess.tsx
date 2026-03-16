@@ -3,12 +3,17 @@ import { useEffect } from 'react';
 import { HiCheckCircle } from 'react-icons/hi';
 import { useCart } from '../context/CartContext';
 import './PaymentSuccess.css';
+import { useTranslation } from 'react-i18next';
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
 export default function PaymentSuccess() {
+    const { t } = useTranslation('common');
     const location = useLocation();
     const navigate = useNavigate();
     const { clearCart } = useCart();
     const orderNumber = location.state?.orderNumber || 'N/A';
+    const currentLang = useRouteLocale();
+    const homePath = getLocalizedPathByKey(currentLang, 'home');
 
     useEffect(() => {
         clearCart();
@@ -19,13 +24,13 @@ export default function PaymentSuccess() {
             <div className="result-container">
                 <div className="result-card success">
                     <HiCheckCircle className="result-icon" />
-                    <h1>Ödeme Başarılı!</h1>
-                    <p>Siparişiniz başarıyla alındı.</p>
+                    <h1>{t('paymentStatus.success.title')}</h1>
+                    <p>{t('paymentStatus.success.description')}</p>
                     <div className="order-details">
-                        <p><strong>Sipariş No:</strong> {orderNumber}</p>
+                        <p><strong>{t('paymentStatus.orderNumber')}</strong> {orderNumber}</p>
                     </div>
-                    <button className="btn-home" onClick={() => navigate('/')}>
-                        Ana Sayfaya Dön
+                    <button className="btn-home" onClick={() => navigate(homePath)}>
+                        {t('paymentStatus.backHome')}
                     </button>
                 </div>
             </div>

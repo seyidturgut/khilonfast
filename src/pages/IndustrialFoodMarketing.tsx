@@ -114,7 +114,7 @@ export default function IndustrialFoodMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/urunler/maestro-ai-endustriyel-gida' : '/urunler/maestro-ai-endustriyel-gida'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -243,7 +243,7 @@ export default function IndustrialFoodMarketing() {
                         <div className="sectoral-tabs-content">
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go To Market Strategy</h3>
+                                    <h3>Go To Market Stratejisi</h3>
                                     <p style={{ fontSize: '0.85rem' }}>
                                         Go-To-Market Stratejisi, yeni ürün veya hizmetinizi doğru kitleye, doğru kanallardan ve en verimli şekilde ulaştırmanızı sağlar. Gıda sektörü gibi rekabetin yüksek olduğu pazarlarda, doğru GTM yaklaşımı büyümeyi hızlandırır ve fark yaratır.
                                     </p>
@@ -394,7 +394,7 @@ export default function IndustrialFoodMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-endustriyel-gida' : '/urunler/maestro-ai-endustriyel-gida'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

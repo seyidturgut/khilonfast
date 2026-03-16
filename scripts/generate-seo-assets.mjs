@@ -55,6 +55,31 @@ const trainingRouteMap = [
   'trainingFood'
 ]
 
+const serviceRouteKeys = [
+  'gtm',
+  'contentStrategy',
+  'idm',
+  'googleAds',
+  'socialAds',
+  'seo',
+  'contentProduction',
+  'b2bEmail'
+]
+
+const sectoralRouteKeys = [
+  'sectoralB2B',
+  'sectoralPayment',
+  'sectoralFood',
+  'sectoralFintech',
+  'sectoralTech',
+  'sectoralEnergy',
+  'sectoralDesign',
+  'sectoralFleet',
+  'sectoralManufacturing'
+]
+
+const productRouteKeys = ['maestro', 'eyeTracking']
+
 const setupFlows = [
   '/google-analytics-kurulum-akisi',
   '/google-tag-manager-kurulum-akisi',
@@ -63,25 +88,41 @@ const setupFlows = [
   '/google-search-console-kurulum-akisi'
 ]
 
-const entries = [
+const pageEntries = [
   ...mainRouteKeys.map((key) => ({
     tr: key === 'home' ? '/' : `/${trSlugs[key]}`,
     en: key === 'home' ? '/en' : `/en/${enSlugs[key]}`,
     priority: key === 'home' ? '1.0' : key === 'trainings' ? '0.85' : '0.80',
-    changefreq: key === 'home' ? 'weekly' : 'monthly'
+    changefreq: key === 'home' ? 'weekly' : 'monthly',
+    bucket:
+      serviceRouteKeys.includes(key) ? 'services'
+        : sectoralRouteKeys.includes(key) ? 'sectoral'
+          : productRouteKeys.includes(key) ? 'products'
+            : 'pages'
   })),
   ...trainingRouteMap.map((key) => ({
     tr: `/${trSlugs[key]}`,
     en: `/en/${enSlugs[key]}`,
     priority: '0.76',
-    changefreq: 'monthly'
+    changefreq: 'monthly',
+    bucket: 'trainings'
   })),
   ...setupFlows.map((flow) => ({
     tr: flow,
     priority: '0.64',
-    changefreq: 'monthly'
+    changefreq: 'monthly',
+    bucket: 'flows'
   }))
 ]
+
+const segmentedEntries = {
+  pages: pageEntries.filter((entry) => entry.bucket === 'pages'),
+  services: pageEntries.filter((entry) => entry.bucket === 'services'),
+  sectoral: pageEntries.filter((entry) => entry.bucket === 'sectoral'),
+  products: pageEntries.filter((entry) => entry.bucket === 'products'),
+  trainings: pageEntries.filter((entry) => entry.bucket === 'trainings'),
+  flows: pageEntries.filter((entry) => entry.bucket === 'flows')
+}
 
 const escapeXml = (value) =>
   value
@@ -91,7 +132,7 @@ const escapeXml = (value) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;')
 
-const urlset = `<?xml version="1.0" encoding="UTF-8"?>
+const renderUrlset = (entries) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${entries
   .flatMap((entry) => {
@@ -125,6 +166,26 @@ ${variant.alternateEn ? `    <xhtml:link rel="alternate" hreflang="en" href="${e
   })
   .join('\n')}
 </urlset>
+`
+
+const sitemapFiles = {
+  'sitemap-pages.xml': renderUrlset(segmentedEntries.pages),
+  'sitemap-services.xml': renderUrlset(segmentedEntries.services),
+  'sitemap-sectoral.xml': renderUrlset(segmentedEntries.sectoral),
+  'sitemap-products.xml': renderUrlset(segmentedEntries.products),
+  'sitemap-trainings.xml': renderUrlset(segmentedEntries.trainings),
+  'sitemap-flows.xml': renderUrlset(segmentedEntries.flows)
+}
+
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${Object.keys(sitemapFiles)
+  .map((file) => `  <sitemap>
+    <loc>${escapeXml(`${siteUrl}/${file}`)}</loc>
+    <lastmod>${now}</lastmod>
+  </sitemap>`)
+  .join('\n')}
+</sitemapindex>
 `
 
 const robots = `User-agent: *
@@ -217,7 +278,7 @@ khilonfast is a bilingual website for marketing services, sector-specific market
 - Canonical English URLs live under ${siteUrl}/en/.
 
 ## Discovery and canonical sources
-- Primary sitemap: ${siteUrl}/sitemap.xml
+- Primary sitemap index: ${siteUrl}/sitemap.xml
 - Crawl policy: ${siteUrl}/robots.txt
 - Canonical URLs and alternate languages are published with canonical and hreflang tags in page head markup.
 - If a URL redirects or has a canonical target, prefer the canonical target over the requested URL.
@@ -329,9 +390,14 @@ ${setupFlows.map((flow) => `- ${siteUrl}${flow}`).join('\n')}
 `
 
 await fs.mkdir(publicDir, { recursive: true })
-await fs.writeFile(path.join(publicDir, 'sitemap.xml'), urlset, 'utf8')
+await fs.writeFile(path.join(publicDir, 'sitemap.xml'), sitemapIndex, 'utf8')
+await Promise.all(
+  Object.entries(sitemapFiles).map(([fileName, contents]) =>
+    fs.writeFile(path.join(publicDir, fileName), contents, 'utf8')
+  )
+)
 await fs.writeFile(path.join(publicDir, 'robots.txt'), robots, 'utf8')
 await fs.writeFile(path.join(publicDir, 'llms.txt'), llms, 'utf8')
 await fs.writeFile(path.join(publicDir, '_redirects'), redirects, 'utf8')
 
-console.log('SEO assets generated:', ['public/sitemap.xml', 'public/robots.txt', 'public/llms.txt', 'public/_redirects'].join(', '))
+console.log('SEO assets generated:', ['public/sitemap.xml', 'public/sitemap-pages.xml', 'public/sitemap-services.xml', 'public/sitemap-sectoral.xml', 'public/sitemap-products.xml', 'public/sitemap-trainings.xml', 'public/sitemap-flows.xml', 'public/robots.txt', 'public/llms.txt', 'public/_redirects'].join(', '))

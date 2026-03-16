@@ -31,6 +31,7 @@ import ManufacturingMarketing from './pages/ManufacturingMarketing'
 import About from './pages/About'
 import HowItWorks from './pages/HowItWorks'
 import MaestroAI from './pages/MaestroAI'
+import MaestroAISector from './pages/MaestroAISector'
 import EyeTracking from './pages/EyeTracking'
 import SearchConsoleSetup from './pages/SearchConsoleSetup'
 import SetupFlowPage from './pages/SetupFlowPage'
@@ -49,6 +50,7 @@ import ProductSlugResolver from './pages/ProductSlugResolver'
 import { trainingPrograms } from './data/trainingPrograms'
 import { productPrograms } from './data/productPrograms'
 import { setupFlows } from './data/setupFlows'
+import { resolveLocaleFromPath } from './utils/locale'
 import trCommon from './locales/tr/common.json'
 import enCommon from './locales/en/common.json'
 
@@ -87,7 +89,7 @@ function RequireAdmin({ children }: { children: ReactElement }) {
 
 function MainContent() {
     const location = useLocation();
-    const routeLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    const routeLang = resolveLocaleFromPath(location.pathname);
     const isAdminRoute = location.pathname.startsWith('/admin');
     const knownRoutePatterns = [
         '/',
@@ -126,6 +128,13 @@ function MainContent() {
         '/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi',
         '/hizmetlerimiz/maestro-ai',
         '/urunler/maestro-ai',
+        '/urunler/maestro-ai-b2b',
+        '/urunler/maestro-ai-odeme-sistemleri',
+        '/urunler/maestro-ai-endustriyel-gida',
+        '/urunler/maestro-ai-fintech',
+        '/urunler/maestro-ai-enerji',
+        '/urunler/maestro-ai-ofis-tasarim',
+        '/urunler/maestro-ai-filo-kiralama',
         '/hizmetlerimiz/eye-tracking-reklam-analizi',
         '/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy',
         '/hizmetler/eye-tracking-reklam-analizi',
@@ -249,6 +258,13 @@ function MainContent() {
                         <Route path="sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFleet}`} replace />} />
                         <Route path="sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralManufacturing}`} replace />} />
                         <Route path="urunler/maestro-ai" element={<MaestroAI />} />
+                        <Route path="urunler/maestro-ai-b2b" element={<MaestroAISector sectorKey="b2b" />} />
+                        <Route path="urunler/maestro-ai-odeme-sistemleri" element={<MaestroAISector sectorKey="odeme-sistemleri" />} />
+                        <Route path="urunler/maestro-ai-endustriyel-gida" element={<MaestroAISector sectorKey="endustriyel-gida" />} />
+                        <Route path="urunler/maestro-ai-fintech" element={<MaestroAISector sectorKey="fintech" />} />
+                        <Route path="urunler/maestro-ai-enerji" element={<MaestroAISector sectorKey="enerji" />} />
+                        <Route path="urunler/maestro-ai-ofis-tasarim" element={<MaestroAISector sectorKey="ofis-tasarim" />} />
+                        <Route path="urunler/maestro-ai-filo-kiralama" element={<MaestroAISector sectorKey="filo-kiralama" />} />
                         <Route path="urunler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
                     </Route>
 
@@ -298,6 +314,13 @@ function MainContent() {
                     <Route path="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi-copy" element={<Navigate to="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path={`/${slugsTr.maestro}`} element={<MaestroAI />} />
+                    <Route path="/urunler/maestro-ai-b2b" element={<MaestroAISector sectorKey="b2b" />} />
+                    <Route path="/urunler/maestro-ai-odeme-sistemleri" element={<MaestroAISector sectorKey="odeme-sistemleri" />} />
+                    <Route path="/urunler/maestro-ai-endustriyel-gida" element={<MaestroAISector sectorKey="endustriyel-gida" />} />
+                    <Route path="/urunler/maestro-ai-fintech" element={<MaestroAISector sectorKey="fintech" />} />
+                    <Route path="/urunler/maestro-ai-enerji" element={<MaestroAISector sectorKey="enerji" />} />
+                    <Route path="/urunler/maestro-ai-ofis-tasarim" element={<MaestroAISector sectorKey="ofis-tasarim" />} />
+                    <Route path="/urunler/maestro-ai-filo-kiralama" element={<MaestroAISector sectorKey="filo-kiralama" />} />
                     <Route path="/hizmetlerimiz/maestro-ai" element={<Navigate to="/urunler/maestro-ai" replace />} />
                     <Route path="/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy" element={<Navigate to="/urunler/maestro-ai" replace />} />
                     <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />

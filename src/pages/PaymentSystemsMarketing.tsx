@@ -114,7 +114,7 @@ export default function PaymentSystemsMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-odeme-sistemleri' : '/urunler/maestro-ai-odeme-sistemleri'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -242,7 +242,7 @@ export default function PaymentSystemsMarketing() {
                         <div className="sectoral-tabs-content">
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go To Market Strategy</h3>
+                                    <h3>Go To Market Stratejisi</h3>
                                     <p style={{ fontSize: '0.85rem' }}>
                                         Go-To-Market Stratejisi, yeni ürün veya hizmetinizi doğru kitleye, doğru kanallardan ve en verimli şekilde ulaştırmanızı sağlar. Ödeme sistemleri gibi rekabetin yüksek olduğu pazarlarda, doğru GTM yaklaşımı büyümeyi hızlandırır ve fark yaratır.
                                     </p>
@@ -383,7 +383,7 @@ export default function PaymentSystemsMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-odeme-sistemleri' : '/urunler/maestro-ai-odeme-sistemleri'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

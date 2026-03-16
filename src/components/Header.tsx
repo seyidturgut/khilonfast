@@ -28,6 +28,7 @@ import {
 import './Header.css'
 import trCommon from '../locales/tr/common.json'
 import enCommon from '../locales/en/common.json'
+import { buildLocalizedPath, resolveLocaleFromPath, translatePathnameToLocale } from '../utils/locale'
 
 export default function Header() {
     const { t, i18n } = useTranslation('common')
@@ -35,57 +36,10 @@ export default function Header() {
     const enSlugs = enCommon.slugs as Record<string, string>
     const location = useLocation()
     const navigate = useNavigate()
-    const isEnglishPath = location.pathname === '/en' || location.pathname.startsWith('/en/')
-    const currentLang = isEnglishPath ? 'en' : 'tr'
+    const currentLang = resolveLocaleFromPath(location.pathname)
     const localeCommon = currentLang === 'en' ? enCommon : trCommon
-    const langPrefix = currentLang === 'en' ? '/en' : ''
     const activeSlugs = currentLang === 'en' ? enSlugs : trSlugs
-    const toLocalized = (key: string) => `${langPrefix}/${activeSlugs[key] ?? ''}`.replace(/\/{2,}/g, '/')
-
-    const switchLanguagePath = (targetLang: 'tr' | 'en', pathname: string) => {
-        const isEnglishPath = pathname === '/en' || pathname.startsWith('/en/')
-        const cleanPath = pathname
-            .replace(/^\/en(\/|$)/, '')
-            .replace(/^\/+/, '')
-            .replace(/\/+$/, '')
-
-        const sourceSlugs = isEnglishPath ? enSlugs : trSlugs
-        const targetSlugs = targetLang === 'en' ? enSlugs : trSlugs
-        const matchedKey = Object.keys(sourceSlugs).find((k) => sourceSlugs[k] === cleanPath)
-
-        if (matchedKey && targetSlugs[matchedKey] !== undefined) {
-            const targetSlug = targetSlugs[matchedKey]
-            if (!targetSlug) return targetLang === 'en' ? '/en' : '/'
-            const withPrefix = `${targetLang === 'en' ? '/en' : ''}/${targetSlug}`.replace(/\/{2,}/g, '/')
-            return withPrefix
-        }
-
-        if (!cleanPath) return targetLang === 'en' ? '/en' : '/'
-        const dynamicPrefixMap: Record<'tr' | 'en', Array<[RegExp, string]>> = {
-            tr: [
-                [/^services\/?/, 'hizmetlerimiz/'],
-                [/^sectoral-services\/?/, 'sektorel-hizmetler/'],
-                [/^trainings\/?/, 'egitimler/'],
-                [/^products\/?/, 'urunler/']
-            ],
-            en: [
-                [/^hizmetlerimiz\/?/, 'services/'],
-                [/^sektorel-hizmetler\/?/, 'sectoral-services/'],
-                [/^egitimler\/?/, 'trainings/'],
-                [/^urunler\/?/, 'products/']
-            ]
-        }
-
-        let translatedPath = cleanPath
-        for (const [pattern, replacement] of dynamicPrefixMap[targetLang]) {
-            if (pattern.test(translatedPath)) {
-                translatedPath = translatedPath.replace(pattern, replacement)
-                break
-            }
-        }
-
-        return `${targetLang === 'en' ? '/en' : ''}/${translatedPath}`.replace(/\/{2,}/g, '/')
-    }
+    const toLocalized = (key: string) => buildLocalizedPath(currentLang, activeSlugs[key] ?? '')
 
     // Define localized items inside the component to use 't'
     const services = [
@@ -144,7 +98,7 @@ export default function Header() {
 
     const handleLanguageChange = (lang: string) => {
         const targetLang = lang === 'en' ? 'en' : 'tr'
-        const newPath = switchLanguagePath(targetLang, location.pathname)
+        const newPath = translatePathnameToLocale(targetLang, location.pathname)
         void i18n.changeLanguage(targetLang)
         localStorage.setItem('i18nextLng', targetLang)
         navigate(`${newPath}${location.search}${location.hash}`)

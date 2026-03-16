@@ -5,6 +5,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import './Trainings.css';
 import trCommon from '../locales/tr/common.json';
 import enCommon from '../locales/en/common.json';
+import { getTrainingPrograms } from '../data/trainingPrograms';
 
 export default function Trainings() {
     const { t } = useTranslation('common');
@@ -13,7 +14,7 @@ export default function Trainings() {
     const slugs = (currentLang === 'en' ? enCommon.slugs : trCommon.slugs) as Record<string, string>;
     const langPrefix = currentLang === 'en' ? '/en' : '';
 
-    const trainingPrograms = [
+    const trainingCards = [
         { slugKey: 'trainingPayment', menuKey: 'payment', image: '/images/TR_Odeme_Sistemleri-2.avif' },
         { slugKey: 'trainingB2B', menuKey: 'b2b', image: '/images/TR_Butunlesik.avif' },
         { slugKey: 'trainingFintech', menuKey: 'fintech', image: '/images/fintech.avif' },
@@ -24,7 +25,8 @@ export default function Trainings() {
         { slugKey: 'trainingFleet', menuKey: 'fleet', image: '/images/filo.avif' },
         { slugKey: 'trainingFood', menuKey: 'food', image: '/images/sef.avif' }
     ].map(({ slugKey, menuKey, image }) => ({
-        path: `${langPrefix}/${slugs[slugKey] ?? ''}`.replace(/\/{2,}/g, '/'),
+        path: getTrainingPrograms(currentLang).find((program) => program.path.endsWith(`/${slugs[slugKey] ?? ''}`))?.path
+            ?? `${langPrefix}/${slugs[slugKey] ?? ''}`.replace(/\/{2,}/g, '/'),
         title: t(`header.menuItems.trainings.${menuKey}.title`),
         summary: t(`header.menuItems.trainings.${menuKey}.desc`),
         image
@@ -39,17 +41,15 @@ export default function Trainings() {
                         <HiAcademicCap />
                         <span>khilonfast Academy</span>
                     </div>
-                    <h1>{t('trainingsPage.hero.title', 'Eğitim Programları')}</h1>
-                    <p>
-                        {t('trainingsPage.hero.description', 'Sektöre özel büyüme odaklı pazarlama eğitimlerini mevcut sistemimize entegre ettik. Programları inceleyip size en uygun eğitim akışıyla başlayabilirsiniz.')}
-                    </p>
+                    <h1>{t('trainingsPage.hero.title')}</h1>
+                    <p>{t('trainingsPage.hero.description')}</p>
                 </div>
             </section>
 
             <section className="trainings-list">
                 <div className="container">
                     <div className="trainings-grid">
-                        {trainingPrograms.map((program) => (
+                        {trainingCards.map((program) => (
                             <article key={program.path} className="training-card">
                                 <div className="training-card-image">
                                     <img src={program.image} alt={program.title} />
@@ -61,7 +61,7 @@ export default function Trainings() {
                                     <h3>{program.title}</h3>
                                     <p>{program.summary}</p>
                                     <Link to={program.path} className="training-link">
-                                        {t('trainingsPage.list.open', 'Eğitimi Aç')} <HiArrowRight />
+                                        {t('trainingsPage.list.open')} <HiArrowRight />
                                     </Link>
                                 </div>
                             </article>

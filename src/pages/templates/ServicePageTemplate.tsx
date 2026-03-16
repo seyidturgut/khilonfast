@@ -16,6 +16,8 @@ import { parseLocalizedPrice } from '../../utils/price'
 import './ServicePageTemplate.css'
 import trCommon from '../../locales/tr/common.json'
 import enCommon from '../../locales/en/common.json'
+import { getLocalePrefix, resolveLocaleFromPath } from '../../utils/locale'
+import { API_BASE_URL } from '../../config/api'
 
 export interface PricingPackage {
     id: string;
@@ -217,9 +219,9 @@ export interface ServicePageProps {
 
 export default function ServicePageTemplate(props: ServicePageProps) {
     const { t, i18n } = useTranslation('common');
-    const API_BASE = import.meta.env.VITE_API_URL || '/api';
+    const API_BASE = API_BASE_URL;
     const location = useLocation();
-    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    const currentLang = resolveLocaleFromPath(location.pathname);
     const isCmsMode = props.cmsMode ?? (new URLSearchParams(location.search).get('cms') === '1');
     const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
     const hasExternalCmsController = Boolean(props.onCmsEditSection);
@@ -228,7 +230,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         .replace(/^\/en(\/|$)/, '')
         .replace(/^\/+/, '')
         .replace(/\/+$/, '');
-    const langPrefix = currentLang === 'en' ? '/en' : '';
+    const langPrefix = getLocalePrefix(currentLang);
     const trSlugs = trCommon.slugs as Record<string, string>;
     const enSlugs = enCommon.slugs as Record<string, string>;
     const { addToCart } = useCart();

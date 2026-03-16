@@ -17,10 +17,11 @@ import {
 
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
+import { useRouteLocale } from '../utils/locale'
 
 export default function SeoService() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const { t } = useTranslation('common')
+    const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
     const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
     const langPrefix = isEn ? '/en' : ''

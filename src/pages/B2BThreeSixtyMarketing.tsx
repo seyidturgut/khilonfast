@@ -12,6 +12,7 @@ import {
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
 import { useCart } from '../context/CartContext'
+import { API_BASE_URL } from '../config/api'
 
 export default function B2BThreeSixtyMarketing() {
     const { t, i18n } = useTranslation('common')
@@ -20,7 +21,7 @@ export default function B2BThreeSixtyMarketing() {
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
     const langPrefix = isEn ? '/en' : ''
-    const API_BASE = import.meta.env.VITE_API_URL || '/api'
+    const API_BASE = API_BASE_URL
     const [packageMap, setPackageMap] = useState<Record<string, any>>({})
 
     useEffect(() => {
@@ -131,7 +132,7 @@ export default function B2BThreeSixtyMarketing() {
                                 <div className="sectoral-card">
                                     <h3>B2B Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
-                                    <Link to={path('trainingGrowth')} className="sectoral-btn">{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                    <Link to={path('trainingB2B')} className="sectoral-btn">{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +154,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -283,7 +284,7 @@ export default function B2BThreeSixtyMarketing() {
                         <div className="sectoral-tabs-content">
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go To Market Strategy</h3>
+                                    <h3>Go To Market Stratejisi</h3>
                                     <p style={{ fontSize: '0.85rem' }}>
                                         Go-To-Market Stratejisi, yeni ürün veya hizmetinizi doğru kitleye, doğru kanallardan ve en verimli şekilde ulaştırmanızı sağlar. B2B sektörü gibi rekabetin yüksek olduğu pazarlarda, doğru GTM yaklaşımı büyümeyi hızlandırır ve fark yaratır.
                                     </p>
@@ -454,7 +455,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

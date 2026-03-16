@@ -832,6 +832,79 @@
             }
         ]
     },
+    "authPages": {
+        "or": "or",
+        "fields": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "phoneOptional": "Phone (Optional)",
+            "password": "Password",
+            "confirmPassword": "Confirm Password"
+        },
+        "placeholders": {
+            "firstName": "Your first name",
+            "lastName": "Your last name",
+            "email": "example@email.com",
+            "phone": "+90 5XX XXX XX XX",
+            "password": "At least 6 characters",
+            "confirmPassword": "Enter your password again"
+        },
+        "login": {
+            "title": "Login",
+            "subtitle": "Sign in to your account",
+            "submit": "Login",
+            "loading": "Signing in...",
+            "switchPrompt": "Don't have an account?",
+            "errors": {
+                "default": "Login failed",
+                "google": "Google sign-in failed"
+            }
+        },
+        "register": {
+            "title": "Register",
+            "subtitle": "Create a new account",
+            "submit": "Register",
+            "loading": "Creating account...",
+            "switchPrompt": "Already have an account?",
+            "errors": {
+                "default": "Registration failed",
+                "google": "Google sign-in failed",
+                "passwordMismatch": "Passwords do not match"
+            }
+        }
+    },
+    "dynamicPage": {
+        "loading": "Loading...",
+        "notFound": "The page could not be found or has not been created yet.",
+        "unknownBlock": "Unknown Block Type:"
+    },
+    "trainingsPage": {
+        "hero": {
+            "title": "Training Programs",
+            "description": "We integrated sector-specific growth-oriented marketing trainings into our current system. Review the programs and start with the learning path that fits you best."
+        },
+        "list": {
+            "open": "Open Training"
+        }
+    },
+    "paymentStatus": {
+        "orderNumber": "Order No:",
+        "backHome": "Back to Home",
+        "success": {
+            "title": "Payment Successful!",
+            "description": "Your order has been received successfully."
+        },
+        "callback": {
+            "title": "Payment Status",
+            "errorTitle": "Payment Error",
+            "verifying": "Verifying payment result...",
+            "success": "Payment successful. Redirecting...",
+            "failed": "Payment could not be completed ({{status}}).",
+            "unverified": "Payment callback could not be verified.",
+            "backToCheckout": "Return to Checkout"
+        }
+    },
     "pages": {
         "home": {
             "seo": {
@@ -925,9 +998,9 @@
                     "title": "Purchase",
                     "desc": "Choose the package aligned with your needs. The workflow starts automatically once payment is completed."
                 },
-                "authorize": {
-                    "title": "Authorize",
-                    "desc": "Provide necessary access permissions to the khilonfast team. Click for authorization details >>"
+                "brief": {
+                    "title": "Share the Brief",
+                    "desc": "Answer the questions in the form we send to share your goals, target audience, and brand voice. This form becomes the foundation of the strategy."
                 },
                 "analysis": {
                     "title": "Analysis",
@@ -1165,6 +1238,57 @@
             "quote": "After consolidating all digital processes under one strategy, the return on our marketing budget increased by 45%.",
             "author": "Caner Ozkan",
             "role": "E-commerce Director"
+        }
+    },
+    "maestroAISectors": {
+        "b2b": {
+            "sectorLabel": "B2B",
+            "videoTag": "AI Assistant for B2B Marketing Departments",
+            "featuresDescription": "A strategist who understands the B2B sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in B2B Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the B2B sector."
+        },
+        "odeme-sistemleri": {
+            "sectorLabel": "Payment Systems",
+            "videoTag": "AI Assistant for Payment Systems Marketing Departments",
+            "featuresDescription": "A strategist who understands payment systems sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Payment Systems and Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the payment systems sector."
+        },
+        "endustriyel-gida": {
+            "sectorLabel": "Industrial Food & Chef Solutions",
+            "videoTag": "AI Assistant for Industrial Food Sector",
+            "featuresDescription": "A strategist who understands industrial food sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Industrial Food & Chef Solutions Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Industrial Food & Chef Solutions sector."
+        },
+        "fintech": {
+            "sectorLabel": "FinTech",
+            "videoTag": "AI Assistant for FinTech Sector",
+            "featuresDescription": "A strategist who understands FinTech sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in FinTech Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the FinTech sector."
+        },
+        "enerji": {
+            "sectorLabel": "Energy",
+            "videoTag": "AI Assistant for Energy Sector",
+            "featuresDescription": "A strategist who understands energy sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Energy Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the energy sector."
+        },
+        "ofis-tasarim": {
+            "sectorLabel": "Office & Corporate Interior Design",
+            "videoTag": "AI Assistant for Office & Corporate Interior Design Sector",
+            "featuresDescription": "A strategist who understands office & corporate interior design sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Office & Corporate Interior Design Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Office & Corporate Interior Design sector."
+        },
+        "filo-kiralama": {
+            "sectorLabel": "Fleet Rental",
+            "videoTag": "AI Assistant for Fleet Rental Sector",
+            "featuresDescription": "A strategist who understands fleet rental sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Fleet Rental Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the fleet rental sector."
         }
     }
 }

@@ -36,6 +36,9 @@ if ($method === 'GET' && $action === 'slug' && !empty($id)) {
     } else {
         $decoded = json_decode((string)$raw, true);
         if (is_array($decoded)) {
+            if ($lang === 'en' && !isset($decoded['en']) && isset($decoded['tr'])) {
+                error_log(sprintf('Localization fallback used for CMS page "%s" (page_id=%d)', $slug, (int) $page['id']));
+            }
             $content = $decoded[$lang] ?? $decoded;
         }
     }

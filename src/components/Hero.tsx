@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import './Hero.css'
 import HeroBackgroundEffect from './HeroBackgroundEffect'
 import { Link } from 'react-router-dom'
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
 
 // Slides data now managed via translations
 
@@ -13,10 +14,9 @@ type HeroContentOverrides = {
 };
 
 export default function Hero({ content }: { content?: HeroContentOverrides }) {
-    const { t, i18n } = useTranslation('common');
-    const currentLang = i18n.language.split('-')[0];
-    const prefix = currentLang === 'en' ? '/en' : '';
-    const toLocalized = (key: string) => `${prefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+    const { t } = useTranslation('common');
+    const currentLang = useRouteLocale();
+    const toLocalized = (key: string) => getLocalizedPathByKey(currentLang, key);
     return (
         <section id="home" className="hero" style={{ position: 'relative', overflow: 'hidden' }}>
             {/* Background Layer: Full-screen Data Flow Lines */}

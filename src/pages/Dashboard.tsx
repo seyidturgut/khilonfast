@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay } from 'react-icons/hi';
+import { useRouteLocale, getLocalizedPathByKey } from '../utils/locale';
+import { API_BASE_URL } from '../config/api';
 import './Dashboard.css';
 
 interface OrderItem {
@@ -57,9 +59,12 @@ interface PurchasedContent {
 }
 
 export default function Dashboard() {
-    const API_BASE = import.meta.env.VITE_API_URL || '/api';
+    const API_BASE = API_BASE_URL;
     const { user } = useAuth();
     const navigate = useNavigate();
+    const currentLang = useRouteLocale();
+    const isEn = currentLang === 'en';
+    const loginPath = getLocalizedPathByKey(currentLang, 'login');
     const [activeTab, setActiveTab] = useState('orders');
     const [orders, setOrders] = useState<Order[]>([]);
     const [contents, setContents] = useState<PurchasedContent[]>([]);
@@ -88,13 +93,81 @@ export default function Dashboard() {
 
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const copy = {
+        loading: isEn ? 'Loading...' : 'Yükleniyor...',
+        welcome: isEn ? 'Welcome' : 'Hoş Geldiniz',
+        subtitle: isEn ? 'You can manage your account details and orders from here.' : 'Hesap bilgilerinizi ve siparişlerinizi buradan yönetebilirsiniz.',
+        tabs: {
+            orders: isEn ? 'My Orders' : 'Siparişlerim',
+            contents: isEn ? 'My Content' : 'İçeriklerim',
+            profile: isEn ? 'Profile Details' : 'Profil Bilgileri',
+            password: isEn ? 'Change Password' : 'Şifre Değiştir',
+            company: isEn ? 'Company Details' : 'Firma Bilgileri'
+        },
+        messages: {
+            paymentSuccess: isEn ? 'Your payment was completed successfully. Your order is shown below.' : 'Ödemeniz başarıyla tamamlandı! Siparişiniz aşağıda görüntülenmektedir.',
+            forcePasswordChange: isEn ? 'For your security, you must change your password on first login.' : 'Güvenliğiniz için ilk girişte şifrenizi değiştirmeniz zorunludur.',
+            profileSaved: isEn ? 'Profile updated successfully!' : 'Profil başarıyla güncellendi!',
+            profileError: isEn ? 'An error occurred while updating your profile.' : 'Profil güncellenirken hata oluştu',
+            passwordMismatch: isEn ? 'The new passwords do not match.' : 'Yeni şifreler eşleşmiyor',
+            passwordSaved: isEn ? 'Password changed successfully!' : 'Şifre başarıyla değiştirildi!',
+            passwordError: isEn ? 'An error occurred while changing the password.' : 'Şifre değiştirilirken hata oluştu',
+            companySaved: isEn ? 'Company details saved successfully!' : 'Firma bilgileri başarıyla kaydedildi!',
+            companyError: isEn ? 'An error occurred while saving company details.' : 'Firma bilgileri kaydedilirken hata oluştu',
+            serverError: isEn ? 'Server error.' : 'Sunucu hatası'
+        },
+        orders: {
+            title: isEn ? 'My Orders' : 'Siparişlerim',
+            empty: isEn ? 'You do not have any orders yet.' : 'Henüz siparişiniz bulunmuyor.',
+            number: isEn ? 'Order No' : 'Sipariş No',
+            date: isEn ? 'Date' : 'Tarih',
+            products: isEn ? 'Products' : 'Ürünler',
+            amount: isEn ? 'Amount' : 'Tutar',
+            status: isEn ? 'Status' : 'Durum',
+            completed: isEn ? 'Completed' : 'Tamamlandı',
+            pending: isEn ? 'Pending' : 'Beklemede',
+            processing: isEn ? 'Processing' : 'İşleniyor'
+        },
+        contents: {
+            title: isEn ? 'My Content' : 'İçeriklerim',
+            empty: isEn ? 'You do not have any training content with active access yet.' : 'Henüz erişime açık bir eğitim içeriğiniz bulunmuyor.',
+            activeAccess: isEn ? 'Access Active' : 'Erişim Aktif',
+            missingVideo: isEn ? 'The video link has not been entered yet.' : 'Video linki henüz girilmemiş.'
+        },
+        profile: {
+            title: isEn ? 'Profile Details' : 'Profil Bilgileri',
+            firstName: isEn ? 'First Name' : 'Ad',
+            lastName: isEn ? 'Last Name' : 'Soyad',
+            email: isEn ? 'Email' : 'E-posta',
+            emailHint: isEn ? 'You cannot change your email address.' : 'E-posta adresinizi değiştiremezsiniz',
+            phone: isEn ? 'Phone' : 'Telefon',
+            address: isEn ? 'Address' : 'Adres',
+            save: isEn ? 'Save Changes' : 'Değişiklikleri Kaydet'
+        },
+        password: {
+            title: isEn ? 'Change Password' : 'Şifre Değiştir',
+            current: isEn ? 'Current Password' : 'Mevcut Şifre',
+            next: isEn ? 'New Password' : 'Yeni Şifre',
+            confirm: isEn ? 'Repeat New Password' : 'Yeni Şifre (Tekrar)',
+            save: isEn ? 'Change Password' : 'Şifreyi Değiştir'
+        },
+        company: {
+            title: isEn ? 'Company Details' : 'Firma Bilgileri',
+            description: isEn ? 'You can enter your company details for invoicing (optional).' : 'Fatura için firma bilgilerinizi girebilirsiniz (İsteğe bağlı)',
+            name: isEn ? 'Company Name' : 'Firma Adı',
+            tax: isEn ? 'Tax Number' : 'Vergi Numarası',
+            address: isEn ? 'Company Address' : 'Firma Adresi',
+            phone: isEn ? 'Company Phone' : 'Firma Telefonu',
+            save: isEn ? 'Save Company Details' : 'Firma Bilgilerini Kaydet'
+        }
+    };
 
     // Redirect if not logged in
     useEffect(() => {
         if (!user) {
-            navigate('/giris');
+            navigate(loginPath);
         }
-    }, [user, navigate]);
+    }, [loginPath, user, navigate]);
 
     // Check URL parameters for auto-switching to orders tab
     useEffect(() => {
@@ -106,18 +179,18 @@ export default function Dashboard() {
         if (tab === 'orders') {
             setActiveTab('orders');
             if (success === 'true') {
-                setMessage('Ödemeniz başarıyla tamamlandı! Siparişiniz aşağıda görüntülenmektedir.');
+                setMessage(copy.messages.paymentSuccess);
                 // Clear URL parameters
-                window.history.replaceState({}, '', '/dashboard');
+                window.history.replaceState({}, '', getLocalizedPathByKey(currentLang, 'dashboard'));
             }
         }
         if (tab === 'password') {
             setActiveTab('password');
             if (forcePasswordChange === 'true') {
-                setError('Güvenliğiniz için ilk girişte şifrenizi değiştirmeniz zorunludur.');
+                setError(copy.messages.forcePasswordChange);
             }
         }
-    }, []);
+    }, [copy.messages.forcePasswordChange, copy.messages.paymentSuccess, currentLang]);
 
     // Fetch data on mount
     useEffect(() => {
@@ -268,13 +341,13 @@ export default function Dashboard() {
 
             const data = await response.json();
             if (response.ok) {
-                setMessage('Profil başarıyla güncellendi!');
+                setMessage(copy.messages.profileSaved);
                 setProfile(data.user);
             } else {
-                setError(data.error || 'Profil güncellenirken hata oluştu');
+                setError(data.error || copy.messages.profileError);
             }
         } catch (err) {
-            setError('Sunucu hatası');
+            setError(copy.messages.serverError);
         }
     };
 
@@ -284,7 +357,7 @@ export default function Dashboard() {
         setError('');
 
         if (passwordForm.new_password !== passwordForm.confirm_password) {
-            setError('Yeni şifreler eşleşmiyor');
+            setError(copy.messages.passwordMismatch);
             return;
         }
 
@@ -304,13 +377,13 @@ export default function Dashboard() {
 
             const data = await response.json();
             if (response.ok) {
-                setMessage('Şifre başarıyla değiştirildi!');
+                setMessage(copy.messages.passwordSaved);
                 setPasswordForm({ current_password: '', new_password: '', confirm_password: '' });
             } else {
-                setError(data.error || 'Şifre değiştirilirken hata oluştu');
+                setError(data.error || copy.messages.passwordError);
             }
         } catch (err) {
-            setError('Sunucu hatası');
+            setError(copy.messages.serverError);
         }
     };
 
@@ -332,13 +405,13 @@ export default function Dashboard() {
 
             const data = await response.json();
             if (response.ok) {
-                setMessage('Firma bilgileri başarıyla kaydedildi!');
+                setMessage(copy.messages.companySaved);
                 setCompany(data.company);
             } else {
-                setError(data.error || 'Firma bilgileri kaydedilirken hata oluştu');
+                setError(data.error || copy.messages.companyError);
             }
         } catch (err) {
-            setError('Sunucu hatası');
+            setError(copy.messages.serverError);
         }
     };
 
@@ -346,7 +419,7 @@ export default function Dashboard() {
         return (
             <div className="dashboard-page">
                 <div className="dashboard-container">
-                    <div className="loading">Yükleniyor...</div>
+                    <div className="loading">{copy.loading}</div>
                 </div>
             </div>
         );
@@ -356,8 +429,8 @@ export default function Dashboard() {
         <div className="dashboard-page">
             <div className="dashboard-container">
                 <div className="dashboard-header">
-                    <h1>Hoş Geldiniz, {user?.first_name}!</h1>
-                    <p>Hesap bilgilerinizi ve siparişlerinizi buradan yönetebilirsiniz.</p>
+                    <h1>{copy.welcome}, {user?.first_name}!</h1>
+                    <p>{copy.subtitle}</p>
                 </div>
 
                 <div className="dashboard-tabs">
@@ -365,31 +438,31 @@ export default function Dashboard() {
                         className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('orders'); setMessage(''); setError(''); }}
                     >
-                        <HiShoppingBag /> Siparişlerim
+                        <HiShoppingBag /> {copy.tabs.orders}
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'contents' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('contents'); setMessage(''); setError(''); }}
                     >
-                        <HiPlay /> İçeriklerim
+                        <HiPlay /> {copy.tabs.contents}
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('profile'); setMessage(''); setError(''); }}
                     >
-                        <HiUser /> Profil Bilgileri
+                        <HiUser /> {copy.tabs.profile}
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'password' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('password'); setMessage(''); setError(''); }}
                     >
-                        <HiLockClosed /> Şifre Değiştir
+                        <HiLockClosed /> {copy.tabs.password}
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'company' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('company'); setMessage(''); setError(''); }}
                     >
-                        <HiBriefcase /> Firma Bilgileri
+                        <HiBriefcase /> {copy.tabs.company}
                     </button>
                 </div>
 
@@ -400,28 +473,28 @@ export default function Dashboard() {
                     {/* Orders Tab */}
                     {activeTab === 'orders' && (
                         <div className="tab-content">
-                            <h2>Siparişlerim</h2>
+                            <h2>{copy.orders.title}</h2>
                             {orders.length === 0 ? (
                                 <div className="empty-state">
-                                    <p>Henüz siparişiniz bulunmuyor.</p>
+                                    <p>{copy.orders.empty}</p>
                                 </div>
                             ) : (
                                 <div className="orders-table-container">
                                     <table className="orders-table">
                                         <thead>
                                             <tr>
-                                                <th>Sipariş No</th>
-                                                <th>Tarih</th>
-                                                <th>Ürünler</th>
-                                                <th>Tutar</th>
-                                                <th>Durum</th>
+                                                <th>{copy.orders.number}</th>
+                                                <th>{copy.orders.date}</th>
+                                                <th>{copy.orders.products}</th>
+                                                <th>{copy.orders.amount}</th>
+                                                <th>{copy.orders.status}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {orders.map((order) => (
                                                 <tr key={order.id}>
                                                     <td className="col-id">#{order.id}</td>
-                                                    <td className="col-date">{new Date(order.created_at).toLocaleDateString('tr-TR')}</td>
+                                                    <td className="col-date">{new Date(order.created_at).toLocaleDateString(isEn ? 'en-US' : 'tr-TR')}</td>
                                                     <td className="col-products">
                                                         {order.items && order.items.length > 0 ? (
                                                             <div className="product-list-compact">
@@ -438,12 +511,12 @@ export default function Dashboard() {
                                                         )}
                                                     </td>
                                                     <td className="col-total">
-                                                        {order.total_amount.toLocaleString('tr-TR')} {order.currency}
+                                                        {order.total_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}
                                                     </td>
                                                     <td className="col-status">
                                                         <span className={`status-badge status-${order.status}`}>
-                                                            {order.status === 'completed' ? 'Tamamlandı' :
-                                                                order.status === 'pending' ? 'Beklemede' : 'İşleniyor'}
+                                                            {order.status === 'completed' ? copy.orders.completed :
+                                                                order.status === 'pending' ? copy.orders.pending : copy.orders.processing}
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -458,10 +531,10 @@ export default function Dashboard() {
                     {/* Purchased Contents Tab */}
                     {activeTab === 'contents' && (
                         <div className="tab-content">
-                            <h2>İçeriklerim</h2>
+                            <h2>{copy.contents.title}</h2>
                             {contents.length === 0 ? (
                                 <div className="empty-state">
-                                    <p>Henüz erişime açık bir eğitim içeriğiniz bulunmuyor.</p>
+                                    <p>{copy.contents.empty}</p>
                                 </div>
                             ) : (
                                 <div className="content-library-grid">
@@ -473,7 +546,7 @@ export default function Dashboard() {
                                             <article key={`${content.subscription_id}-${content.product_id}`} className="content-library-card">
                                                 <div className="content-library-header">
                                                     <h3>{content.name}</h3>
-                                                    <span className="content-badge">Erişim Aktif</span>
+                                                    <span className="content-badge">{copy.contents.activeAccess}</span>
                                                 </div>
                                                 {content.description && <p className="content-library-description">{content.description}</p>}
                                                 {features.length > 0 && (
@@ -494,7 +567,7 @@ export default function Dashboard() {
                                                     </div>
                                                 ) : (
                                                     <div className="content-video-placeholder">
-                                                        Video linki henüz girilmemiş.
+                                                        {copy.contents.missingVideo}
                                                     </div>
                                                 )}
                                             </article>
@@ -508,11 +581,11 @@ export default function Dashboard() {
                     {/* Profile Tab */}
                     {activeTab === 'profile' && (
                         <div className="tab-content">
-                            <h2>Profil Bilgileri</h2>
+                            <h2>{copy.profile.title}</h2>
                             <form onSubmit={handleProfileUpdate} className="dashboard-form">
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Ad</label>
+                                        <label>{copy.profile.firstName}</label>
                                         <input
                                             type="text"
                                             value={profileForm.first_name}
@@ -521,7 +594,7 @@ export default function Dashboard() {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Soyad</label>
+                                        <label>{copy.profile.lastName}</label>
                                         <input
                                             type="text"
                                             value={profileForm.last_name}
@@ -531,12 +604,12 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label>E-posta</label>
+                                    <label>{copy.profile.email}</label>
                                     <input type="email" value={user?.email} disabled />
-                                    <small>E-posta adresinizi değiştiremezsiniz</small>
+                                    <small>{copy.profile.emailHint}</small>
                                 </div>
                                 <div className="form-group">
-                                    <label>Telefon</label>
+                                    <label>{copy.profile.phone}</label>
                                     <input
                                         type="tel"
                                         value={profileForm.phone}
@@ -544,14 +617,14 @@ export default function Dashboard() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Adres</label>
+                                    <label>{copy.profile.address}</label>
                                     <textarea
                                         value={profileForm.address}
                                         onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
                                         rows={3}
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Değişiklikleri Kaydet</button>
+                                <button type="submit" className="btn btn-primary">{copy.profile.save}</button>
                             </form>
                         </div>
                     )}
@@ -559,10 +632,10 @@ export default function Dashboard() {
                     {/* Password Tab */}
                     {activeTab === 'password' && (
                         <div className="tab-content">
-                            <h2>Şifre Değiştir</h2>
+                            <h2>{copy.password.title}</h2>
                             <form onSubmit={handlePasswordChange} className="dashboard-form">
                                 <div className="form-group">
-                                    <label>Mevcut Şifre</label>
+                                    <label>{copy.password.current}</label>
                                     <input
                                         type="password"
                                         value={passwordForm.current_password}
@@ -571,7 +644,7 @@ export default function Dashboard() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Yeni Şifre</label>
+                                    <label>{copy.password.next}</label>
                                     <input
                                         type="password"
                                         value={passwordForm.new_password}
@@ -581,7 +654,7 @@ export default function Dashboard() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Yeni Şifre (Tekrar)</label>
+                                    <label>{copy.password.confirm}</label>
                                     <input
                                         type="password"
                                         value={passwordForm.confirm_password}
@@ -590,7 +663,7 @@ export default function Dashboard() {
                                         minLength={6}
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Şifreyi Değiştir</button>
+                                <button type="submit" className="btn btn-primary">{copy.password.save}</button>
                             </form>
                         </div>
                     )}
@@ -598,11 +671,11 @@ export default function Dashboard() {
                     {/* Company Tab */}
                     {activeTab === 'company' && (
                         <div className="tab-content">
-                            <h2>Firma Bilgileri</h2>
-                            <p className="tab-description">Fatura için firma bilgilerinizi girebilirsiniz (İsteğe bağlı)</p>
+                            <h2>{copy.company.title}</h2>
+                            <p className="tab-description">{copy.company.description}</p>
                             <form onSubmit={handleCompanyUpdate} className="dashboard-form">
                                 <div className="form-group">
-                                    <label>Firma Adı</label>
+                                    <label>{copy.company.name}</label>
                                     <input
                                         type="text"
                                         value={companyForm.company_name}
@@ -610,7 +683,7 @@ export default function Dashboard() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Vergi Numarası</label>
+                                    <label>{copy.company.tax}</label>
                                     <input
                                         type="text"
                                         value={companyForm.tax_number}
@@ -618,7 +691,7 @@ export default function Dashboard() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Firma Adresi</label>
+                                    <label>{copy.company.address}</label>
                                     <textarea
                                         value={companyForm.company_address}
                                         onChange={(e) => setCompanyForm({ ...companyForm, company_address: e.target.value })}
@@ -626,14 +699,14 @@ export default function Dashboard() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Firma Telefonu</label>
+                                    <label>{copy.company.phone}</label>
                                     <input
                                         type="tel"
                                         value={companyForm.company_phone}
                                         onChange={(e) => setCompanyForm({ ...companyForm, company_phone: e.target.value })}
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Firma Bilgilerini Kaydet</button>
+                                <button type="submit" className="btn btn-primary">{copy.company.save}</button>
                             </form>
                         </div>
                     )}

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { API_BASE_URL } from '../config/api'
 import './ContactPage.css'
 
 const CONTACT_TEXT_KEYS = [
@@ -19,7 +20,7 @@ export default function ContactPage() {
   const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
   const isCmsMode = new URLSearchParams(location.search).get('cms') === '1'
   const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'))
-  const API_BASE = import.meta.env.VITE_API_URL || '/api'
+  const API_BASE = API_BASE_URL
 
   const [cmsPageId, setCmsPageId] = useState<number | null>(null)
   const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null)

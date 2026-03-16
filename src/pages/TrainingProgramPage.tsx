@@ -16,17 +16,20 @@ import {
     HiUserGroup
 } from 'react-icons/hi2';
 import ServicePageTemplate from './templates/ServicePageTemplate';
-import { trainingPrograms } from '../data/trainingPrograms';
+import { getTrainingPrograms } from '../data/trainingPrograms';
 import trCommon from '../locales/tr/common.json';
 import enCommon from '../locales/en/common.json';
+import { API_BASE_URL } from '../config/api';
+import { useRouteLocale } from '../utils/locale';
 
 export default function TrainingProgramPage() {
     const location = useLocation();
     const { i18n } = useTranslation('common');
-    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    const currentLang = useRouteLocale();
     const isEn = currentLang === 'en';
     const langPrefix = isEn ? '/en' : '';
     const activeSlugs = (isEn ? enCommon.slugs : trCommon.slugs) as Record<string, string>;
+    const trainingPrograms = useMemo(() => getTrainingPrograms(currentLang), [currentLang]);
 
     useEffect(() => {
         const activeLang = i18n.language.split('-')[0];
@@ -82,7 +85,7 @@ export default function TrainingProgramPage() {
 
     const training = useMemo(() => {
         if (matchedTrainingKey) {
-            const resolvedPath = `/${trSlugs[matchedTrainingKey]}`;
+            const resolvedPath = `/${activeSlugs[matchedTrainingKey]}`;
             const bySlugKey = trainingPrograms.find((item) => item.path === resolvedPath);
             if (bySlugKey) return bySlugKey;
         }
@@ -95,7 +98,7 @@ export default function TrainingProgramPage() {
             })
         );
         return byPath ?? trainingPrograms[0];
-    }, [matchedTrainingKey, normalizedCandidates.join('|'), trSlugs]);
+    }, [matchedTrainingKey, normalizedCandidates.join('|'), trSlugs, trainingPrograms]);
 
     const resolvedSlugKey =
         matchedTrainingKey ??
@@ -129,7 +132,7 @@ export default function TrainingProgramPage() {
     const cmsSlugEncoded = encodeURIComponent(cmsSlug);
     const [cmsContent, setCmsContent] = useState<any | null>(null);
     const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
-    const API_BASE = import.meta.env.VITE_API_URL || '/api';
+    const API_BASE = API_BASE_URL;
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
     const [cmsEditorData, setCmsEditorData] = useState<any | null>(null);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
@@ -511,6 +514,16 @@ export default function TrainingProgramPage() {
         isIndustrialFoodTraining;
 
     const checkoutPath = `${langPrefix}/${activeSlugs.checkout ?? ''}`.replace(/\/{2,}/g, '/');
+
+    const heroPriceFeatures = isEn
+        ? [
+            'Who It\'s For: CEO, CMO, CSO, Marketing and Sales Professionals',
+            'Why Choose It: Make better decisions with data-driven marketing, accelerate growth.'
+        ]
+        : [
+            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
+            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
+        ];
 
     const baseConfig = {
         hero: {
@@ -916,71 +929,16 @@ export default function TrainingProgramPage() {
             priceOnly: true,
             ...(isPaymentSystemsTraining
                 ? {
-                    name: 'Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi',
-                    description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
+                    name: trainingTitle,
+                    description: isEn
+                        ? 'Stand out in the market and leave the competition behind with smart strategies.'
+                        : 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
                     price: '5000TL',
                     period: '',
-                    features: [
-                        'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                        'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                    ]
+                    features: heroPriceFeatures
                 }
-                : isB2BTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isManufacturingTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isInteriorDesignTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isEnergyTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isSoftwareTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isFintechTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isIndustrialFoodTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
-                : isFleetRentalTraining
-                    ? {
-                        features: [
-                            'Kimler için Uygun : CEO, CMO, CSO, Pazarlama ve Satış Profesyonelleri',
-                            'Neden Tercih Edilmeli : Veriye dayalı pazarlama ile daha doğru kararlar alır, büyümeyi hızlandırırlar.'
-                        ]
-                    }
+                : (isB2BTraining || isManufacturingTraining || isInteriorDesignTraining || isEnergyTraining || isSoftwareTraining || isFintechTraining || isIndustrialFoodTraining || isFleetRentalTraining)
+                    ? { features: heroPriceFeatures }
                 : {})
         },
         testimonial: {

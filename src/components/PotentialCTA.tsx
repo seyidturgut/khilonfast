@@ -1,15 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import './PotentialCTA.css'
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
 
 export default function PotentialCTA({ tx }: { tx: (key: string) => string }) {
-    const { t, i18n } = useTranslation('common')
-    
-    // Resolve localized path for contact
-    const currentLang = i18n.language.split('-')[0];
-    const prefix = currentLang === 'en' ? '/en' : '';
-    const contactSlug = t('slugs.contact', { defaultValue: 'iletisim' });
-    const contactPath = `${prefix}/${contactSlug}`.replace(/\/{2,}/g, '/');
+    useTranslation('common')
+    const currentLang = useRouteLocale();
+    const contactPath = getLocalizedPathByKey(currentLang, 'contact');
 
     return (
         <section className="potential-cta">

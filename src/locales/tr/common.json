@@ -251,8 +251,8 @@
             "description": "Marka stratejisi ve kurumsal iletişimde kapsamlı çözümlerimizi keşfedin."
         },
         "item3": {
-            "title": "Marketing Expertise for a Strong Digital Presence",
-            "description": "Examine our special digital marketing solutions to achieve effective results."
+            "title": "Güçlü Dijital Varlık İçin Pazarlama Uzmanlığı",
+            "description": "Etkili sonuçlar elde etmek için özel dijital pazarlama çözümlerimizi inceleyin."
         }
     },
     "features": {
@@ -1111,6 +1111,79 @@
             "role": "E-Ticaret Direktörü"
         }
     },
+    "authPages": {
+        "or": "veya",
+        "fields": {
+            "firstName": "Ad",
+            "lastName": "Soyad",
+            "email": "E-posta",
+            "phoneOptional": "Telefon (Opsiyonel)",
+            "password": "Şifre",
+            "confirmPassword": "Şifre (Tekrar)"
+        },
+        "placeholders": {
+            "firstName": "Adınız",
+            "lastName": "Soyadınız",
+            "email": "ornek@email.com",
+            "phone": "+90 5XX XXX XX XX",
+            "password": "En az 6 karakter",
+            "confirmPassword": "Şifreyi tekrar girin"
+        },
+        "login": {
+            "title": "Giriş Yap",
+            "subtitle": "Hesabınıza giriş yapın",
+            "submit": "Giriş Yap",
+            "loading": "Giriş yapılıyor...",
+            "switchPrompt": "Hesabınız yok mu?",
+            "errors": {
+                "default": "Giriş başarısız",
+                "google": "Google ile giriş başarısız"
+            }
+        },
+        "register": {
+            "title": "Kayıt Ol",
+            "subtitle": "Yeni hesap oluşturun",
+            "submit": "Kayıt Ol",
+            "loading": "Kayıt yapılıyor...",
+            "switchPrompt": "Zaten hesabınız var mı?",
+            "errors": {
+                "default": "Kayıt başarısız",
+                "google": "Google ile giriş başarısız",
+                "passwordMismatch": "Şifreler eşleşmiyor"
+            }
+        }
+    },
+    "dynamicPage": {
+        "loading": "Yükleniyor...",
+        "notFound": "Sayfa bulunamadı veya henüz oluşturulmadı.",
+        "unknownBlock": "Bilinmeyen Blok Tipi:"
+    },
+    "trainingsPage": {
+        "hero": {
+            "title": "Eğitim Programları",
+            "description": "Sektöre özel büyüme odaklı pazarlama eğitimlerini mevcut sistemimize entegre ettik. Programları inceleyip size en uygun eğitim akışıyla başlayabilirsiniz."
+        },
+        "list": {
+            "open": "Eğitimi Aç"
+        }
+    },
+    "paymentStatus": {
+        "orderNumber": "Sipariş No:",
+        "backHome": "Ana Sayfaya Dön",
+        "success": {
+            "title": "Ödeme Başarılı!",
+            "description": "Siparişiniz başarıyla alındı."
+        },
+        "callback": {
+            "title": "Ödeme Sonucu",
+            "errorTitle": "Ödeme Hatası",
+            "verifying": "Ödeme sonucu doğrulanıyor...",
+            "success": "Ödeme başarılı. Yönlendiriliyorsunuz...",
+            "failed": "Ödeme tamamlanamadı ({{status}}).",
+            "unverified": "Ödeme dönüşü doğrulanamadı.",
+            "backToCheckout": "Ödeme Adımına Dön"
+        }
+    },
     "pages": {
         "home": {
             "seo": {
@@ -1166,5 +1239,56 @@
         "checkout": "checkout",
         "paymentSuccess": "payment-success",
         "paymentCallback": "payment-callback"
+    },
+    "maestroAISectors": {
+        "b2b": {
+            "sectorLabel": "B2B",
+            "videoTag": "B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "featuresDescription": "B2B sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "B2B Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "odeme-sistemleri": {
+            "sectorLabel": "Ödeme Sistemleri",
+            "videoTag": "Ödeme Sistemleri Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "featuresDescription": "Ödeme sistemleri sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Ödeme Sistemleri ve Pazarlama konularında eğitimli",
+            "processDescription": "Ödeme sistemleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "endustriyel-gida": {
+            "sectorLabel": "Endüstriyel Gıda & Şef Çözümleri",
+            "videoTag": "Endüstriyel Gıda Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Endüstriyel gıda sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Endüstriyel Gıda & Şef Çözümleri Sektöründe Pazarlama konularında eğitimli",
+            "processDescription": "Endüstriyel Gıda & Şef Çözümleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "fintech": {
+            "sectorLabel": "FinTech",
+            "videoTag": "FinTech Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "FinTech sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "FinTech Sektöründe Pazarlama konularında eğitimli",
+            "processDescription": "FinTech sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "enerji": {
+            "sectorLabel": "Enerji",
+            "videoTag": "Enerji Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Enerji sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Enerji Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Enerji sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "ofis-tasarim": {
+            "sectorLabel": "Ofis & Kurumsal İç Tasarım",
+            "videoTag": "Ofis & Kurumsal İç Tasarım Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Ofis & kurumsal iç tasarım sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Ofis & Kurumsal İç Tasarım Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Ofis & Kurumsal İç Tasarım sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "filo-kiralama": {
+            "sectorLabel": "Filo Kiralama",
+            "videoTag": "Filo Kiralama Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Filo kiralama sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Filo Kiralama Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Filo Kiralama sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        }
     }
 }

@@ -2,12 +2,12 @@ import { HiArrowRight } from 'react-icons/hi2'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './Solutions.css'
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
 
 export default function Solutions({ tx }: { tx?: (key: string) => string }) {
-    const { t, i18n } = useTranslation('common');
-    const currentLang = i18n.language.split('-')[0];
-    const langPrefix = currentLang === 'en' ? '/en' : '';
-    const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+    const { t } = useTranslation('common');
+    const currentLang = useRouteLocale();
+    const toLocalized = (key: string) => getLocalizedPathByKey(currentLang, key);
     const text = (key: string) => tx?.(key) ?? t(key);
 
     const solutions = [
