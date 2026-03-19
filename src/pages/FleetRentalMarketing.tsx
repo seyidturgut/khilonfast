@@ -12,6 +12,7 @@ import {
     HiTruck
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
 
 export default function FleetRentalMarketing() {
     const { t, i18n } = useTranslation('common')
@@ -236,39 +237,7 @@ export default function FleetRentalMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>B2B Marka Konumlandırma</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Kurumsal güven ve operasyonel mükemmeliyet odaklı marka stratejisi.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Dijital Dönüşüm Rehberi</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Kiralama süreçlerinin dijital kanallara entegrasyonu ve otomasyonu.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Loyalty Programları</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Kurumsal müşteriler için sadakat ve uzun dönemli ilişki yönetimi stratejileri.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Filo Kiralama Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="filo kiralama firmaları için" advisoryPath="/danismanlik/filo-kiralama-sektorunde-buyume-odakli-pazarlama-danismanligi" />
                 },
                 {
                     id: 'analysis',
@@ -467,27 +436,7 @@ export default function FleetRentalMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go-to-Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Design your market entry and scaling roadmap with strategic precision.</p>
-                                    <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Content Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Build messaging systems that increase trust, relevance, and conversion quality.</p>
-                                    <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Growth Advisory</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Work directly with khilonfast for high-impact strategic and operational guidance.</p>
-                                    <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Fleet Rental Companies" gtmContext="For fleet rental companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-fleet-rental" />
                 },
                 {
                     id: 'analysis',

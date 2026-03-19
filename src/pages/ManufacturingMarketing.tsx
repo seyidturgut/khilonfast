@@ -12,6 +12,7 @@ import {
     HiWrench
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
 
 export default function ManufacturingMarketing() {
     const { t, i18n } = useTranslation('common')
@@ -236,39 +237,7 @@ export default function ManufacturingMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>İhracat Stratejisi</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Doğru pazar seçimi ve dijital ihracat kanallarının inşası.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Ürün Konumlandırma</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Teknik üstünlüklerinizin pazar ihtiyaçlarıyla örtüştürülmesi.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Distribütör İletişimi</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Bayi ve distribütör ağları için stratejik pazarlama desteği.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Üretim Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="üretim firmaları için" advisoryPath="/danismanlik/uretim-sektorunde-buyume-odakli-pazarlama-danismanligi" />
                 },
                 {
                     id: 'analysis',
@@ -467,27 +436,7 @@ export default function ManufacturingMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go-to-Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Design your market entry and scaling roadmap with strategic precision.</p>
-                                    <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Content Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Build messaging systems that increase trust, relevance, and conversion quality.</p>
-                                    <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Growth Advisory</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Work directly with khilonfast for high-impact strategic and operational guidance.</p>
-                                    <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Manufacturing Companies" gtmContext="For manufacturing companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-manufacturing" />
                 },
                 {
                     id: 'analysis',

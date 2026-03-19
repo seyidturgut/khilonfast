@@ -12,6 +12,7 @@ import {
     HiPaintBrush
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
 
 export default function InteriorDesignMarketing() {
     const { t, i18n } = useTranslation('common')
@@ -236,39 +237,7 @@ export default function InteriorDesignMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Marka Kimliği</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Tasarım dilinizi yansıtan kurumsal kimlik ve marka hikayesi.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>İçerik Stratejisi</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Tasarım trendleri ve vaka analizleri ile sektörde fikir liderliği.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Müşteri Deneyimi (CX)</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        B2B müşterilerinin proje boyunca yaşadığı deneyimi iyileştirme planı.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Ofis ve Kurumsal İç Mimarlık Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="ofis ve kurumsal iç mimarlık firmaları için" advisoryPath="/danismanlik/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-danismanligi" />
                 },
                 {
                     id: 'analysis',
@@ -467,27 +436,7 @@ export default function InteriorDesignMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go-to-Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Design your market entry and scaling roadmap with strategic precision.</p>
-                                    <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Content Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Build messaging systems that increase trust, relevance, and conversion quality.</p>
-                                    <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Growth Advisory</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Work directly with khilonfast for high-impact strategic and operational guidance.</p>
-                                    <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Office & Corporate Interior Design Companies" gtmContext="For office and corporate interior design companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-office-and-corporate-interior-design" />
                 },
                 {
                     id: 'analysis',

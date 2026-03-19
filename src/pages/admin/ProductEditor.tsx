@@ -338,6 +338,7 @@ export default function ProductEditor() {
                                 required
                             >
                                 <option value="egitimler">Eğitimler</option>
+                                <option value="danismanlik">Danışmanlık</option>
                                 <option value="hizmetler">Hizmetler</option>
                                 <option value="sektorler">Sektörler</option>
                             </select>

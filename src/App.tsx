@@ -45,9 +45,12 @@ import PaymentCallback from './pages/PaymentCallback'
 import Dashboard from './pages/Dashboard'
 import Trainings from './pages/Trainings'
 import TrainingProgramPage from './pages/TrainingProgramPage'
+import Consulting from './pages/Consulting'
+import ConsultingProgramPage from './pages/ConsultingProgramPage'
 import LegacyWordpressPage from './pages/LegacyWordpressPage'
 import ProductSlugResolver from './pages/ProductSlugResolver'
 import { trainingPrograms } from './data/trainingPrograms'
+import { consultingPrograms } from './data/consultingPrograms'
 import { productPrograms } from './data/productPrograms'
 import { setupFlows } from './data/setupFlows'
 import { resolveLocaleFromPath } from './utils/locale'
@@ -195,6 +198,8 @@ function MainContent() {
                         <Route path={slugsEn.howItWorks} element={<HowItWorks />} />
                         <Route path={slugsEn.trainings} element={<Trainings />} />
                         <Route path={`${slugsEn.trainings}/:id`} element={<TrainingProgramPage />} />
+                        <Route path={slugsEn.consulting} element={<Consulting />} />
+                        <Route path={`${slugsEn.consulting}/:id`} element={<ConsultingProgramPage />} />
                         <Route path={slugsEn.gtm} element={<GoToMarket />} />
                         <Route path={slugsEn.contentStrategy} element={<ContentStrategy />} />
                         <Route path={slugsEn.idm} element={<IntegratedDigitalMarketing />} />
@@ -231,6 +236,8 @@ function MainContent() {
                         <Route path="kayil-ol" element={<Register />} />
                         <Route path="egitimler" element={<Trainings />} />
                         <Route path="egitimler/:id" element={<TrainingProgramPage />} />
+                        <Route path="danismanlik" element={<Consulting />} />
+                        <Route path="danismanlik/:id" element={<ConsultingProgramPage />} />
                         <Route path="hizmetlerimiz/go-to-market-stratejisi" element={<GoToMarket />} />
                         <Route path="hizmetlerimiz/icerik-stratejisi" element={<ContentStrategy />} />
                         <Route path="hizmetlerimiz/butunlesik-dijital-pazarlama" element={<IntegratedDigitalMarketing />} />
@@ -335,6 +342,11 @@ function MainContent() {
                     <Route path={`/${slugsTr.trainings}/:id`} element={<TrainingProgramPage />} />
                     {trainingPrograms.map((program) => (
                         <Route key={program.path} path={program.path} element={<TrainingProgramPage />} />
+                    ))}
+                    <Route path={`/${slugsTr.consulting}`} element={<Consulting />} />
+                    <Route path={`/${slugsTr.consulting}/:id`} element={<ConsultingProgramPage />} />
+                    {consultingPrograms.map((program) => (
+                        <Route key={program.path} path={program.path} element={<ConsultingProgramPage />} />
                     ))}
 
                     {/* Auth & Cart Routes */}

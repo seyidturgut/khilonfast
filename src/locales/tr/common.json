@@ -1167,6 +1167,15 @@
             "open": "Eğitimi Aç"
         }
     },
+    "consultingPage": {
+        "hero": {
+            "title": "Şirketinizde Büyüme Odaklı Pazarlama Danışmanlığı",
+            "description": "Uzmanlarımız şirketinize gelerek yüz yüze danışmanlık verir. Sektörünüze özel, uygulamalı ve sonuç odaklı danışmanlık programları ile ekibinizi güçlendirin."
+        },
+        "list": {
+            "open": "Danışmanlığı İncele"
+        }
+    },
     "paymentStatus": {
         "orderNumber": "Sipariş No:",
         "backHome": "Ana Sayfaya Dön",
@@ -1231,6 +1240,16 @@
         "trainingDesign": "egitimler/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
         "trainingFleet": "egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
         "trainingFood": "egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "consulting": "danismanlik",
+        "consultingPayment": "danismanlik/odeme-sistemlerinde-buyume-odakli-pazarlama-danismanligi",
+        "consultingB2B": "danismanlik/b2b-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFintech": "danismanlik/fintech-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingTech": "danismanlik/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingManufacturing": "danismanlik/uretim-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingEnergy": "danismanlik/enerji-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingDesign": "danismanlik/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFleet": "danismanlik/filo-kiralama-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFood": "danismanlik/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-danismanligi",
         "maestro": "urunler/maestro-ai",
         "eyeTracking": "urunler/eye-tracking-reklam-analizi",
         "login": "giris",

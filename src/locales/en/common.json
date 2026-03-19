@@ -888,6 +888,15 @@
             "open": "Open Training"
         }
     },
+    "consultingPage": {
+        "hero": {
+            "title": "On-Site Growth-Focused Marketing Consulting",
+            "description": "Our experts come to your company and provide face-to-face consulting. Strengthen your team with hands-on, results-driven consulting programs tailored to your sector."
+        },
+        "list": {
+            "open": "View Consulting"
+        }
+    },
     "paymentStatus": {
         "orderNumber": "Order No:",
         "backHome": "Back to Home",
@@ -1122,6 +1131,16 @@
         "trainingDesign": "trainings/growth-focused-marketing-training-for-office-and-corporate-interior-design",
         "trainingFleet": "trainings/growth-focused-marketing-training-for-fleet-rental",
         "trainingFood": "trainings/growth-focused-marketing-training-for-industrial-food",
+        "consulting": "consulting",
+        "consultingPayment": "consulting/growth-focused-marketing-consulting-for-payment-systems",
+        "consultingB2B": "consulting/growth-focused-marketing-consulting-for-b2b",
+        "consultingFintech": "consulting/growth-focused-marketing-consulting-for-fintech",
+        "consultingTech": "consulting/growth-focused-marketing-consulting-for-technology-and-software",
+        "consultingManufacturing": "consulting/growth-focused-marketing-consulting-for-manufacturing",
+        "consultingEnergy": "consulting/growth-focused-marketing-consulting-for-energy",
+        "consultingDesign": "consulting/growth-focused-marketing-consulting-for-office-and-corporate-interior-design",
+        "consultingFleet": "consulting/growth-focused-marketing-consulting-for-fleet-rental",
+        "consultingFood": "consulting/growth-focused-marketing-consulting-for-industrial-food",
         "maestro": "products/maestro-ai",
         "eyeTracking": "products/eye-tracking-ad-analysis",
         "login": "login",
