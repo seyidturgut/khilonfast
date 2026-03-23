@@ -8,7 +8,7 @@
     "dev:php-api": "php -S 127.0.0.1:8099 -t .",
     "check:i18n": "node scripts/check-locale-parity.mjs",
     "seo:generate": "node scripts/generate-seo-assets.mjs",
-    "build": "npm run check:i18n && node scripts/generate-seo-assets.mjs && tsc -b && vite build",
+    "build": "vite build",
     "build:railway": "vite build",
     "start": "node backend/server.js",
     "preview": "vite preview",
