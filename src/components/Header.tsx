@@ -412,10 +412,6 @@ export default function Header() {
                             </button>
                             <h3 className="mobile-submenu-title">{t('header.trainings')}</h3>
                             <div className="mobile-submenu-list">
-                                <Link to={toLocalized('trainings')} className="mobile-sub-item" onClick={closeMobileMenu}>
-                                    <div className="sub-icon"><HiAcademicCap /></div>
-                                    <span>{t('header.allTrainings')}</span>
-                                </Link>
                                 {trainingMenuItems.map((item, idx) => (
                                     <Link key={idx} to={item.path} className="mobile-sub-item" onClick={closeMobileMenu}>
                                         <div className="sub-icon"><item.icon /></div>
