@@ -10,13 +10,20 @@ import {
     HiCheckBadge,
     HiSignal,
     HiCursorArrowRays,
-    HiUserGroup
+    HiUserGroup,
+    HiShoppingCart,
+    HiClipboardDocumentList,
+    HiGlobeAlt,
+    HiArrowTrendingUp,
+    HiChartPie,
+    HiSparkles
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
+import { useRouteLocale } from '../utils/locale'
 
 export default function GoogleAds() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const { t } = useTranslation('common')
+    const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
     const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
 
@@ -51,71 +58,40 @@ export default function GoogleAds() {
             description: 'Görünür olun, rakiplerinizin önüne geçin! khilonfast ile doğru hedefleme ve stratejilerle reklam bütçenizi etkili yönetin, sonuçları hızla görün.',
             videoUrl: 'https://www.youtube.com/embed/V-TdlZW40BE'
         },
-        // Mapped old 'featuresSection' to new 'approachSection' and expanded to 5 items for Bento Grid
-        approachSection: {
-            title: 'Hesap Denetimi ve Strateji',
-            description: 'Mevcut reklam hesaplarınızı derinlemesine analiz ediyor, kayıp bütçe alanlarını tespit ediyoruz.',
-            items: [
-                {
-                    title: 'Profesyonel Hesap Denetimi',
-                    subtitle: 'Hataları Tespit Edin',
-                    description: 'Mevcut hesaplarınızdaki hataları bulur, bütçe israfını önleriz. Kapsamlı audit ile potansiyel fırsatları ortaya çıkarırız.',
-                    icon: <HiMagnifyingGlass />
-                },
-                {
-                    title: 'Kalite Puanı İyileştirme',
-                    subtitle: 'Maliyetleri Düşürün',
-                    description: 'Reklam alaka düzeyini artırarak tıklama başı maliyetleri düşürürüz. Daha yüksek kalite puanı, daha düşük maliyetle daha fazla erişim demektir.',
-                    icon: <HiChartBar />
-                },
-                {
-                    title: 'Dönüşüm Takibi',
-                    subtitle: 'ROI Odaklı Yaklaşım',
-                    description: 'Harcadığınız her kuruşun size ne kadar kazandırdığını ölçeriz. Gelişmiş dönüşüm kurulumları ile veriye dayalı kararlar almanızı sağlarız.',
-                    icon: <HiPresentationChartLine />
-                },
-                {
-                    title: 'Rakip Analizi',
-                    subtitle: 'Pazarda Öne Geçin',
-                    description: 'Rakiplerinizin stratejilerini analiz eder, onların önünde yer almanızı sağlayacak taktikler geliştiririz.',
-                    icon: <HiRocketLaunch />
-                },
-                {
-                    title: 'Sürekli Optimizasyon',
-                    subtitle: 'Dinamik Yönetim',
-                    description: 'Kampanyalarınızı "kur ve unut" mantığıyla değil, günlük ve haftalık optimizasyonlarla sürekli canlı ve verimli tutarız.',
-                    icon: <HiSignal />
-                }
-            ]
-        },
         processSection: {
-            tag: '4 Adımda Başarı',
-            title: 'Nasıl Çalışır?',
-            description: 'Google Ads süreçlerimizle reklam performansınızı zirveye taşıyın. Şeffaf, hızlı ve sonuç odaklı.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237', // Using standard GTM video layout or placeholder if specific video missing
+            tag: 'Nasıl Çalışır?',
+            title: 'Hizmet Süreci',
+            description: '5 adımda Google Ads başarıya ulaşın.',
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Adım 1: Analiz & Audit',
-                    description: 'Mevcut hesabınızı ve pazar durumunuzu detaylıca inceler, fırsat ve riskleri raporlarız.',
-                    icon: <HiMagnifyingGlass />
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Adım 2: Strateji & Kurulum',
-                    description: 'Hedef kitlenize uygun kampanya yapısını kurgular, anahtar kelime ve reklam metinlerini hazırlarız.',
-                    icon: <HiPresentationChartLine />
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Adım 3: Yayına Alma',
-                    description: 'Onayınızla birlikte kampanyaları başlatır, ilk veri akışını ve doğruluğunu kontrol ederiz.',
-                    icon: <HiCursorArrowRays />
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Adım 4: Optimizasyon',
-                    description: 'Gelen verilerle sürekli A/B testleri yapar, maliyetleri düşürüp dönüşümleri artırırız.',
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    stepNumber: 5,
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
                     icon: <HiCheckBadge />
                 }
             ]
@@ -228,8 +204,49 @@ export default function GoogleAds() {
                     description: "Sürecin baştan sona nasıl ilerlediğini adım adım görün.",
                     highlightText: "Doğru brief → net süreç → ölçülebilir sonuçları keşfedin.",
                     buttonText: "KEŞFET",
-                    buttonLink: "/google-tag-manager-kurulum-akisi",
+                    buttonLink: "/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi",
                     theme: "dark" as const
+                }
+            ]
+        },
+        approachSection: {
+            title: t('serviceGTM.approach.title', { defaultValue: 'khilonfast Yaklaşımı' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'Her adımda sürdürülebilir büyüme odaklı çalışıyoruz.' }),
+            items: [
+                {
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360 Derece Bakış Açısı' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Bütünleşik Strateji' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'Her detayı bütünsel bir bakış açısıyla inceliyoruz.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Büyüme Odaklı Stratejiler' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performans Yönetimi' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'Hedeflerinizi hızlıca yakalamak için büyümenizi ölçümlüyoruz.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Veri Odaklı Pazarlama' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Geniş İçgörüler' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'Kanıtlanmış verilerle risk almadan hareket ediyoruz.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'İnovasyon ile Fark' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Yenilikçi Teknikler' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Sektördeki en modern teknoloji araçlarıyla rakiplerden ayrışın.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Stratejik İş Ortağı' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Uzun Vadeli Başarı' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'Müşterilerimizi kısa süreli değil uzun dönemli hedeflerle destekliyoruz.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
@@ -350,5 +367,5 @@ export default function GoogleAds() {
         ]
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-google-ads" />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-google-ads" disableApiHeroTextOverride={true} />
 }

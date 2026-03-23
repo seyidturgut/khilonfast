@@ -28,6 +28,7 @@ import {
 import './Header.css'
 import trCommon from '../locales/tr/common.json'
 import enCommon from '../locales/en/common.json'
+import { buildLocalizedPath, resolveLocaleFromPath, translatePathnameToLocale } from '../utils/locale'
 
 export default function Header() {
     const { t, i18n } = useTranslation('common')
@@ -35,54 +36,10 @@ export default function Header() {
     const enSlugs = enCommon.slugs as Record<string, string>
     const location = useLocation()
     const navigate = useNavigate()
-    const currentLang = location.pathname.startsWith('/en') ? 'en' : 'tr'
-    const langPrefix = currentLang === 'en' ? '/en' : ''
-    const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
-
-    const switchLanguagePath = (targetLang: 'tr' | 'en', pathname: string) => {
-        const isEnglishPath = pathname.startsWith('/en')
-        const cleanPath = pathname
-            .replace(/^\/en/, '')
-            .replace(/^\/+/, '')
-            .replace(/\/+$/, '')
-
-        const sourceSlugs = isEnglishPath ? enSlugs : trSlugs
-        const targetSlugs = targetLang === 'en' ? enSlugs : trSlugs
-        const matchedKey = Object.keys(sourceSlugs).find((k) => sourceSlugs[k] === cleanPath)
-
-        if (matchedKey && targetSlugs[matchedKey] !== undefined) {
-            const targetSlug = targetSlugs[matchedKey]
-            if (!targetSlug) return targetLang === 'en' ? '/en' : '/'
-            const withPrefix = `${targetLang === 'en' ? '/en' : ''}/${targetSlug}`.replace(/\/{2,}/g, '/')
-            return withPrefix
-        }
-
-        if (!cleanPath) return targetLang === 'en' ? '/en' : '/'
-        const dynamicPrefixMap: Record<'tr' | 'en', Array<[RegExp, string]>> = {
-            tr: [
-                [/^services\/?/, 'hizmetlerimiz/'],
-                [/^sectoral-services\/?/, 'sektorel-hizmetler/'],
-                [/^trainings\/?/, 'egitimler/'],
-                [/^products\/?/, 'urunler/']
-            ],
-            en: [
-                [/^hizmetlerimiz\/?/, 'services/'],
-                [/^sektorel-hizmetler\/?/, 'sectoral-services/'],
-                [/^egitimler\/?/, 'trainings/'],
-                [/^urunler\/?/, 'products/']
-            ]
-        }
-
-        let translatedPath = cleanPath
-        for (const [pattern, replacement] of dynamicPrefixMap[targetLang]) {
-            if (pattern.test(translatedPath)) {
-                translatedPath = translatedPath.replace(pattern, replacement)
-                break
-            }
-        }
-
-        return `${targetLang === 'en' ? '/en' : ''}/${translatedPath}`.replace(/\/{2,}/g, '/')
-    }
+    const currentLang = resolveLocaleFromPath(location.pathname)
+    const localeCommon = currentLang === 'en' ? enCommon : trCommon
+    const activeSlugs = currentLang === 'en' ? enSlugs : trSlugs
+    const toLocalized = (key: string) => buildLocalizedPath(currentLang, activeSlugs[key] ?? '')
 
     // Define localized items inside the component to use 't'
     const services = [
@@ -96,21 +53,21 @@ export default function Header() {
         { icon: HiEnvelope, title: t('header.menuItems.services.email.title'), desc: t('header.menuItems.services.email.desc'), path: toLocalized('b2bEmail') }
     ]
 
+    const sectoralMenuCopy = localeCommon.header.menuItems.sectoral as Record<string, { title: string; desc: string }>
     const sectoralServices = [
-        { icon: HiBriefcase, title: t('header.menuItems.sectoral.b2b.title'), desc: t('header.menuItems.sectoral.b2b.desc'), path: toLocalized('sectoralB2B') },
-        { icon: HiCreditCard, title: t('header.menuItems.sectoral.payment.title'), desc: t('header.menuItems.sectoral.payment.desc'), path: toLocalized('sectoralPayment') },
-        { icon: HiRocketLaunch, title: t('header.menuItems.sectoral.food.title'), desc: t('header.menuItems.sectoral.food.desc'), path: toLocalized('sectoralFood') },
-        { icon: HiPresentationChartLine, title: t('header.menuItems.sectoral.fintech.title'), desc: t('header.menuItems.sectoral.fintech.desc'), path: toLocalized('sectoralFintech') },
-        { icon: HiCommandLine, title: t('header.menuItems.sectoral.tech.title'), desc: t('header.menuItems.sectoral.tech.desc'), path: toLocalized('sectoralTech') },
-        { icon: HiBolt, title: t('header.menuItems.sectoral.energy.title'), desc: t('header.menuItems.sectoral.energy.desc'), path: toLocalized('sectoralEnergy') },
-        { icon: HiPaintBrush, title: t('header.menuItems.sectoral.design.title'), desc: t('header.menuItems.sectoral.design.desc'), path: toLocalized('sectoralDesign') },
-        { icon: HiTruck, title: t('header.menuItems.sectoral.fleet.title'), desc: t('header.menuItems.sectoral.fleet.desc'), path: toLocalized('sectoralFleet') },
-        { icon: HiWrench, title: t('header.menuItems.sectoral.manufacturing.title'), desc: t('header.menuItems.sectoral.manufacturing.desc'), path: toLocalized('sectoralManufacturing') }
+        { icon: HiBriefcase, title: sectoralMenuCopy.b2b.title, desc: sectoralMenuCopy.b2b.desc, path: toLocalized('sectoralB2B') },
+        { icon: HiCreditCard, title: sectoralMenuCopy.payment.title, desc: sectoralMenuCopy.payment.desc, path: toLocalized('sectoralPayment') },
+        { icon: HiRocketLaunch, title: sectoralMenuCopy.food.title, desc: sectoralMenuCopy.food.desc, path: toLocalized('sectoralFood') },
+        { icon: HiPresentationChartLine, title: sectoralMenuCopy.fintech.title, desc: sectoralMenuCopy.fintech.desc, path: toLocalized('sectoralFintech') },
+        { icon: HiCommandLine, title: sectoralMenuCopy.tech.title, desc: sectoralMenuCopy.tech.desc, path: toLocalized('sectoralTech') },
+        { icon: HiBolt, title: sectoralMenuCopy.energy.title, desc: sectoralMenuCopy.energy.desc, path: toLocalized('sectoralEnergy') },
+        { icon: HiPaintBrush, title: sectoralMenuCopy.design.title, desc: sectoralMenuCopy.design.desc, path: toLocalized('sectoralDesign') },
+        { icon: HiTruck, title: sectoralMenuCopy.fleet.title, desc: sectoralMenuCopy.fleet.desc, path: toLocalized('sectoralFleet') },
+        { icon: HiWrench, title: sectoralMenuCopy.manufacturing.title, desc: sectoralMenuCopy.manufacturing.desc, path: toLocalized('sectoralManufacturing') }
     ]
 
     const trainingMenuItems = [
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.all.title'), desc: t('header.menuItems.trainings.all.desc'), path: toLocalized('trainings') },
-        { icon: HiAcademicCap, title: t('header.menuItems.trainings.growth.title'), desc: t('header.menuItems.trainings.growth.desc'), path: toLocalized('trainingGrowth') },
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.payment.title'), desc: t('header.menuItems.trainings.payment.desc'), path: toLocalized('trainingPayment') },
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.b2b.title'), desc: t('header.menuItems.trainings.b2b.desc'), path: toLocalized('trainingB2B') },
         { icon: HiAcademicCap, title: t('header.menuItems.trainings.fintech.title'), desc: t('header.menuItems.trainings.fintech.desc'), path: toLocalized('trainingFintech') },
@@ -134,15 +91,25 @@ export default function Header() {
     const [cartOpen, setCartOpen] = useState(false)
     const { isAuthenticated } = useAuth()
     const isHome = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/'
+    const useSolidHeader =
+        location.pathname === '/butunlesik-pazarlama-kurulum-akisi' ||
+        location.pathname === '/en/butunlesik-pazarlama-kurulum-akisi'
     const desktopNavRef = useRef<HTMLElement | null>(null)
 
     const handleLanguageChange = (lang: string) => {
         const targetLang = lang === 'en' ? 'en' : 'tr'
-        const newPath = switchLanguagePath(targetLang, location.pathname)
+        const newPath = translatePathnameToLocale(targetLang, location.pathname)
         void i18n.changeLanguage(targetLang)
         localStorage.setItem('i18nextLng', targetLang)
         navigate(`${newPath}${location.search}${location.hash}`)
     }
+
+    useEffect(() => {
+        const activeLang = i18n.language.split('-')[0]
+        if (activeLang !== currentLang) {
+            void i18n.changeLanguage(currentLang)
+        }
+    }, [currentLang, i18n])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -195,6 +162,12 @@ export default function Header() {
             window.removeEventListener('orientationchange', handleResize)
         }
     }, [closeMobileMenu])
+
+    useEffect(() => {
+        const openCart = () => setCartOpen(true)
+        window.addEventListener('khilon:open-cart', openCart as EventListener)
+        return () => window.removeEventListener('khilon:open-cart', openCart as EventListener)
+    }, [])
 
     useEffect(() => {
         const handleDocumentClick = (event: MouseEvent) => {
@@ -272,7 +245,7 @@ export default function Header() {
     }
 
     return (
-        <header className={`header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
+        <header className={`header ${scrolled || useSolidHeader ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
             <div className="container header-container">
                 <div className="logo">
                     <Link to={currentLang === 'en' ? '/en' : '/'}>

@@ -14,6 +14,7 @@ import {
 import Breadcrumbs from '../components/Breadcrumbs'
 import { setupFlows } from '../data/setupFlows'
 import './SearchConsoleSetup.css'
+import { useRouteLocale } from '../utils/locale'
 
 type SetupFlowPageProps = {
   path: string
@@ -30,8 +31,8 @@ const stepIcons = [
 ]
 
 export default function SetupFlowPage({ path }: SetupFlowPageProps) {
-  const { t, i18n } = useTranslation('common')
-  const isEn = i18n.language.split('-')[0] === 'en'
+  const { t } = useTranslation('common')
+  const isEn = useRouteLocale() === 'en'
   const flow = useMemo(() => setupFlows.find((item) => item.path === path), [path])
 
   const [selectedPathId, setSelectedPathId] = useState<string>(flow?.paths[0]?.id ?? '')

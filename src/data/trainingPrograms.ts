@@ -1,69 +1,179 @@
+import type { AppLocale } from '../utils/locale'
+import type { LocalizedProgram } from '../utils/localizedContent'
+import { getLocalizedPrograms } from '../utils/localizedContent'
+import trCommon from '../locales/tr/common.json'
+import enCommon from '../locales/en/common.json'
+
 export interface TrainingProgram {
-    path: string;
-    productKey: string;
-    title: string;
-    summary: string;
+    path: string
+    productKey: string
+    title: string
+    summary: string
 }
 
-export const trainingPrograms: TrainingProgram[] = [
+const trSlugs = trCommon.slugs as Record<string, string>
+const enSlugs = enCommon.slugs as Record<string, string>
+
+function buildLocalizedTrainingPath(locale: AppLocale, slugKey: string): string {
+    const slugMap = locale === 'en' ? enSlugs : trSlugs
+    return `/${slugMap[slugKey]}`.replace(/\/{2,}/g, '/')
+}
+
+export const trainingProgramCatalog: LocalizedProgram[] = [
     {
-        path: '/egitimler/buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingGrowth'),
+            en: buildLocalizedTrainingPath('en', 'trainingGrowth')
+        },
         productKey: 'training-buyume-odakli-pazarlama',
-        title: 'Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'khilonfast temel büyüme odaklı pazarlama eğitim programı.'
+        title: {
+            tr: 'Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training'
+        },
+        summary: {
+            tr: 'khilonfast temel büyüme odaklı pazarlama eğitim programı.',
+            en: 'The core khilonfast training program for growth-oriented marketing.'
+        }
     },
     {
-        path: '/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingPayment'),
+            en: buildLocalizedTrainingPath('en', 'trainingPayment')
+        },
         productKey: 'training-odeme-sistemlerinde-buyume',
-        title: 'Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.'
+        title: {
+            tr: 'Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in Payment Systems'
+        },
+        summary: {
+            tr: 'Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.',
+            en: 'Applied content focused on sales funnels, value proposition, and measurement.'
+        }
     },
     {
-        path: '/b2b-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingB2B'),
+            en: buildLocalizedTrainingPath('en', 'trainingB2B')
+        },
         productKey: 'training-b2b-sektorunde-buyume',
-        title: 'B2B Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti.'
+        title: {
+            tr: 'B2B Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in the B2B Sector'
+        },
+        summary: {
+            tr: 'B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti.',
+            en: 'A training set on marketing and sales integration for B2B companies.'
+        }
     },
     {
-        path: '/fintech-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingFintech'),
+            en: buildLocalizedTrainingPath('en', 'trainingFintech')
+        },
         productKey: 'training-fintech-sektorunde-buyume',
-        title: 'Fintech Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Fintech odaklı büyüme stratejileri ve kanal optimizasyonu.'
+        title: {
+            tr: 'Fintech Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in the Fintech Sector'
+        },
+        summary: {
+            tr: 'Fintech odaklı büyüme stratejileri ve kanal optimizasyonu.',
+            en: 'Fintech-focused growth strategies and channel optimization.'
+        }
     },
     {
-        path: '/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingTech'),
+            en: buildLocalizedTrainingPath('en', 'trainingTech')
+        },
         productKey: 'training-teknoloji-yazilim-buyume',
-        title: 'Teknoloji & Yazılım Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'SaaS ve teknoloji markaları için performans odaklı eğitim içeriği.'
+        title: {
+            tr: 'Teknoloji & Yazılım Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in Tech & Software'
+        },
+        summary: {
+            tr: 'SaaS ve teknoloji markaları için performans odaklı eğitim içeriği.',
+            en: 'Performance-oriented training content for SaaS and technology brands.'
+        }
     },
     {
-        path: '/uretim-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingManufacturing'),
+            en: buildLocalizedTrainingPath('en', 'trainingManufacturing')
+        },
         productKey: 'training-uretim-sektorunde-buyume',
-        title: 'Üretim Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi.'
+        title: {
+            tr: 'Üretim Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in the Manufacturing Sector'
+        },
+        summary: {
+            tr: 'Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi.',
+            en: 'Sustainable demand and conversion management for manufacturing companies.'
+        }
     },
     {
-        path: '/enerji-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingEnergy'),
+            en: buildLocalizedTrainingPath('en', 'trainingEnergy')
+        },
         productKey: 'training-enerji-sektorunde-buyume',
-        title: 'Enerji Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Enerji sektöründe karar verici odaklı pazarlama planlama yaklaşımı.'
+        title: {
+            tr: 'Enerji Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in the Energy Sector'
+        },
+        summary: {
+            tr: 'Enerji sektöründe karar verici odaklı pazarlama planlama yaklaşımı.',
+            en: 'A decision-maker-focused marketing planning approach for the energy sector.'
+        }
     },
     {
-        path: '/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingDesign'),
+            en: buildLocalizedTrainingPath('en', 'trainingDesign')
+        },
         productKey: 'training-ofis-kurumsal-ic-tasarim-buyume',
-        title: 'Ofis & Kurumsal İç Tasarım Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Kurumsal iç tasarım firmaları için tekliften satışa pazarlama modeli.'
+        title: {
+            tr: 'Ofis & Kurumsal İç Tasarım Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in Corporate Interior Design'
+        },
+        summary: {
+            tr: 'Kurumsal iç tasarım firmaları için tekliften satışa pazarlama modeli.',
+            en: 'A marketing model for corporate interior design firms, from proposal to sale.'
+        }
     },
     {
-        path: '/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingFleet'),
+            en: buildLocalizedTrainingPath('en', 'trainingFleet')
+        },
         productKey: 'training-filo-kiralama-sektorunde-buyume',
-        title: 'Filo Kiralama Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Filo kiralama firmalarında lead kalitesi ve dönüşüm yönetimi eğitimi.'
+        title: {
+            tr: 'Filo Kiralama Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in Fleet Rental'
+        },
+        summary: {
+            tr: 'Filo kiralama firmalarında lead kalitesi ve dönüşüm yönetimi eğitimi.',
+            en: 'Training on lead quality and conversion management for fleet rental companies.'
+        }
     },
     {
-        path: '/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi',
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingFood'),
+            en: buildLocalizedTrainingPath('en', 'trainingFood')
+        },
         productKey: 'training-endustriyel-gida-sektorunde-buyume',
-        title: 'Endüstriyel Gıda Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-        summary: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama eğitim akışı.'
+        title: {
+            tr: 'Endüstriyel Gıda Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training in Industrial Food'
+        },
+        summary: {
+            tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama eğitim akışı.',
+            en: 'A growth-oriented marketing training flow tailored to the industrial food sector.'
+        }
     }
-];
+]
+
+export const trainingPrograms: TrainingProgram[] = getLocalizedPrograms('tr', trainingProgramCatalog) as TrainingProgram[]
+
+export function getTrainingPrograms(locale: AppLocale): TrainingProgram[] {
+    return getLocalizedPrograms(locale, trainingProgramCatalog) as TrainingProgram[]
+}

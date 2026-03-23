@@ -15,12 +15,13 @@ import { useTranslation } from 'react-i18next'
 import Breadcrumbs from '../components/Breadcrumbs'
 import FAQ from '../components/FAQ'
 import './HowItWorks.css'
+import { buildLocalizedPath, getLocalePrefix, useRouteLocale } from '../utils/locale'
 
 export default function HowItWorks() {
-  const { t, i18n } = useTranslation('common');
-  const currentLang = i18n.language.split('-')[0];
-  const langPrefix = currentLang === 'en' ? '/en' : '';
-  const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+  const { t } = useTranslation('common');
+  const currentLang = useRouteLocale();
+  const langPrefix = getLocalePrefix(currentLang);
+  const toLocalized = (key: string) => buildLocalizedPath(currentLang, t(`slugs.${key}`));
   const withLang = (path: string) => `${langPrefix}${path}`.replace(/\/{2,}/g, '/');
 
   const processSteps = [

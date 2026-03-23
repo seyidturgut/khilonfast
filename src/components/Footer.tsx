@@ -3,12 +3,13 @@ import { FaLinkedinIn, FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/f
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './Footer.css'
+import { getLocalizedPathByKey, getLocalePrefix, useRouteLocale } from '../utils/locale'
 
 export default function Footer() {
-    const { t, i18n } = useTranslation('common');
-    const currentLang = i18n.language.split('-')[0];
-    const prefix = currentLang === 'en' ? '/en' : '';
-    const toLocalized = (key: string) => `${prefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
+    const { t } = useTranslation('common');
+    const currentLang = useRouteLocale();
+    const prefix = getLocalePrefix(currentLang);
+    const toLocalized = (key: string) => getLocalizedPathByKey(currentLang, key);
 
     return (
         <footer className="footer">

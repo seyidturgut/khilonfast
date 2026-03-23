@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Frontend (Vite)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "Backend (Express API)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "backend",
+      "port": 3002
+    },
+    {
+      "name": "PHP API",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:php-api"],
+      "port": 8099
+    }
+  ]
+}

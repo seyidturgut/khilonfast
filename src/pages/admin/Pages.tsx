@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
-import { HiPlus, HiPencil, HiTrash, HiExternalLink } from 'react-icons/hi';
+import { HiPlus, HiPencil, HiTrash, HiExternalLink, HiDocumentText } from 'react-icons/hi';
 
 interface Page {
     id: number;
@@ -12,14 +12,23 @@ interface Page {
 
 export default function PagesList() {
     const [pages, setPages] = useState<Page[]>([]);
+    const ADMIN_API_BASE = import.meta.env.VITE_API_URL || '/api';
 
     useEffect(() => {
-        // Mock data for now, actual API integration later
-        setPages([
-            { id: 1, title: 'SEO Hizmeti', slug: 'hizmetlerimiz/seo', is_active: true },
-            { id: 2, title: 'Blog: Dijital Pazarlama', slug: 'blog/dijital-pazarlama', is_active: true },
-            { id: 3, title: 'Kampanya Sayfası', slug: 'landing/yaz-kampanyasi', is_active: false },
-        ]);
+        const fetchPages = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`${ADMIN_API_BASE}/admin/pages`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                setPages(data || []);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchPages();
     }, []);
 
     return (
@@ -63,6 +72,15 @@ export default function PagesList() {
                                         <a href={`/${page.slug}`} target="_blank" rel="noreferrer" style={{ padding: '8px', color: '#6b7280', cursor: 'pointer' }} title="Görüntüle">
                                             <HiExternalLink size={18} />
                                         </a>
+                                        {page.slug?.startsWith('egitimler/') && (
+                                            <Link
+                                                to={`/admin/training-pages/${page.slug}`}
+                                                style={{ padding: '8px', color: '#0f766e', cursor: 'pointer' }}
+                                                title="Eğitim İçeriği"
+                                            >
+                                                <HiDocumentText size={18} />
+                                            </Link>
+                                        )}
                                         <Link to={`/admin/pages/edit/${page.id}`} style={{ padding: '8px', color: '#1e5f8a', cursor: 'pointer' }} title="Düzenle">
                                             <HiPencil size={18} />
                                         </Link>

@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
+import { useRouteLocale } from '../utils/locale'
 import './CTA.css'
 
 export default function CTA() {
-    const { i18n } = useTranslation('common')
-    const isEn = i18n.language.split('-')[0] === 'en'
+    useTranslation('common')
+    const isEn = useRouteLocale() === 'en'
 
     return (
         <section className="cta">

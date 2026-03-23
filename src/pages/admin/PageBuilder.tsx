@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
 import { HiSave, HiArrowUp, HiArrowDown, HiTrash, HiCursorClick, HiArrowsExpand } from 'react-icons/hi';
+import { useNavigate, useParams } from 'react-router-dom';
 import { HiRocketLaunch, HiQuestionMarkCircle, HiCurrencyDollar, HiCheckCircle, HiMegaphone, HiDocumentText, HiPhoto } from 'react-icons/hi2';
 
 // Import all block components for rendering
@@ -51,10 +52,23 @@ const PAGE_CATEGORIES = [
 ];
 
 export default function PageBuilder() {
+    const ADMIN_API_BASE = import.meta.env.VITE_API_URL || '/api';
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const isEdit = Boolean(id);
     const [pageMeta, setPageMeta] = useState({ title: '', category: 'hizmetler' });
     const [blocks, setBlocks] = useState<any[]>([]);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
     const [hoveredBlockId, setHoveredBlockId] = useState<string | null>(null);
+    const [activeLang, setActiveLang] = useState<'tr' | 'en'>('tr');
+    const [contentByLang, setContentByLang] = useState<{ tr: any[]; en: any[] }>({ tr: [], en: [] });
+    const [meta, setMeta] = useState({
+        title: '',
+        slug: '',
+        meta_title: '',
+        meta_description: '',
+        is_active: true
+    });
 
     // Auto-generate slug
     const generateSlug = (category: string, title: string) => {
@@ -162,6 +176,67 @@ export default function PageBuilder() {
     };
 
     const selectedBlock = blocks.find(b => b.id === selectedBlockId);
+
+    useEffect(() => {
+        if (!isEdit) return;
+        const fetchPage = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`${ADMIN_API_BASE}/admin/pages/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) return;
+                const page = await res.json();
+                setMeta({
+                    title: page.title || '',
+                    slug: page.slug || '',
+                    meta_title: page.meta_title || '',
+                    meta_description: page.meta_description || '',
+                    is_active: Boolean(page.is_active)
+                });
+
+                const contentRes = await fetch(`${ADMIN_API_BASE}/admin/pages/${id}/content`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (contentRes.ok) {
+                    const contentData = await contentRes.json();
+                    let raw: any = null;
+                    if (contentData?.content_json) {
+                        if (typeof contentData.content_json === 'string') {
+                            try {
+                                raw = JSON.parse(contentData.content_json);
+                            } catch {
+                                raw = null;
+                            }
+                        } else if (typeof contentData.content_json === 'object') {
+                            raw = contentData.content_json;
+                        }
+                    }
+                    if (raw && typeof raw === 'object') {
+                        const trBlocks = Array.isArray(raw.tr) ? raw.tr : [];
+                        const enBlocks = Array.isArray(raw.en) ? raw.en : [];
+                        setContentByLang({ tr: trBlocks, en: enBlocks });
+                        setBlocks(activeLang === 'en' ? enBlocks : trBlocks);
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchPage();
+    }, [ADMIN_API_BASE, id, isEdit]);
+
+    useEffect(() => {
+        setBlocks(activeLang === 'en' ? contentByLang.en : contentByLang.tr);
+        setSelectedBlockId(null);
+    }, [activeLang]);
+
+    useEffect(() => {
+        setContentByLang(prev => ({
+            ...prev,
+            [activeLang]: blocks
+        }));
+    }, [blocks, activeLang]);
 
     // Property Editors for each block type
     const renderPropertyEditor = () => {
@@ -430,12 +505,101 @@ export default function PageBuilder() {
         return <div className="empty-editor"><p>Bu blok tipi için editor hazırlanıyor...</p></div>;
     };
 
+    const handleSave = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!isEdit) {
+                const res = await fetch(`${ADMIN_API_BASE}/admin/pages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: meta.title || pageMeta.title,
+                        slug: meta.slug || generatedSlug,
+                        meta_title: meta.meta_title,
+                        meta_description: meta.meta_description
+                    })
+                });
+                if (!res.ok) throw new Error('Sayfa oluşturulamadı');
+                const data = await res.json();
+                const newId = data.id;
+                await fetch(`${ADMIN_API_BASE}/admin/pages/${newId}/content`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ content_json: contentByLang, is_published: true })
+                });
+                navigate(`/admin/pages/edit/${newId}`);
+                return;
+            }
+
+            await fetch(`${ADMIN_API_BASE}/admin/pages/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    title: meta.title,
+                    slug: meta.slug,
+                    meta_title: meta.meta_title,
+                    meta_description: meta.meta_description,
+                    is_active: meta.is_active
+                })
+            });
+
+            await fetch(`${ADMIN_API_BASE}/admin/pages/${id}/content`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ content_json: contentByLang, is_published: true })
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Kaydetme sırasında hata oluştu.');
+        }
+    };
+
     return (
         <AdminLayout>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
                 <div style={{ flex: 1 }}>
                     <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f8fafc', margin: 0 }}>Sayfa Oluşturucu</h1>
+                    <div style={{ display: 'flex', gap: '0.75rem', margin: '0.75rem 0' }}>
+                        <button
+                            onClick={() => setActiveLang('tr')}
+                            className={`btn ${activeLang === 'tr' ? 'btn-primary' : 'btn-secondary'}`}
+                            style={{
+                                borderRadius: '999px',
+                                padding: '0.35rem 0.9rem',
+                                background: activeLang === 'tr' ? '#1a3a52' : 'transparent',
+                                color: activeLang === 'tr' ? '#fff' : '#cbd5e1',
+                                border: '1px solid rgba(148,163,184,0.4)'
+                            }}
+                        >
+                            TR
+                        </button>
+                        <button
+                            onClick={() => setActiveLang('en')}
+                            className={`btn ${activeLang === 'en' ? 'btn-primary' : 'btn-secondary'}`}
+                            style={{
+                                borderRadius: '999px',
+                                padding: '0.35rem 0.9rem',
+                                background: activeLang === 'en' ? '#1a3a52' : 'transparent',
+                                color: activeLang === 'en' ? '#fff' : '#cbd5e1',
+                                border: '1px solid rgba(148,163,184,0.4)'
+                            }}
+                        >
+                            EN
+                        </button>
+                    </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '1rem', marginTop: '0.75rem' }}>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Kategori</label>
@@ -462,6 +626,35 @@ export default function PageBuilder() {
                             </small>
                         </div>
                     </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Meta Title</label>
+                            <input
+                                value={meta.meta_title}
+                                onChange={e => setMeta({ ...meta, meta_title: e.target.value })}
+                                className="form-control"
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.3rem' }}>Meta Description</label>
+                            <input
+                                value={meta.meta_description}
+                                onChange={e => setMeta({ ...meta, meta_description: e.target.value })}
+                                className="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div style={{ marginTop: '0.75rem' }}>
+                        <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+                            <input
+                                type="checkbox"
+                                checked={meta.is_active}
+                                onChange={e => setMeta({ ...meta, is_active: e.target.checked })}
+                                style={{ marginRight: '8px' }}
+                            />
+                            Yayında
+                        </label>
+                    </div>
                 </div>
                 <button
                     className="btn btn-primary"
@@ -477,6 +670,7 @@ export default function PageBuilder() {
                         fontWeight: 600,
                         cursor: 'pointer'
                     }}
+                    onClick={handleSave}
                 >
                     <HiSave /> Kaydet
                 </button>

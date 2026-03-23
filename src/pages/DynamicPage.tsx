@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import HeroBlock from '../components/blocks/HeroBlock';
 import FAQBlock from '../components/blocks/FAQBlock';
 import FeaturesBlock from '../components/blocks/FeaturesBlock';
@@ -24,6 +25,7 @@ const BLOCK_COMPONENTS: Record<string, any> = {
 };
 
 export default function DynamicPage() {
+    const { t } = useTranslation('common');
     const { slug } = useParams<{ slug: string }>();
     const [pageData, setPageData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -53,13 +55,13 @@ export default function DynamicPage() {
         if (slug) fetchPage();
     }, [slug]);
 
-    if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>Yükleniyor...</div>;
+    if (loading) return <div style={{ padding: '5rem', textAlign: 'center' }}>{t('dynamicPage.loading')}</div>;
 
     if (error || !pageData) {
         return (
             <div style={{ padding: '5rem', textAlign: 'center' }}>
                 <h1>404</h1>
-                <p>Sayfa bulunamadı veya henüz oluşturulmadı.</p>
+                <p>{t('dynamicPage.notFound')}</p>
             </div>
         );
     }
@@ -69,7 +71,7 @@ export default function DynamicPage() {
             {pageData.blocks.map((block: any, index: number) => {
                 const Component = BLOCK_COMPONENTS[block.type];
                 if (!Component) {
-                    return <div key={index}>Bilinmeyen Blok Tipi: {block.type}</div>;
+                    return <div key={index}>{t('dynamicPage.unknownBlock')} {block.type}</div>;
                 }
                 return <Component key={block.id || index} data={block.data} />;
             })}

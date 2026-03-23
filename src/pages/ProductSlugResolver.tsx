@@ -7,6 +7,7 @@ import GoogleAds from './GoogleAds'
 import SocialMediaAds from './SocialMediaAds'
 import SeoService from './SeoService'
 import ContentProduction from './ContentProduction'
+import { API_BASE_URL } from '../config/api'
 import B2BEmailMarketing from './B2BEmailMarketing'
 import B2BThreeSixtyMarketing from './B2BThreeSixtyMarketing'
 import PaymentSystemsMarketing from './PaymentSystemsMarketing'
@@ -18,10 +19,12 @@ import InteriorDesignMarketing from './InteriorDesignMarketing'
 import FleetRentalMarketing from './FleetRentalMarketing'
 import ManufacturingMarketing from './ManufacturingMarketing'
 import MaestroAI from './MaestroAI'
+import MaestroAISector from './MaestroAISector'
 import EyeTracking from './EyeTracking'
 import LegacyWordpressPage from './LegacyWordpressPage'
+import { resolveLocaleFromPath } from '../utils/locale'
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api'
+const API_BASE = API_BASE_URL
 
 function resolveByProductKey(productKey: string) {
     if (!productKey) return null
@@ -47,6 +50,13 @@ function resolveByProductKey(productKey: string) {
         'service-fleet-rental': <FleetRentalMarketing />,
         'service-manufacturing': <ManufacturingMarketing />,
         'service-maestro-ai': <MaestroAI />,
+        'service-maestro-ai-b2b': <MaestroAISector sectorKey="b2b" />,
+        'service-maestro-ai-odeme-sistemleri': <MaestroAISector sectorKey="odeme-sistemleri" />,
+        'service-maestro-ai-endustriyel-gida': <MaestroAISector sectorKey="endustriyel-gida" />,
+        'service-maestro-ai-fintech': <MaestroAISector sectorKey="fintech" />,
+        'service-maestro-ai-enerji': <MaestroAISector sectorKey="enerji" />,
+        'service-maestro-ai-ofis-tasarim': <MaestroAISector sectorKey="ofis-tasarim" />,
+        'service-maestro-ai-filo-kiralama': <MaestroAISector sectorKey="filo-kiralama" />,
         'service-eye-tracking': <EyeTracking />
     }
 
@@ -71,7 +81,10 @@ export default function ProductSlugResolver() {
     const [resolvedElement, setResolvedElement] = useState<JSX.Element | null>(null)
     const [loading, setLoading] = useState(true)
 
-    const currentLang = useMemo(() => (location.pathname.startsWith('/en') ? 'en' : 'tr'), [location.pathname])
+    const currentLang = useMemo(
+        () => resolveLocaleFromPath(location.pathname),
+        [location.pathname]
+    )
 
     useEffect(() => {
         let cancelled = false

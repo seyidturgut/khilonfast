@@ -6,7 +6,10 @@ import {
     HiShoppingBag,
     HiUsers,
     HiLogout,
-    HiSparkles
+    HiSparkles,
+    HiDocumentText,
+    HiUserGroup,
+    HiCalendar
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 import '../styles/admin-light.css';
@@ -28,6 +31,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     const menuItems = [
         { icon: HiHome, label: 'Dashboard', path: '/admin' },
         { icon: HiShoppingBag, label: 'Ürünler', path: '/admin/products' },
+        { icon: HiDocumentText, label: 'Sayfalar', path: '/admin/pages' },
+        { icon: HiUserGroup, label: 'Danışmanlar', path: '/admin/consultants' },
+        { icon: HiCalendar, label: 'Rezervasyonlar', path: '/admin/bookings' },
         { icon: HiUsers, label: 'Kullanıcılar', path: '/admin/users' },
         { icon: HiCog, label: 'Ayarlar', path: '/admin/settings' },
     ];

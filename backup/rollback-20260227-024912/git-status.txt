@@ -1,0 +1,42 @@
+ M backend/routes/admin.js
+ M backend/server.js
+ M index.html
+ M src/App.tsx
+ M src/components/About.tsx
+ M src/components/FAQ.tsx
+ M src/components/Features.tsx
+ M src/components/Header.tsx
+ M src/components/Hero.tsx
+ M src/components/Pricing.tsx
+ M src/components/Services.tsx
+ M src/components/Solutions.tsx
+ M src/data/trainingPrograms.ts
+ M src/layouts/AdminLayout.tsx
+ M src/locales/en/common.json
+ M src/locales/tr/common.json
+ M src/pages/About.tsx
+ M src/pages/B2BThreeSixtyMarketing.tsx
+ M src/pages/ContactPage.tsx
+ M src/pages/EnergyMarketing.tsx
+ M src/pages/FintechMarketing.tsx
+ M src/pages/FleetRentalMarketing.tsx
+ M src/pages/Home.tsx
+ M src/pages/IndustrialFoodMarketing.tsx
+ M src/pages/IntegratedDigitalMarketing.tsx
+ M src/pages/InteriorDesignMarketing.tsx
+ M src/pages/ManufacturingMarketing.tsx
+ M src/pages/PaymentSystemsMarketing.tsx
+ M src/pages/ProductSlugResolver.tsx
+ M src/pages/SoftwareMarketing.tsx
+ M src/pages/TrainingProgramPage.tsx
+ M src/pages/Trainings.tsx
+ M src/pages/admin/PageBuilder.tsx
+ M src/pages/admin/Pages.tsx
+ M src/pages/templates/SectoralSolutionTemplate.tsx
+ M src/pages/templates/ServicePageTemplate.tsx
+?? backend/routes/pages.js
+?? backend/scripts/seed_training_page_odeme.js
+?? backup/rollback-20260227-024912/
+?? backup/rollback-latest.txt
+?? public/uploads/cms/
+?? src/pages/admin/TrainingContentEditor.tsx

@@ -18,9 +18,7 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function IntegratedDigitalMarketing() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
-    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const { t } = useTranslation('common')
 
     useEffect(() => {
         document.title = t('serviceIDM.hero.title')
@@ -40,7 +38,7 @@ export default function IntegratedDigitalMarketing() {
 
     const idmConfig = {
         hero: {
-            title: t('serviceIDM.hero.title'),
+            title: 'Dijital Kanalları Tek Bir Stratejide Birleştirin!',
             subtitle: t('serviceIDM.hero.subtitle'),
             description: t('serviceIDM.hero.description'),
             buttonText: t('serviceIDM.hero.buttonText'),
@@ -69,31 +67,36 @@ export default function IntegratedDigitalMarketing() {
                     title: t('serviceGTM.approach.360.title'),
                     subtitle: t('serviceGTM.approach.360.subtitle'),
                     description: t('serviceGTM.approach.360.desc'),
-                    icon: <HiGlobeAlt />
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
                     title: t('serviceGTM.approach.growth.title'),
                     subtitle: t('serviceGTM.approach.growth.subtitle'),
                     description: t('serviceGTM.approach.growth.desc'),
-                    icon: <HiArrowTrendingUp />
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
                     title: t('serviceGTM.approach.data.title'),
                     subtitle: t('serviceGTM.approach.data.subtitle'),
                     description: t('serviceGTM.approach.data.desc'),
-                    icon: <HiChartPie />
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
                     title: t('serviceGTM.approach.innovation.title'),
                     subtitle: t('serviceGTM.approach.innovation.subtitle'),
                     description: t('serviceGTM.approach.innovation.desc'),
-                    icon: <HiSparkles />
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
                     title: t('serviceGTM.approach.partner.title'),
                     subtitle: t('serviceGTM.approach.partner.subtitle'),
                     description: t('serviceGTM.approach.partner.desc'),
-                    icon: <HiUserGroup />
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
@@ -106,7 +109,7 @@ export default function IntegratedDigitalMarketing() {
                     description: t('serviceIDM.authorization.card1.desc'),
                     highlightText: t('serviceIDM.authorization.card1.highlight'),
                     buttonText: t('common.discover'),
-                    buttonLink: `${langPrefix}/search-ads-google-reklamlari-kurulum-akisi`,
+                    buttonLink: '/butunlesik-pazarlama-kurulum-akisi',
                     theme: 'light' as const
                 },
                 {
@@ -114,45 +117,45 @@ export default function IntegratedDigitalMarketing() {
                     description: t('serviceIDM.authorization.card2.desc'),
                     highlightText: t('serviceIDM.authorization.card2.highlight'),
                     buttonText: t('common.discover'),
-                    buttonLink: `${langPrefix}/google-tag-manager-kurulum-akisi`,
+                    buttonLink: '/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi',
                     theme: 'dark' as const
                 }
             ]
         },
         processSection: {
-            tag: t('serviceIDM.process.tag'),
-            title: t('serviceIDM.process.title'),
-            description: t('serviceIDM.process.description'),
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            tag: t('process.tag', { defaultValue: 'Nasıl Çalışır?' }),
+            title: t('process.title', { defaultValue: 'Hizmet Süreci' }),
+            description: t('process.description', { defaultValue: '5 adımda başarıya ulaşın.' }),
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: t('process.steps.buy.title'),
-                    description: t('process.steps.buy.description'),
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: t('process.steps.auth.title'),
-                    description: t('process.steps.auth.description'),
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın.</a></p>,
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: t('process.steps.brief.title'),
-                    description: t('process.steps.brief.description'),
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: t('process.steps.analysis.title'),
-                    description: t('process.steps.analysis.description'),
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: t('process.steps.approval.title'),
-                    description: t('process.steps.approval.description'),
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
                     icon: <HiCheckBadge />
                 }
             ]
@@ -279,5 +282,5 @@ export default function IntegratedDigitalMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...idmConfig} serviceKey="service-integrated-marketing" />
+    return <ServicePageTemplate {...idmConfig} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

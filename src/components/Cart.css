@@ -109,6 +109,12 @@
     margin: 0 0 1rem 0;
 }
 
+.price-unit {
+    font-size: 0.75em;
+    font-weight: 500;
+    margin-left: 2px;
+}
+
 .cart-item-actions {
     display: flex;
     justify-content: flex-end;

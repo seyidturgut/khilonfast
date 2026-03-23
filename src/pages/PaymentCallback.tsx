@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
 export default function PaymentCallback() {
+    const { t } = useTranslation('common');
     const location = useLocation();
     const navigate = useNavigate();
     const { clearCart } = useCart();
-    const [message, setMessage] = useState('Ödeme sonucu doğrulanıyor...');
+    const currentLang = useRouteLocale();
+    const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
+    const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout');
+    const [message, setMessage] = useState(t('paymentStatus.callback.verifying'));
     const [isError, setIsError] = useState(false);
 
     useEffect(() => {
@@ -23,16 +29,16 @@ export default function PaymentCallback() {
                 if (!active) return;
                 if (success) {
                     clearCart();
-                    setMessage('Ödeme başarılı. Yönlendiriliyorsunuz...');
-                    setTimeout(() => navigate('/dashboard?tab=orders&success=true', { replace: true }), 1200);
+                    setMessage(t('paymentStatus.callback.success'));
+                    setTimeout(() => navigate(`${dashboardPath}?tab=orders&success=true`, { replace: true }), 1200);
                 } else {
                     setIsError(true);
-                    setMessage(`Ödeme tamamlanamadı (${response?.data?.status || 'failed'}).`);
+                    setMessage(t('paymentStatus.callback.failed', { status: response?.data?.status || 'failed' }));
                 }
             } catch (error: any) {
                 if (!active) return;
                 setIsError(true);
-                setMessage(error?.response?.data?.error || 'Ödeme dönüşü doğrulanamadı.');
+                setMessage(error?.response?.data?.error || t('paymentStatus.callback.unverified'));
             }
         };
 
@@ -40,19 +46,19 @@ export default function PaymentCallback() {
         return () => {
             active = false;
         };
-    }, [location.search, navigate, clearCart]);
+    }, [location.search, navigate, clearCart, dashboardPath, t]);
 
     return (
         <div style={{ maxWidth: 720, margin: '80px auto', padding: '24px', textAlign: 'center' }}>
-            <h1 style={{ marginBottom: 12 }}>{isError ? 'Ödeme Hatası' : 'Ödeme Sonucu'}</h1>
+            <h1 style={{ marginBottom: 12 }}>{isError ? t('paymentStatus.callback.errorTitle') : t('paymentStatus.callback.title')}</h1>
             <p style={{ marginBottom: 20 }}>{message}</p>
             {isError && (
                 <button
                     type="button"
-                    onClick={() => navigate('/checkout')}
+                    onClick={() => navigate(checkoutPath)}
                     style={{ padding: '10px 16px', borderRadius: 8, border: 'none', cursor: 'pointer' }}
                 >
-                    Ödeme Adımına Dön
+                    {t('paymentStatus.callback.backToCheckout')}
                 </button>
             )}
         </div>

@@ -216,8 +216,15 @@ export default function ProductEditor() {
             });
 
             if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || 'İşlem başarısız');
+                const raw = await res.text();
+                let message = 'İşlem başarısız';
+                try {
+                    const data = JSON.parse(raw);
+                    message = data.error || message;
+                } catch {
+                    message = raw || `İşlem başarısız (HTTP ${res.status})`;
+                }
+                throw new Error(message);
             }
 
             navigate('/admin/products');
@@ -331,6 +338,7 @@ export default function ProductEditor() {
                                 required
                             >
                                 <option value="egitimler">Eğitimler</option>
+                                <option value="danismanlik">Danışmanlık</option>
                                 <option value="hizmetler">Hizmetler</option>
                                 <option value="sektorler">Sektörler</option>
                             </select>

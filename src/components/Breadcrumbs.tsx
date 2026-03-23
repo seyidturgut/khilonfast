@@ -9,15 +9,16 @@ interface BreadcrumbItem {
 
 interface BreadcrumbsProps {
     items: BreadcrumbItem[]
+    homePath?: string
 }
 
-export default function Breadcrumbs({ items }: BreadcrumbsProps) {
+export default function Breadcrumbs({ items, homePath = '/' }: BreadcrumbsProps) {
     return (
         <nav className="breadcrumbs" aria-label="Breadcrumb">
             <div className="container breadcrumbs-container">
                 <ol className="breadcrumbs-list">
                     <li className="breadcrumb-item">
-                        <Link to="/" className="breadcrumb-link home-link">
+                        <Link to={homePath} className="breadcrumb-link home-link">
                             <HiHome />
                         </Link>
                     </li>

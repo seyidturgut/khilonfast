@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
     HiChartBar,
@@ -11,18 +12,32 @@ import {
     HiCreditCard
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
 
 export default function FintechMarketing() {
     const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const location = useLocation()
+    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
-    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const langPrefix = isEn ? '/en' : ''
+
+    useEffect(() => {
+        const activeLang = i18n.language.split('-')[0]
+        if (activeLang !== currentLang) {
+            void i18n.changeLanguage(currentLang)
+        }
+    }, [currentLang, i18n])
     const path = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
 
     const trConfig = {
         hero: {
-            title: 'FinTech Firmaları İçin',
-            subtitle: 'Tek Noktadan Pazarlama Çözümleri',
+            title: (
+                <>
+                    FinTech Firmaları İçin<br />
+                    Tek Noktadan Pazarlama Çözümleri
+                </>
+            ),
+            subtitle: '',
             description: 'khilonfast ile FinTech pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
             buttonLink: '#pricing',
@@ -49,7 +64,12 @@ export default function FintechMarketing() {
         },
         tabsSection: {
             tag: 'FinTech Sektörü İçin',
-            title: '360° Stratejik Pazarlama Çözümleri',
+            title: (
+                <>
+                    FinTech Sektörü için<br />
+                    360° Stratejik Pazarlama Çözümleri
+                </>
+            ),
             description1: 'Finansal teknolojilerde liderliğe oynamak için doğru adımları atın.',
             description2: 'İhtiyacınıza uygun çözümleri seçin, khilonfast ile pazarlama süreçlerinizi hızla devreye alın.',
             tabs: [
@@ -72,7 +92,7 @@ export default function FintechMarketing() {
                                     <h3 style={{ color: '#1b3d2d', fontSize: '1.6rem' }}>FinTech Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p style={{ color: '#1b3d2d', fontWeight: '500' }}>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('trainingGrowth')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <Link to={path('trainingFintech')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +116,7 @@ export default function FintechMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('maestro')} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/urunler/maestro-ai-fintech' : '/urunler/maestro-ai-fintech'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -127,11 +147,11 @@ export default function FintechMarketing() {
                             <div className="tab-grid grid-cols-3">
                                 <div className="sectoral-card" style={{ border: '1px solid #eef2d0' }}>
                                     <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>FinTech markaları için pazarlama faaliyetlerine hızlıca başlamaya odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>FinTech sektörü markaları için pazarlama faaliyetlerine hızlıca başlamaya ve sonuç almaya odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Süreçleri hızlıca devreye alır ve operasyonel yükten kurtarır.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Ekip kurma derdi olmadan hemen başlayın.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen FinTech girişimleri.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital pazarlama süreçlerinizi hızlıca devreye alır ve operasyonel yüklerden kurtarır.</li>
+                                        <li><HiCheck /> <strong>Fark:</strong> Ekstra toplantılar veya ekip kurma derdi olmadan pazarlama faaliyetlerine hemen başlayabilir, sonuçları kısa sürede görebilirsiniz.</li>
+                                        <li><HiCheck /> <strong>Uygun:</strong> Zaman ve kaynak yönetimini sadeleştirmek isteyen küçük ve orta ölçekli işletmeler.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -139,11 +159,11 @@ export default function FintechMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
                                     <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>FinTech markaları için büyümeye ve derinlemesine çözümlere odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>FinTech sektörü markaları için büyümeye ve derinlemesine pazarlama çözümlerine odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Müşteri tabanınızı sürdürülebilir büyütür.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> İşletme etkisini artırarak rekabet avantajı sağlar.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Pazar payını artırmak isteyen FinTech şirketleri.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital varlığınızı genişletmek ve müşteri tabanınızı büyütmek için dengeli ve sürdürülebilir çözümler sunar.</li>
+                                        <li><HiCheck /> <strong>Fark:</strong> İşletmenizin pazarlama etkisini artırarak, büyümeye odaklanmanızı sağlar ve rakiplerinize karşı avantaj kazandırır.</li>
+                                        <li><HiCheck /> <strong>Uygun:</strong> Dijital pazarlamada bir adım ileri gitmek isteyen ve büyümeye yatırım yapmayı hedefleyen işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -151,11 +171,11 @@ export default function FintechMarketing() {
                                 </div>
                                 <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
                                     <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Marka gücünü maksimize eden en üst seviye çözümlere odaklanır.</p>
+                                    <p style={{ fontSize: '0.85rem' }}>FinTech sektörü markaları için pazarlama süreçlerini en üst seviyeye taşıyan ve marka gücünü maksimize eden çözümlere odaklanır.</p>
                                     <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm kanalları entegre eden marka stratejisi.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Sektörde lider konuma getiren tam kapsamlı strateji.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Global ölçekte büyümeyi hedefleyen FinTech markaları.</li>
+                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm pazarlama kanallarını entegre ederek güçlü bir marka stratejisi oluşturur ve kalıcı bir etki yaratır.</li>
+                                        <li><HiCheck /> <strong>Fark:</strong> Pazarda lider konuma gelmenizi sağlayacak tam kapsamlı bir strateji ile yüksek seviyede rekabet avantajı sunar.</li>
+                                        <li><HiCheck /> <strong>Uygun:</strong> Tam donanımlı bir pazarlama stratejisiyle sektörde öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -218,39 +238,7 @@ export default function FintechMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go To Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        GTM Stratejisi ile yeni FinTech ürününüzü hızla pazara sunun.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>İletişim Stratejisi</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Regülasyonlara uyumlu, güven tazeleyen marka iletişimi.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Büyüme Danışmanlığı</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Scale-up aşamasındaki FinTech’ler için metrik odaklı danışmanlık.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="FinTech Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="FinTech firmaları için" advisoryPath="/danismanlik/fintech-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="fintech" />
                 },
                 {
                     id: 'analysis',
@@ -291,7 +279,7 @@ export default function FintechMarketing() {
             role: "CMO, FinPay"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1135500461"
+            vimeoUrl: "https://player.vimeo.com/video/1128822985"
         },
         faqs: [
             {
@@ -312,8 +300,8 @@ export default function FintechMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For FinTech Companies`,
-            subtitle: 'One-Stop Marketing Solutions',
+            title: `360° Marketing Management for FinTech Companies`,
+            subtitle: '',
             description: `Scale fintech customer growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
             badgeText: 'FinTech Companies Growth Engine'
@@ -372,7 +360,7 @@ export default function FintechMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-fintech' : '/urunler/maestro-ai-fintech'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>
@@ -449,27 +437,7 @@ export default function FintechMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go-to-Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Design your market entry and scaling roadmap with strategic precision.</p>
-                                    <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Content Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Build messaging systems that increase trust, relevance, and conversion quality.</p>
-                                    <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Growth Advisory</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Work directly with khilonfast for high-impact strategic and operational guidance.</p>
-                                    <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for FinTech Companies" gtmContext="For FinTech companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-fintech" sectorSlug="fintech" />
                 },
                 {
                     id: 'analysis',
@@ -508,5 +476,5 @@ export default function FintechMarketing() {
         } : {})
     }
 
-    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fintech-360" />
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fintech-360" disableApiHeroTextOverride={true} disableApiPackages={true} />
 }

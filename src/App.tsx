@@ -9,6 +9,7 @@ import { useAuth } from './context/AuthContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import SeoHead from './components/SeoHead'
 import Home from './pages/Home'
 import GoToMarket from './pages/GoToMarket'
 import ContentStrategy from './pages/ContentStrategy'
@@ -30,9 +31,11 @@ import ManufacturingMarketing from './pages/ManufacturingMarketing'
 import About from './pages/About'
 import HowItWorks from './pages/HowItWorks'
 import MaestroAI from './pages/MaestroAI'
+import MaestroAISector from './pages/MaestroAISector'
 import EyeTracking from './pages/EyeTracking'
 import SearchConsoleSetup from './pages/SearchConsoleSetup'
 import SetupFlowPage from './pages/SetupFlowPage'
+import IntegratedMarketingSetupFlow from './pages/IntegratedMarketingSetupFlow'
 import ContactPage from './pages/ContactPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -42,11 +45,17 @@ import PaymentCallback from './pages/PaymentCallback'
 import Dashboard from './pages/Dashboard'
 import Trainings from './pages/Trainings'
 import TrainingProgramPage from './pages/TrainingProgramPage'
+import Consulting from './pages/Consulting'
+import ConsultingProgramPage from './pages/ConsultingProgramPage'
+import Consultants from './pages/Consultants'
+import ConsultantDetail from './pages/ConsultantDetail'
 import LegacyWordpressPage from './pages/LegacyWordpressPage'
 import ProductSlugResolver from './pages/ProductSlugResolver'
 import { trainingPrograms } from './data/trainingPrograms'
+import { consultingPrograms } from './data/consultingPrograms'
 import { productPrograms } from './data/productPrograms'
 import { setupFlows } from './data/setupFlows'
+import { resolveLocaleFromPath } from './utils/locale'
 import trCommon from './locales/tr/common.json'
 import enCommon from './locales/en/common.json'
 
@@ -56,6 +65,12 @@ import SettingsPage from './pages/admin/Settings'
 import ProductList from './pages/admin/ProductList'
 import ProductEditor from './pages/admin/ProductEditor'
 import UsersPage from './pages/admin/Users'
+import PagesList from './pages/admin/Pages'
+import PageBuilder from './pages/admin/PageBuilder'
+import TrainingContentEditor from './pages/admin/TrainingContentEditor'
+import ConsultantList from './pages/admin/ConsultantList'
+import ConsultantEditor from './pages/admin/ConsultantEditor'
+import BookingList from './pages/admin/BookingList'
 
 const slugsTr = trCommon.slugs as Record<string, string>
 const slugsEn = enCommon.slugs as Record<string, string>
@@ -82,7 +97,7 @@ function RequireAdmin({ children }: { children: ReactElement }) {
 
 function MainContent() {
     const location = useLocation();
-    const routeLang = location.pathname.startsWith('/en') ? 'en' : 'tr';
+    const routeLang = resolveLocaleFromPath(location.pathname);
     const isAdminRoute = location.pathname.startsWith('/admin');
     const knownRoutePatterns = [
         '/',
@@ -97,25 +112,42 @@ function MainContent() {
         '/hizmetlerimiz/seo-yonetimi',
         '/hizmetlerimiz/icerik-uretimi',
         '/hizmetlerimiz/b2b-email-pazarlama',
+        '/sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/b2b-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi',
-        '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi',
-        '/sektorel-hizmetler/fintech-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/fintech-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/teknoloji-yazilim-firmalari-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi',
         '/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi',
-        '/sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi',
+        '/sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi',
         '/hizmetlerimiz/buyume-odakli-pazarlama-egitimi',
         '/egitimler/buyume-odakli-pazarlama-egitimi',
         '/courses/odeme-sistemlerinde-buyume-odakli-pazarlama',
         '/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi',
         '/hizmetlerimiz/maestro-ai',
         '/urunler/maestro-ai',
+        '/urunler/maestro-ai-b2b',
+        '/urunler/maestro-ai-odeme-sistemleri',
+        '/urunler/maestro-ai-endustriyel-gida',
+        '/urunler/maestro-ai-fintech',
+        '/urunler/maestro-ai-enerji',
+        '/urunler/maestro-ai-ofis-tasarim',
+        '/urunler/maestro-ai-filo-kiralama',
         '/hizmetlerimiz/eye-tracking-reklam-analizi',
         '/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy',
         '/hizmetler/eye-tracking-reklam-analizi',
         '/hizmetlerimiz/google-search-console-kurulum-akisi',
+        '/butunlesik-pazarlama-kurulum-akisi',
         ...setupFlows.map((flow) => flow.path),
         '/egitimler',
         '/giris',
@@ -124,6 +156,7 @@ function MainContent() {
         '/login',
         '/register',
         '/checkout',
+        '/odeme',
         '/payment-success',
         '/payment-callback',
         '/dashboard',
@@ -132,10 +165,31 @@ function MainContent() {
         '/admin/products',
         '/admin/products/new',
         '/admin/products/edit/:id',
+        '/admin/pages',
+        '/admin/pages/new',
+        '/admin/pages/edit/:id',
+        '/admin/training-pages/*',
         '/admin/users',
+        '/admin/consultants',
+        '/admin/consultants/new',
+        '/admin/consultants/:id',
+        '/admin/bookings',
+        '/danismanlar',
+        '/danismanlar/:slug',
+        '/consultants',
+        '/consultants/:slug',
+        `/${slugsTr.consulting}`,
+        `/${slugsTr.consulting}/:id`,
+        `/${slugsEn.consulting}`,
+        `/${slugsEn.consulting}/:id`,
+        `/${slugsTr.trainings}`,
+        `/${slugsTr.trainings}/:id`,
+        `/${slugsEn.trainings}`,
+        `/${slugsEn.trainings}/:id`,
         ...slugValuesTr.map((slug) => `/${slug}`),
         ...slugValuesEn.map((slug) => `/${slug}`),
         ...trainingPrograms.map((program) => program.path),
+        ...consultingPrograms.map((program) => program.path),
         ...productPrograms.map((product) => product.path)
     ];
     const isKnownRoute = knownRoutePatterns.some((pattern) =>
@@ -156,6 +210,7 @@ function MainContent() {
 
     return (
         <>
+            <SeoHead />
             <ScrollToTop />
             {!isAdminRoute && !isLegacyRoute && <Header />}
             <main
@@ -170,6 +225,10 @@ function MainContent() {
                         <Route path={slugsEn.howItWorks} element={<HowItWorks />} />
                         <Route path={slugsEn.trainings} element={<Trainings />} />
                         <Route path={`${slugsEn.trainings}/:id`} element={<TrainingProgramPage />} />
+                        <Route path={slugsEn.consulting} element={<Consulting />} />
+                        <Route path={`${slugsEn.consulting}/:id`} element={<ConsultingProgramPage />} />
+                        <Route path="consultants" element={<Consultants />} />
+                        <Route path="consultants/:slug" element={<ConsultantDetail />} />
                         <Route path={slugsEn.gtm} element={<GoToMarket />} />
                         <Route path={slugsEn.contentStrategy} element={<ContentStrategy />} />
                         <Route path={slugsEn.idm} element={<IntegratedDigitalMarketing />} />
@@ -206,6 +265,10 @@ function MainContent() {
                         <Route path="kayil-ol" element={<Register />} />
                         <Route path="egitimler" element={<Trainings />} />
                         <Route path="egitimler/:id" element={<TrainingProgramPage />} />
+                        <Route path="danismanlik" element={<Consulting />} />
+                        <Route path="danismanlik/:id" element={<ConsultingProgramPage />} />
+                        <Route path="danismanlar" element={<Consultants />} />
+                        <Route path="danismanlar/:slug" element={<ConsultantDetail />} />
                         <Route path="hizmetlerimiz/go-to-market-stratejisi" element={<GoToMarket />} />
                         <Route path="hizmetlerimiz/icerik-stratejisi" element={<ContentStrategy />} />
                         <Route path="hizmetlerimiz/butunlesik-dijital-pazarlama" element={<IntegratedDigitalMarketing />} />
@@ -214,21 +277,39 @@ function MainContent() {
                         <Route path="hizmetlerimiz/seo-yonetimi" element={<SeoService />} />
                         <Route path="hizmetlerimiz/icerik-uretimi" element={<ContentProduction />} />
                         <Route path="hizmetlerimiz/b2b-email-pazarlama" element={<B2BEmailMarketing />} />
-                        <Route path="sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<B2BThreeSixtyMarketing />} />
-                        <Route path="sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi" element={<PaymentSystemsMarketing />} />
-                        <Route path="sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi" element={<IndustrialFoodMarketing />} />
-                        <Route path="sektorel-hizmetler/fintech-360-pazarlama-yonetimi" element={<FintechMarketing />} />
-                        <Route path="sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi" element={<SoftwareMarketing />} />
-                        <Route path="sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi" element={<EnergyMarketing />} />
-                        <Route path="sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi" element={<InteriorDesignMarketing />} />
-                        <Route path="sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
-                        <Route path="sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
+                        <Route path="sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi" element={<B2BThreeSixtyMarketing />} />
+                        <Route path="sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi" element={<PaymentSystemsMarketing />} />
+                        <Route path="sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi" element={<IndustrialFoodMarketing />} />
+                        <Route path="sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi" element={<FintechMarketing />} />
+                        <Route path="sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi" element={<SoftwareMarketing />} />
+                        <Route path="sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi" element={<EnergyMarketing />} />
+                        <Route path="sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi" element={<InteriorDesignMarketing />} />
+                        <Route path="sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi" element={<FleetRentalMarketing />} />
+                        <Route path="sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi" element={<ManufacturingMarketing />} />
+                        <Route path="sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralB2B}`} replace />} />
+                        <Route path="sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralPayment}`} replace />} />
+                        <Route path="sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFood}`} replace />} />
+                        <Route path="sektorel-hizmetler/fintech-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFintech}`} replace />} />
+                        <Route path="sektorel-hizmetler/teknoloji-yazilim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralTech}`} replace />} />
+                        <Route path="sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralEnergy}`} replace />} />
+                        <Route path="sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralDesign}`} replace />} />
+                        <Route path="sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralFleet}`} replace />} />
+                        <Route path="sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/en/${slugsEn.sectoralManufacturing}`} replace />} />
                         <Route path="urunler/maestro-ai" element={<MaestroAI />} />
-                        <Route path="hizmetler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
+                        <Route path="urunler/maestro-ai-b2b" element={<MaestroAISector sectorKey="b2b" />} />
+                        <Route path="urunler/maestro-ai-odeme-sistemleri" element={<MaestroAISector sectorKey="odeme-sistemleri" />} />
+                        <Route path="urunler/maestro-ai-endustriyel-gida" element={<MaestroAISector sectorKey="endustriyel-gida" />} />
+                        <Route path="urunler/maestro-ai-fintech" element={<MaestroAISector sectorKey="fintech" />} />
+                        <Route path="urunler/maestro-ai-enerji" element={<MaestroAISector sectorKey="enerji" />} />
+                        <Route path="urunler/maestro-ai-ofis-tasarim" element={<MaestroAISector sectorKey="ofis-tasarim" />} />
+                        <Route path="urunler/maestro-ai-filo-kiralama" element={<MaestroAISector sectorKey="filo-kiralama" />} />
+                        <Route path="urunler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
                     </Route>
 
                     {/* Turkish Routes (Default) */}
                     <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Navigate to="/" replace />} />
+                    <Route path="/elementor-696" element={<Navigate to="/" replace />} />
                     <Route path={`/${slugsTr.about}`} element={<About />} />
                     <Route path="/nasil-calisir" element={<Navigate to="/khilonfast-nasil-calisir-hizli-profesyonel-ve-sonuc-odakli-pazarlama-deneyimi" replace />} />
                     <Route path={`/${slugsTr.howItWorks}`} element={<HowItWorks />} />
@@ -249,23 +330,57 @@ function MainContent() {
                     <Route path={`/${slugsTr.sectoralDesign}`} element={<InteriorDesignMarketing />} />
                     <Route path={`/${slugsTr.sectoralFleet}`} element={<FleetRentalMarketing />} />
                     <Route path={`/${slugsTr.sectoralManufacturing}`} element={<ManufacturingMarketing />} />
+                    <Route path="/sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralB2B}`} replace />} />
+                    <Route path="/sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralPayment}`} replace />} />
+                    <Route path="/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFood}`} replace />} />
+                    <Route path="/sektorel-hizmetler/fintech-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFintech}`} replace />} />
+                    <Route path="/sektorel-hizmetler/teknoloji-yazilim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralTech}`} replace />} />
+                    <Route path="/sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralEnergy}`} replace />} />
+                    <Route path="/sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralDesign}`} replace />} />
+                    <Route path="/sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFleet}`} replace />} />
+                    <Route path="/sektorel-hizmetler/uretim-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralManufacturing}`} replace />} />
                     <Route path="/hizmetlerimiz/buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/courses/odeme-sistemlerinde-buyume-odakli-pazarlama" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/b2b-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/b2b-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/fintech-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/fintech-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/uretim-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/uretim-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/enerji-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/enerji-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
+                    <Route path="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" element={<Navigate to="/egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi-copy" element={<Navigate to="/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi" replace />} />
                     <Route path={`/${slugsTr.maestro}`} element={<MaestroAI />} />
+                    <Route path="/urunler/maestro-ai-b2b" element={<MaestroAISector sectorKey="b2b" />} />
+                    <Route path="/urunler/maestro-ai-odeme-sistemleri" element={<MaestroAISector sectorKey="odeme-sistemleri" />} />
+                    <Route path="/urunler/maestro-ai-endustriyel-gida" element={<MaestroAISector sectorKey="endustriyel-gida" />} />
+                    <Route path="/urunler/maestro-ai-fintech" element={<MaestroAISector sectorKey="fintech" />} />
+                    <Route path="/urunler/maestro-ai-enerji" element={<MaestroAISector sectorKey="enerji" />} />
+                    <Route path="/urunler/maestro-ai-ofis-tasarim" element={<MaestroAISector sectorKey="ofis-tasarim" />} />
+                    <Route path="/urunler/maestro-ai-filo-kiralama" element={<MaestroAISector sectorKey="filo-kiralama" />} />
                     <Route path="/hizmetlerimiz/maestro-ai" element={<Navigate to="/urunler/maestro-ai" replace />} />
                     <Route path="/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy" element={<Navigate to="/urunler/maestro-ai" replace />} />
-                    <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<EyeTracking />} />
+                    <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />
+                    <Route path="/hizmetler/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />
                     <Route path={`/${slugsTr.eyeTracking}`} element={<EyeTracking />} />
                     <Route path="/hizmetlerimiz/google-search-console-kurulum-akisi" element={<SearchConsoleSetup />} />
+                    <Route path="/butunlesik-pazarlama-kurulum-akisi" element={<IntegratedMarketingSetupFlow />} />
                     {setupFlows.map((flow) => (
                         <Route key={flow.path} path={flow.path} element={<SetupFlowPage path={flow.path} />} />
                     ))}
                     <Route path={`/${slugsTr.trainings}`} element={<Trainings />} />
+                    <Route path={`/${slugsTr.trainings}/:id`} element={<TrainingProgramPage />} />
                     {trainingPrograms.map((program) => (
                         <Route key={program.path} path={program.path} element={<TrainingProgramPage />} />
                     ))}
+                    <Route path={`/${slugsTr.consulting}`} element={<Consulting />} />
+                    <Route path={`/${slugsTr.consulting}/:id`} element={<ConsultingProgramPage />} />
+                    {consultingPrograms.map((program) => (
+                        <Route key={program.path} path={program.path} element={<ConsultingProgramPage />} />
+                    ))}
+                    <Route path="/danismanlar" element={<Consultants />} />
+                    <Route path="/danismanlar/:slug" element={<ConsultantDetail />} />
 
                     {/* Auth & Cart Routes */}
                     <Route path={`/${slugsTr.login}`} element={<Login />} />
@@ -286,7 +401,15 @@ function MainContent() {
                     <Route path="/admin/products" element={<RequireAdmin><ProductList /></RequireAdmin>} />
                     <Route path="/admin/products/new" element={<RequireAdmin><ProductEditor /></RequireAdmin>} />
                     <Route path="/admin/products/edit/:id" element={<RequireAdmin><ProductEditor /></RequireAdmin>} />
+                    <Route path="/admin/pages" element={<RequireAdmin><PagesList /></RequireAdmin>} />
+                    <Route path="/admin/pages/new" element={<RequireAdmin><PageBuilder /></RequireAdmin>} />
+                    <Route path="/admin/pages/edit/:id" element={<RequireAdmin><PageBuilder /></RequireAdmin>} />
+                    <Route path="/admin/training-pages/*" element={<RequireAdmin><TrainingContentEditor /></RequireAdmin>} />
                     <Route path="/admin/users" element={<RequireAdmin><UsersPage /></RequireAdmin>} />
+                    <Route path="/admin/consultants" element={<RequireAdmin><ConsultantList /></RequireAdmin>} />
+                    <Route path="/admin/consultants/new" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
+                    <Route path="/admin/consultants/:id" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
+                    <Route path="/admin/bookings" element={<RequireAdmin><BookingList /></RequireAdmin>} />
                     <Route path="*" element={<LegacyWordpressPage />} />
                 </Routes>
             </main>

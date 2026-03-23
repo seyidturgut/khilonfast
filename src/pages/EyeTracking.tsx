@@ -15,10 +15,11 @@ import {
     HiBriefcase
 } from 'react-icons/hi2'
 import ServicePageTemplate, { ServicePageProps } from './templates/ServicePageTemplate'
+import { useRouteLocale } from '../utils/locale'
 
 export default function EyeTracking() {
-    const { t, i18n } = useTranslation('common')
-    const isEn = i18n.language.split('-')[0] === 'en'
+    const { t } = useTranslation('common')
+    const isEn = useRouteLocale() === 'en'
 
     const eyeTrackingConfig: ServicePageProps = {
         hero: {

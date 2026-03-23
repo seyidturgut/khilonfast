@@ -1,8 +1,8 @@
 {
     "pricing": {
-        "monthly": "Month",
+        "monthly": "month",
         "buyNow": "Buy Now",
-        "popular": "Most Popular"
+        "popular": "POPULAR"
     },
     "process": {
         "steps": {
@@ -78,39 +78,39 @@
             },
             "sectoral": {
                 "b2b": {
-                    "title": "360 Marketing Management for B2B Companies",
+                    "title": "360° Marketing Management for B2B Companies",
                     "desc": "Integrated B2B marketing solutions"
                 },
                 "fintech": {
-                    "title": "360 Marketing for FinTech Companies",
+                    "title": "360° Marketing Management for FinTech Companies",
                     "desc": "Financial technology-oriented solutions"
                 },
                 "food": {
-                    "title": "Industrial Food & Chef Solutions",
+                    "title": "360° Marketing Management for Industrial Food & Chef Solutions Companies",
                     "desc": "360 marketing specific to the food sector"
                 },
                 "payment": {
-                    "title": "360 Marketing Management for Payment Systems",
+                    "title": "360° Marketing Management for Payment Systems Companies",
                     "desc": "Fintech-oriented strategic solutions"
                 },
                 "tech": {
-                    "title": "360 Marketing Management for Tech & Software Companies",
+                    "title": "360° Marketing Management for Technology & Software Companies",
                     "desc": "SaaS and software-oriented solutions"
                 },
                 "energy": {
-                    "title": "360 Marketing Management for Energy Companies",
+                    "title": "360° Marketing Management for Energy Companies",
                     "desc": "Energy and technology-oriented solutions"
                 },
                 "design": {
-                    "title": "Marketing Management for Office & Corporate Interior Design",
+                    "title": "360° Marketing Management for Office & Corporate Interior Design Companies",
                     "desc": "Architectural and corporate design solutions"
                 },
                 "fleet": {
-                    "title": "360 Marketing Management for Fleet Rental Companies",
+                    "title": "360° Marketing Management for Fleet Rental Companies",
                     "desc": "Corporate mobility and fleet solutions"
                 },
                 "manufacturing": {
-                    "title": "360 Marketing Management for Manufacturing Companies",
+                    "title": "360° Marketing Management for Manufacturing Companies",
                     "desc": "Industrial and production-oriented solutions"
                 }
             },
@@ -121,7 +121,7 @@
                 },
                 "growth": {
                     "title": "Growth-Oriented Marketing Training",
-                    "desc": "khilonfast's core growth-oriented marketing training program."
+                    "desc": "khilonfast core growth-oriented marketing training program."
                 },
                 "payment": {
                     "title": "Growth-Oriented Marketing Training in Payment Systems",
@@ -232,6 +232,11 @@
             "title": "Marketing Solutions Tailored to Your Brand",
             "description": "We provide maximum impact and success by offering special marketing strategies aligned with your brand's vision, values, and goals."
         }
+    },
+    "potentialCTA": {
+        "title": "Reach Your Business Potential with khilonfast!",
+        "description": "With our tailored approach, we help your business achieve concrete results and get ahead of your competitors.",
+        "button": "Contact Us"
     },
     "services": {
         "header": {
@@ -541,14 +546,14 @@
             "badge": "AI Power"
         },
         "videoShowcase": {
-            "tag": "AI Assistant for B2B Sector Marketing Department",
+            "tag": "AI Assistant for Marketing Teams",
             "title": "Accelerate Your Marketing Decisions with Maestro AI",
-            "description": "Created for the B2B sector; from CRM to PR, from market research to digital marketing, our AI module nourished with the experience of expert teams helps you make the right decision, accelerates work, and transforms your marketing into tangible results."
+            "description": "From CRM to PR, from market research to digital marketing, our AI module nourished with the experience of expert teams helps you make the right decision, accelerates work, and transforms your marketing into tangible results."
         },
         "features": {
             "tag": "Core Capabilities",
             "title": "Why Maestro AI?",
-            "description": "A strategist who understands the complex structure of the B2B world and produces suitable solutions.",
+            "description": "A strategist who understands the complexity of marketing operations and produces suitable solutions.",
             "items": {
                 "disciplines": {
                     "title": "Different Disciplines Together",
@@ -556,11 +561,11 @@
                 },
                 "speed": {
                     "title": "Gains Speed",
-                    "desc": "Accelerates sectoral experience acquisition that would take years with meetings and research."
+                    "desc": "Accelerates experience accumulation that would otherwise take years of meetings and research."
                 },
                 "strategist": {
                     "title": "Wise Strategist",
-                    "desc": "Trained in Marketing topics for the Industrial Food & Chef Solutions Sector"
+                    "desc": "Trained in marketing, growth, and decision-support workflows"
                 },
                 "results": {
                     "title": "Result Oriented",
@@ -568,11 +573,11 @@
                 },
                 "memory": {
                     "title": "Memory",
-                    "desc": "Maestro AI does not forget topics related to your company and knows the sector. It prevents information loss due to turnover by preserving sectoral memory."
+                    "desc": "Maestro AI does not forget topics related to your company. It prevents information loss due to turnover by preserving organizational memory."
                 },
                 "guidance": {
-                    "title": "Sector-Specific Guidance",
-                    "desc": "Guides you correctly since it is trained with sector-specific data. Offers strategies suitable for your business, not general solutions."
+                    "title": "Relevant Guidance",
+                    "desc": "Guides you with the right context and data. Offers strategies suitable for your business, not generic solutions."
                 },
                 "analysis": {
                     "title": "Neutral Analysis",
@@ -587,7 +592,7 @@
         "process": {
             "tag": "Operating Process",
             "title": "How Maestro AI Works?",
-            "description": "Strengthen your marketing strategies with our AI assistant specifically developed for the B2B sector.",
+            "description": "Strengthen your marketing strategies with Maestro AI.",
             "steps": {
                 "question": {
                     "title": "Question",
@@ -610,15 +615,31 @@
         "pricing": {
             "tag": "Plans",
             "title": "Choose the Plan That Fits You",
-            "description": "Strengthen your marketing strategies with our AI assistant specifically developed for the B2B sector.",
+            "description": "Strengthen your marketing strategies with Maestro AI.",
             "plans": {
                 "kredili": {
                     "name": "Credited Maestro",
-                    "desc": "Increase your digital performance, provide more conversions."
+                    "desc": "Increase your digital performance, provide more conversions.",
+                    "for": {
+                        "title": "Who It's For",
+                        "desc": "Ideal for medium-sized businesses looking to grow and optimize their digital marketing strategies. Includes more content, expanded advertising budget, and more advanced reporting content."
+                    },
+                    "why": {
+                        "title": "Why Choose Us",
+                        "desc": "An advanced solution to reach wider audiences and increase your digital marketing activities. Increase your business's digital visibility with monthly reports and performance tracking."
+                    }
                 },
                 "growth": {
                     "name": "Unlimited Maestro",
-                    "desc": "Increase your digital performance, provide more conversions."
+                    "desc": "Increase your digital performance, provide more conversions.",
+                    "for": {
+                        "title": "Who It's For",
+                        "desc": "Ideal for medium-sized businesses looking to grow and optimize their digital marketing strategies. Includes more content, expanded advertising budget, and more advanced reporting content."
+                    },
+                    "why": {
+                        "title": "Why Choose Us",
+                        "desc": "An advanced solution to reach wider audiences and increase your digital marketing activities. Increase your business's digital visibility with monthly reports and performance tracking."
+                    }
                 }
             }
         },
@@ -811,6 +832,88 @@
             }
         ]
     },
+    "authPages": {
+        "or": "or",
+        "fields": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "phoneOptional": "Phone (Optional)",
+            "password": "Password",
+            "confirmPassword": "Confirm Password"
+        },
+        "placeholders": {
+            "firstName": "Your first name",
+            "lastName": "Your last name",
+            "email": "example@email.com",
+            "phone": "+90 5XX XXX XX XX",
+            "password": "At least 6 characters",
+            "confirmPassword": "Enter your password again"
+        },
+        "login": {
+            "title": "Login",
+            "subtitle": "Sign in to your account",
+            "submit": "Login",
+            "loading": "Signing in...",
+            "switchPrompt": "Don't have an account?",
+            "errors": {
+                "default": "Login failed",
+                "google": "Google sign-in failed"
+            }
+        },
+        "register": {
+            "title": "Register",
+            "subtitle": "Create a new account",
+            "submit": "Register",
+            "loading": "Creating account...",
+            "switchPrompt": "Already have an account?",
+            "errors": {
+                "default": "Registration failed",
+                "google": "Google sign-in failed",
+                "passwordMismatch": "Passwords do not match"
+            }
+        }
+    },
+    "dynamicPage": {
+        "loading": "Loading...",
+        "notFound": "The page could not be found or has not been created yet.",
+        "unknownBlock": "Unknown Block Type:"
+    },
+    "trainingsPage": {
+        "hero": {
+            "title": "Training Programs",
+            "description": "We integrated sector-specific growth-oriented marketing trainings into our current system. Review the programs and start with the learning path that fits you best."
+        },
+        "list": {
+            "open": "Open Training"
+        }
+    },
+    "consultingPage": {
+        "hero": {
+            "title": "On-Site Growth-Focused Marketing Consulting",
+            "description": "Our experts come to your company and provide face-to-face consulting. Strengthen your team with hands-on, results-driven consulting programs tailored to your sector."
+        },
+        "list": {
+            "open": "View Consulting"
+        }
+    },
+    "paymentStatus": {
+        "orderNumber": "Order No:",
+        "backHome": "Back to Home",
+        "success": {
+            "title": "Payment Successful!",
+            "description": "Your order has been received successfully."
+        },
+        "callback": {
+            "title": "Payment Status",
+            "errorTitle": "Payment Error",
+            "verifying": "Verifying payment result...",
+            "success": "Payment successful. Redirecting...",
+            "failed": "Payment could not be completed ({{status}}).",
+            "unverified": "Payment callback could not be verified.",
+            "backToCheckout": "Return to Checkout"
+        }
+    },
     "pages": {
         "home": {
             "seo": {
@@ -853,24 +956,24 @@
             "description": "Entering a new market requires a precise strategic start. With khilonfast, build a fast and effective launch architecture, define your audience correctly, and gain sustainable competitive advantage.",
             "core": {
                 "desc": "Take action and establish your digital market presence quickly.",
-                "forWho": "Best Fit For",
+                "forWho": "Ideal For",
                 "forWhoDesc": "Small and mid-sized companies that want a fast market entry with a clear sales proposition and essential positioning.",
-                "why": "Why Choose It",
-                "whyDesc": "Launch with lower risk through a focused marketing plan, core sales proposition, and foundational digital strategy."
+                "why": "Why Choose This",
+                "whyDesc": "Launch your business with minimal risk and in a short time through a marketing plan, sales proposition, and fundamental digital strategy."
             },
             "growth": {
-                "desc": "Increase digital performance and drive stronger conversion outcomes.",
-                "forWho": "Best Fit For",
-                "forWhoDesc": "Mid-sized businesses targeting growth through advanced digital execution, content systems, marketing automation, and sales strategy.",
-                "why": "Why Choose It",
-                "whyDesc": "Move your brand to the next level with advanced digital planning, content strategy, automation, and sales scripting."
+                "desc": "Boost your digital performance and achieve higher conversions.",
+                "forWho": "Ideal For",
+                "forWhoDesc": "Ideal for medium-sized businesses aiming for growth with advanced digital, content, marketing automation, and sales strategies.",
+                "why": "Why Choose This",
+                "whyDesc": "Elevate your brand with advanced digital, content, marketing automation strategies, and a defined sales script."
             },
             "ultimate": {
                 "desc": "Stand out in the market and outmaneuver competitors with smart strategy.",
-                "forWho": "Best Fit For",
+                "forWho": "Ideal For",
                 "forWhoDesc": "Companies seeking lasting competitive advantage through comprehensive strategy, brand identity, and funnel design.",
-                "why": "Why Choose It",
-                "whyDesc": "Includes Growth plus corporate identity design and funnel-ready creative templates to amplify brand power."
+                "why": "Why Choose This",
+                "whyDesc": "In addition to the Growth package, amplify your brand power with corporate identity design and sales funnel templates."
             }
         },
         "comparison": {
@@ -901,19 +1004,19 @@
             "description": "Build your market entry strategy in just a few steps. Every stage is designed for transparency, speed, and measurable execution.",
             "steps": {
                 "buy": {
-                    "title": "Step 1: Purchase",
+                    "title": "Purchase",
                     "desc": "Choose the package aligned with your needs. The workflow starts automatically once payment is completed."
                 },
                 "brief": {
-                    "title": "Step 2: Submit Brief",
-                    "desc": "Complete the form we send to share your goals, audience, and brand language. This brief becomes the strategic foundation."
+                    "title": "Share the Brief",
+                    "desc": "Answer the questions in the form we send to share your goals, target audience, and brand voice. This form becomes the foundation of the strategy."
                 },
                 "analysis": {
-                    "title": "Step 3: Analysis",
+                    "title": "Analysis",
                     "desc": "The khilonfast team analyzes your brief and prepares a de-brief report that aligns understanding and strategic direction."
                 },
                 "approval": {
-                    "title": "Step 4: Approval",
+                    "title": "Approval",
                     "desc": "After de-brief approval, service setup begins and measurement systems are activated within one week."
                 }
             }
@@ -1008,13 +1111,13 @@
         "seo": "services/seo-management",
         "contentProduction": "services/content-production",
         "b2bEmail": "services/b2b-email-marketing",
-        "sectoralB2B": "sectoral-services/b2b-360-marketing-management",
-        "sectoralPayment": "sectoral-services/payment-systems-marketing-management",
-        "sectoralFood": "sectoral-services/industrial-food-chef-solutions-marketing-management",
-        "sectoralFintech": "sectoral-services/fintech-360-marketing-management",
-        "sectoralTech": "sectoral-services/technology-software-360-marketing-management",
+        "sectoralB2B": "sectoral-services/b2b-companies-360-marketing-management",
+        "sectoralPayment": "sectoral-services/payment-systems-companies-360-marketing-management",
+        "sectoralFood": "sectoral-services/industrial-food-and-chef-solutions-companies-360-marketing-management",
+        "sectoralFintech": "sectoral-services/fintech-companies-360-marketing-management",
+        "sectoralTech": "sectoral-services/technology-and-software-companies-360-marketing-management",
         "sectoralEnergy": "sectoral-services/energy-companies-360-marketing-management",
-        "sectoralDesign": "sectoral-services/office-corporate-interior-design-360-marketing-management",
+        "sectoralDesign": "sectoral-services/office-and-corporate-interior-design-companies-360-marketing-management",
         "sectoralFleet": "sectoral-services/fleet-rental-companies-360-marketing-management",
         "sectoralManufacturing": "sectoral-services/manufacturing-companies-360-marketing-management",
         "trainings": "trainings",
@@ -1028,8 +1131,18 @@
         "trainingDesign": "trainings/growth-focused-marketing-training-for-office-and-corporate-interior-design",
         "trainingFleet": "trainings/growth-focused-marketing-training-for-fleet-rental",
         "trainingFood": "trainings/growth-focused-marketing-training-for-industrial-food",
+        "consulting": "consulting",
+        "consultingPayment": "consulting/growth-focused-marketing-consulting-for-payment-systems",
+        "consultingB2B": "consulting/growth-focused-marketing-consulting-for-b2b",
+        "consultingFintech": "consulting/growth-focused-marketing-consulting-for-fintech",
+        "consultingTech": "consulting/growth-focused-marketing-consulting-for-technology-and-software",
+        "consultingManufacturing": "consulting/growth-focused-marketing-consulting-for-manufacturing",
+        "consultingEnergy": "consulting/growth-focused-marketing-consulting-for-energy",
+        "consultingDesign": "consulting/growth-focused-marketing-consulting-for-office-and-corporate-interior-design",
+        "consultingFleet": "consulting/growth-focused-marketing-consulting-for-fleet-rental",
+        "consultingFood": "consulting/growth-focused-marketing-consulting-for-industrial-food",
         "maestro": "products/maestro-ai",
-        "eyeTracking": "services/eye-tracking-ad-analysis",
+        "eyeTracking": "products/eye-tracking-ad-analysis",
         "login": "login",
         "register": "register",
         "dashboard": "dashboard",
@@ -1144,6 +1257,57 @@
             "quote": "After consolidating all digital processes under one strategy, the return on our marketing budget increased by 45%.",
             "author": "Caner Ozkan",
             "role": "E-commerce Director"
+        }
+    },
+    "maestroAISectors": {
+        "b2b": {
+            "sectorLabel": "B2B",
+            "videoTag": "AI Assistant for B2B Marketing Departments",
+            "featuresDescription": "A strategist who understands the B2B sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in B2B Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the B2B sector."
+        },
+        "odeme-sistemleri": {
+            "sectorLabel": "Payment Systems",
+            "videoTag": "AI Assistant for Payment Systems Marketing Departments",
+            "featuresDescription": "A strategist who understands payment systems sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Payment Systems and Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the payment systems sector."
+        },
+        "endustriyel-gida": {
+            "sectorLabel": "Industrial Food & Chef Solutions",
+            "videoTag": "AI Assistant for Industrial Food Sector",
+            "featuresDescription": "A strategist who understands industrial food sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Industrial Food & Chef Solutions Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Industrial Food & Chef Solutions sector."
+        },
+        "fintech": {
+            "sectorLabel": "FinTech",
+            "videoTag": "AI Assistant for FinTech Sector",
+            "featuresDescription": "A strategist who understands FinTech sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in FinTech Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the FinTech sector."
+        },
+        "enerji": {
+            "sectorLabel": "Energy",
+            "videoTag": "AI Assistant for Energy Sector",
+            "featuresDescription": "A strategist who understands energy sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Energy Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the energy sector."
+        },
+        "ofis-tasarim": {
+            "sectorLabel": "Office & Corporate Interior Design",
+            "videoTag": "AI Assistant for Office & Corporate Interior Design Sector",
+            "featuresDescription": "A strategist who understands office & corporate interior design sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Office & Corporate Interior Design Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Office & Corporate Interior Design sector."
+        },
+        "filo-kiralama": {
+            "sectorLabel": "Fleet Rental",
+            "videoTag": "AI Assistant for Fleet Rental Sector",
+            "featuresDescription": "A strategist who understands fleet rental sector marketing processes and produces suitable solutions.",
+            "strategistDesc": "Trained in Fleet Rental Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the fleet rental sector."
         }
     }
 }

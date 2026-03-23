@@ -1,8 +1,8 @@
 {
     "pricing": {
-        "monthly": "Ay",
+        "monthly": "ay",
         "buyNow": "Satın Al",
-        "popular": "En Çok Tercih Edilen"
+        "popular": "POPÜLER"
     },
     "process": {
         "steps": {
@@ -78,39 +78,39 @@
             },
             "sectoral": {
                 "b2b": {
-                    "title": "B2B Firmalar İçin 360 Pazarlama Yönetimi",
+                    "title": "B2B Firmalar İçin 360° Pazarlama Yönetimi",
                     "desc": "Bütünleşik B2B pazarlama çözümleri"
                 },
                 "fintech": {
-                    "title": "FinTech Firmaları İçin 360 Pazarlama",
+                    "title": "FinTech Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Finansal teknoloji odaklı çözümler"
                 },
                 "food": {
-                    "title": "Endüstriyel Gıda & Şef Çözümleri",
+                    "title": "Endüstriyel Gıda & Şef Çözümleri Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Gıda sektörüne özel 360 pazarlama"
                 },
                 "payment": {
-                    "title": "Ödeme Sistemleri İçin 360 Pazarlama Yönetimi",
+                    "title": "Ödeme Sistemleri Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Fintech odaklı stratejik çözümler"
                 },
                 "tech": {
-                    "title": "Teknoloji & Yazılım Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Teknoloji & Yazılım Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "SaaS and software-oriented solutions"
                 },
                 "energy": {
-                    "title": "Enerji Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Enerji Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Enerji ve teknoloji odaklı çözümler"
                 },
                 "design": {
-                    "title": "Ofis & Kurumsal İç Tasarım Sektörü İçin Pazarlama Yönetimi",
+                    "title": "Ofis & Kurumsal İç Tasarım Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Mimari ve kurumsal tasarım çözümleri"
                 },
                 "fleet": {
-                    "title": "Filo Kiralama Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Filo Kiralama Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Kurumsal mobilite ve filo çözümleri"
                 },
                 "manufacturing": {
-                    "title": "Üretim Sektörü Firmaları İçin 360 Pazarlama Yönetimi",
+                    "title": "Üretim Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Endüstriyel ve üretim odaklı çözümler"
                 }
             },
@@ -233,6 +233,11 @@
             "description": "Markanızın vizyonu, değerleri ve hedefleri ile uyumlu özel pazarlama stratejileri sunarak maksimum etki ve başarı sağlıyoruz."
         }
     },
+    "potentialCTA": {
+        "title": "İşletmenizin Potansiyeline khilonfast ile Ulaşın!",
+        "description": "Size özel yaklaşımımızla, işletmenizin somut sonuçlar elde etmesine ve rakiplerinizin önüne geçmesine yardımcı oluyoruz.",
+        "button": "Bize Ulaşın"
+    },
     "services": {
         "header": {
             "title": "İşletmeniz İçin Kapsamlı Pazarlama Çözümleri"
@@ -246,8 +251,8 @@
             "description": "Marka stratejisi ve kurumsal iletişimde kapsamlı çözümlerimizi keşfedin."
         },
         "item3": {
-            "title": "Marketing Expertise for a Strong Digital Presence",
-            "description": "Examine our special digital marketing solutions to achieve effective results."
+            "title": "Güçlü Dijital Varlık İçin Pazarlama Uzmanlığı",
+            "description": "Etkili sonuçlar elde etmek için özel dijital pazarlama çözümlerimizi inceleyin."
         }
     },
     "features": {
@@ -321,12 +326,12 @@
             }
         },
         "quote": {
-            "title": "Dijital çağın hızına uyum sağlamayın,",
-            "highlight": "onu yönetmeyi öğrenin!"
+            "title": "Dijital çağın hızına uyum sağlamakla kalmayın;",
+            "highlight": "onu stratejik gücünüzle yönetin."
         },
         "model": {
             "title": "Hizmet Modelimiz",
-            "description": "khilonfast olarak hizmet modelimizi işletmelerin sadece ihtiyaçlarına değil, aynı zamanda büyüme potansiyellerine göre tasarladık.",
+            "description": "khilonfast, işletmelerin pazarlama süreçlerini kolaylaştırmak için tasarlanmış, üyelik temelli bir hizmet modeli sunar. Bu modelle, ajans ve ekip yönetimi yükünden kurtulurken işinizin büyümesi için gerekli strateji ve uygulama hizmetlerini tek elden alabilirsiniz.",
             "sub1": {
                 "title": "Analiz Odaklı",
                 "desc": "Her sürece derinlemesine bir analizle başlar, işletmenizin dijital röntgenini çekeriz. Mevcut durumunuzu anlayıp eksikleri gideririz."
@@ -541,14 +546,14 @@
             "badge": "Yapay Zeka Gücü"
         },
         "videoShowcase": {
-            "tag": "B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "tag": "Pazarlama Ekipleri için Yapay Zeka Asistanı",
             "title": "Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
-            "description": "B2B sektörü için oluşturulmuş; CRM’den PR’a, pazar araştırmasından dijital pazarlamaya kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür."
+            "description": "CRM’den PR’a, pazar araştırmasından dijital pazarlamaya kadar uzman ekiplerin deneyimiyle beslenmiş yapay zeka modülümüz; doğru kararı almanıza yardımcı olur, işleri hızlandırır ve pazarlamanızı somut sonuçlara dönüştürür."
         },
         "features": {
             "tag": "Temel Yetenekler",
             "title": "Neden Maestro AI?",
-            "description": "B2B dünyasının karmaşık yapısını anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "description": "Pazarlama süreçlerinin karmaşık yapısını anlayan ve buna uygun çözümler üreten bir stratejist.",
             "items": {
                 "disciplines": {
                     "title": "Farklı Disiplinler Bir Arada",
@@ -556,11 +561,11 @@
                 },
                 "speed": {
                     "title": "Hız Kazandırır",
-                    "desc": "Toplantılar, araştırmalar, yıllar ile oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    "desc": "Toplantılar, araştırmalar ve uzun öğrenme süreçleriyle oluşacak deneyim kazanımını hızlandırır."
                 },
                 "strategist": {
                     "title": "Bilge Stratejist",
-                    "desc": "Endüstriyel Gıda & Şef Çözümleri Sektörü Pazarlama konularında eğitimli"
+                    "desc": "Pazarlama, büyüme ve karar destek süreçlerinde eğitimli"
                 },
                 "results": {
                     "title": "Sonuç Odaklı",
@@ -568,11 +573,11 @@
                 },
                 "memory": {
                     "title": "Bellek",
-                    "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak, turnover nedeniyle bilginin kaybolmasını engeller."
+                    "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz. Kurumsal hafızayı koruyarak, turnover nedeniyle bilginin kaybolmasını engeller."
                 },
                 "guidance": {
-                    "title": "Sektöre Özel Yönlendirme",
-                    "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    "title": "Doğru Yönlendirme",
+                    "desc": "Veri ve bağlama göre sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
                 },
                 "analysis": {
                     "title": "Tarafsız Analiz",
@@ -587,7 +592,7 @@
         "process": {
             "tag": "İşleyiş Süreci",
             "title": "Maestro AI Nasıl Çalışır?",
-            "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "description": "Maestro AI ile pazarlama stratejilerinizi güçlendirin.",
             "steps": {
                 "question": {
                     "title": "Soru",
@@ -610,15 +615,31 @@
         "pricing": {
             "tag": "Planlar",
             "title": "Size Uygun Planı Seçin",
-            "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "description": "Maestro AI ile pazarlama stratejilerinizi güçlendirin.",
             "plans": {
                 "kredili": {
                     "name": "Kredili Maestro",
-                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın."
+                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
+                    "for": {
+                        "title": "Kimler İçin Uygun",
+                        "desc": "Orta ölçekli işletmelerin dijital pazarlama stratejilerini büyütmek ve optimize etmek isteyenler için idealdir. Daha fazla içerik, genişletilmiş reklam bütçesi ve daha gelişmiş raporlama içerir."
+                    },
+                    "why": {
+                        "title": "Neden Tercih Edilmeli",
+                        "desc": "Daha geniş kitlelere ulaşmak ve dijital pazarlama faaliyetlerinizi artırmak için gelişmiş bir çözümdür. Aylık raporlar ve performans izleme ile işletmenizin dijital görünürlüğünü artırın."
+                    }
                 },
                 "growth": {
                     "name": "Sınırsız Maestro",
-                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın."
+                    "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
+                    "for": {
+                        "title": "Kimler İçin Uygun",
+                        "desc": "Orta ölçekli işletmelerin dijital pazarlama stratejilerini büyütmek ve optimize etmek isteyenler için idealdir. Daha fazla içerik, genişletilmiş reklam bütçesi ve daha gelişmiş raporlama içerir."
+                    },
+                    "why": {
+                        "title": "Neden Tercih Edilmeli",
+                        "desc": "Daha geniş kitlelere ulaşmak ve dijital pazarlama faaliyetlerinizi artırmak için gelişmiş bir çözümdür. Aylık raporlar ve performans izleme ile işletmenizin dijital görünürlüğünü artırın."
+                    }
                 }
             }
         },
@@ -839,7 +860,7 @@
             "growth": {
                 "desc": "Dijital performansınızı artırın, daha fazla dönüşüm sağlayın.",
                 "forWho": "Kimler İçin Uygun",
-                "forWhoDesc": "Gelişmiş dijital, içerik ve pazarlama otomasyonu ile satış stratejisiyle büyümeyi hedefleyen orta ölçekli işletmeler için ideal.",
+                "forWhoDesc": "Gelişmiş bir dijital, içerik ve pazarlama otomasyonu, satış stratejisi ile büyümeyi hedefleyen orta ölçekli işletmeler için ideal.",
                 "why": "Neden Tercih Edilmeli",
                 "whyDesc": "Gelişmiş dijital, içerik, pazarlama otomasyonu stratejisi ve satış scripti sayesinde markanızı bir üst seviyeye taşıyın."
             },
@@ -848,7 +869,7 @@
                 "forWho": "Kimler İçin Uygun",
                 "forWhoDesc": "Kapsamlı strateji, marka kimliği ve satış hunisi tasarımıyla kalıcı rekabet avantajı isteyen firmalar için ideal.",
                 "why": "Neden Tercih Edilmeli",
-                "whyDesc": "Growth paketine ek olarak; kurumsal kimlik tasarımı ve satış hunisi şablonlarıyla markanızın gücünü artırın."
+                "whyDesc": "Growth paketine ek olarak; kurumsal kimlik tasarımı, satış hunisi şablonları ile markanızın gücünü artırın."
             }
         },
         "comparison": {
@@ -879,20 +900,20 @@
             "description": "Sadece birkaç adımda pazara giriş stratejinizi oluşturun. Tüm adımlar şeffaf, hızlı ve ölçülebilir şekilde tasarlandı.",
             "steps": {
                 "buy": {
-                    "title": "Adım 1: Satın Al",
+                    "title": "Satın Al",
                     "desc": "İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar."
                 },
                 "brief": {
-                    "title": "Adım 2: Brief Ver",
+                    "title": "Brief Ver",
                     "desc": "Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur."
                 },
                 "analysis": {
-                    "title": "Adım 3: Analiz",
+                    "title": "Analiz",
                     "desc": "khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar."
                 },
                 "approval": {
-                    "title": "Adım 4: Onay",
-                    "desc": "De-brief raporunun onaylanması ile hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
+                    "title": "Onay",
+                    "desc": "De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
                 }
             }
         },
@@ -1009,7 +1030,7 @@
         },
         "pricing": {
             "tag": "Hizmet Paketleri",
-            "title": "360° Dijital Pazarlama Yönetimi",
+            "title": "Bütünleşik Dijital Pazarlama Çözümleri",
             "description": "Tüm pazarlama ihtiyaçlarınızı tek bir yerden karşılayarak operasyonel yüklerden kurtulun.",
             "core": {
                 "desc": "Harekete geçin ve dijital dünyada varlığınızı hissettirmeye başlayın.",
@@ -1068,7 +1089,7 @@
                 "continuous": "Sürekli",
                 "limited": "Sınırlı",
                 "geoTargeting": "Lokasyon, zaman, cihaz",
-                "demographic": "İnmarket vb. demografik kitle segmentasyonu",
+                "demographic": "remarketing vb. demografik kitle segmentasyonu",
                 "profile1": "1 Meta Hesap",
                 "profile2": "2 Hesap (Meta + Linkedin veya Tiktok)",
                 "profile3": "3 Hesap (Meta ve/veya Linkedin ve/veya Tiktok)",
@@ -1088,6 +1109,88 @@
             "quote": "Tüm dijital süreçlerimizi tek bir stratejide birleştirdikten sonra pazarlama bütçemizin geri dönüşü %45 oranında arttı.",
             "author": "Caner Özkan",
             "role": "E-Ticaret Direktörü"
+        }
+    },
+    "authPages": {
+        "or": "veya",
+        "fields": {
+            "firstName": "Ad",
+            "lastName": "Soyad",
+            "email": "E-posta",
+            "phoneOptional": "Telefon (Opsiyonel)",
+            "password": "Şifre",
+            "confirmPassword": "Şifre (Tekrar)"
+        },
+        "placeholders": {
+            "firstName": "Adınız",
+            "lastName": "Soyadınız",
+            "email": "ornek@email.com",
+            "phone": "+90 5XX XXX XX XX",
+            "password": "En az 6 karakter",
+            "confirmPassword": "Şifreyi tekrar girin"
+        },
+        "login": {
+            "title": "Giriş Yap",
+            "subtitle": "Hesabınıza giriş yapın",
+            "submit": "Giriş Yap",
+            "loading": "Giriş yapılıyor...",
+            "switchPrompt": "Hesabınız yok mu?",
+            "errors": {
+                "default": "Giriş başarısız",
+                "google": "Google ile giriş başarısız"
+            }
+        },
+        "register": {
+            "title": "Kayıt Ol",
+            "subtitle": "Yeni hesap oluşturun",
+            "submit": "Kayıt Ol",
+            "loading": "Kayıt yapılıyor...",
+            "switchPrompt": "Zaten hesabınız var mı?",
+            "errors": {
+                "default": "Kayıt başarısız",
+                "google": "Google ile giriş başarısız",
+                "passwordMismatch": "Şifreler eşleşmiyor"
+            }
+        }
+    },
+    "dynamicPage": {
+        "loading": "Yükleniyor...",
+        "notFound": "Sayfa bulunamadı veya henüz oluşturulmadı.",
+        "unknownBlock": "Bilinmeyen Blok Tipi:"
+    },
+    "trainingsPage": {
+        "hero": {
+            "title": "Eğitim Programları",
+            "description": "Sektöre özel büyüme odaklı pazarlama eğitimlerini mevcut sistemimize entegre ettik. Programları inceleyip size en uygun eğitim akışıyla başlayabilirsiniz."
+        },
+        "list": {
+            "open": "Eğitimi Aç"
+        }
+    },
+    "consultingPage": {
+        "hero": {
+            "title": "Şirketinizde Büyüme Odaklı Pazarlama Danışmanlığı",
+            "description": "Uzmanlarımız şirketinize gelerek yüz yüze danışmanlık verir. Sektörünüze özel, uygulamalı ve sonuç odaklı danışmanlık programları ile ekibinizi güçlendirin."
+        },
+        "list": {
+            "open": "Danışmanlığı İncele"
+        }
+    },
+    "paymentStatus": {
+        "orderNumber": "Sipariş No:",
+        "backHome": "Ana Sayfaya Dön",
+        "success": {
+            "title": "Ödeme Başarılı!",
+            "description": "Siparişiniz başarıyla alındı."
+        },
+        "callback": {
+            "title": "Ödeme Sonucu",
+            "errorTitle": "Ödeme Hatası",
+            "verifying": "Ödeme sonucu doğrulanıyor...",
+            "success": "Ödeme başarılı. Yönlendiriliyorsunuz...",
+            "failed": "Ödeme tamamlanamadı ({{status}}).",
+            "unverified": "Ödeme dönüşü doğrulanamadı.",
+            "backToCheckout": "Ödeme Adımına Dön"
         }
     },
     "pages": {
@@ -1117,33 +1220,94 @@
         "seo": "hizmetlerimiz/seo-yonetimi",
         "contentProduction": "hizmetlerimiz/icerik-uretimi",
         "b2bEmail": "hizmetlerimiz/b2b-email-pazarlama",
-        "sectoralB2B": "sektorel-hizmetler/b2b-360-pazarlama-yonetimi",
-        "sectoralPayment": "sektorel-hizmetler/odeme-sistemleri-pazarlama-yonetimi",
-        "sectoralFood": "sektorel-hizmetler/endustriyel-gida-sef-cozumleri-pazarlama-yonetimi",
-        "sectoralFintech": "sektorel-hizmetler/fintech-360-pazarlama-yonetimi",
-        "sectoralTech": "sektorel-hizmetler/teknoloji-yazilim-360-pazarlama-yonetimi",
-        "sectoralEnergy": "sektorel-hizmetler/enerji-firmalari-360-pazarlama-yonetimi",
-        "sectoralDesign": "sektorel-hizmetler/ofis-kurumsal-ic-tasarim-360-pazarlama-yonetimi",
-        "sectoralFleet": "sektorel-hizmetler/filo-kiralama-firmalari-360-pazarlama-yonetimi",
-        "sectoralManufacturing": "sektorel-hizmetler/uretim-sektoru-firmalari-360-pazarlama-yonetimi",
+        "sectoralB2B": "sektorel-hizmetler/b2b-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralPayment": "sektorel-hizmetler/odeme-sistemleri-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFood": "sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFintech": "sektorel-hizmetler/fintech-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralTech": "sektorel-hizmetler/teknoloji-yazilim-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralEnergy": "sektorel-hizmetler/enerji-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralDesign": "sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFleet": "sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralManufacturing": "sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi",
         "trainings": "egitimler",
         "trainingGrowth": "egitimler/buyume-odakli-pazarlama-egitimi",
         "trainingPayment": "egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi",
-        "trainingB2B": "b2b-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingFintech": "fintech-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingTech": "teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingManufacturing": "uretim-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingEnergy": "enerji-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingDesign": "ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingFleet": "filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
-        "trainingFood": "endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingB2B": "egitimler/b2b-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFintech": "egitimler/fintech-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingTech": "egitimler/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingManufacturing": "egitimler/uretim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingEnergy": "egitimler/enerji-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingDesign": "egitimler/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFleet": "egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFood": "egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "consulting": "danismanlik",
+        "consultingPayment": "danismanlik/odeme-sistemlerinde-buyume-odakli-pazarlama-danismanligi",
+        "consultingB2B": "danismanlik/b2b-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFintech": "danismanlik/fintech-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingTech": "danismanlik/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingManufacturing": "danismanlik/uretim-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingEnergy": "danismanlik/enerji-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingDesign": "danismanlik/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFleet": "danismanlik/filo-kiralama-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFood": "danismanlik/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-danismanligi",
         "maestro": "urunler/maestro-ai",
-        "eyeTracking": "hizmetler/eye-tracking-reklam-analizi",
+        "eyeTracking": "urunler/eye-tracking-reklam-analizi",
         "login": "giris",
-        "register": "kayil-ol",
+        "register": "kayit-ol",
         "dashboard": "dashboard",
-        "checkout": "checkout",
+        "checkout": "odeme",
         "paymentSuccess": "payment-success",
         "paymentCallback": "payment-callback"
+    },
+    "maestroAISectors": {
+        "b2b": {
+            "sectorLabel": "B2B",
+            "videoTag": "B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "featuresDescription": "B2B sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "B2B Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "odeme-sistemleri": {
+            "sectorLabel": "Ödeme Sistemleri",
+            "videoTag": "Ödeme Sistemleri Pazarlama Departmanı için Yapay Zeka Asistanı",
+            "featuresDescription": "Ödeme sistemleri sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Ödeme Sistemleri ve Pazarlama konularında eğitimli",
+            "processDescription": "Ödeme sistemleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "endustriyel-gida": {
+            "sectorLabel": "Endüstriyel Gıda & Şef Çözümleri",
+            "videoTag": "Endüstriyel Gıda Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Endüstriyel gıda sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Endüstriyel Gıda & Şef Çözümleri Sektöründe Pazarlama konularında eğitimli",
+            "processDescription": "Endüstriyel Gıda & Şef Çözümleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "fintech": {
+            "sectorLabel": "FinTech",
+            "videoTag": "FinTech Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "FinTech sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "FinTech Sektöründe Pazarlama konularında eğitimli",
+            "processDescription": "FinTech sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "enerji": {
+            "sectorLabel": "Enerji",
+            "videoTag": "Enerji Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Enerji sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Enerji Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Enerji sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "ofis-tasarim": {
+            "sectorLabel": "Ofis & Kurumsal İç Tasarım",
+            "videoTag": "Ofis & Kurumsal İç Tasarım Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Ofis & kurumsal iç tasarım sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Ofis & Kurumsal İç Tasarım Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Ofis & Kurumsal İç Tasarım sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        },
+        "filo-kiralama": {
+            "sectorLabel": "Filo Kiralama",
+            "videoTag": "Filo Kiralama Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Filo kiralama sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Filo Kiralama Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Filo Kiralama sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+        }
     }
 }

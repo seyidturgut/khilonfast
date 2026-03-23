@@ -15,10 +15,11 @@ import {
     HiUserGroup
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
+import { useRouteLocale } from '../utils/locale'
 
 export default function ContentStrategy() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const { t } = useTranslation('common')
+    const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
 
     useEffect(() => {
@@ -124,20 +125,23 @@ export default function ContentStrategy() {
             packages: [
                 {
                     id: 'single-plan',
-                    name: 'İçerik Stratejisi Çözümü',
-                    price: '₺80.000',
-                    period: 'tek sefer*',
+                    productKey: 'service-content-strategy',
+                    name: 'İçerik Stratejisi Paketi',
+                    price: '₺80.000*',
+                    period: 'tek sefer',
                     description: 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
-                    isPopular: true,
-                    icon: <HiTrophy />,
-                    buttonText: 'SATIN AL',
+                    isPopular: false,
+                    buttonText: 'Satın Al',
+                    icon: <HiKey />,
                     features: [
-                        'Her ölçekten firma için profesyonel strateji',
-                        'İçerik üretim süreçlerine rehberlik',
-                        'Firma özelinde pazarlama hedeflerine ulaşma',
-                        'Üretimi optimize eden ve iletişimi güçlendiren çözüm',
-                        'SEO uyumlu içerik planlaması',
-                        'Uzun vadeli ve sürdürülebilir strateji belgesi'
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            <span style={{ fontWeight: 800, color: '#1a3a52', fontSize: '0.95rem' }}>Kimler İçin Uygun</span>
+                            <span style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>İşletmesi için profesyonel bir içerik stratejisi oluşturmak isteyen her ölçekten firmaya uygundur. Strateji belgesi, içerik üretim süreçlerinde rehberlik edecek ve firmanın içerik pazarlama hedeflerine ulaşmasına yardımcı olacaktır.</span>
+                        </div>,
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            <span style={{ fontWeight: 800, color: '#1a3a52', fontSize: '0.95rem' }}>Neden Tercih Edilmeli</span>
+                            <span style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>İçerik Stratejisi Paketi, içerik üretimini optimize etmek, hedef kitlesi ile etkili bir iletişim kurmak ve SEO uyumlu içerikler üreterek dijital görünürlüğü artırmak isteyen firmalar için mükemmel bir çözümdür. Doküman, firmanın uzun vadeli içerik stratejisini belirlemesine yardımcı olur ve sürdürülebilir içerik planlaması sağlar.</span>
+                        </div>
                     ]
                 }
             ]
@@ -167,31 +171,36 @@ export default function ContentStrategy() {
                     title: '360 Derece Bakış Açısı',
                     subtitle: 'Her Detayı Kapsayan khilonfast Yaklaşımı',
                     description: 'Khilon olarak pazarlama dünyasına geniş bir pencereden bakıyoruz. 360 derece bakış açısı, tek bir parçaya odaklanmak yerine tüm süreçleri kapsayan bir anlayış gerektiriyor. Bu kapsamlı yaklaşım, markaların ihtiyaçlarını derinlemesine anlayarak, tüm pazarlama kanallarını entegre bir strateji ile yönetmemize olanak tanıyor. khilon ile aldığınız en mikro hizmette dahi, size 360 derece bakış açısı ile o işi hedeflerinize, amacınıza, stratejinize uyumlu hale getiriyoruz.',
-                    icon: <HiGlobeAlt />
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
                     title: 'Büyüme Odaklı Stratejiler',
                     subtitle: 'Sektöre Özel Büyüme Planları',
                     description: 'Her sektörün kendine özgü dinamikleri bulunuyor ve Khilon, bu farklılıkları dikkate alarak büyüme stratejilerinizi geliştiriyor. Markanızın bulunduğu sektöre özel olarak hazırladığımız planlar, hedef kitlenizle daha etkin iletişim kurmanızı sağlıyoruz. Sürdürülebilir büyüme için pazardaki eğilimleri yakından takip eder ve sektörel farkındalık ile stratejilerinizi yönetiyoruz.',
-                    icon: <HiArrowTrendingUp />
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
                     title: 'Veri Odaklı Pazarlama',
                     subtitle: 'Daha Fazla Veri, Daha Fazla Başarı',
                     description: 'Khilon, veriyi sadece toplamakla kalmaz, aksiyona dönüştürülebilir içgörüler sunar. Tüketici davranışlarını analiz ederek, dönüşüm oranlarını optimize eden çözümler üretiriz. Bu şekilde, markanızın mevcut durumunu analiz etmenin ötesine geçerek, veriye dayalı tahminlerle geleceğe yönelik adımlar atmanızı sağlar. Müşteri segmentasyonu, kişiselleştirilmiş kampanyalar ve daha etkili hedeflemeler ile veriyi bir fırsata dönüştürmenize yardımcı oluyoruz.',
-                    icon: <HiChartPie />
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
                     title: 'İnovasyon ile Fark',
                     subtitle: 'Rakiplerden Bir Adım Önde Olun',
                     description: 'Pazarlama dünyasında kalabalığın içinde kaybolmamak için sürekli yenilikçi olmak gerekiyor. Khilon, ileri veri analitiği ve yapay zeka destekli araçları kullanarak müşterilerine yenilikçi çözümler sunar. Bu sayede, rakiplerinizden bir adım önde olmanızı sağlar, markanızı daima yeniliklerle destekliyoruz.',
-                    icon: <HiSparkles />
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
                     title: 'Stratejik İş Ortağı',
                     subtitle: 'Uzun Vadeli Başarı İçin Güvenilir Partneriniz',
                     description: 'Khilon sadece bir hizmet sağlayıcı değil, uzun vadeli başarılar için stratejik bir iş ortağıdır. İş hedeflerinizi tam olarak anlayarak, sadece kısa vadeli kampanyalar değil, uzun vadeli ve sürdürülebilir başarı stratejileri geliştiririz. Markanızın sürekli büyümesi ve başarıya ulaşması için güvenebileceğiniz bir iş ortağı olarak yanınızdayız.',
-                    icon: <HiUserGroup />
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
@@ -313,5 +322,5 @@ export default function ContentStrategy() {
         ]
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-strategy" />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-strategy" disableApiHeroTextOverride />
 }

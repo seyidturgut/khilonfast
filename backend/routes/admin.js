@@ -1,10 +1,17 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import fs from 'fs/promises';
+import path from 'path';
 import db from '../config/database.js';
+import { clearCache } from '../middleware/cache.js';
 import authMiddleware from '../middleware/auth.js';
 import adminMiddleware from '../middleware/admin.js';
 
+import { fileURLToPath } from 'url';
 const router = express.Router();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const SENSITIVE_SETTINGS = new Set([
     'smtp_pass',
@@ -161,6 +168,7 @@ router.post('/settings', async (req, res) => {
                 );
             }
             await connection.commit();
+            clearCache(); // Clear all cache when settings change
             res.json({ message: 'Settings updated successfully' });
         } catch (err) {
             await connection.rollback();
@@ -176,6 +184,148 @@ router.post('/settings', async (req, res) => {
 
 // --- PAGE MANAGEMENT (Basic) ---
 
+// GET /api/admin/pages - List pages
+router.get('/pages', async (req, res) => {
+    try {
+        const [pages] = await db.query('SELECT * FROM cms_pages ORDER BY updated_at DESC');
+        res.json(pages);
+    } catch (error) {
+        console.error('Get pages error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/pages/slug/:slug(*) - Get page details by slug
+router.get('/pages/slug/:slug(*)', async (req, res) => {
+    const slug = decodeURIComponent(req.params.slug || '');
+    try {
+        const [rows] = await db.query('SELECT * FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
+        if (!rows.length) return res.status(404).json({ error: 'Page not found' });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page by slug error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/pages/slug/:slug(*)/content - Get page content by slug
+router.get('/pages/slug/:slug(*)/content', async (req, res) => {
+    const slug = decodeURIComponent(req.params.slug || '');
+    try {
+        const [pages] = await db.query('SELECT id FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
+        if (!pages.length) return res.status(404).json({ error: 'Page not found' });
+        const pageId = pages[0].id;
+        const [rows] = await db.query(
+            'SELECT content_json, is_published FROM cms_page_contents WHERE page_id = ? ORDER BY id DESC LIMIT 1',
+            [pageId]
+        );
+        if (!rows.length) return res.json({ content_json: null, is_published: false });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page content by slug error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/pages/slug/:slug(*)/content - Upsert page content by slug
+router.put('/pages/slug/:slug(*)/content', async (req, res) => {
+    const slug = decodeURIComponent(req.params.slug || '');
+    const { title, content_json, is_published = true } = req.body;
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        const [pages] = await connection.query('SELECT id FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
+        let pageId;
+        if (pages.length) {
+            pageId = pages[0].id;
+            if (title) {
+                await connection.query('UPDATE cms_pages SET title = ? WHERE id = ?', [String(title), pageId]);
+            }
+        } else {
+            const [inserted] = await connection.query(
+                'INSERT INTO cms_pages (title, slug, meta_title, meta_description, is_active) VALUES (?, ?, ?, ?, 1)',
+                [String(title || slug), slug, '', '']
+            );
+            pageId = inserted.insertId;
+        }
+
+        await connection.query('DELETE FROM cms_page_contents WHERE page_id = ?', [pageId]);
+        await connection.query(
+            'INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)',
+            [pageId, JSON.stringify(content_json || {}), is_published ? 1 : 0]
+        );
+
+        await connection.commit();
+        clearCache(); // Clear all cache when page content changes
+        res.json({ message: 'Content updated', page_id: pageId });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Upsert page content by slug error:', error);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        connection.release();
+    }
+});
+
+// GET /api/admin/pages/:id - Get page details
+router.get('/pages/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await db.query('SELECT * FROM cms_pages WHERE id = ?', [id]);
+        if (!rows.length) return res.status(404).json({ error: 'Page not found' });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/admin/media/upload-base64 - Save base64 image under public/uploads/cms
+router.post('/media/upload-base64', async (req, res) => {
+    try {
+        const { dataUrl, filename } = req.body || {};
+        if (!dataUrl || typeof dataUrl !== 'string') {
+            return res.status(400).json({ error: 'Missing dataUrl' });
+        }
+
+        const m = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+        if (!m) return res.status(400).json({ error: 'Invalid image data' });
+
+        const mime = m[1].toLowerCase();
+        const base64 = m[2];
+        const extMap = {
+            'image/jpeg': 'jpg',
+            'image/jpg': 'jpg',
+            'image/png': 'png',
+            'image/webp': 'webp',
+            'image/gif': 'gif',
+            'image/avif': 'avif'
+        };
+        const ext = extMap[mime];
+        if (!ext) return res.status(400).json({ error: 'Unsupported image type' });
+
+        const safeBase = String(filename || 'cms-image')
+            .toLowerCase()
+            .replace(/[^a-z0-9-_]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 60) || 'cms-image';
+        const finalName = `${safeBase}-${Date.now()}.${ext}`;
+
+        const projectRoot = path.resolve(__dirname, '../../');
+        const uploadDir = path.join(projectRoot, 'public', 'uploads', 'cms');
+        await fs.mkdir(uploadDir, { recursive: true });
+
+        const filePath = path.join(uploadDir, finalName);
+        await fs.writeFile(filePath, Buffer.from(base64, 'base64'));
+
+        res.json({ path: `/uploads/cms/${finalName}` });
+    } catch (error) {
+        console.error('Upload base64 media error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // POST /api/admin/pages/create
 router.post('/pages', async (req, res) => {
     const { title, slug, meta_title, meta_description } = req.body;
@@ -184,9 +334,63 @@ router.post('/pages', async (req, res) => {
             'INSERT INTO cms_pages (title, slug, meta_title, meta_description) VALUES (?, ?, ?, ?)',
             [title, slug, meta_title, meta_description]
         );
+        clearCache();
         res.status(201).json({ id: result.insertId, message: 'Page created' });
     } catch (error) {
         console.error('Create page error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/pages/:id - Update page metadata
+router.put('/pages/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, slug, meta_title, meta_description, is_active } = req.body;
+    try {
+        await db.query(
+            `UPDATE cms_pages
+             SET title = ?, slug = ?, meta_title = ?, meta_description = ?, is_active = ?
+             WHERE id = ?`,
+            [title, slug, meta_title, meta_description, is_active ? 1 : 0, id]
+        );
+        clearCache();
+        res.json({ message: 'Page updated' });
+    } catch (error) {
+        console.error('Update page error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/pages/:id/content - Get latest page content
+router.get('/pages/:id/content', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await db.query(
+            'SELECT content_json, is_published FROM cms_page_contents WHERE page_id = ? ORDER BY id DESC LIMIT 1',
+            [id]
+        );
+        if (!rows.length) return res.json({ content_json: null, is_published: false });
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Get page content error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/pages/:id/content - Upsert page content
+router.put('/pages/:id/content', async (req, res) => {
+    const { id } = req.params;
+    const { content_json, is_published = true } = req.body;
+    try {
+        await db.query('DELETE FROM cms_page_contents WHERE page_id = ?', [id]);
+        await db.query(
+            'INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)',
+            [id, JSON.stringify(content_json || {}), is_published ? 1 : 0]
+        );
+        clearCache();
+        res.json({ message: 'Content updated' });
+    } catch (error) {
+        console.error('Update page content error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
@@ -206,10 +410,29 @@ router.get('/products', async (req, res) => {
 
 // POST /api/admin/products - Create new product
 router.post('/products', async (req, res) => {
-    const {
-        product_key, name, description, price, currency, category,
-        type = 'service', duration_days = null, access_content_url = null, features = null
-    } = req.body;
+    const data = req.body || {};
+    const product_key = String(data.product_key || '').trim();
+    const name = String(data.name || '').trim();
+    const description = String(data.description || '');
+    const price = Number(data.price || 0);
+    const currency = String(data.currency || 'TRY').trim().toUpperCase();
+    const category = String(data.category || 'hizmetler').trim();
+    const type = String(data.type || 'service').trim();
+    const duration_days = data.duration_days === '' || data.duration_days == null
+        ? null
+        : Number(data.duration_days);
+    const access_content_url = data.access_content_url || data.accessContentUrl || data.content_url || null;
+    const features = data.features ?? null;
+
+    if (!product_key || !name) {
+        return res.status(400).json({ error: 'Ürün key ve ürün adı zorunludur.' });
+    }
+    if (!Number.isFinite(price)) {
+        return res.status(400).json({ error: 'Geçerli bir fiyat girin.' });
+    }
+    if (duration_days !== null && !Number.isFinite(duration_days)) {
+        return res.status(400).json({ error: 'Geçerli bir süre (gün) girin.' });
+    }
 
     try {
         const [result] = await db.query(
@@ -218,6 +441,7 @@ router.post('/products', async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [product_key, name, description, price, currency, category, type, duration_days, access_content_url, features]
         );
+        clearCache();
         res.status(201).json({ id: result.insertId, message: 'Ürün başarıyla oluşturuldu.' });
     } catch (error) {
         console.error('Create product error:', error);
@@ -230,10 +454,33 @@ router.post('/products', async (req, res) => {
 
 // PUT /api/admin/products/:id - Update product
 router.put('/products/:id', async (req, res) => {
-    const {
-        name, description, price, currency, category, is_active,
-        type, duration_days, access_content_url, features
-    } = req.body;
+    const data = req.body || {};
+    const name = String(data.name || '').trim();
+    const description = String(data.description || '');
+    const price = Number(data.price || 0);
+    const currency = String(data.currency || 'TRY').trim().toUpperCase();
+    const category = String(data.category || 'hizmetler').trim();
+    const is_active = data.is_active ? 1 : 0;
+    const type = String(data.type || 'service').trim();
+    const duration_days = data.duration_days === '' || data.duration_days == null
+        ? null
+        : Number(data.duration_days);
+    const access_content_url = data.access_content_url || data.accessContentUrl || data.content_url || null;
+    const features = data.features ?? null;
+    const productId = Number(req.params.id);
+
+    if (!productId) {
+        return res.status(400).json({ error: 'Geçersiz ürün id.' });
+    }
+    if (!name) {
+        return res.status(400).json({ error: 'Ürün adı zorunludur.' });
+    }
+    if (!Number.isFinite(price)) {
+        return res.status(400).json({ error: 'Geçerli bir fiyat girin.' });
+    }
+    if (duration_days !== null && !Number.isFinite(duration_days)) {
+        return res.status(400).json({ error: 'Geçerli bir süre (gün) girin.' });
+    }
 
     try {
         await db.query(
@@ -241,12 +488,13 @@ router.put('/products/:id', async (req, res) => {
             name=?, description=?, price=?, currency=?, category=?, is_active=?,
             type=?, duration_days=?, access_content_url=?, features=?
             WHERE id=?`,
-            [name, description, price, currency, category, is_active, type, duration_days, access_content_url, features, req.params.id]
+            [name, description, price, currency, category, is_active, type, duration_days, access_content_url, features, productId]
         );
+        clearCache();
         res.json({ message: 'Ürün güncellendi.' });
     } catch (error) {
         console.error('Update product error:', error);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: 'Ürün güncellenemedi.' });
     }
 });
 
@@ -254,6 +502,7 @@ router.put('/products/:id', async (req, res) => {
 router.delete('/products/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM products WHERE id = ?', [req.params.id]);
+        clearCache();
         res.json({ message: 'Ürün silindi.' });
     } catch (error) {
         console.error('Delete product error:', error);
@@ -526,6 +775,246 @@ router.get('/users/:id/orders', async (req, res) => {
         res.json(result);
     } catch (error) {
         console.error('Admin get user orders error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ─── CONSULTANT ADMIN ROUTES ─────────────────────────────────────────────────
+
+// GET /api/admin/consultants
+router.get('/consultants', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM consultants ORDER BY id DESC');
+        res.json({ consultants: rows });
+    } catch (err) {
+        console.error('Admin get consultants error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/admin/consultants
+router.post('/consultants', authMiddleware, adminMiddleware, async (req, res) => {
+    const { slug, name, title, bio, photo_url, stars, review_count, sectors } = req.body;
+    if (!slug || !name) return res.status(400).json({ error: 'slug and name required' });
+    try {
+        const [result] = await db.query(
+            `INSERT INTO consultants (slug, name, title, bio, photo_url, stars, review_count, sectors, is_active)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+            [slug, name, title || null, bio || null, photo_url || null,
+             stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || [])]
+        );
+        clearCache();
+        res.json({ id: result.insertId });
+    } catch (err) {
+        console.error('Admin create consultant error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/consultants/:id
+router.put('/consultants/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { slug, name, title, bio, photo_url, stars, review_count, sectors, is_active } = req.body;
+    try {
+        await db.query(
+            `UPDATE consultants SET slug=?, name=?, title=?, bio=?, photo_url=?, stars=?, review_count=?, sectors=?, is_active=? WHERE id=?`,
+            [slug, name, title || null, bio || null, photo_url || null,
+             stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || []),
+              is_active !== undefined ? is_active : 1, req.params.id]
+        );
+        clearCache();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin update consultant error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /api/admin/consultants/:id (soft delete)
+router.delete('/consultants/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await db.query('UPDATE consultants SET is_active=0 WHERE id=?', [req.params.id]);
+        clearCache();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin delete consultant error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/consultants/:id/services
+router.get('/consultants/:id/services', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            'SELECT * FROM consultant_services WHERE consultant_id=? ORDER BY sort_order ASC',
+            [req.params.id]
+        );
+        res.json({ services: rows });
+    } catch (err) {
+        console.error('Admin get services error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/admin/consultants/:id/services
+router.post('/consultants/:id/services', authMiddleware, adminMiddleware, async (req, res) => {
+    const { category, parent_service_id, title, title_en, description, description_en,
+            scope_items, scope_items_en, duration_text, sessions_text, price, currency,
+            plus_vat, cta_text, cta_text_en, badge_text, sort_order } = req.body;
+    try {
+        const [result] = await db.query(
+            `INSERT INTO consultant_services
+             (consultant_id, category, parent_service_id, title, title_en, description, description_en,
+              scope_items, scope_items_en, duration_text, sessions_text, price, currency, plus_vat,
+              cta_text, cta_text_en, badge_text, sort_order)
+             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [req.params.id, category, parent_service_id || null, title, title_en || null,
+             description || null, description_en || null,
+             scope_items ? JSON.stringify(scope_items) : null,
+             scope_items_en ? JSON.stringify(scope_items_en) : null,
+             duration_text || null, sessions_text || null,
+             price ?? 0, currency || 'TRY', plus_vat ? 1 : 0,
+             cta_text || null, cta_text_en || null, badge_text || null, sort_order ?? 0]
+        );
+        clearCache();
+        res.json({ id: result.insertId });
+    } catch (err) {
+        console.error('Admin create service error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /api/admin/consultant-services/:id
+router.put('/consultant-services/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { title, title_en, description, description_en, scope_items, scope_items_en,
+            duration_text, sessions_text, price, currency, plus_vat,
+            cta_text, cta_text_en, badge_text, sort_order, is_active } = req.body;
+    try {
+        await db.query(
+            `UPDATE consultant_services SET title=?, title_en=?, description=?, description_en=?,
+             scope_items=?, scope_items_en=?, duration_text=?, sessions_text=?,
+             price=?, currency=?, plus_vat=?, cta_text=?, cta_text_en=?, badge_text=?,
+             sort_order=?, is_active=? WHERE id=?`,
+            [title, title_en || null, description || null, description_en || null,
+             scope_items ? JSON.stringify(scope_items) : null,
+             scope_items_en ? JSON.stringify(scope_items_en) : null,
+             duration_text || null, sessions_text || null,
+             price ?? 0, currency || 'TRY', plus_vat ? 1 : 0,
+             cta_text || null, cta_text_en || null, badge_text || null,
+             sort_order ?? 0, is_active !== undefined ? is_active : 1, req.params.id]
+        );
+        clearCache();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin update service error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /api/admin/consultant-services/:id
+router.delete('/consultant-services/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await db.query('DELETE FROM consultant_services WHERE id=?', [req.params.id]);
+        clearCache();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin delete service error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/consultants/:id/availability
+router.get('/consultants/:id/availability', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            'SELECT * FROM consultant_availability WHERE consultant_id=? ORDER BY available_date, start_time',
+            [req.params.id]
+        );
+        res.json({ slots: rows });
+    } catch (err) {
+        console.error('Admin get availability error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/admin/consultants/:id/availability
+router.post('/consultants/:id/availability', authMiddleware, adminMiddleware, async (req, res) => {
+    const { slots } = req.body; // array of { available_date, start_time, end_time, service_id }
+    const consultantId = req.params.id;
+    if (!slots || !slots.length) return res.status(400).json({ error: 'slots array required' });
+    try {
+        const values = slots.map(s => [consultantId, s.service_id || null, s.available_date, s.start_time, s.end_time]);
+        await db.query(
+            'INSERT INTO consultant_availability (consultant_id, service_id, available_date, start_time, end_time) VALUES ?',
+            [values]
+        );
+        res.json({ success: true, count: slots.length });
+    } catch (err) {
+        console.error('Admin create availability error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /api/admin/availability/:id
+router.delete('/availability/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await db.query('DELETE FROM consultant_availability WHERE id=?', [req.params.id]);
+        clearCache();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin delete availability error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PATCH /api/admin/availability/:id
+router.patch('/availability/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { status } = req.body;
+    try {
+        await db.query('UPDATE consultant_availability SET status=? WHERE id=?', [status || 'available', req.params.id]);
+        clearCache();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin update availability error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/admin/bookings — tüm rezervasyonlar
+router.get('/bookings', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const { status, consultant_id } = req.query;
+        let query = `SELECT cb.*, c.name as consultant_name, cs.title as service_title
+                     FROM consultant_bookings cb
+                     JOIN consultants c ON cb.consultant_id = c.id
+                     JOIN consultant_services cs ON cb.service_id = cs.id
+                     WHERE 1=1`;
+        const params = [];
+        if (status) { query += ' AND cb.status=?'; params.push(status); }
+        if (consultant_id) { query += ' AND cb.consultant_id=?'; params.push(consultant_id); }
+        query += ' ORDER BY cb.created_at DESC';
+        const [rows] = await db.query(query, params);
+        res.json({ bookings: rows });
+    } catch (err) {
+        console.error('Admin get bookings error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PATCH /api/admin/bookings/:id
+router.patch('/bookings/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { status, meeting_link, admin_notes } = req.body;
+    try {
+        const fields = [];
+        const params = [];
+        if (status) { fields.push('status=?'); params.push(status); }
+        if (meeting_link !== undefined) { fields.push('meeting_link=?'); params.push(meeting_link); }
+        if (admin_notes !== undefined) { fields.push('admin_notes=?'); params.push(admin_notes); }
+        if (!fields.length) return res.status(400).json({ error: 'Nothing to update' });
+        params.push(req.params.id);
+        await db.query(`UPDATE consultant_bookings SET ${fields.join(', ')} WHERE id=?`, params);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin update booking error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });

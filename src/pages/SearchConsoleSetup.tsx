@@ -13,10 +13,11 @@ import {
 } from 'react-icons/hi2'
 import Breadcrumbs from '../components/Breadcrumbs'
 import './SearchConsoleSetup.css'
+import { useRouteLocale } from '../utils/locale'
 
 export default function SearchConsoleSetup() {
-    const { t, i18n } = useTranslation('common')
-    const isEn = i18n.language.split('-')[0] === 'en'
+    const { t } = useTranslation('common')
+    const isEn = useRouteLocale() === 'en'
     const [path, setPath] = useState<'yes' | 'no' | null>(null)
 
     return (

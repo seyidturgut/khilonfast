@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
     HiChartBar,
@@ -10,18 +11,80 @@ import {
     HiMagnifyingGlass
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
+import { useCart } from '../context/CartContext'
+import { API_BASE_URL } from '../config/api'
 
 export default function B2BThreeSixtyMarketing() {
     const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const location = useLocation()
+    const { addToCart } = useCart()
+    const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
-    const langPrefix = currentLang === 'en' ? '/en' : ''
+    const langPrefix = isEn ? '/en' : ''
+    const API_BASE = API_BASE_URL
+    const [packageMap, setPackageMap] = useState<Record<string, any>>({})
+
+    useEffect(() => {
+        const activeLang = i18n.language.split('-')[0]
+        if (activeLang !== currentLang) {
+            void i18n.changeLanguage(currentLang)
+        }
+    }, [currentLang, i18n])
     const path = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
+
+    useEffect(() => {
+        const fetchPackages = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/products/key/service-b2b-360?lang=${currentLang}`)
+                if (!res.ok) return
+                const data = await res.json()
+                const packages = Array.isArray(data?.product?.packages) ? data.product.packages : []
+                const mapped: Record<string, any> = {}
+                for (const pkg of packages) {
+                    const key = String(pkg?.product_key || '')
+                    if (key.endsWith('-core')) mapped.core = pkg
+                    else if (key.endsWith('-growth')) mapped.growth = pkg
+                    else if (key.endsWith('-ultimate')) mapped.ultimate = pkg
+                }
+                setPackageMap(mapped)
+            } catch (err) {
+                console.error('Failed to load B2B package map:', err)
+            }
+        }
+        void fetchPackages()
+    }, [API_BASE, currentLang])
+
+    const fallbackIdmPath = useMemo(() => path('idm'), [currentLang, i18n.language])
+
+    const handlePackageBuy = (tier: 'core' | 'growth' | 'ultimate') => {
+        const pkg = packageMap[tier]
+        if (!pkg) {
+            window.location.href = fallbackIdmPath
+            return
+        }
+        const priceNum = Number(pkg.price)
+        addToCart({
+            id: String(pkg.product_key || `service-b2b-360-${tier}`),
+            product_id: 0,
+            product_key: String(pkg.product_key || `service-b2b-360-${tier}`),
+            name: String(pkg.name || (tier === 'core' ? 'Core' : tier === 'growth' ? 'Growth' : 'Ultimate')),
+            description: String(pkg.description || ''),
+            price: Number.isFinite(priceNum) ? priceNum : 0,
+            currency: String(pkg.currency || 'TRY')
+        })
+        window.dispatchEvent(new Event('khilon:open-cart'))
+    }
 
     const trConfig = {
         hero: {
-            title: 'B2B Firmalar İçin',
-            subtitle: 'Tek Noktadan Pazarlama Çözümleri',
+            title: (
+                <>
+                    B2B Firmalar İçin<br />
+                    Tek Noktadan Pazarlama Çözümleri
+                </>
+            ),
+            subtitle: '',
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
             buttonLink: '#pricing',
@@ -70,7 +133,7 @@ export default function B2BThreeSixtyMarketing() {
                                 <div className="sectoral-card">
                                     <h3>B2B Sektöründe Büyüme Odaklı Pazarlama</h3>
                                     <p>Büyüme odaklı pazarlama alanında Türkiye’nin sayılı uzmanlarından Bora Işık tarafından hazırlanan bu eğitim, sahada kanıtlanmış yöntemleri ve tekrar edilebilir stratejileri sunuyor.</p>
-                                    <Link to={path('trainingGrowth')} className="sectoral-btn">{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                    <Link to={path('trainingB2B')} className="sectoral-btn">{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +155,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -129,7 +192,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen KOBİ'ler.</li>
                                     </ul>
                                     <div style={{ textAlign: 'center' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('core')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
                                     </div>
                                 </div>
 
@@ -142,7 +205,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Dijitalde büyümeye yatırım yapan işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('growth')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
                                     </div>
                                 </div>
 
@@ -155,7 +218,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> <strong>Uygun:</strong> Rekabette öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('ultimate')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
                                     </div>
                                 </div>
                             </div>
@@ -218,39 +281,7 @@ export default function B2BThreeSixtyMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go To Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        Go-To-Market Stratejisi, yeni ürün veya hizmetinizi doğru kitleye, doğru kanallardan ve en verimli şekilde ulaştırmanızı sağlar. B2B sektörü gibi rekabetin yüksek olduğu pazarlarda, doğru GTM yaklaşımı büyümeyi hızlandırır ve fark yaratır.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>İçerik Stratejisi</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        B2B Sektöründe etkili bir içerik stratejisi nasıl oluşturulur? Doğru mesajla hedef kitlenize nasıl ulaşabileceğinizi öğrenin.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>B2B Sektöründe Büyüme Odaklı Pazarlama Danışmanlığı</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>
-                                        B2B sektöründe dijital dünyanın gücünü kullanarak satışlarınızı artırın. Sektöre özel stratejilerle rekabette öne çıkın, bu danışmanlık hizmetiyle tecrübeyi hızla firmanıza taşıyın.
-                                    </p>
-                                    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-                                        <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="B2B Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="B2B firmaları için" advisoryPath="/danismanlik/b2b-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="b2b" />
                 },
                 {
                     id: 'analysis',
@@ -333,8 +364,8 @@ export default function B2BThreeSixtyMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `For B2B Companies`,
-            subtitle: 'One-Stop Marketing Solutions',
+            title: `360° Marketing Management for B2B Companies`,
+            subtitle: '',
             description: `Scale B2B pipeline growth with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
             badgeText: 'B2B Companies Growth Engine'
@@ -393,7 +424,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={path('maestro')} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/urunler/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>
@@ -410,21 +441,21 @@ export default function B2BThreeSixtyMarketing() {
                                     <h3>Core</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Launch quickly with a lean execution setup focused on traction.</p>
                                     <div style={{ textAlign: 'center' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('core')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
                                     </div>
                                 </div>
                                 <div className='sectoral-card' style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
                                     <h3>Growth</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Scale demand generation and conversion performance with stronger orchestration.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('growth')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
                                     </div>
                                 </div>
                                 <div className='sectoral-card' style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
                                     <h3>Ultimate</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Operate a full-spectrum growth system with strategic and executional depth.</p>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
+                                        <button type="button" onClick={() => handlePackageBuy('ultimate')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
                                     </div>
                                 </div>
                             </div>
@@ -470,27 +501,7 @@ export default function B2BThreeSixtyMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: (
-                        <div className="sectoral-tabs-content">
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Go-to-Market Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Design your market entry and scaling roadmap with strategic precision.</p>
-                                    <Link to={path('gtm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Content Strategy</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Build messaging systems that increase trust, relevance, and conversion quality.</p>
-                                    <Link to={path('contentStrategy')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                                <div className="sectoral-card" style={{ textAlign: 'left' }}>
-                                    <h3>Growth Advisory</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Work directly with khilonfast for high-impact strategic and operational guidance.</p>
-                                    <Link to={path('contact')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for B2B Companies" gtmContext="For B2B companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-b2b" sectorSlug="b2b" />
                 },
                 {
                     id: 'analysis',
@@ -529,5 +540,5 @@ export default function B2BThreeSixtyMarketing() {
         } : {})
     }
 
-    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-360" />
+    return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-360" disableApiHeroTextOverride={true} disableApiPackages={true} />
 }

@@ -2,18 +2,19 @@ import { HiCheckCircle } from 'react-icons/hi2'
 import { useTranslation } from 'react-i18next'
 import './Features.css'
 
-export default function Features() {
+export default function Features({ tx }: { tx?: (key: string) => string }) {
     const { t } = useTranslation();
+    const text = (key: string) => tx?.(key) ?? t(key);
 
     return (
         <section id="features" className="features">
             <div className="container features-container">
                 <div className="features-content">
                     <h2 className="features-title">
-                        {t('features.title')}
+                        {text('features.title')}
                     </h2>
                     <p className="features-description">
-                        {t('features.description')}
+                        {text('features.description')}
                     </p>
 
                     <div className="features-list">
@@ -22,7 +23,7 @@ export default function Features() {
                                 <HiCheckCircle />
                             </div>
                             <div className="feature-text">
-                                <h3 className="feature-item-title">{t('features.list1')}</h3>
+                                <h3 className="feature-item-title">{text('features.list1')}</h3>
                             </div>
                         </div>
 
@@ -31,7 +32,7 @@ export default function Features() {
                                 <HiCheckCircle />
                             </div>
                             <div className="feature-text">
-                                <h3 className="feature-item-title">{t('features.list2')}</h3>
+                                <h3 className="feature-item-title">{text('features.list2')}</h3>
                             </div>
                         </div>
                     </div>

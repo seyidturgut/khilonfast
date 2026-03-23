@@ -6,6 +6,7 @@ import { HiVideoCamera, HiTicket, HiDocumentText } from 'react-icons/hi2';
 
 const CATEGORY_SECTIONS = [
     { key: 'egitimler', label: 'Eğitimler' },
+    { key: 'danismanlik', label: 'Danışmanlık' },
     { key: 'hizmetler', label: 'Hizmetler' },
     { key: 'sektorler', label: 'Sektörler' }
 ];
@@ -82,6 +83,7 @@ export default function ProductList() {
     const normalizeCategory = (category?: string) => {
         const normalized = (category || '').toLowerCase().trim();
         if (['egitimler', 'egitim', 'training', 'course', 'courses'].includes(normalized)) return 'egitimler';
+        if (['danismanlik', 'consulting', 'advisory', 'consultancy'].includes(normalized)) return 'danismanlik';
         if (['sektorler', 'sektorel', 'sector', 'sectoral', 'industry'].includes(normalized)) return 'sektorler';
         if (['hizmetler', 'hizmet', 'service', 'services'].includes(normalized)) return 'hizmetler';
         return 'hizmetler';

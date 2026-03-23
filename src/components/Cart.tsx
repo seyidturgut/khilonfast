@@ -3,6 +3,7 @@ import { HiX, HiShoppingCart, HiTrash } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './Cart.css';
+import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
 interface CartProps {
     isOpen: boolean;
@@ -10,16 +11,26 @@ interface CartProps {
 }
 
 export default function Cart({ isOpen, onClose }: CartProps) {
-    const { t, i18n } = useTranslation('common');
+    useTranslation('common');
     const { items, removeFromCart, getTotalPrice, clearCart } = useCart();
     const navigate = useNavigate();
-    const currentLang = i18n.language.split('-')[0];
-    const langPrefix = currentLang === 'en' ? '/en' : '';
-    const checkoutPath = `${langPrefix}/${t('slugs.checkout')}`.replace(/\/{2,}/g, '/');
+    const currentLang = useRouteLocale();
+    const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout');
 
     const handleCheckout = () => {
         onClose();
         navigate(checkoutPath);
+    };
+
+    const formatPrice = (amount: number, currency: string) => {
+        return (
+            <>
+                {Number(amount).toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                })} <span className="price-unit">{currency}</span>
+            </>
+        );
     };
 
     if (!isOpen) return null;
@@ -50,7 +61,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                     <div className="cart-item-info">
                                         <h3>{item.name}</h3>
                                         <p className="cart-item-price">
-                                            {item.price.toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')} {item.currency}
+                                            {formatPrice(item.price, item.currency)}
                                         </p>
                                     </div>
                                     <div className="cart-item-actions">
@@ -72,7 +83,9 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                     <div className="cart-footer">
                         <div className="cart-total">
                             <span>{currentLang === 'en' ? 'Total:' : 'Toplam:'}</span>
-                            <strong>{getTotalPrice().toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')} TL</strong>
+                            <strong>
+                                {formatPrice(getTotalPrice(), items.length > 0 && items.every(i => i.currency === items[0].currency) ? items[0].currency : 'TL')}
+                            </strong>
                         </div>
                         <button className="btn-checkout" onClick={handleCheckout}>
                             {currentLang === 'en' ? 'Proceed to Checkout' : 'Ödemeye Geç'}

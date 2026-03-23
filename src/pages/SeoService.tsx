@@ -2,24 +2,26 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
     HiMagnifyingGlass,
-    HiPresentationChartLine,
     HiGlobeAlt,
     HiSparkles,
     HiChartBar,
     HiTrophy,
     HiKey,
-    HiCommandLine,
-    HiCpuChip,
     HiArrowTrendingUp,
+    HiChartPie,
     HiUserGroup,
-    HiRocketLaunch
+    HiRocketLaunch,
+    HiShoppingCart,
+    HiCheckBadge,
+    HiClipboardDocumentList
 
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
+import { useRouteLocale } from '../utils/locale'
 
 export default function SeoService() {
-    const { t, i18n } = useTranslation('common')
-    const currentLang = i18n.language.split('-')[0]
+    const { t } = useTranslation('common')
+    const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
     const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
     const langPrefix = isEn ? '/en' : ''
@@ -35,7 +37,7 @@ export default function SeoService() {
             description: 'Doğru anahtar kelime stratejileri ve SEO optimizasyonuyla, khilonfast ile markanızın organik sıralamalarda yükselmesini sağlayın. Hedef kitlenizi büyütün.',
             buttonText: 'Hemen Başlayın',
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/seo-yonetimi/hero.png',
+            image: '/images/hizmetlerimiz/seo-yonetimi/TR_SEOservices.avif',
             hideBadge: true,
             badgeText: "Üst Sıralara Çıkın! Rekabetin Önüne Geçin!",
             badgeIcon: <HiGlobeAlt />,
@@ -57,70 +59,81 @@ export default function SeoService() {
             videoUrl: 'https://www.youtube.com/embed/qx17zxGfFzs'
         },
         approachSection: {
-            title: 'Teknik ve Stratejik SEO',
-            description: 'Sitenizin mevcut durumunu derinlemesine analiz ediyor, performans engellerini ortadan kaldırıyoruz.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'khilonfast Yaklaşımı' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'Her adımda sürdürülebilir büyüme odaklı çalışıyoruz.' }),
             items: [
                 {
-                    title: 'Teknik SEO Denetimi',
-                    subtitle: 'Altyapı İyileştirme',
-                    description: 'Site hızı, mobil uyumluluk ve tarama hatalarını gidererek Google dostu bir yapı kuruyoruz. Hızlı ve hatasız bir site, SEO başarısının temelidir.',
-                    icon: <HiCommandLine />
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360 Derece Bakış Açısı' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Bütünleşik Strateji' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'Her detayı bütünsel bir bakış açısıyla inceliyoruz.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
                 },
                 {
-                    title: 'İçerik Optimizasyonu',
-                    subtitle: 'Değer Odaklı İçerik',
-                    description: 'Sektörünüze özel anahtar kelime araştırmasıyla içeriklerinizi sıralamalarda yukarılara taşıyoruz. Kullanıcı niyetine uygun, kaliteli içerikler üretiyoruz.',
-                    icon: <HiSparkles />
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Büyüme Odaklı Stratejiler' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performans Yönetimi' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'Hedeflerinizi hızlıca yakalamak için büyümenizi ölçümlüyoruz.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
                 },
                 {
-                    title: 'Performans Takibi',
-                    subtitle: 'Veriye Dayalı Büyüme',
-                    description: 'Sıralama değişimlerini ve organik trafik artışını düzenli raporlarla izliyoruz. Her veriyi analize dökerek stratejimizi sürekli güncelliyoruz.',
-                    icon: <HiPresentationChartLine />
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Veri Odaklı Pazarlama' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Geniş İçgörüler' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'Kanıtlanmış verilerle risk almadan hareket ediyoruz.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
                 },
                 {
-                    title: 'Rakip Analizi',
-                    subtitle: 'Pazar Hakimiyeti',
-                    description: 'Rakiplerin güçlü ve zayıf yönlerini analiz ederek, onların önüne geçmenizi sağlayacak fırsatları belirliyoruz.',
-                    icon: <HiChartBar />
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'İnovasyon ile Fark' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Yenilikçi Teknikler' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Sektördeki en modern teknoloji araçlarıyla rakiplerden ayrışın.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
                 },
                 {
-                    title: 'Otorite İnşası',
-                    subtitle: 'Güvenilir Backlinkler',
-                    description: 'Markanızın dijital otoritesini artırmak için kaliteli ve doğal backlink stratejileri geliştiriyoruz.',
-                    icon: <HiTrophy />
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Stratejik İş Ortağı' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Uzun Vadeli Başarı' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'Müşterilerimizi kısa süreli değil uzun dönemli hedeflerle destekliyoruz.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
                 }
             ]
         },
         processSection: {
-            tag: '4 Adımda Zirve',
-            title: 'Nasıl Çalışır?',
-            description: 'Organik trafiğinizi artırmak için kanıtlanmış bir SEO yol haritası izliyoruz.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            tag: 'Nasıl Çalışır?',
+            title: 'Hizmet Süreci',
+            description: 'Organik trafiğinizi artırmak için izlediğimiz 5 adımlı yol haritası.',
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Adım 1: Kapsamlı Audit',
-                    description: 'Web sitenizin teknik, içerik ve otorite durumunu detaylıca tarar, eksikleri raporlarız.',
-                    icon: <HiMagnifyingGlass />
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Adım 2: Strateji Planı',
-                    description: 'Hedef kelimeleri belirler, rakipleri analiz eder ve 6 aylık büyüme planını oluştururuz.',
-                    icon: <HiPresentationChartLine />
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Adım 3: Optimizasyon',
-                    description: 'Teknik hataları giderir, içerikleri düzenler ve site içi optimizasyonları tamamlarız.',
-                    icon: <HiCpuChip />
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Adım 4: Otorite & Rapor',
-                    description: 'Backlink çalışmalarıyla gücünüzü artırır, düzenli raporlarla gelişimi sunarız.',
-                    icon: <HiArrowTrendingUp />
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    stepNumber: 5,
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    icon: <HiCheckBadge />
                 }
             ]
         },
@@ -314,26 +327,82 @@ export default function SeoService() {
             videoUrl: 'https://www.youtube.com/embed/qx17zxGfFzs'
         },
         approachSection: {
-            title: 'Technical and Strategic SEO',
-            description: 'We remove growth blockers and build a measurable SEO operating system.',
+            title: t('serviceGTM.approach.title', { defaultValue: 'The khilonfast Approach' }),
+            description: t('serviceGTM.approach.description', { defaultValue: 'We focus on sustainable growth at every step.' }),
             items: [
-                { title: 'Technical SEO Audit', subtitle: 'Infrastructure Optimization', description: 'Improve crawlability, speed, mobile stability, and index health for stronger ranking foundations.', icon: <HiCommandLine /> },
-                { title: 'Content Optimization', subtitle: 'Value-Led Content', description: 'Build intent-matched content clusters with strategic keyword mapping and editorial depth.', icon: <HiSparkles /> },
-                { title: 'Performance Tracking', subtitle: 'Data-Driven Growth', description: 'Track ranking movement and organic demand with actionable reporting and continuous optimization.', icon: <HiPresentationChartLine /> },
-                { title: 'Competitive Analysis', subtitle: 'Market Positioning', description: 'Identify competitor gaps and opportunities to improve authority, visibility, and share of search.', icon: <HiChartBar /> },
-                { title: 'Authority Building', subtitle: 'Trust Signals', description: 'Strengthen domain authority through quality link acquisition and topical relevance strategy.', icon: <HiTrophy /> }
+                {
+                    title: t('serviceGTM.approach.360.title', { defaultValue: '360-Degree Perspective' }),
+                    subtitle: t('serviceGTM.approach.360.subtitle', { defaultValue: 'Integrated Strategy' }),
+                    description: t('serviceGTM.approach.360.desc', { defaultValue: 'We analyze every detail with a holistic perspective.' }),
+                    icon: <HiGlobeAlt />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/Bakis-Acisi.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.growth.title', { defaultValue: 'Growth-Driven Strategies' }),
+                    subtitle: t('serviceGTM.approach.growth.subtitle', { defaultValue: 'Performance Management' }),
+                    description: t('serviceGTM.approach.growth.desc', { defaultValue: 'We measure your growth to reach your goals quickly.' }),
+                    icon: <HiArrowTrendingUp />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/buyume-dakli.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.data.title', { defaultValue: 'Data-Driven Marketing' }),
+                    subtitle: t('serviceGTM.approach.data.subtitle', { defaultValue: 'Broad Insights' }),
+                    description: t('serviceGTM.approach.data.desc', { defaultValue: 'We move without risk using proven data.' }),
+                    icon: <HiChartPie />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/veri-odakli.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.innovation.title', { defaultValue: 'Making a Difference with Innovation' }),
+                    subtitle: t('serviceGTM.approach.innovation.subtitle', { defaultValue: 'Innovative Techniques' }),
+                    description: t('serviceGTM.approach.innovation.desc', { defaultValue: 'Stand out from competitors with the most modern tech tools in the industry.' }),
+                    icon: <HiSparkles />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/inovasyon-fark.avif'
+                },
+                {
+                    title: t('serviceGTM.approach.partner.title', { defaultValue: 'Strategic Partner' }),
+                    subtitle: t('serviceGTM.approach.partner.subtitle', { defaultValue: 'Long-Term Success' }),
+                    description: t('serviceGTM.approach.partner.desc', { defaultValue: 'We support our clients with long-term goals, not short-term ones.' }),
+                    icon: <HiUserGroup />,
+                    image: '/images/hizmetlerimiz/go-to-market-stratejisi/is-ortagi.avif'
+                }
             ]
         },
         processSection: {
-            tag: '4-Step SEO Framework',
-            title: 'How It Works?',
-            description: 'A practical SEO system designed for compounding organic performance.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            tag: 'Nasıl Çalışır?',
+            title: 'Hizmet Süreci',
+            description: 'Organik trafiğinizi artırmak için izlediğimiz 5 adımlı yol haritası.',
+            videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
-                { stepNumber: 1, title: 'Step 1: Audit', description: 'Technical, content, and authority signals are analyzed across your domain.', icon: <HiMagnifyingGlass /> },
-                { stepNumber: 2, title: 'Step 2: Strategy', description: 'Keyword opportunities, competitor insights, and execution priorities are mapped.', icon: <HiPresentationChartLine /> },
-                { stepNumber: 3, title: 'Step 3: Optimization', description: 'On-page and technical improvements are deployed with quality control.', icon: <HiCpuChip /> },
-                { stepNumber: 4, title: 'Step 4: Authority & Reporting', description: 'We scale authority and provide structured progress reporting.', icon: <HiArrowTrendingUp /> }
+                {
+                    stepNumber: 1,
+                    title: 'Satın Al',
+                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    icon: <HiShoppingCart />
+                },
+                {
+                    stepNumber: 2,
+                    title: 'Yetkilendir',
+                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    icon: <HiKey />
+                },
+                {
+                    stepNumber: 3,
+                    title: 'Brief Ver',
+                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    icon: <HiClipboardDocumentList />
+                },
+                {
+                    stepNumber: 4,
+                    title: 'Analiz',
+                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    icon: <HiMagnifyingGlass />
+                },
+                {
+                    stepNumber: 5,
+                    title: 'Onay',
+                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    icon: <HiCheckBadge />
+                }
             ]
         },
         pricingSection: {
@@ -380,5 +449,5 @@ export default function SeoService() {
         }
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-seo" />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-seo" disableApiHeroTextOverride={true} />
 }
