@@ -237,7 +237,7 @@ export default function ManufacturingMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Üretim Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="üretim firmaları için" advisoryPath="/danismanlik/uretim-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Üretim Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="üretim firmaları için" advisoryPath="/danismanlik/uretim-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="uretim" />
                 },
                 {
                     id: 'analysis',
@@ -436,7 +436,7 @@ export default function ManufacturingMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Manufacturing Companies" gtmContext="For manufacturing companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-manufacturing" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Manufacturing Companies" gtmContext="For manufacturing companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-manufacturing" sectorSlug="uretim" />
                 },
                 {
                     id: 'analysis',

@@ -22,6 +22,17 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         navigate(checkoutPath);
     };
 
+    const formatPrice = (amount: number, currency: string) => {
+        return (
+            <>
+                {Number(amount).toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                })} <span className="price-unit">{currency}</span>
+            </>
+        );
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -50,7 +61,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                     <div className="cart-item-info">
                                         <h3>{item.name}</h3>
                                         <p className="cart-item-price">
-                                            {item.price.toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')} {item.currency}
+                                            {formatPrice(item.price, item.currency)}
                                         </p>
                                     </div>
                                     <div className="cart-item-actions">
@@ -72,7 +83,9 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                     <div className="cart-footer">
                         <div className="cart-total">
                             <span>{currentLang === 'en' ? 'Total:' : 'Toplam:'}</span>
-                            <strong>{getTotalPrice().toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')} TL</strong>
+                            <strong>
+                                {formatPrice(getTotalPrice(), items.length > 0 && items.every(i => i.currency === items[0].currency) ? items[0].currency : 'TL')}
+                            </strong>
                         </div>
                         <button className="btn-checkout" onClick={handleCheckout}>
                             {currentLang === 'en' ? 'Proceed to Checkout' : 'Ödemeye Geç'}

@@ -237,7 +237,7 @@ export default function FleetRentalMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Filo Kiralama Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="filo kiralama firmaları için" advisoryPath="/danismanlik/filo-kiralama-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Filo Kiralama Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="filo kiralama firmaları için" advisoryPath="/danismanlik/filo-kiralama-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="filo-kiralama" />
                 },
                 {
                     id: 'analysis',
@@ -436,7 +436,7 @@ export default function FleetRentalMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Fleet Rental Companies" gtmContext="For fleet rental companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-fleet-rental" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Fleet Rental Companies" gtmContext="For fleet rental companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-fleet-rental" sectorSlug="filo-kiralama" />
                 },
                 {
                     id: 'analysis',

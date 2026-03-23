@@ -898,7 +898,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 name: (pkg as any).fullName || pkg.name, // Use full name if available
                 description: pkg.description,
                 price: priceNum,
-                currency: pkg.price.includes('$') ? 'USD' : 'TRY'
+                currency: (pkg.price.includes('$') || pkg.price.toUpperCase().includes('USD')) ? 'USD' : 'TRY'
             });
 
             // Auto-open cart after adding
@@ -1098,7 +1098,12 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         <div className="pkg-icon">{displayedHeroPricePackage.icon}</div>
                                         <h3 className="pkg-name">{displayedHeroPricePackage.name}</h3>
                                         <div className="pkg-price-wrap">
-                                            <span className="pkg-price">{displayedHeroPricePackage.price}</span>
+                                            {(() => {
+                                                const parts = (displayedHeroPricePackage.price || '').split(' ');
+                                                return parts.length === 2
+                                                    ? <><span className="pkg-price">{parts[0]}</span><span className="pkg-period">{parts[1]}</span></>
+                                                    : <span className="pkg-price">{displayedHeroPricePackage.price}</span>;
+                                            })()}
                                             {displayedHeroPricePackage.period ? (
                                                 <span className="pkg-period">/{displayedHeroPricePackage.period}</span>
                                             ) : null}

@@ -237,7 +237,7 @@ export default function InteriorDesignMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Ofis ve Kurumsal İç Mimarlık Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="ofis ve kurumsal iç mimarlık firmaları için" advisoryPath="/danismanlik/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Ofis ve Kurumsal İç Mimarlık Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="ofis ve kurumsal iç mimarlık firmaları için" advisoryPath="/danismanlik/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="ic-tasarim" />
                 },
                 {
                     id: 'analysis',
@@ -436,7 +436,7 @@ export default function InteriorDesignMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Office & Corporate Interior Design Companies" gtmContext="For office and corporate interior design companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-office-and-corporate-interior-design" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Office & Corporate Interior Design Companies" gtmContext="For office and corporate interior design companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-office-and-corporate-interior-design" sectorSlug="ic-tasarim" />
                 },
                 {
                     id: 'analysis',

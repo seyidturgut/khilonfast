@@ -5,13 +5,15 @@ interface StrategyAdvisoryTabContentProps {
     advisoryTitle: string
     gtmContext: string
     advisoryPath?: string
+    sectorSlug?: string
 }
 
 export default function StrategyAdvisoryTabContent({
     isEn,
     advisoryTitle,
     gtmContext,
-    advisoryPath
+    advisoryPath,
+    sectorSlug
 }: StrategyAdvisoryTabContentProps) {
     const gtmTitle = isEn ? 'Go to market strategy' : 'Go To Market Stratejisi'
     const buyNowLabel = isEn ? 'Buy Now' : 'Satın Al'
@@ -26,6 +28,9 @@ export default function StrategyAdvisoryTabContent({
         ? 'Strengthen your growth strategy, reach the right audience more effectively, manage marketing investments more efficiently, and clarify your next growth opportunities.'
         : 'Büyüme odaklı pazarlama danışmanlığı ile hedef kitlenize daha etkili ulaşın, pazarlama yatırımlarınızı daha verimli yönetin ve yeni büyüme fırsatlarını netleştirin.'
 
+    const customPath = sectorSlug
+        ? (isEn ? `/en/consultants?sektor=${sectorSlug}` : `/danismanlar?sektor=${sectorSlug}`)
+        : (isEn ? '/en/consultants' : '/danismanlar')
     const customTitle = isEn ? 'Custom Advisory' : 'Size Özel Danışmanlık'
     const customDescription = isEn
         ? 'Get advisory support shaped around your company goals, growth priorities, and current market realities.'
@@ -51,7 +56,7 @@ export default function StrategyAdvisoryTabContent({
                 <div className="sectoral-card" style={{ textAlign: 'center' }}>
                     <h3>{customTitle}</h3>
                     <p style={{ fontSize: '0.95rem', lineHeight: 1.75 }}>{customDescription}</p>
-                    <Link to="#" className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>
+                    <Link to={customPath} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>
                         {learnMoreLabel}
                     </Link>
                 </div>

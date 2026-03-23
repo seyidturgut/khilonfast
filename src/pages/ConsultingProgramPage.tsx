@@ -106,7 +106,7 @@ export default function ConsultingProgramPage() {
     const [cmsSection, setCmsSection] = useState<'hero' | 'video' | 'features' | 'faqs'>('hero');
     const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
     const [activeFaqIndex, setActiveFaqIndex] = useState(0);
-    const [cmsSaving, setCmsSaving] = useState(false);
+    const [cmsSaving] = useState(false);
     const [cmsLoading, setCmsLoading] = useState(false);
     const [cmsError, setCmsError] = useState('');
     const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
@@ -229,51 +229,11 @@ export default function ConsultingProgramPage() {
     const isFleetRental = consulting.productKey === 'consulting-filo-kiralama-sektorunde-buyume';
     const isIndustrialFood = consulting.productKey === 'consulting-endustriyel-gida-sektorunde-buyume';
 
+    /*
     const defaultFeatures = isEn
-        ? [
-            {
-                title: 'Audience Architecture and Segmentation',
-                description: 'Define decision-maker and influencer personas precisely to build channel-fit messaging.',
-                icon: <HiUserGroup />
-            },
-            {
-                title: 'Value Proposition and Message Design',
-                description: 'Craft differentiated value narratives that turn attention into commercial intent.',
-                icon: <HiRocketLaunch />
-            },
-            {
-                title: 'Sales Funnel Blueprint',
-                description: 'Design stage-specific actions for awareness, consideration, and conversion.',
-                icon: <HiFunnel />
-            },
-            {
-                title: 'Measurement and Optimization System',
-                description: 'Use KPI-driven iteration loops to sustain predictable, compounding growth.',
-                icon: <HiChartBar />
-            }
-        ]
-        : [
-            {
-                title: 'Hedef Kitle ve Segmentasyon',
-                description: 'Karar verici ve etkileyici rolleri doğru analiz ederek kanal planı oluşturma.',
-                icon: <HiUserGroup />
-            },
-            {
-                title: 'Değer Önerisi ve Mesaj Kurgusu',
-                description: 'Fark yaratan teklif metni ve iletişim çerçevesi geliştirme.',
-                icon: <HiRocketLaunch />
-            },
-            {
-                title: 'Satış Hunisi Tasarımı',
-                description: 'Awareness, consideration ve conversion aşamaları için aksiyon planı.',
-                icon: <HiFunnel />
-            },
-            {
-                title: 'Ölçümleme ve Optimizasyon',
-                description: 'Performans metrikleriyle düzenli iyileştirme ve sürdürülebilir büyüme.',
-                icon: <HiChartBar />
-            }
-        ];
+        ? [ ... ]
+        : [ ... ];
+    */
 
     const advancedFeatures = isEn
         ? [
@@ -448,8 +408,8 @@ export default function ConsultingProgramPage() {
                     price: '5.000 USD',
                     period: isEn ? 'one-time' : 'tek seferlik',
                     description: isEn
-                        ? 'Includes 10+1 on-site consulting sessions, practical frameworks, and an execution playbook — delivered at your premises.'
-                        : '10+1 yüz yüze danışmanlık seansı, pratik şablonlar ve uygulama rehberi — şirketinizde gerçekleştirilir.',
+                        ? 'Consulting · Face-to-face, At Your Company'
+                        : 'Danışmanlık · Yüz yüze, Şirketinizde',
                     isPopular: true,
                     icon: <HiBriefcase />,
                     features: isEn

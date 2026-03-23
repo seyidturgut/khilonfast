@@ -193,6 +193,12 @@
     color: var(--checkout-price);
 }
 
+.price-unit {
+    font-size: 0.75em;
+    font-weight: 500;
+    margin-left: 2px;
+}
+
 .summary-total {
     border-top: 2px solid #e5e7eb;
     margin-top: 1rem;

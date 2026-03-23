@@ -9,6 +9,8 @@
     "check:i18n": "node scripts/check-locale-parity.mjs",
     "seo:generate": "node scripts/generate-seo-assets.mjs",
     "build": "npm run check:i18n && node scripts/generate-seo-assets.mjs && tsc -b && vite build",
+    "build:railway": "tsc -b && vite build",
+    "start": "node backend/server.js",
     "preview": "vite preview",
     "import:legacy": "node scripts/import-khilon-legacy.mjs"
   },
@@ -17,6 +19,7 @@
     "axios": "^1.13.4",
     "i18next": "^25.8.13",
     "i18next-browser-languagedetector": "^8.2.1",
+    "mysql2": "^3.20.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^16.5.4",

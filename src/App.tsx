@@ -47,6 +47,8 @@ import Trainings from './pages/Trainings'
 import TrainingProgramPage from './pages/TrainingProgramPage'
 import Consulting from './pages/Consulting'
 import ConsultingProgramPage from './pages/ConsultingProgramPage'
+import Consultants from './pages/Consultants'
+import ConsultantDetail from './pages/ConsultantDetail'
 import LegacyWordpressPage from './pages/LegacyWordpressPage'
 import ProductSlugResolver from './pages/ProductSlugResolver'
 import { trainingPrograms } from './data/trainingPrograms'
@@ -66,6 +68,9 @@ import UsersPage from './pages/admin/Users'
 import PagesList from './pages/admin/Pages'
 import PageBuilder from './pages/admin/PageBuilder'
 import TrainingContentEditor from './pages/admin/TrainingContentEditor'
+import ConsultantList from './pages/admin/ConsultantList'
+import ConsultantEditor from './pages/admin/ConsultantEditor'
+import BookingList from './pages/admin/BookingList'
 
 const slugsTr = trCommon.slugs as Record<string, string>
 const slugsEn = enCommon.slugs as Record<string, string>
@@ -151,6 +156,7 @@ function MainContent() {
         '/login',
         '/register',
         '/checkout',
+        '/odeme',
         '/payment-success',
         '/payment-callback',
         '/dashboard',
@@ -159,10 +165,31 @@ function MainContent() {
         '/admin/products',
         '/admin/products/new',
         '/admin/products/edit/:id',
+        '/admin/pages',
+        '/admin/pages/new',
+        '/admin/pages/edit/:id',
+        '/admin/training-pages/*',
         '/admin/users',
+        '/admin/consultants',
+        '/admin/consultants/new',
+        '/admin/consultants/:id',
+        '/admin/bookings',
+        '/danismanlar',
+        '/danismanlar/:slug',
+        '/consultants',
+        '/consultants/:slug',
+        `/${slugsTr.consulting}`,
+        `/${slugsTr.consulting}/:id`,
+        `/${slugsEn.consulting}`,
+        `/${slugsEn.consulting}/:id`,
+        `/${slugsTr.trainings}`,
+        `/${slugsTr.trainings}/:id`,
+        `/${slugsEn.trainings}`,
+        `/${slugsEn.trainings}/:id`,
         ...slugValuesTr.map((slug) => `/${slug}`),
         ...slugValuesEn.map((slug) => `/${slug}`),
         ...trainingPrograms.map((program) => program.path),
+        ...consultingPrograms.map((program) => program.path),
         ...productPrograms.map((product) => product.path)
     ];
     const isKnownRoute = knownRoutePatterns.some((pattern) =>
@@ -200,6 +227,8 @@ function MainContent() {
                         <Route path={`${slugsEn.trainings}/:id`} element={<TrainingProgramPage />} />
                         <Route path={slugsEn.consulting} element={<Consulting />} />
                         <Route path={`${slugsEn.consulting}/:id`} element={<ConsultingProgramPage />} />
+                        <Route path="consultants" element={<Consultants />} />
+                        <Route path="consultants/:slug" element={<ConsultantDetail />} />
                         <Route path={slugsEn.gtm} element={<GoToMarket />} />
                         <Route path={slugsEn.contentStrategy} element={<ContentStrategy />} />
                         <Route path={slugsEn.idm} element={<IntegratedDigitalMarketing />} />
@@ -238,6 +267,8 @@ function MainContent() {
                         <Route path="egitimler/:id" element={<TrainingProgramPage />} />
                         <Route path="danismanlik" element={<Consulting />} />
                         <Route path="danismanlik/:id" element={<ConsultingProgramPage />} />
+                        <Route path="danismanlar" element={<Consultants />} />
+                        <Route path="danismanlar/:slug" element={<ConsultantDetail />} />
                         <Route path="hizmetlerimiz/go-to-market-stratejisi" element={<GoToMarket />} />
                         <Route path="hizmetlerimiz/icerik-stratejisi" element={<ContentStrategy />} />
                         <Route path="hizmetlerimiz/butunlesik-dijital-pazarlama" element={<IntegratedDigitalMarketing />} />
@@ -348,6 +379,8 @@ function MainContent() {
                     {consultingPrograms.map((program) => (
                         <Route key={program.path} path={program.path} element={<ConsultingProgramPage />} />
                     ))}
+                    <Route path="/danismanlar" element={<Consultants />} />
+                    <Route path="/danismanlar/:slug" element={<ConsultantDetail />} />
 
                     {/* Auth & Cart Routes */}
                     <Route path={`/${slugsTr.login}`} element={<Login />} />
@@ -373,6 +406,10 @@ function MainContent() {
                     <Route path="/admin/pages/edit/:id" element={<RequireAdmin><PageBuilder /></RequireAdmin>} />
                     <Route path="/admin/training-pages/*" element={<RequireAdmin><TrainingContentEditor /></RequireAdmin>} />
                     <Route path="/admin/users" element={<RequireAdmin><UsersPage /></RequireAdmin>} />
+                    <Route path="/admin/consultants" element={<RequireAdmin><ConsultantList /></RequireAdmin>} />
+                    <Route path="/admin/consultants/new" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
+                    <Route path="/admin/consultants/:id" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
+                    <Route path="/admin/bookings" element={<RequireAdmin><BookingList /></RequireAdmin>} />
                     <Route path="*" element={<LegacyWordpressPage />} />
                 </Routes>
             </main>

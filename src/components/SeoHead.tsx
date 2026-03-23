@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import trCommon from '../locales/tr/common.json'
 import enCommon from '../locales/en/common.json'
 import { setupFlows } from '../data/setupFlows'
+import { consultingPrograms } from '../data/consultingPrograms'
 
 type LocaleValue = {
     tr: string
@@ -102,6 +103,48 @@ const pageEntries: SeoEntry[] = [
         section: 'company'
     },
     {
+        key: 'checkout',
+        tr: `/${trSlugs.checkout}`,
+        en: `/en/${enSlugs.checkout}`,
+        title: {
+            tr: 'Checkout | khilonfast',
+            en: 'Checkout | khilonfast'
+        },
+        description: {
+            tr: 'Siparis ve odeme bilgilerinizi tamamlayarak kaydinizi bitirin.',
+            en: 'Complete your order and payment details to finish your enrollment.'
+        },
+        kind: 'website' as const
+    },
+    {
+        key: 'paymentSuccess',
+        tr: `/${trSlugs.paymentSuccess}`,
+        en: `/en/${enSlugs.paymentSuccess}`,
+        title: {
+            tr: 'Odeme Basarili | khilonfast',
+            en: 'Payment Successful | khilonfast'
+        },
+        description: {
+            tr: 'Odemeniz basariyla alindi ve kaydiniz tamamlandi.',
+            en: 'Your payment has been received successfully and your registration is complete.'
+        },
+        kind: 'website' as const
+    },
+    {
+        key: 'paymentCallback',
+        tr: `/${trSlugs.paymentCallback}`,
+        en: `/en/${enSlugs.paymentCallback}`,
+        title: {
+            tr: 'Odeme Durumu | khilonfast',
+            en: 'Payment Status | khilonfast'
+        },
+        description: {
+            tr: 'Odeme isleminizin durumu kontrol ediliyor.',
+            en: 'Your payment transaction status is being checked.'
+        },
+        kind: 'website' as const
+    },
+    {
         key: 'howItWorks',
         tr: `/${trSlugs.howItWorks}`,
         en: `/en/${enSlugs.howItWorks}`,
@@ -130,6 +173,35 @@ const pageEntries: SeoEntry[] = [
         },
         kind: 'collection' as const,
         section: 'trainings'
+    },
+    {
+        key: 'consulting',
+        tr: `/${trSlugs.consulting}`,
+        en: `/en/${enSlugs.consulting}`,
+        title: {
+            tr: 'Danışmanlık Hizmetleri | khilonfast',
+            en: 'Consulting Services | khilonfast'
+        },
+        description: {
+            tr: 'Sektörünüze özel, uygulamalı ve sonuç odaklı danışmanlık programları ile markanızı büyütün.',
+            en: 'Grow your brand with industry-specific, hands-on, and results-oriented consulting programs.'
+        },
+        kind: 'collection' as const,
+        section: 'trainings' // Grouped with trainings for breadcrumbs
+    },
+    {
+        key: 'consultants',
+        tr: '/danismanlar',
+        en: '/en/consultants',
+        title: {
+            tr: 'Danışmanlarımız | khilonfast',
+            en: 'Our Consultants | khilonfast'
+        },
+        description: {
+            tr: 'Uzman danışmanlarımızla tanışın ve işinizi büyütmek için profesyonel destek alın.',
+            en: 'Meet our expert consultants and get professional support to grow your business.'
+        },
+        kind: 'collection' as const
     },
     {
         key: 'gtm',
@@ -345,6 +417,21 @@ const pageEntries: SeoEntry[] = [
         },
         kind: 'howto' as const,
         section: 'flows' as const
+    })),
+    ...consultingPrograms.map((program) => ({
+        key: program.path,
+        tr: program.path,
+        en: program.path.replace(/^\//, '/en/'),
+        title: composeTitle({
+            tr: program.title,
+            en: program.title
+        }),
+        description: {
+            tr: program.summary,
+            en: program.summary
+        },
+        kind: 'service' as const,
+        section: 'trainings' as const
     }))
 ]
 
@@ -744,11 +831,17 @@ export default function SeoHead() {
         const isDynamicResolverPath = dynamicResolverPrefixes.some(
             (prefix) => normalizedPath.startsWith(prefix) && normalizedPath.split('/').length > prefix.split('/').length
         )
+        const isConsultantDetail = resolvedPath.startsWith('/danismanlar/') || resolvedPath.startsWith('/en/consultants/')
+        const isAdmin = resolvedPath.startsWith('/admin')
         const title = matchedEntry
             ? matchedEntry.title[isEnglish ? 'en' : 'tr']
-            : isEnglish
-                ? 'Page Not Found | khilonfast'
-                : 'Sayfa Bulunamadı | khilonfast'
+            : isAdmin
+                ? 'Admin Panel | khilonfast'
+                : isConsultantDetail
+                    ? isEnglish ? 'Consultant Profile | khilonfast' : 'Danışman Profili | khilonfast'
+                    : isEnglish
+                        ? 'Page Not Found | khilonfast'
+                        : 'Sayfa Bulunamadı | khilonfast'
         const description = matchedEntry
             ? matchedEntry.description[isEnglish ? 'en' : 'tr']
             : isEnglish

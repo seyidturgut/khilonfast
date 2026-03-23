@@ -238,7 +238,7 @@ export default function FintechMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="FinTech Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="FinTech firmaları için" advisoryPath="/danismanlik/fintech-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="FinTech Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="FinTech firmaları için" advisoryPath="/danismanlik/fintech-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="fintech" />
                 },
                 {
                     id: 'analysis',
@@ -437,7 +437,7 @@ export default function FintechMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for FinTech Companies" gtmContext="For FinTech companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-fintech" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for FinTech Companies" gtmContext="For FinTech companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-fintech" sectorSlug="fintech" />
                 },
                 {
                     id: 'analysis',

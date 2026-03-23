@@ -237,7 +237,7 @@ export default function EnergyMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Enerji Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="enerji firmaları için" advisoryPath="/danismanlik/enerji-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Enerji Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="enerji firmaları için" advisoryPath="/danismanlik/enerji-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="enerji" />
                 },
                 {
                     id: 'analysis',
@@ -436,7 +436,7 @@ export default function EnergyMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Energy Companies" gtmContext="For energy companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-energy" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Energy Companies" gtmContext="For energy companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-energy" sectorSlug="enerji" />
                 },
                 {
                     id: 'analysis',

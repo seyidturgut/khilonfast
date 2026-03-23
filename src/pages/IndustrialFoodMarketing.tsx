@@ -240,7 +240,7 @@ export default function IndustrialFoodMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Endüstriyel Gıda ve Şef Çözümleri İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="Endüstriyel gıda ve şef çözümleri firmaları için" advisoryPath="/danismanlik/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Endüstriyel Gıda ve Şef Çözümleri İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="Endüstriyel gıda ve şef çözümleri firmaları için" advisoryPath="/danismanlik/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="endustriyel-gida" />
                 },
                 {
                     id: 'analysis',
@@ -440,7 +440,7 @@ export default function IndustrialFoodMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Industrial Food & Chef Solution Companies" gtmContext="For industrial food and chef solution companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-industrial-food" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Industrial Food & Chef Solution Companies" gtmContext="For industrial food and chef solution companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-industrial-food" sectorSlug="endustriyel-gida" />
                 },
                 {
                     id: 'analysis',

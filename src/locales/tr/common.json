@@ -1253,9 +1253,9 @@
         "maestro": "urunler/maestro-ai",
         "eyeTracking": "urunler/eye-tracking-reklam-analizi",
         "login": "giris",
-        "register": "kayil-ol",
+        "register": "kayit-ol",
         "dashboard": "dashboard",
-        "checkout": "checkout",
+        "checkout": "odeme",
         "paymentSuccess": "payment-success",
         "paymentCallback": "payment-callback"
     },

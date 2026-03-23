@@ -281,7 +281,7 @@ export default function B2BThreeSixtyMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="B2B Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="B2B firmaları için" advisoryPath="/danismanlik/b2b-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="B2B Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="B2B firmaları için" advisoryPath="/danismanlik/b2b-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="b2b" />
                 },
                 {
                     id: 'analysis',
@@ -501,7 +501,7 @@ export default function B2BThreeSixtyMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for B2B Companies" gtmContext="For B2B companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-b2b" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for B2B Companies" gtmContext="For B2B companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-b2b" sectorSlug="b2b" />
                 },
                 {
                     id: 'analysis',

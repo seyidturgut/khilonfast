@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ordersAPI, paymentAPI } from '../services/api';
 import { HiCheckCircle, HiCreditCard, HiShieldCheck, HiShoppingBag } from 'react-icons/hi';
@@ -16,6 +16,8 @@ export default function Checkout() {
     const { user, isAuthenticated, activateToken } = useAuth();
     const { items, getTotalPrice, clearCart } = useCart();
     const navigate = useNavigate();
+    const location = useLocation();
+    const state = location.state as { email?: string; name?: string; country?: string } | null;
     const currentLang = useRouteLocale();
     const isEn = currentLang === 'en';
     const homePath = getLocalizedPathByKey(currentLang, 'home');
@@ -25,16 +27,18 @@ export default function Checkout() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
-    const [step, setStep] = useState<1 | 2 | 3>(1);
-    const [termsReachedEnd, setTermsReachedEnd] = useState(false);
-    const [termsAccepted, setTermsAccepted] = useState(false);
-    const [privacyAccepted, setPrivacyAccepted] = useState(false);
-    const [country, setCountry] = useState('Türkiye');
-    const [email, setEmail] = useState(user?.email || '');
+    
+    // Auto-advance logic: if coming with guest info, start at Step 3 (Payment)
+    const [step, setStep] = useState<1 | 2 | 3>(state?.email ? 3 : 1);
+    const [termsReachedEnd, setTermsReachedEnd] = useState(state?.email ? true : false);
+    const [termsAccepted, setTermsAccepted] = useState(state?.email ? true : false);
+    const [privacyAccepted, setPrivacyAccepted] = useState(state?.email ? true : false);
+    const [country, setCountry] = useState(state?.country || 'Türkiye');
+    const [email, setEmail] = useState(state?.email || user?.email || '');
     const [buyingAsBusiness, setBuyingAsBusiness] = useState(false);
     const [companyName, setCompanyName] = useState('');
     const [taxNumber, setTaxNumber] = useState('');
-    const [cardHolderName, setCardHolderName] = useState('');
+    const [cardHolderName, setCardHolderName] = useState(state?.name || '');
     const [cardNumber, setCardNumber] = useState('');
     const [cardExpireMonth, setCardExpireMonth] = useState('');
     const [cardExpireYear, setCardExpireYear] = useState('');
@@ -158,6 +162,18 @@ export default function Checkout() {
         if (step === 2) return copy.stepTitles.terms;
         return copy.stepTitles.payment;
     }, [copy.stepTitles.info, copy.stepTitles.payment, copy.stepTitles.terms, step]);
+
+    const formatPrice = (amount: number, currency: string) => {
+        const formatted = Number(amount).toLocaleString(isEn ? 'en-US' : 'tr-TR', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+        return (
+            <>
+                {formatted} <span className="price-unit">{currency}</span>
+            </>
+        );
+    };
 
     useEffect(() => {
         if (items.length === 0) {
@@ -556,7 +572,7 @@ export default function Checkout() {
                                             <h3>{item.name}</h3>
                                         </div>
                                         <div className="item-price">
-                                            {item.price.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {item.currency}
+                                            {formatPrice(item.price, item.currency)}
                                         </div>
                                     </div>
                                 ))}
@@ -564,7 +580,7 @@ export default function Checkout() {
 
                             <div className="summary-total">
                                 <span>{copy.summary.total}</span>
-                                <strong>{getTotalPrice().toLocaleString(isEn ? 'en-US' : 'tr-TR')} TL</strong>
+                                <strong>{formatPrice(getTotalPrice(), 'TL')}</strong>
                             </div>
                         </div>
 

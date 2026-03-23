@@ -237,7 +237,7 @@ export default function SoftwareMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Teknoloji ve Yazılım Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="teknoloji ve yazılım firmaları için" advisoryPath="/danismanlik/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Teknoloji ve Yazılım Firmaları İçin Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="teknoloji ve yazılım firmaları için" advisoryPath="/danismanlik/teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-danismanligi" sectorSlug="teknoloji-yazilim" />
                 },
                 {
                     id: 'analysis',
@@ -436,7 +436,7 @@ export default function SoftwareMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Technology & Software Companies" gtmContext="For technology and software companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-technology-and-software" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Technology & Software Companies" gtmContext="For technology and software companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-technology-and-software" sectorSlug="teknoloji-yazilim" />
                 },
                 {
                     id: 'analysis',

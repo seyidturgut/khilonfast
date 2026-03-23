@@ -1,0 +1,635 @@
+/* =============================================
+   Consultant Booking Modal
+   ============================================= */
+
+/* ── Overlay ────────────────────────────────── */
+
+.booking-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+/* ── Modal Card ─────────────────────────────── */
+
+.booking-modal {
+    background: #fff;
+    border-radius: 22px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modal-enter 0.22s ease;
+}
+
+@keyframes modal-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Header ─────────────────────────────────── */
+
+.booking-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1.75rem 0;
+    gap: 1rem;
+}
+
+.booking-modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a3a52;
+    margin: 0;
+    line-height: 1.3;
+    flex: 1;
+}
+
+.booking-modal-close {
+    background: #f3f4f6;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 1rem;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.booking-modal-close:hover {
+    background: #e5e7eb;
+    color: #1a3a52;
+}
+
+/* ── Step Indicator ─────────────────────────── */
+
+.booking-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 1.25rem 1.75rem 0;
+}
+
+.booking-step {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.booking-step:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: #e5e7eb;
+    margin: 0 0.5rem;
+    border-radius: 2px;
+    transition: background 0.2s;
+}
+
+.booking-step.done:not(:last-child)::after {
+    background: #d4f04d;
+}
+
+.step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #9ca3af;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.booking-step.active .step-circle {
+    background: #d4f04d;
+    color: #1a3a52;
+}
+
+.booking-step.done .step-circle {
+    background: #22c55e;
+    color: #fff;
+}
+
+.step-label {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.booking-step.active .step-label {
+    color: #1a3a52;
+}
+
+.booking-step.done .step-label {
+    color: #22c55e;
+}
+
+/* ── Step Content ───────────────────────────── */
+
+.booking-step-content {
+    padding: 1.5rem 1.75rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ── Calendar ───────────────────────────────── */
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-month-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a3a52;
+    text-transform: capitalize;
+}
+
+.cal-nav-btn {
+    background: #f3f4f6;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    color: #374151;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s;
+    line-height: 1;
+}
+
+.cal-nav-btn:hover {
+    background: #e5e7eb;
+}
+
+.calendar-container {
+    background: #fdfdfd;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-weekdays span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.35rem;
+}
+
+.calendar-day-empty {
+    aspect-ratio: 1;
+}
+
+.calendar-day-btn {
+    aspect-ratio: 1;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    background: #fff;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: default;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-day-btn.has-slots {
+    cursor: pointer;
+    color: #334155;
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+.calendar-day-btn.has-slots:hover {
+    background: #f0fdf4;
+    border-color: #86efac;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(134, 239, 172, 0.2);
+}
+
+.calendar-day-btn.selected {
+    background: #d4f04d;
+    border-color: #a8c938;
+    color: #1a3a52;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(212, 240, 77, 0.3);
+    z-index: 2;
+}
+
+/* ── Time Slots ─────────────────────────────── */
+
+.time-slots-section {
+    margin-top: 0.25rem;
+}
+
+.time-slots-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.6rem;
+}
+
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.slot-btn {
+    background: #f3f4f6;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+
+.slot-btn:hover {
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+
+.slot-btn.selected {
+    background: #d4f04d;
+    border-color: #a8c938;
+    color: #1a3a52;
+}
+
+/* ── Slot states ────────────────────────────── */
+
+.slots-message {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.95rem;
+    padding: 2rem 0;
+}
+
+.slots-message.error {
+    color: #dc2626;
+}
+
+.slots-empty {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.slots-empty p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* ── Booking Summary ────────────────────────── */
+
+.booking-summary {
+    background: #f8fbff;
+    border: 1px solid #e0ebf5;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.booking-summary-service {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.booking-summary-label {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.booking-summary-value {
+    font-size: 0.97rem;
+    color: #1a3a52;
+    font-weight: 700;
+}
+
+.booking-summary-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1a3a52;
+}
+
+.booking-summary-slot {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.88rem;
+    color: #374151;
+    flex-wrap: wrap;
+}
+
+/* ── Form ───────────────────────────────────── */
+
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.form-group label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group .required {
+    color: #ef4444;
+}
+
+.form-group input,
+.form-group textarea {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.95rem;
+    color: #1a3a52;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.18s;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #a8c938;
+}
+
+.form-error {
+    color: #dc2626;
+    font-size: 0.88rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 0.55rem 0.9rem;
+    margin: 0;
+}
+
+/* ── Step Actions ───────────────────────────── */
+
+.booking-step-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.booking-btn-primary {
+    flex: 1;
+    background: #d4f04d;
+    color: #1a3a52;
+    border: none;
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    min-width: 0;
+}
+
+.booking-btn-primary:hover:not(:disabled) {
+    background: #c5d63d;
+    transform: translateY(-1px);
+}
+
+.booking-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.booking-btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    border: none;
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s;
+    white-space: nowrap;
+}
+
+.booking-btn-secondary:hover:not(:disabled) {
+    background: #e5e7eb;
+}
+
+.booking-btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Confirmation ───────────────────────────── */
+
+.booking-confirmation {
+    align-items: center;
+    text-align: center;
+}
+
+.confirmation-icon {
+    font-size: 3rem;
+    margin-bottom: 0.25rem;
+}
+
+.confirmation-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1a3a52;
+    margin: 0;
+}
+
+.confirmation-id {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.confirmation-summary {
+    background: #f8fbff;
+    border: 1px solid #e0ebf5;
+    border-radius: 14px;
+    padding: 1rem 1.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.confirmation-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.conf-label {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    font-weight: 600;
+}
+
+.conf-value {
+    font-size: 0.9rem;
+    color: #1a3a52;
+    font-weight: 600;
+    text-align: right;
+    flex: 1;
+}
+
+.confirmation-message {
+    color: #374151;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.confirmation-price-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 10px;
+    padding: 12px 16px;
+    width: 100%;
+    margin: 4px 0;
+}
+
+.conf-price-label {
+    font-size: 0.85rem;
+    color: #0369a1;
+    font-weight: 500;
+}
+
+.conf-price-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+.conf-price-value small {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #666;
+    margin-left: 4px;
+}
+
+.booking-confirmation .booking-btn-primary {
+    max-width: 260px;
+}
+
+/* ── Responsive ─────────────────────────────── */
+
+/* ── Animations ─────────────────────────────── */
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .booking-modal {
+        border-radius: 16px;
+        max-height: 95vh;
+    }
+
+    .booking-modal-header {
+        padding: 1.25rem 1.25rem 0;
+    }
+
+    .booking-step-content {
+        padding: 1.25rem;
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .booking-steps {
+        padding: 1rem 1rem 0;
+    }
+
+    .booking-step:not(:last-child)::after {
+        width: 20px;
+    }
+
+    .step-label {
+        display: none;
+    }
+}

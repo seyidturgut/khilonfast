@@ -239,7 +239,7 @@ export default function PaymentSystemsMarketing() {
                     id: 'strategy',
                     label: 'Strateji / Danışmanlık',
                     icon: <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="Ödeme sistemleri şirketleri için" advisoryPath="/danismanlik/odeme-sistemlerinde-buyume-odakli-pazarlama-danismanligi" />
+                    content: <StrategyAdvisoryTabContent isEn={false} advisoryTitle="Ödeme Sistemlerinde Büyüme Odaklı Pazarlama Danışmanlığı" gtmContext="Ödeme sistemleri şirketleri için" advisoryPath="/danismanlik/odeme-sistemlerinde-buyume-odakli-pazarlama-danismanligi" sectorSlug="odeme-sistemleri" />
                 },
                 {
                     id: 'analysis',
@@ -429,7 +429,7 @@ export default function PaymentSystemsMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Payment Systems Companies" gtmContext="For payment systems companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-payment-systems" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Payment Systems Companies" gtmContext="For payment systems companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-payment-systems" sectorSlug="odeme-sistemleri" />
                 },
                 {
                     id: 'analysis',
