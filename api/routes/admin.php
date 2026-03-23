@@ -1007,6 +1007,83 @@ if ($action === 'consultants') {
     }
 }
 
+// GET /api/admin/consultants/:id/services
+if ($action === 'consultants' && $method === 'GET' && !empty($id) && $subAction === 'services') {
+    $stmt = $db->prepare("SELECT * FROM consultant_services WHERE consultant_id=? ORDER BY sort_order ASC");
+    $stmt->execute([$id]);
+    sendResponse(['services' => $stmt->fetchAll()]);
+}
+
+// POST /api/admin/consultants/:id/services
+if ($action === 'consultants' && $method === 'POST' && !empty($id) && $subAction === 'services') {
+    $d = json_decode(file_get_contents('php://input'), true) ?? [];
+    $stmt = $db->prepare(
+        "INSERT INTO consultant_services
+         (consultant_id, category, parent_service_id, title, title_en, description, description_en,
+          scope_items, scope_items_en, duration_text, sessions_text, price, currency, plus_vat,
+          cta_text, cta_text_en, badge_text, sort_order)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    );
+    $stmt->execute([
+        $id,
+        $d['category'] ?? null,
+        !empty($d['parent_service_id']) ? $d['parent_service_id'] : null,
+        $d['title'],
+        $d['title_en'] ?? null,
+        $d['description'] ?? null,
+        $d['description_en'] ?? null,
+        isset($d['scope_items'])    ? json_encode($d['scope_items'])    : null,
+        isset($d['scope_items_en']) ? json_encode($d['scope_items_en']) : null,
+        $d['duration_text'] ?? null,
+        $d['sessions_text'] ?? null,
+        $d['price'] ?? 0,
+        $d['currency'] ?? 'TRY',
+        !empty($d['plus_vat']) ? 1 : 0,
+        $d['cta_text'] ?? null,
+        $d['cta_text_en'] ?? null,
+        $d['badge_text'] ?? null,
+        $d['sort_order'] ?? 0,
+    ]);
+    sendResponse(['id' => $db->lastInsertId()]);
+}
+
+// PUT /api/admin/consultant-services/:id
+if ($action === 'consultant-services' && $method === 'PUT' && !empty($id)) {
+    $d = json_decode(file_get_contents('php://input'), true) ?? [];
+    $stmt = $db->prepare(
+        "UPDATE consultant_services SET title=?, title_en=?, description=?, description_en=?,
+         scope_items=?, scope_items_en=?, duration_text=?, sessions_text=?,
+         price=?, currency=?, plus_vat=?, cta_text=?, cta_text_en=?, badge_text=?,
+         sort_order=?, is_active=? WHERE id=?"
+    );
+    $stmt->execute([
+        $d['title'],
+        $d['title_en'] ?? null,
+        $d['description'] ?? null,
+        $d['description_en'] ?? null,
+        isset($d['scope_items'])    ? json_encode($d['scope_items'])    : null,
+        isset($d['scope_items_en']) ? json_encode($d['scope_items_en']) : null,
+        $d['duration_text'] ?? null,
+        $d['sessions_text'] ?? null,
+        $d['price'] ?? 0,
+        $d['currency'] ?? 'TRY',
+        !empty($d['plus_vat']) ? 1 : 0,
+        $d['cta_text'] ?? null,
+        $d['cta_text_en'] ?? null,
+        $d['badge_text'] ?? null,
+        $d['sort_order'] ?? 0,
+        isset($d['is_active']) ? $d['is_active'] : 1,
+        $id,
+    ]);
+    sendResponse(['success' => true]);
+}
+
+// DELETE /api/admin/consultant-services/:id
+if ($action === 'consultant-services' && $method === 'DELETE' && !empty($id)) {
+    $db->prepare("DELETE FROM consultant_services WHERE id=?")->execute([$id]);
+    sendResponse(['success' => true]);
+}
+
 // DELETE /api/admin/availability/:id
 if ($action === 'availability' && $method === 'DELETE' && !empty($id)) {
     $db->prepare("DELETE FROM consultant_availability WHERE id=?")->execute([$id]);
