@@ -904,4 +904,88 @@ if ($action === 'translate' && $method === 'POST') {
     }
 }
 
+// --- Bookings ---
+if ($action === 'bookings') {
+    if ($method === 'GET' && empty($id)) {
+        $status = $_GET['status'] ?? null;
+        $consultant_id = $_GET['consultant_id'] ?? null;
+        $query = "SELECT cb.*, c.name as consultant_name, cs.title as service_title
+                  FROM consultant_bookings cb
+                  JOIN consultants c ON cb.consultant_id = c.id
+                  JOIN consultant_services cs ON cb.service_id = cs.id
+                  WHERE 1=1";
+        $params = [];
+        if ($status) { $query .= " AND cb.status = ?"; $params[] = $status; }
+        if ($consultant_id) { $query .= " AND cb.consultant_id = ?"; $params[] = $consultant_id; }
+        $query .= " ORDER BY cb.created_at DESC";
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        sendResponse(['bookings' => $stmt->fetchAll()]);
+    }
+
+    if (($method === 'PATCH' || $method === 'PUT') && !empty($id)) {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $fields = []; $params = [];
+        if (array_key_exists('status', $data))       { $fields[] = 'status = ?';       $params[] = $data['status']; }
+        if (array_key_exists('meeting_link', $data))  { $fields[] = 'meeting_link = ?'; $params[] = $data['meeting_link']; }
+        if (array_key_exists('admin_notes', $data))   { $fields[] = 'admin_notes = ?';  $params[] = $data['admin_notes']; }
+        if (!$fields) sendResponse(['error' => 'Nothing to update'], 400);
+        $params[] = $id;
+        $stmt = $db->prepare("UPDATE consultant_bookings SET " . implode(', ', $fields) . " WHERE id = ?");
+        $stmt->execute($params);
+        sendResponse(['success' => true]);
+    }
+
+    if ($method === 'DELETE' && !empty($id)) {
+        $stmt = $db->prepare("DELETE FROM consultant_bookings WHERE id = ?");
+        $stmt->execute([$id]);
+        if ($stmt->rowCount() === 0) sendResponse(['error' => 'Booking not found'], 404);
+        sendResponse(['success' => true]);
+    }
+}
+
+// --- Consultants (admin) ---
+if ($action === 'consultants') {
+    if ($method === 'GET' && empty($id)) {
+        $stmt = $db->query("SELECT * FROM consultants ORDER BY id");
+        $rows = $stmt->fetchAll();
+        foreach ($rows as &$r) $r['sectors'] = json_decode($r['sectors'] ?? '[]', true);
+        sendResponse(['consultants' => $rows]);
+    }
+    if ($method === 'GET' && !empty($id)) {
+        $stmt = $db->prepare("SELECT * FROM consultants WHERE id = ?");
+        $stmt->execute([$id]);
+        $c = $stmt->fetch();
+        if (!$c) sendResponse(['error' => 'Not found'], 404);
+        $c['sectors'] = json_decode($c['sectors'] ?? '[]', true);
+        $stmt2 = $db->prepare("SELECT * FROM consultant_services WHERE consultant_id = ? ORDER BY sort_order");
+        $stmt2->execute([$id]);
+        $c['services'] = $stmt2->fetchAll();
+        sendResponse(['consultant' => $c]);
+    }
+    if ($method === 'POST' && empty($id)) {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $stmt = $db->prepare("INSERT INTO consultants (slug,name,title,bio,photo_url,stars,review_count,sectors,is_active) VALUES (?,?,?,?,?,?,?,?,?)");
+        $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['bio']??'',$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1]);
+        sendResponse(['success'=>true,'id'=>$db->lastInsertId()],201);
+    }
+    if ($method === 'PUT' && !empty($id)) {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,title=?,bio=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=? WHERE id=?");
+        $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['bio']??'',$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$id]);
+        sendResponse(['success'=>true]);
+    }
+    if ($method === 'DELETE' && !empty($id)) {
+        $db->prepare("DELETE FROM consultant_services WHERE consultant_id=?")->execute([$id]);
+        $db->prepare("DELETE FROM consultants WHERE id=?")->execute([$id]);
+        sendResponse(['success'=>true]);
+    }
+    if ($method === 'PATCH' && !empty($id)) {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $stmt = $db->prepare("UPDATE consultants SET is_active=? WHERE id=?");
+        $stmt->execute([$data['is_active'],$id]);
+        sendResponse(['success'=>true]);
+    }
+}
+
 sendResponse(['error' => 'Action not found'], 404);
