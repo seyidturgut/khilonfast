@@ -980,12 +980,44 @@ if ($action === 'consultants') {
         $db->prepare("DELETE FROM consultants WHERE id=?")->execute([$id]);
         sendResponse(['success'=>true]);
     }
-    if ($method === 'PATCH' && !empty($id)) {
+    if ($method === 'PATCH' && !empty($id) && empty($subAction)) {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
         $stmt = $db->prepare("UPDATE consultants SET is_active=? WHERE id=?");
         $stmt->execute([$data['is_active'],$id]);
         sendResponse(['success'=>true]);
     }
+
+    // GET /api/admin/consultants/:id/availability
+    if ($method === 'GET' && !empty($id) && $subAction === 'availability') {
+        $stmt = $db->prepare("SELECT * FROM consultant_availability WHERE consultant_id=? ORDER BY available_date, start_time");
+        $stmt->execute([$id]);
+        sendResponse(['slots' => $stmt->fetchAll()]);
+    }
+
+    // POST /api/admin/consultants/:id/availability
+    if ($method === 'POST' && !empty($id) && $subAction === 'availability') {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $slots = $data['slots'] ?? [];
+        if (empty($slots)) sendResponse(['error' => 'slots boş'], 400);
+        $stmt = $db->prepare("INSERT INTO consultant_availability (consultant_id, service_id, available_date, start_time, end_time) VALUES (?,?,?,?,?)");
+        foreach ($slots as $s) {
+            $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], $s['start_time'], $s['end_time']]);
+        }
+        sendResponse(['success' => true, 'count' => count($slots)]);
+    }
+}
+
+// DELETE /api/admin/availability/:id
+if ($action === 'availability' && $method === 'DELETE' && !empty($id)) {
+    $db->prepare("DELETE FROM consultant_availability WHERE id=?")->execute([$id]);
+    sendResponse(['success' => true]);
+}
+
+// PATCH /api/admin/availability/:id
+if ($action === 'availability' && ($method === 'PATCH' || $method === 'PUT') && !empty($id)) {
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $db->prepare("UPDATE consultant_availability SET status=? WHERE id=?")->execute([$data['status'] ?? 'available', $id]);
+    sendResponse(['success' => true]);
 }
 
 sendResponse(['error' => 'Action not found'], 404);
