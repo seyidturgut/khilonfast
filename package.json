@@ -9,7 +9,7 @@
     "check:i18n": "node scripts/check-locale-parity.mjs",
     "seo:generate": "node scripts/generate-seo-assets.mjs",
     "build": "npm run check:i18n && node scripts/generate-seo-assets.mjs && tsc -b && vite build",
-    "build:railway": "tsc -b && vite build",
+    "build:railway": "vite build",
     "start": "node backend/server.js",
     "preview": "vite preview",
     "import:legacy": "node scripts/import-khilon-legacy.mjs"
