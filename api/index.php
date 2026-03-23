@@ -53,6 +53,9 @@ switch ($controller) {
     case 'admin':
         require_once __DIR__ . '/routes/admin.php';
         break;
+    case 'consultants':
+        require_once __DIR__ . '/routes/consultants.php';
+        break;
     case 'health':
         sendResponse(['status' => 'ok', 'message' => 'khilonfast PHP API is running']);
         break;
