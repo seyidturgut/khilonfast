@@ -1019,4 +1019,16 @@ router.patch('/bookings/:id', authMiddleware, adminMiddleware, async (req, res) 
     }
 });
 
+// DELETE /api/admin/bookings/:id
+router.delete('/bookings/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM consultant_bookings WHERE id=?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Booking not found' });
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin delete booking error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 export default router;

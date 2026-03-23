@@ -53,6 +53,26 @@ export default function BookingList() {
         fetchBookings();
     };
 
+    const cancelBooking = async (id: number) => {
+        const token = localStorage.getItem('token');
+        await fetch(`${ADMIN_API_BASE}/admin/bookings/${id}`, {
+            method: 'PATCH',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'cancelled' })
+        });
+        fetchBookings();
+    };
+
+    const deleteBooking = async (id: number) => {
+        if (!window.confirm('Bu rezervasyonu kalıcı olarak silmek istediğinize emin misiniz?')) return;
+        const token = localStorage.getItem('token');
+        await fetch(`${ADMIN_API_BASE}/admin/bookings/${id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        fetchBookings();
+    };
+
     return (
         <AdminLayout>
             <div style={{ padding: '24px' }}>
@@ -97,6 +117,16 @@ export default function BookingList() {
                                         <button onClick={() => startEdit(b)}
                                             style={{ background: '#1e3a5f', color: '#fff', border: 'none', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: '0.85rem' }}>
                                             Düzenle
+                                        </button>
+                                        {b.status !== 'cancelled' && (
+                                            <button onClick={() => cancelBooking(b.id)}
+                                                style={{ background: '#e65100', color: '#fff', border: 'none', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                                                İptal Et
+                                            </button>
+                                        )}
+                                        <button onClick={() => deleteBooking(b.id)}
+                                            style={{ background: '#c62828', color: '#fff', border: 'none', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                                            Sil
                                         </button>
                                     </div>
                                 </div>
