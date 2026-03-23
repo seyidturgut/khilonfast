@@ -952,7 +952,7 @@ if ($action === 'consultants') {
         foreach ($rows as &$r) $r['sectors'] = json_decode($r['sectors'] ?? '[]', true);
         sendResponse(['consultants' => $rows]);
     }
-    if ($method === 'GET' && !empty($id)) {
+    if ($method === 'GET' && !empty($id) && empty($subAction)) {
         $stmt = $db->prepare("SELECT * FROM consultants WHERE id = ?");
         $stmt->execute([$id]);
         $c = $stmt->fetch();
@@ -975,7 +975,7 @@ if ($action === 'consultants') {
         $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['bio']??'',$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$id]);
         sendResponse(['success'=>true]);
     }
-    if ($method === 'DELETE' && !empty($id)) {
+    if ($method === 'DELETE' && !empty($id) && empty($subAction)) {
         $db->prepare("DELETE FROM consultant_services WHERE consultant_id=?")->execute([$id]);
         $db->prepare("DELETE FROM consultants WHERE id=?")->execute([$id]);
         sendResponse(['success'=>true]);
