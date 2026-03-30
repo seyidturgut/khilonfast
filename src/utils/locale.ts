@@ -1,11 +1,45 @@
 import { useLocation } from 'react-router-dom'
 import trCommon from '../locales/tr/common.json'
 import enCommon from '../locales/en/common.json'
+import { productProgramCatalog } from '../data/productPrograms'
+import { trainingProgramCatalog } from '../data/trainingPrograms'
+import { consultingProgramCatalog } from '../data/consultingPrograms'
+import type { LocalizedProgram } from './localizedContent'
 
 export type AppLocale = 'tr' | 'en'
 
 const trSlugs = trCommon.slugs as Record<string, string>
 const enSlugs = enCommon.slugs as Record<string, string>
+const localizedCatalogs: LocalizedProgram[] = [
+    ...productProgramCatalog,
+    ...trainingProgramCatalog,
+    ...consultingProgramCatalog
+]
+
+function normalizePathname(pathname: string): string {
+    const [cleanPath] = String(pathname || '').split(/[?#]/)
+    const normalized = cleanPath.replace(/\/+$/, '')
+    return normalized || '/'
+}
+
+function resolveCatalogLocalizedPath(targetLocale: AppLocale, pathname: string): string | null {
+    const normalizedPath = normalizePathname(pathname)
+    const strippedPath = `/${stripLocalePrefix(normalizedPath)}`.replace(/\/{2,}/g, '/')
+
+    const matchedProgram = localizedCatalogs.find((program) => {
+        const trPath = normalizePathname(program.path.tr)
+        const enPath = normalizePathname(program.path.en)
+        return (
+            normalizedPath === trPath ||
+            normalizedPath === enPath ||
+            strippedPath === trPath ||
+            strippedPath === enPath
+        )
+    })
+
+    if (!matchedProgram) return null
+    return targetLocale === 'en' ? matchedProgram.path.en : matchedProgram.path.tr
+}
 
 export function resolveLocaleFromPath(pathname: string): AppLocale {
     return pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'tr'
@@ -50,6 +84,12 @@ export function translatePathnameToLocale(targetLocale: AppLocale, pathname: str
     const cleanPath = stripLocalePrefix(pathname).replace(/\/+$/, '')
     const sourceSlugs = getSlugMap(sourceLocale)
     const targetSlugs = getSlugMap(targetLocale)
+    const catalogPath = resolveCatalogLocalizedPath(targetLocale, pathname)
+
+    if (catalogPath) {
+        return catalogPath
+    }
+
     const matchedKey = Object.keys(sourceSlugs).find((key) => sourceSlugs[key] === cleanPath)
 
     if (matchedKey && targetSlugs[matchedKey] !== undefined) {

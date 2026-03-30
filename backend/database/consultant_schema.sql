@@ -9,12 +9,21 @@ CREATE TABLE IF NOT EXISTS consultants (
     stars DECIMAL(2,1) DEFAULT 5.0,
     review_count INT DEFAULT 0,
     sectors JSON COMMENT 'Array of sector slugs e.g. ["fintech","filo-kiralama"]',
+    ical_url VARCHAR(500) NULL,
+    ical_sync_enabled TINYINT(1) NOT NULL DEFAULT 0,
+    ical_last_sync TIMESTAMP NULL,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_slug (slug),
     INDEX idx_active (is_active)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- iCal senkronizasyon alanları (migration — mevcut tabloya ekle)
+-- ALTER TABLE consultants
+--   ADD COLUMN ical_url VARCHAR(500) NULL AFTER sectors,
+--   ADD COLUMN ical_sync_enabled TINYINT(1) NOT NULL DEFAULT 0 AFTER ical_url,
+--   ADD COLUMN ical_last_sync TIMESTAMP NULL AFTER ical_sync_enabled;
 
 -- Danışman hizmetleri
 CREATE TABLE IF NOT EXISTS consultant_services (

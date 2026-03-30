@@ -20,6 +20,28 @@ import { useRouteLocale } from '../utils/locale'
 export default function EyeTracking() {
     const { t } = useTranslation('common')
     const isEn = useRouteLocale() === 'en'
+    const showcaseHighlight = isEn ? 'AI and Eye Tracking' : 'AI ve Eye Tracking'
+    const showcaseTitle = t('eyeTracking.videoShowcase.title')
+    const [showcaseBefore, showcaseAfter = ''] = showcaseTitle.split(showcaseHighlight)
+    const scoreMeta = isEn
+        ? [
+            { eyebrow: 'Visual clarity', stat: 'High = cleaner message', footnote: 'Measures how quickly the main message is understood.' },
+            { eyebrow: 'Mental load', stat: 'Low = easier to process', footnote: 'Shows whether the creative feels crowded or cognitively tiring.' },
+            { eyebrow: 'Interest potential', stat: 'High = stronger curiosity', footnote: 'Signals the likelihood of interaction and attention depth.' },
+            { eyebrow: 'Recall strength', stat: 'High = stronger retention', footnote: 'Indicates how memorable the visual is after first contact.' }
+        ]
+        : [
+            { eyebrow: 'Görsel netlik', stat: 'Yüksek = daha temiz mesaj', footnote: 'Ana mesajın ne kadar hızlı anlaşıldığını ölçer.' },
+            { eyebrow: 'Zihinsel yük', stat: 'Düşük = daha kolay tüketim', footnote: 'Kreatifin kalabalık ya da yorucu hissedip hissettirmediğini gösterir.' },
+            { eyebrow: 'İlgi potansiyeli', stat: 'Yüksek = daha güçlü merak', footnote: 'Dikkat çekme ve etkileşime girme ihtimalini işaret eder.' },
+            { eyebrow: 'Hatırlanma gücü', stat: 'Yüksek = daha kalıcı iz', footnote: 'İlk temastan sonra görselin akılda kalma olasılığını gösterir.' }
+        ]
+    const reportBullets = isEn
+        ? ['4 score blocks with interpretations', 'Heatmap outputs and benchmark notes', 'Actionable creative improvement checklist']
+        : ['4 skor bloğu ve yorumları', 'Heatmap çıktıları ve benchmark notları', 'Uygulanabilir kreatif iyileştirme checklisti']
+    const reportPreviewLabels = isEn
+        ? ['Focus', 'Cognitive', 'Engagement', 'Memory']
+        : ['Focus', 'Cognitive', 'Engagement', 'Memory']
 
     const eyeTrackingConfig: ServicePageProps = {
         hero: {
@@ -44,9 +66,9 @@ export default function EyeTracking() {
             tag: t('eyeTracking.videoShowcase.tag'),
             title: (
                 <>
-                    {t('eyeTracking.videoShowcase.title').split('AI ve Eye Tracking')[0]}
-                    <span className="highlight"> AI ve Eye Tracking</span>
-                    {t('eyeTracking.videoShowcase.title').split('AI ve Eye Tracking')[1]}
+                    {showcaseBefore}
+                    <span className="highlight"> {showcaseHighlight}</span>
+                    {showcaseAfter}
                 </>
             ),
             description: t('eyeTracking.videoShowcase.description'),
@@ -96,29 +118,42 @@ export default function EyeTracking() {
             ]
         },
         featuresSection: {
-            tag: t('eyeTracking.pricing.tag'),
-            title: t('eyeTracking.hero.title'),
-            description: t('eyeTracking.hero.description'),
+            tag: t('eyeTracking.features.tag'),
+            title: t('eyeTracking.features.title'),
+            description: t('eyeTracking.features.description'),
+            variant: 'eye-tracking-scoreboard',
             features: [
                 {
                     title: t('eyeTracking.features.focus.title'),
                     description: t('eyeTracking.features.focus.desc'),
-                    icon: <HiOutlineEye />
+                    icon: <HiOutlineEye />,
+                    eyebrow: scoreMeta[0].eyebrow,
+                    stat: scoreMeta[0].stat,
+                    footnote: scoreMeta[0].footnote
                 },
                 {
                     title: t('eyeTracking.features.cognitive.title'),
                     description: t('eyeTracking.features.cognitive.desc'),
-                    icon: <HiOutlineLightBulb />
+                    icon: <HiOutlineLightBulb />,
+                    eyebrow: scoreMeta[1].eyebrow,
+                    stat: scoreMeta[1].stat,
+                    footnote: scoreMeta[1].footnote
                 },
                 {
                     title: t('eyeTracking.features.engagement.title'),
                     description: t('eyeTracking.features.engagement.desc'),
-                    icon: <HiSparkles />
+                    icon: <HiSparkles />,
+                    eyebrow: scoreMeta[2].eyebrow,
+                    stat: scoreMeta[2].stat,
+                    footnote: scoreMeta[2].footnote
                 },
                 {
                     title: t('eyeTracking.features.memory.title'),
                     description: t('eyeTracking.features.memory.desc'),
-                    icon: <HiOutlineAcademicCap />
+                    icon: <HiOutlineAcademicCap />,
+                    eyebrow: scoreMeta[3].eyebrow,
+                    stat: scoreMeta[3].stat,
+                    footnote: scoreMeta[3].footnote
                 }
             ]
         },
@@ -150,6 +185,7 @@ export default function EyeTracking() {
         authorizationSection: {
             title: t('eyeTracking.authorization.title'),
             description: t('eyeTracking.authorization.description'),
+            variant: 'eye-tracking-report',
             cards: [
                 {
                     title: t('eyeTracking.authorization.card.title'),
@@ -157,7 +193,9 @@ export default function EyeTracking() {
                     highlightText: t('eyeTracking.authorization.card.highlight'),
                     buttonText: t('eyeTracking.authorization.card.button'),
                     buttonLink: '/Gorsel_Reklam_Analiz_raporu.pdf',
-                    theme: 'light'
+                    theme: 'light',
+                    bullets: reportBullets,
+                    previewLabels: reportPreviewLabels
                 }
             ]
         },

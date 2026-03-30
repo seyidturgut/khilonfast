@@ -1,0 +1,19 @@
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # /api/ isteklerini PHP backend'e bırak
+  RewriteRule ^api/ - [L]
+
+  # Crawl ve makine-okunur statik dosyalari her zaman dogrudan servis et
+  RewriteRule ^(robots\.txt|sitemap\.xml|sitemap-[^.]+\.xml|llms\.txt|llm\.txt)$ - [L]
+
+  # Gerçek dosya veya klasör varsa dokunma (assets, images vb.)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Geri kalanı SPA index.html'e yönlendir
+  RewriteRule . /index.html [L]
+</IfModule>

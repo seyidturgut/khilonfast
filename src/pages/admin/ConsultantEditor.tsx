@@ -219,8 +219,11 @@ export default function ConsultantEditor() {
     // ── Info ──
     const [form, setForm] = useState({
         slug: '', name: '', title: '', bio: '', photo_url: '',
-        stars: 5.0, review_count: 0, sectors: [] as string[], is_active: 1
+        stars: 5.0, review_count: 0, sectors: [] as string[], is_active: 1,
+        ical_url: '', ical_sync_enabled: 0
     });
+    const [icalSyncing, setIcalSyncing] = useState(false);
+    const [icalMsg, setIcalMsg] = useState('');
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const fileRef = useRef<HTMLInputElement>(null);
 
@@ -254,6 +257,8 @@ export default function ConsultantEditor() {
                     review_count: c.review_count || 0, is_active: c.is_active,
                     sectors: Array.isArray(c.sectors) ? c.sectors
                         : (typeof c.sectors === 'string' ? (() => { try { return JSON.parse(c.sectors); } catch { return []; } })() : []),
+                    ical_url: c.ical_url || '',
+                    ical_sync_enabled: c.ical_sync_enabled ? 1 : 0,
                 });
             });
         fetchServices();
@@ -426,6 +431,26 @@ export default function ConsultantEditor() {
             await fetch(`${ADMIN_API_BASE}/admin/availability/${sid}`, { method: 'DELETE', headers: authHeaders() });
             fetchSlots();
         }
+    };
+
+    // ── iCal sync ──
+    const syncIcal = async () => {
+        setIcalSyncing(true);
+        setIcalMsg('');
+        try {
+            const res = await fetch(`${ADMIN_API_BASE}/admin/sync-calendar/${id}`, {
+                method: 'POST',
+                headers: authHeaders(),
+                body: JSON.stringify({ ical_url: form.ical_url })
+            });
+            const text = await res.text();
+            let data: any;
+            try { data = JSON.parse(text); } catch { setIcalMsg(`Sunucu hatası (${res.status}): ${text.slice(0, 200)}`); setIcalSyncing(false); return; }
+            if (data.error) setIcalMsg(`Hata: ${data.error}`);
+            else setIcalMsg(`✓ ${data.added} slot eklendi, ${data.removed} slot silindi`);
+            fetchSlots();
+        } catch (e: any) { setIcalMsg(`Bağlantı hatası: ${e?.message || e}`); }
+        setIcalSyncing(false);
     };
 
     // ── Sector toggle ──
@@ -721,7 +746,46 @@ export default function ConsultantEditor() {
                 ═══════════════════════════════════════════ */}
                 {tab === 'availability' && (
                     <div>
-                        {/* Add slots */}
+                        {/* iCal Sync */}
+                        <div style={S.card}>
+                            <h3 style={S.sectionTitle}>🔗 iCal Takvim Senkronizasyonu</h3>
+                            <p style={{ fontSize: '0.83rem', color: '#6b7280', margin: '0 0 14px', lineHeight: 1.6 }}>
+                                Google, Apple veya Outlook takviminizin iCal (ICS) URL'sini girin. Sistem bu URL'yi periyodik olarak okuyarak uygun saatleri otomatik ekler.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                <div>
+                                    <label style={S.label}>iCal URL</label>
+                                    <input style={S.input} value={form.ical_url}
+                                        onChange={e => setForm(f => ({ ...f, ical_url: e.target.value }))}
+                                        placeholder="https://calendar.google.com/calendar/ical/.../.../basic.ics" />
+                                    <span style={{ fontSize: '0.73rem', color: '#9ca3af', marginTop: 4, display: 'block' }}>
+                                        Google: Takvim Ayarları → Gizli adres (iCal) · Apple: iCloud → Takvimi paylaş → Genel Takvim · Outlook: Takvim → Yayınla → ICS linki
+                                    </span>
+                                </div>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.88rem', userSelect: 'none' }}>
+                                    <input type="checkbox" checked={form.ical_sync_enabled === 1}
+                                        onChange={e => setForm(f => ({ ...f, ical_sync_enabled: e.target.checked ? 1 : 0 }))} />
+                                    <span>Otomatik senkronizasyonu etkinleştir (her 20 dakikada bir)</span>
+                                </label>
+                                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <button onClick={syncIcal} disabled={icalSyncing || !form.ical_url}
+                                        style={{ ...S.btnPrimary, opacity: !form.ical_url ? 0.5 : 1, fontSize: '0.88rem', padding: '8px 18px' }}>
+                                        {icalSyncing ? '⏳ Senkronize ediliyor...' : '🔄 Şimdi Senkronize Et'}
+                                    </button>
+                                    <button onClick={saveInfo} disabled={saving}
+                                        style={{ ...S.btnGhost, fontSize: '0.88rem' }}>
+                                        {saving ? '⏳...' : '💾 iCal Ayarlarını Kaydet'}
+                                    </button>
+                                    {icalMsg && (
+                                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: icalMsg.startsWith('Hata') ? '#dc2626' : '#16a34a' }}>
+                                            {icalMsg}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Add slots manually */}
                         <div style={S.card}>
                             <h3 style={S.sectionTitle}>Uygun Saat Ekle</h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

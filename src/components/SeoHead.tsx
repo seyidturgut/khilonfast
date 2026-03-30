@@ -4,6 +4,8 @@ import trCommon from '../locales/tr/common.json'
 import enCommon from '../locales/en/common.json'
 import { setupFlows } from '../data/setupFlows'
 import { consultingPrograms } from '../data/consultingPrograms'
+import { productProgramCatalog } from '../data/productPrograms'
+import { legalContent } from '../content/legalContent'
 
 type LocaleValue = {
     tr: string
@@ -58,6 +60,24 @@ function composeTitle({ tr, en }: TitleOptions): LocaleValue {
     }
 }
 
+const productSeoEntries: SeoEntry[] = productProgramCatalog
+    .filter((program) => program.path.tr !== `/${trSlugs.maestro}` && program.path.tr !== `/${trSlugs.eyeTracking}`)
+    .map((program) => ({
+        key: program.path.tr,
+        tr: program.path.tr,
+        en: program.path.en,
+        title: composeTitle({
+            tr: program.title.tr,
+            en: program.title.en
+        }),
+        description: {
+            tr: program.summary.tr,
+            en: program.summary.en
+        },
+        kind: 'product' as const,
+        section: 'products' as const
+    }))
+
 const pageEntries: SeoEntry[] = [
     {
         key: 'home',
@@ -100,6 +120,66 @@ const pageEntries: SeoEntry[] = [
             en: enCommon.contact.hero.lead
         },
         kind: 'contact' as const,
+        section: 'company'
+    },
+    {
+        key: 'privacyPolicy',
+        tr: `/${trSlugs.privacyPolicy}`,
+        en: `/en/${enSlugs.privacyPolicy}`,
+        title: {
+            tr: legalContent.tr.privacyPolicy.seoTitle,
+            en: legalContent.en.privacyPolicy.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.privacyPolicy.seoDescription,
+            en: legalContent.en.privacyPolicy.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
+        key: 'cookiePolicy',
+        tr: `/${trSlugs.cookiePolicy}`,
+        en: `/en/${enSlugs.cookiePolicy}`,
+        title: {
+            tr: legalContent.tr.cookiePolicy.seoTitle,
+            en: legalContent.en.cookiePolicy.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.cookiePolicy.seoDescription,
+            en: legalContent.en.cookiePolicy.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
+        key: 'termsOfService',
+        tr: `/${trSlugs.termsOfService}`,
+        en: `/en/${enSlugs.termsOfService}`,
+        title: {
+            tr: legalContent.tr.termsOfService.seoTitle,
+            en: legalContent.en.termsOfService.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.termsOfService.seoDescription,
+            en: legalContent.en.termsOfService.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
+        key: 'refundPolicy',
+        tr: `/${trSlugs.refundPolicy}`,
+        en: `/en/${enSlugs.refundPolicy}`,
+        title: {
+            tr: legalContent.tr.refundPolicy.seoTitle,
+            en: legalContent.en.refundPolicy.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.refundPolicy.seoDescription,
+            en: legalContent.en.refundPolicy.seoDescription
+        },
+        kind: 'website' as const,
         section: 'company'
     },
     {
@@ -404,6 +484,7 @@ const pageEntries: SeoEntry[] = [
         kind: 'product' as const,
         section: 'products' as const
     },
+    ...productSeoEntries,
     ...setupFlows.map((flow) => ({
         key: flow.path,
         tr: flow.path,
@@ -454,7 +535,15 @@ const aliasMap: Record<string, string> = {
     '/hizmetlerimiz/eye-tracking-reklam-analizi': `/${trSlugs.eyeTracking}`,
     '/hizmetler/eye-tracking-reklam-analizi': `/${trSlugs.eyeTracking}`,
     '/en/urunler/maestro-ai': `/en/${enSlugs.maestro}`,
-    '/en/urunler/eye-tracking-reklam-analizi': `/en/${enSlugs.eyeTracking}`
+    '/en/urunler/eye-tracking-reklam-analizi': `/en/${enSlugs.eyeTracking}`,
+    ...Object.fromEntries(
+        productProgramCatalog
+            .filter((program) => program.path.en.startsWith('/en/products/'))
+            .map((program) => [
+                program.path.en.replace('/en/products/', '/en/urunler/'),
+                program.path.en
+            ])
+    )
 }
 
 const noIndexPaths = new Set([

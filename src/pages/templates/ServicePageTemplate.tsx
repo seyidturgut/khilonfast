@@ -44,6 +44,9 @@ export interface ServiceFeature {
     description: string;
     icon?: ReactNode;
     image?: string;
+    eyebrow?: string;
+    footnote?: string;
+    stat?: string;
 }
 
 export interface ComparisonRow {
@@ -79,7 +82,7 @@ export interface ProcessSection {
 export interface ApproachItem {
     title: string;
     subtitle: string;
-    description: string;
+    description: ReactNode;
     icon?: ReactNode;
     image?: string;
     buttonText?: string;
@@ -110,12 +113,15 @@ export interface AuthorizationCard {
     buttonText: string;
     buttonLink?: string;
     theme: 'light' | 'dark';
+    bullets?: string[];
+    previewLabels?: string[];
 }
 
 export interface AuthorizationSection {
     title: string;
     description: string;
     cards: AuthorizationCard[];
+    variant?: 'default' | 'eye-tracking-report';
 }
 
 export interface AudienceTabItem {
@@ -163,6 +169,7 @@ export interface ServicePageProps {
         description: string;
         features: ServiceFeature[];
         compact?: boolean;
+        variant?: 'default' | 'eye-tracking-scoreboard';
         introBlock?: {
             title: string;
             description: string;
@@ -295,7 +302,19 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     videoId = url.pathname.split('/')[2] || '';
                 }
 
-                if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+                if (videoId) {
+                    const embedUrl = new URL(`https://www.youtube.com/embed/${videoId}`);
+                    ['start', 'end', 'autoplay', 'loop', 'mute', 'controls', 'rel', 'playlist'].forEach((key) => {
+                        const paramValue = url.searchParams.get(key);
+                        if (paramValue) embedUrl.searchParams.set(key, paramValue);
+                    });
+
+                    if (embedUrl.searchParams.get('loop') === '1' && !embedUrl.searchParams.get('playlist')) {
+                        embedUrl.searchParams.set('playlist', videoId);
+                    }
+
+                    return embedUrl.toString();
+                }
             }
 
             if (host.includes('vimeo.com')) {
@@ -319,6 +338,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         value !== undefined && value !== null && value !== '' ? value : fallback;
     const isInvalidCmsText = (value: any) =>
         typeof value !== 'string' || value.trim() === '' || value.trim() === '[object Object]';
+    const eyeTrackingSummaryPills = currentLang === 'en'
+        ? ['4 core signals', 'Human attention model', 'Pre-launch creative check']
+        : ['4 temel sinyal', 'İnsan dikkat modeli', 'Yayın öncesi kreatif kontrol'];
 
     const defaultEditorData = {
         hero: {
@@ -853,6 +875,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     description: useOrFallback(cmsContent?.featuresSection?.description, baseFeaturesSection.description),
                     features: Array.isArray(cmsContent?.featuresSection?.features) && cmsContent.featuresSection.features.length > 0
                         ? cmsContent.featuresSection.features.map((f: any, idx: number) => ({
+                            ...baseFeaturesSection.features[idx],
                             title: f.title,
                             description: f.description,
                             icon: baseFeaturesSection.features[idx]?.icon || baseFeaturesSection.features[0]?.icon
@@ -862,6 +885,8 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 : baseFeaturesSection
         )
         : undefined;
+    const featureVariant = displayFeaturesSection?.variant || 'default';
+    const authorizationVariant = props.authorizationSection?.variant || 'default';
 
     const displayFaqs = Array.isArray(cmsContent?.faqs) && cmsContent.faqs.length > 0
         ? cmsContent.faqs
@@ -1139,45 +1164,54 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
             <section className="video-showcase">
                 <div className="container">
-                    <div className="showcase-grid">
-                        <div className="showcase-info">
+                    <div className={`showcase-grid ${displayVideoShowcase.videoUrl ? '' : 'no-video'}`.trim()}>
+                        <div className={`showcase-info ${displayVideoShowcase.videoUrl ? '' : 'only-text'}`.trim()}>
                             <div style={{ marginBottom: 10 }}>
                                 {renderCmsButton('video')}
                             </div>
-                            <div className="showcase-tag">{displayVideoShowcase.tag}</div>
+                            <div className="showcase-tag">{renderBrandText(displayVideoShowcase.tag)}</div>
                             <h2 className="showcase-title">{displayVideoShowcase.title}</h2>
                             <p className="showcase-description">{displayVideoShowcase.description}</p>
                         </div>
-                        <div className="showcase-video">
-                            <div className="video-glass-wrapper">
-                                <div className="video-container">
-                                    <iframe
-                                        src={resolveEmbedVideoUrl(displayVideoShowcase.videoUrl)}
-                                        title="Showcase Video"
-                                        width="100%"
-                                        height="100%"
-                                        className="video-iframe"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
+                        {displayVideoShowcase.videoUrl && (
+                            <div className="showcase-video">
+                                <div className="video-glass-wrapper">
+                                    <div className="video-container">
+                                        <iframe
+                                            src={resolveEmbedVideoUrl(displayVideoShowcase.videoUrl)}
+                                            title="Showcase Video"
+                                            width="100%"
+                                            height="100%"
+                                            className="video-iframe"
+                                            allow="autoplay; fullscreen; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </section>
 
             {
                 displayFeaturesSection && (
-                    <section className={`service-features-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
+                    <section className={`service-features-linear ${displayFeaturesSection.compact ? 'compact' : ''} ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-scoreboard-section' : ''}`}>
                         <div className="container">
-                            <div className="section-header text-center">
+                            <div className={`section-header text-center ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-scoreboard-header' : ''}`}>
                                 <div style={{ marginBottom: 10 }}>
                                     {renderCmsButton('features')}
                                 </div>
-                                <span className="showcase-tag">{displayFeaturesSection.tag}</span>
+                                <span className="showcase-tag">{renderBrandText(displayFeaturesSection.tag)}</span>
                                 <h2 className="section-title-large">{displayFeaturesSection.title}</h2>
                                 <p className="section-desc-mid">{displayFeaturesSection.description}</p>
+                                {featureVariant === 'eye-tracking-scoreboard' && (
+                                    <div className="eye-tracking-scoreboard-summary" aria-hidden="true">
+                                        {eyeTrackingSummaryPills.map((pill) => (
+                                            <span key={pill} className="summary-pill">{pill}</span>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {displayFeaturesSection.introBlock && (
@@ -1212,19 +1246,28 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 </div>
                             )}
 
-                            <div className={`features-grid-linear ${displayFeaturesSection.compact ? 'compact' : ''}`}>
+                            <div className={`features-grid-linear ${displayFeaturesSection.compact ? 'compact' : ''} ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-scoreboard-grid' : ''}`}>
                                 {displayFeaturesSection.features.map((feature: ServiceFeature, idx: number) => (
-                                    <div key={idx} className={`feature-card-linear ${displayFeaturesSection.compact ? 'compact' : ''} ${feature.image ? 'has-image' : ''}`}>
+                                    <div key={idx} className={`feature-card-linear ${displayFeaturesSection.compact ? 'compact' : ''} ${feature.image ? 'has-image' : ''} ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-score-card' : ''}`}>
                                         {feature.image ? (
                                             <div className="feature-image-box">
                                                 <img src={feature.image} alt={feature.title} />
                                             </div>
                                         ) : (
-                                            <div className="feature-icon-box">{feature.icon}</div>
+                                            <div className={`feature-icon-box ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-score-icon' : ''}`}>{feature.icon}</div>
                                         )}
                                         <div className="feature-content-box">
+                                            {featureVariant === 'eye-tracking-scoreboard' && feature.eyebrow && (
+                                                <span className="eye-tracking-score-eyebrow">{feature.eyebrow}</span>
+                                            )}
                                             <h3>{feature.title}</h3>
                                             <p>{feature.description}</p>
+                                            {featureVariant === 'eye-tracking-scoreboard' && (
+                                                <div className="eye-tracking-score-footer">
+                                                    {feature.stat && <span className="eye-tracking-score-stat">{feature.stat}</span>}
+                                                    {feature.footnote && <span className="eye-tracking-score-footnote">{feature.footnote}</span>}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -1238,7 +1281,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 <section className="audience-tabs-section">
                     <div className="container">
                         <div className="section-header text-center">
-                            {props.audienceTabsSection.tag && <span className="showcase-tag">{props.audienceTabsSection.tag}</span>}
+                            {props.audienceTabsSection.tag && <span className="showcase-tag">{renderBrandText(props.audienceTabsSection.tag)}</span>}
                             <h2 className="section-title-large">{props.audienceTabsSection.title}</h2>
                             {props.audienceTabsSection.description && <p className="section-desc-mid">{props.audienceTabsSection.description}</p>}
                         </div>
@@ -1282,7 +1325,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 <section className="service-pricing-split" id="pricing">
                     <div className="container">
                         <div className="section-header text-center">
-                            <span className="showcase-tag">{props.pricingSection.tag}</span>
+                            <span className="showcase-tag">{renderBrandText(props.pricingSection.tag)}</span>
                             <h2 className="section-title-large">{props.pricingSection.title}</h2>
                             <p className="section-desc-mid">{props.pricingSection.description}</p>
                         </div>
@@ -1387,7 +1430,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     <section className="service-pricing-linear" id="pricing">
                         <div className="container">
                             <div className="section-header text-center">
-                                <span className="showcase-tag">{props.pricingSection.tag}</span>
+                                <span className="showcase-tag">{renderBrandText(props.pricingSection.tag)}</span>
                                 <h2 className="section-title-large">{props.pricingSection.title}</h2>
                                 <p className="section-desc-mid">{props.pricingSection.description}</p>
                             </div>
@@ -1516,7 +1559,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 {/* Intro Card */}
                                 <div className="process-card-intro">
                                     <div className="intro-content">
-                                        <span className="showcase-tag">{props.processSection.tag}</span>
+                                        <span className="showcase-tag">{renderBrandText(props.processSection.tag)}</span>
                                         <h2 className="section-title-large">{props.processSection.title}</h2>
                                         <p className="section-desc-mid">{props.processSection.description}</p>
                                     </div>
@@ -1576,28 +1619,81 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
             {
                 props.authorizationSection && (
-                    <section className="service-auth-section" id="authorization">
+                    <section className={`service-auth-section ${authorizationVariant === 'eye-tracking-report' ? 'eye-tracking-report-section' : ''}`} id="authorization">
                         <div className="container">
                             <div className="section-header text-center">
                                 <h2 className="section-title-large">{props.authorizationSection.title}</h2>
                                 <p className="section-desc-mid">{props.authorizationSection.description}</p>
                             </div>
 
-                            <div className={`auth-cards-grid ${props.authorizationSection.cards.length === 3 ? 'cols-3' : ''}`}>
+                            <div className={`auth-cards-grid ${props.authorizationSection.cards.length === 3 ? 'cols-3' : ''} ${authorizationVariant === 'eye-tracking-report' ? 'eye-tracking-report-grid' : ''}`}>
                                 {props.authorizationSection.cards.map((card, idx) => (
-                                    <div key={idx} className={`auth-card theme-${card.theme}`}>
-                                        <h3 className="auth-card-title">{card.title}</h3>
-                                        <p className="auth-card-desc">{card.description}</p>
-                                        <p className="auth-card-highlight">{card.highlightText}</p>
-                                        <div className="auth-card-action">
-                                            <a
-                                                href={card.buttonLink || contactPath}
-                                                className="btn-auth"
-                                                onClick={(e) => handleAuthorizationActionClick(e, card.buttonLink)}
-                                            >
-                                                {card.buttonText}
-                                            </a>
-                                        </div>
+                                    <div key={idx} className={`auth-card theme-${card.theme} ${authorizationVariant === 'eye-tracking-report' ? 'eye-tracking-report-card' : ''}`}>
+                                        {authorizationVariant === 'eye-tracking-report' ? (
+                                            <>
+                                                <div className="eye-tracking-report-copy">
+                                                    <span className="eye-tracking-report-kicker">{currentLang === 'en' ? 'Sample analysis document' : 'Örnek analiz dokümanı'}</span>
+                                                    <h3 className="auth-card-title">{card.title}</h3>
+                                                    <p className="auth-card-desc">{card.description}</p>
+                                                    {Array.isArray(card.bullets) && card.bullets.length > 0 && (
+                                                        <ul className="eye-tracking-report-bullets">
+                                                            {card.bullets.map((bullet, bulletIdx) => (
+                                                                <li key={bulletIdx}>{bullet}</li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                    <p className="auth-card-highlight">{card.highlightText}</p>
+                                                    <div className="auth-card-action">
+                                                        <a
+                                                            href={card.buttonLink || contactPath}
+                                                            className="btn-auth"
+                                                            onClick={(e) => handleAuthorizationActionClick(e, card.buttonLink)}
+                                                        >
+                                                            {card.buttonText}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div className="eye-tracking-report-preview" aria-hidden="true">
+                                                    <div className="preview-browser-bar">
+                                                        <span></span>
+                                                        <span></span>
+                                                        <span></span>
+                                                    </div>
+                                                    <div className="preview-sheet">
+                                                        <div className="preview-sheet-header">
+                                                            <span className="preview-sheet-label">PDF</span>
+                                                            <strong>{currentLang === 'en' ? 'Creative Analysis Report' : 'Kreatif Analiz Raporu'}</strong>
+                                                        </div>
+                                                        <div className="preview-score-chips">
+                                                            {(card.previewLabels || ['Focus', 'Cognitive', 'Engagement', 'Memory']).map((label, labelIdx) => (
+                                                                <span key={labelIdx}>{label}</span>
+                                                            ))}
+                                                        </div>
+                                                        <div className="preview-heatmap"></div>
+                                                        <div className="preview-lines">
+                                                            <span className="line wide"></span>
+                                                            <span className="line"></span>
+                                                            <span className="line short"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <h3 className="auth-card-title">{card.title}</h3>
+                                                <p className="auth-card-desc">{card.description}</p>
+                                                <p className="auth-card-highlight">{card.highlightText}</p>
+                                                <div className="auth-card-action">
+                                                    <a
+                                                        href={card.buttonLink || contactPath}
+                                                        className="btn-auth"
+                                                        onClick={(e) => handleAuthorizationActionClick(e, card.buttonLink)}
+                                                    >
+                                                        {card.buttonText}
+                                                    </a>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -1628,7 +1724,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                         <div className="container">
                             {(approachSection.title || approachSection.tag) && (
                                 <div className="section-header text-center">
-                                    {approachSection.tag && <span className="showcase-tag">{approachSection.tag}</span>}
+                                    {approachSection.tag && <span className="showcase-tag">{renderBrandText(approachSection.tag)}</span>}
                                     {approachSection.title && <h2 className="section-title-large">{renderBrandText(approachSection.title)}</h2>}
                                     {approachSection.description && <p className="section-desc-mid">{approachSection.description}</p>}
                                 </div>
@@ -1650,7 +1746,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         <div className="approach-content">
                                             <h3 className="approach-title">{item.title}</h3>
                                             <h4 className="approach-subtitle">{renderBrandText(item.subtitle)}</h4>
-                                            <p className="approach-desc">{item.description}</p>
+                                            <div className="approach-desc">{item.description}</div>
                                             {item.buttonText && (
                                                 <div className="approach-action">
                                                     <a href={item.buttonLink || '#pricing'} className="approach-btn">

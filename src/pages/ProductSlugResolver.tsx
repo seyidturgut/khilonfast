@@ -57,6 +57,8 @@ function resolveByProductKey(productKey: string) {
         'service-maestro-ai-enerji': <MaestroAISector sectorKey="enerji" />,
         'service-maestro-ai-ofis-tasarim': <MaestroAISector sectorKey="ofis-tasarim" />,
         'service-maestro-ai-filo-kiralama': <MaestroAISector sectorKey="filo-kiralama" />,
+        'service-maestro-ai-teknoloji-yazilim': <MaestroAISector sectorKey="teknoloji-yazilim" />,
+        'service-maestro-ai-uretim': <MaestroAISector sectorKey="uretim" />,
         'service-eye-tracking': <EyeTracking />
     }
 

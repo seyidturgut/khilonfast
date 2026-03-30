@@ -61,7 +61,7 @@ export default function ContentStrategy() {
             tag: '5 adımda khilonfast',
             title: 'Nasıl Çalışır?',
             description: 'Sadece birkaç adımda dijital pazarlama sürecinizi başlatın. Tüm adımlar şeffaf, hızlı ve ölçülebilir şekilde tasarlandı.',
-            videoUrl: 'https://player.vimeo.com/video/1131179237',
+            videoUrl: 'https://vimeo.com/1128822985?fl=pl&fe=cm',
             steps: [
                 {
                     stepNumber: 1,

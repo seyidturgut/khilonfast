@@ -31,12 +31,7 @@ export default function SoftwareMarketing() {
 
     const trConfig = {
         hero: {
-            title: (
-                <>
-                    Teknoloji & Yazılım Firmaları İçin<br />
-                    Tek Noktadan Pazarlama Çözümleri
-                </>
-            ),
+            title: 'Teknoloji & Yazılım Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Teknoloji & Yazılım pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -116,7 +111,7 @@ export default function SoftwareMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/products/maestro-ai-technology-software' : '/urunler/maestro-ai-teknoloji-yazilim'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -138,7 +133,7 @@ export default function SoftwareMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Tam Donanımlı Teknoloji Pazarlama Takımınızı Kurun</h3>
+                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Teknoloji & Yazılım Firmaları İçin Tek Noktadan Pazarlama Takımınızı Kurun</h3>
                                 <p style={{ fontSize: '0.9rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
                                     Yazılım firmaları için özelleştirilmiş, stratejik pazarlama takımlarıyla ürününüzü global pazarlara taşıyın.
                                 </p>
@@ -177,7 +172,7 @@ export default function SoftwareMarketing() {
                                         <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Tam donanımlı bir pazarlama stratejisiyle sektörde öne çıkmak isteyen büyük işletmeler.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
+                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -359,7 +354,7 @@ export default function SoftwareMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/products/maestro-ai' : '/urunler/maestro-ai'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai-technology-software' : '/urunler/maestro-ai-teknoloji-yazilim'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

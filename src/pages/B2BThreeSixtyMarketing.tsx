@@ -78,12 +78,7 @@ export default function B2BThreeSixtyMarketing() {
 
     const trConfig = {
         hero: {
-            title: (
-                <>
-                    B2B Firmalar İçin<br />
-                    Tek Noktadan Pazarlama Çözümleri
-                </>
-            ),
+            title: 'B2B Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
@@ -155,7 +150,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/urunler/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -176,7 +171,7 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Tam Donanımlı Pazarlama Takımınızı Kurun</h3>
+                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>B2B Firmaları İçin Tek Noktadan Pazarlama Takımınızı Kurun</h3>
                                 <p style={{ fontSize: '0.9rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
                                     B2B hizmet sunan firmalar için özelleştirilmiş, stratejik pazarlama takımlarıyla işinizi hızlıca büyütün.
                                     Tüm pazarlama ihtiyaçlarınızı tek bir yerden karşılayarak operasyonel yüklerden kurtulun.
@@ -424,7 +419,7 @@ export default function B2BThreeSixtyMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/urunler/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

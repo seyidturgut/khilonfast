@@ -8,44 +8,56 @@ const sectorCards = [
     {
         sectorKey: 'b2b',
         path: '/urunler/maestro-ai-b2b',
-        enPath: '/en/urunler/maestro-ai-b2b',
+        enPath: '/en/products/maestro-ai-b2b',
         image: '/images/TR_Butunlesik.avif'
     },
     {
         sectorKey: 'odeme-sistemleri',
         path: '/urunler/maestro-ai-odeme-sistemleri',
-        enPath: '/en/urunler/maestro-ai-odeme-sistemleri',
+        enPath: '/en/products/maestro-ai-payment-systems',
         image: '/images/TR_Odeme_Sistemleri-2.avif'
     },
     {
         sectorKey: 'endustriyel-gida',
         path: '/urunler/maestro-ai-endustriyel-gida',
-        enPath: '/en/urunler/maestro-ai-endustriyel-gida',
+        enPath: '/en/products/maestro-ai-industrial-food',
         image: '/images/sef.avif'
     },
     {
         sectorKey: 'fintech',
         path: '/urunler/maestro-ai-fintech',
-        enPath: '/en/urunler/maestro-ai-fintech',
+        enPath: '/en/products/maestro-ai-fintech',
         image: '/images/fintech.avif'
     },
     {
         sectorKey: 'enerji',
         path: '/urunler/maestro-ai-enerji',
-        enPath: '/en/urunler/maestro-ai-enerji',
+        enPath: '/en/products/maestro-ai-energy',
         image: '/images/enerji.avif'
     },
     {
         sectorKey: 'ofis-tasarim',
         path: '/urunler/maestro-ai-ofis-tasarim',
-        enPath: '/en/urunler/maestro-ai-ofis-tasarim',
+        enPath: '/en/products/maestro-ai-office-design',
         image: '/images/ofis.avif'
     },
     {
         sectorKey: 'filo-kiralama',
         path: '/urunler/maestro-ai-filo-kiralama',
-        enPath: '/en/urunler/maestro-ai-filo-kiralama',
+        enPath: '/en/products/maestro-ai-fleet-rental',
         image: '/images/filo.avif'
+    },
+    {
+        sectorKey: 'teknoloji-yazilim',
+        path: '/urunler/maestro-ai-teknoloji-yazilim',
+        enPath: '/en/products/maestro-ai-technology-software',
+        image: '/images/teknoloji.avif'
+    },
+    {
+        sectorKey: 'uretim',
+        path: '/urunler/maestro-ai-uretim',
+        enPath: '/en/products/maestro-ai-manufacturing',
+        image: '/images/uretim.avif'
     }
 ]
 
@@ -57,7 +69,7 @@ export default function MaestroAI() {
 
     const cards = sectorCards.map((card) => ({
         ...card,
-        resolvedPath: `${langPrefix}${card.path}`,
+        resolvedPath: currentLang === 'en' ? card.enPath : card.path,
         sectorLabel: t(`maestroAISectors.${card.sectorKey}.sectorLabel`),
         description: t(`maestroAISectors.${card.sectorKey}.processDescription`)
     }))

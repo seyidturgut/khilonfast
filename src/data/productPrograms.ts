@@ -74,6 +74,22 @@ export const productProgramCatalog: LocalizedProgram[] = [
         }
     },
     {
+        path: { tr: '/urunler/maestro-ai-teknoloji-yazilim', en: '/en/products/maestro-ai-technology-software' },
+        title: { tr: 'Maestro AI (Teknoloji & Yazılım)', en: 'Maestro AI (Technology & Software)' },
+        summary: {
+            tr: 'Teknoloji ve yazılım şirketlerine özel Maestro AI pazarlama stratejisti.',
+            en: 'A Maestro AI marketing strategist built for technology and software companies.'
+        }
+    },
+    {
+        path: { tr: '/urunler/maestro-ai-uretim', en: '/en/products/maestro-ai-manufacturing' },
+        title: { tr: 'Maestro AI (Üretim)', en: 'Maestro AI (Manufacturing)' },
+        summary: {
+            tr: 'Üretim sektörüne özel Maestro AI pazarlama stratejisti.',
+            en: 'A Maestro AI marketing strategist built for manufacturing companies.'
+        }
+    },
+    {
         path: { tr: '/urunler/eye-tracking-reklam-analizi', en: '/en/products/eye-tracking-ad-analysis' },
         title: { tr: 'Eye Tracking Reklam Analizi', en: 'Eye Tracking Ad Analysis' },
         summary: {

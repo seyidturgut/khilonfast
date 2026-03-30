@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './Footer.css'
 import { getLocalizedPathByKey, getLocalePrefix, useRouteLocale } from '../utils/locale'
+import { useConsent } from '../context/ConsentContext'
 
 export default function Footer() {
     const { t } = useTranslation('common');
     const currentLang = useRouteLocale();
     const prefix = getLocalePrefix(currentLang);
     const toLocalized = (key: string) => getLocalizedPathByKey(currentLang, key);
+    const { openPreferences } = useConsent();
 
     return (
         <footer className="footer">
@@ -68,15 +70,19 @@ export default function Footer() {
                         <div className="footer-column">
                             <h3 className="footer-column-title">{t('footer.columns.info')}</h3>
                             <ul className="footer-list">
-                                <li><Link to={toLocalized('contact')}>{t('footer.career')}</Link></li>
-                                <li><Link to={toLocalized('about')}>{t('footer.privacy')}</Link></li>
-                                <li><Link to={toLocalized('about')}>{t('footer.terms')}</Link></li>
+                                <li><Link to={toLocalized('privacyPolicy')}>{t('footer.privacy')}</Link></li>
+                                <li><Link to={toLocalized('cookiePolicy')}>{t('footer.cookies')}</Link></li>
+                                <li><Link to={toLocalized('termsOfService')}>{t('footer.terms')}</Link></li>
+                                <li><Link to={toLocalized('refundPolicy')}>{t('footer.refund')}</Link></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div className="footer-bottom">
+                    <button type="button" className="footer-cookie-btn" onClick={openPreferences}>
+                        {t('footer.manageCookies')}
+                    </button>
                     <p>&copy; {new Date().getFullYear()} khilonfast. {t('footer.rights')}</p>
                 </div>
             </div>

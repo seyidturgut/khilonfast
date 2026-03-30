@@ -31,12 +31,7 @@ export default function InteriorDesignMarketing() {
 
     const trConfig = {
         hero: {
-            title: (
-                <>
-                    Ofis & Kurumsal İç Tasarım Firmaları İçin<br />
-                    Pazarlama Çözümleri
-                </>
-            ),
+            title: 'Ofis & Kurumsal İç Tasarım Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Ofis & Kurumsal İç Tasarım sektöründe fark yaratacak pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -116,7 +111,7 @@ export default function InteriorDesignMarketing() {
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
                                     <div style={{ marginTop: 'auto' }}>
-                                        <Link to={isEn ? '/en/urunler/maestro-ai-ofis-tasarim' : '/urunler/maestro-ai-ofis-tasarim'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                        <Link to={isEn ? '/en/products/maestro-ai-office-design' : '/urunler/maestro-ai-ofis-tasarim'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
                                 <div className="sectoral-split-video">
@@ -138,7 +133,7 @@ export default function InteriorDesignMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Tam Donanımlı Tasarım Pazarlama Takımınızı Kurun</h3>
+                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Ofis & Kurumsal İç Tasarım Firmaları İçin Tek Noktadan Pazarlama Takımınızı Kurun</h3>
                                 <p style={{ fontSize: '0.9rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
                                     İç tasarım ofisleri için özelleştirilmiş, stratejik pazarlama takımlarıyla projelerinizi daha geniş kitlelere duyurun.
                                 </p>
@@ -359,7 +354,7 @@ export default function InteriorDesignMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/urunler/maestro-ai-ofis-tasarim' : '/urunler/maestro-ai-ofis-tasarim'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai-office-design' : '/urunler/maestro-ai-ofis-tasarim'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

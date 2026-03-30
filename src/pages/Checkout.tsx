@@ -1,13 +1,14 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ordersAPI, paymentAPI } from '../services/api';
 import { HiCheckCircle, HiCreditCard, HiShieldCheck, HiShoppingBag } from 'react-icons/hi';
 import './Checkout.css';
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 import { API_BASE_URL } from '../config/api';
+import { checkoutLegalContent } from '../content/legalContent';
 
 export default function Checkout() {
     useTranslation('common');
@@ -22,7 +23,12 @@ export default function Checkout() {
     const isEn = currentLang === 'en';
     const homePath = getLocalizedPathByKey(currentLang, 'home');
     const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
+    const privacyPolicyPath = getLocalizedPathByKey(currentLang, 'privacyPolicy');
+    const cookiePolicyPath = getLocalizedPathByKey(currentLang, 'cookiePolicy');
+    const termsPath = getLocalizedPathByKey(currentLang, 'termsOfService');
+    const refundPath = getLocalizedPathByKey(currentLang, 'refundPolicy');
     const termsContentRef = useRef<HTMLDivElement | null>(null);
+    const legalCopy = checkoutLegalContent[currentLang];
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -503,7 +509,13 @@ export default function Checkout() {
                                 checked={privacyAccepted}
                                 onChange={(e) => setPrivacyAccepted(e.target.checked)}
                             />
-                            <span>{copy.fields.privacyAccepted}</span>
+                            <span>
+                                {isEn ? 'I have read and accept the ' : ''}
+                                <Link to={privacyPolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                    {isEn ? 'Privacy Policy' : 'Gizlilik Politikası'}
+                                </Link>
+                                {isEn ? '.' : '’nı okudum ve kabul ediyorum.'}
+                            </span>
                         </label>
 
                         <div className="actions-row">
@@ -525,15 +537,33 @@ export default function Checkout() {
                 {step === 2 && (
                     <div className="checkout-card">
                         <div className="step-intro">
-                            <h2>{copy.intro.termsTitle}</h2>
-                            <p>{copy.intro.termsDescription}</p>
+                            <h2>{legalCopy.termsTitle}</h2>
+                            <p>{legalCopy.termsDescription}</p>
                         </div>
 
                         <div className="terms-content" ref={termsContentRef} onScroll={handleTermsScroll}>
-                            <h3>{copy.terms.title}</h3>
-                            {copy.terms.items.map((item) => (
-                                <p key={item}>{item}</p>
-                            ))}
+                            <h3>{legalCopy.termsHeading}</h3>
+                            <p>{legalCopy.termsIntro}</p>
+                            <ul className="terms-list">
+                                {legalCopy.termsBullets.map((item) => (
+                                    <li key={item}>{item}</li>
+                                ))}
+                            </ul>
+                            <div className="terms-links">
+                                <strong>{legalCopy.policyLinksLabel}</strong>
+                                <Link to={termsPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                    {isEn ? 'Terms of Service' : 'Hizmet Şartları'}
+                                </Link>
+                                <Link to={privacyPolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                    {isEn ? 'Privacy Policy' : 'Gizlilik Politikası'}
+                                </Link>
+                                <Link to={cookiePolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                    {isEn ? 'Cookie Policy' : 'Çerez Politikası'}
+                                </Link>
+                                <Link to={refundPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                    {isEn ? 'Cancellation & Refund Policy' : 'İade ve İptal Politikası'}
+                                </Link>
+                            </div>
                         </div>
 
                         {termsReachedEnd && !termsAccepted && (
@@ -551,7 +581,7 @@ export default function Checkout() {
 
                         {!termsReachedEnd && (
                             <div className="terms-hint">
-                                {copy.terms.hint}
+                                {legalCopy.termsReviewHint}
                             </div>
                         )}
                     </div>

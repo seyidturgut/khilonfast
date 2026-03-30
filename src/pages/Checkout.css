@@ -134,6 +134,34 @@
     color: var(--checkout-primary);
 }
 
+.terms-list {
+    margin: 0.9rem 0 0;
+    padding-left: 1.1rem;
+    color: #334155;
+    display: grid;
+    gap: 0.65rem;
+}
+
+.terms-links {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dbe3ef;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.checkout-inline-link {
+    color: var(--checkout-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.checkout-inline-link:hover {
+    text-decoration: underline;
+}
+
 .terms-hint {
     margin-top: 1rem;
     color: #64748b;

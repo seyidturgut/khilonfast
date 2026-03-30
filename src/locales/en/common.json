@@ -176,7 +176,10 @@
         "description": "At khilon fast, we strive to help measure marketing activities by using both the science of data analytics and the art of creativity. Our mission is to transform your marketing, making them not only more efficient but also effective in achieving business goals.",
         "rights": "All rights reserved.",
         "privacy": "Privacy Policy",
+        "cookies": "Cookie Policy",
         "terms": "Terms of Service",
+        "refund": "Cancellation & Refund Policy",
+        "manageCookies": "Manage Cookie Preferences",
         "career": "Career Opportunities",
         "columns": {
             "company": "Khilon",
@@ -694,13 +697,13 @@
     "eyeTracking": {
         "hero": {
             "title": "Eye Tracking Ad Analysis",
-            "description": "Learn Focus, Cognitive Demand, Engagement, Memory scores instantly with Eye Tracking + AI; take the winning creative live, reduce ROI risk.",
+            "description": "See Focus, Cognitive Demand, Engagement, and Memory scores instantly with Eye Tracking + AI; launch the winning creative and reduce ROI risk.",
             "badge": "Data-Driven Analysis"
         },
         "videoShowcase": {
             "tag": "Find the Winning Creative in Minutes",
-            "title": "Measure Your Ad Performance with AI and Eye Tracking",
-            "description": "Strengthen your creative performance with visual analysis. Instead of guessing whether you will get the return on the spent budget, rely directly on scientific data."
+            "title": "Measure Creative Performance with AI and Eye Tracking",
+            "description": "Instead of guessing whether your budget will return results, rely on scientific data. Strengthen creative performance and spot risky elements before going live."
         },
         "approach": {
             "tag": "Main Topics",
@@ -715,27 +718,27 @@
                 "creative": {
                     "title": "Ineffective Visuals",
                     "subtitle": "Problem: Clicks are there, sales are not",
-                    "desc": "Solution: Fix weak elements before going live with Heatmap + Focus/Engagement/Memory analysis."
+                    "desc": "Solution: Fix weak elements before launch with heatmap plus Focus, Engagement, and Memory analysis."
                 },
                 "tests": {
                     "title": "Unending Tests",
                     "subtitle": "Problem: A/B test load and cost",
-                    "desc": "Solution: Narrow down the hypothesis with pre-analysis; get faster and low-cost results with fewer variants."
+                    "desc": "Solution: Narrow the hypothesis with pre-analysis and reach faster, lower-cost results with fewer variants."
                 },
                 "cmo": {
                     "title": "For CMOs",
                     "subtitle": "Prove ROI Before Going Live",
-                    "desc": "Transform ROI pressure into provable data, accelerate team alignment, reduce pre-release risk."
+                    "desc": "Turn ROI pressure into provable data, speed up team alignment, and reduce pre-launch risk."
                 },
                 "growth": {
                     "title": "For Growth Marketers",
                     "subtitle": "Find the Winning Creative in Minutes",
-                    "desc": "Take action on the same day with fast analysis and ready-made suggestions in time/team constraints; reduce A/B load."
+                    "desc": "Move the same day with fast analysis and ready-made suggestions when time and team bandwidth are limited; reduce A/B testing load."
                 },
                 "ceo": {
                     "title": "For SME CEOs",
                     "subtitle": "Small Mistakes Should Not Cost Large Budgets",
-                    "desc": "Perform pre-flight control with clear action lists that reduce uncertainty and preserve a professional brand image."
+                    "desc": "Run a pre-flight check with clear action lists that reduce uncertainty and protect a professional brand image."
                 }
             }
         },
@@ -745,47 +748,47 @@
             "description": "We score each element of your visuals according to the perception of the human eye.",
             "focus": {
                 "title": "Focus",
-                "desc": "Shows how understandable the visual is. High score = clear and clean message."
+                "desc": "Shows how understandable the visual is. A high score means a clearer and cleaner message."
             },
             "cognitive": {
                 "title": "Cognitive Demand",
-                "desc": "Shows the level of complexity. A low score provides easier consumption and faster perception."
+                "desc": "Shows the level of complexity. A lower score means easier processing and faster perception."
             },
             "engagement": {
                 "title": "Engagement",
-                "desc": "Interest and excitement prediction. A high score symbolizes the possibility of more interaction."
+                "desc": "Signals likely interest and excitement. A higher score points to a stronger chance of interaction."
             },
             "memory": {
                 "title": "Memory",
-                "desc": "Memorability. A high score increases the likelihood of the visual being remembered."
+                "desc": "Reflects memorability. A higher score increases the chance that the visual will be remembered."
             }
         },
         "process": {
             "tag": "How It Works?",
             "title": "Analysis Process is Very Simple",
-            "description": "Upload your visual and get your comprehensive report in minutes.",
+            "description": "Upload your visual, run AI-assisted Eye Tracking analysis, and receive your report within minutes.",
             "steps": {
                 "upload": {
                     "title": "Upload Your Visual",
-                    "desc": "Drag and drop your sponsored post/post visual."
+                    "desc": "Upload your sponsored post or ad creative to the system."
                 },
                 "ai": {
                     "title": "AI Analysis",
-                    "desc": "Eye Tracking model calculates heatmaps and scores instantly."
+                    "desc": "The Eye Tracking model generates the heatmap and the four core scores within minutes."
                 },
                 "result": {
                     "title": "Result & Suggestion",
-                    "desc": "Get the PDF containing strong/weak areas and an improvement checklist."
+                    "desc": "Receive a PDF report with strong and weak areas, benchmarks, and an optimization checklist."
                 }
             }
         },
         "authorization": {
             "title": "Sample Report",
-            "description": "Strengthen your creative performance with visual analysis.",
+            "description": "Review Focus, Cognitive Demand, Engagement, and Memory scores together with the heatmap in a sample report.",
             "card": {
                 "title": "Sample PDF Report",
-                "desc": "The report includes Focus, Cognitive Demand, Engagement, and Memory scores; heatmap outputs and applicable creative suggestions.",
-                "highlight": "Examine the demo report, see the analysis quality before going live.",
+                "desc": "The report includes the four core scores, heatmap outputs, benchmark comparisons, and actionable creative suggestions.",
+                "highlight": "Review the demo report and see the analysis quality before launch.",
                 "button": "Sample Report →"
             }
         },
@@ -816,19 +819,19 @@
         "faqs": [
             {
                 "question": "Why should I choose to work with khilonfast?",
-                "answer": "khilonfast stands out with its extensive digital marketing experience and data-driven approaches. It offers customized solutions for your business needs, continuously optimizes your campaigns, and works in a result-oriented manner."
+                "answer": "khilonfast combines digital marketing experience with data-driven creative analysis. In Eye Tracking, you receive not only scores but also clear insights and practical optimization actions."
             },
             {
                 "question": "Why don't we do face-to-face or online meetings?",
-                "answer": "khilonfast prefers digital communication tools to speed up processes and increase efficiency. All transactions are carried out through our site and email, allowing us to provide a higher level of service by eliminating time-consuming meetings."
+                "answer": "khilonfast prefers digital communication to keep the process faster and more efficient. Everything is handled through the website workflow and email, which helps complete analysis and reporting without meeting overhead."
             },
             {
-                "question": "Who is an ideal business partner for khilonfast?",
-                "answer": "khilonfast is a perfect business partner for firms looking for fast, efficient, and result-oriented solutions in the digital world, like taking data-driven decisions, and are eager to use new generation tools."
+                "question": "Who is this service for?",
+                "answer": "Eye Tracking ad analysis is built for ecommerce teams, growth marketers, agencies, and marketing leaders who want to evaluate creative performance before launch."
             },
             {
                 "question": "How will the process proceed after purchasing the service?",
-                "answer": "After the purchase, the forms you need to fill out are sent to you. After these forms are filled out, our team performs analysis, completes the setups, starts the process, and offers periodic reports."
+                "answer": "After purchase, you receive the required instructions. Once the creatives are shared, the team completes the analysis and delivers the report together with optimization recommendations."
             }
         ]
     },
@@ -1143,6 +1146,10 @@
         "consultingFood": "consulting/growth-focused-marketing-consulting-for-industrial-food",
         "maestro": "products/maestro-ai",
         "eyeTracking": "products/eye-tracking-ad-analysis",
+        "privacyPolicy": "privacy-policy",
+        "cookiePolicy": "cookie-policy",
+        "termsOfService": "terms-of-service",
+        "refundPolicy": "cancellation-and-refund-policy",
         "login": "login",
         "register": "register",
         "dashboard": "dashboard",
@@ -1265,49 +1272,905 @@
             "videoTag": "AI Assistant for B2B Marketing Departments",
             "featuresDescription": "A strategist who understands the B2B sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in B2B Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the B2B sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the B2B sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help B2B companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the B2B sector.",
+                "title": "Accelerate B2B Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the decision structure, sales cycle, and multi-stakeholder reality of B2B marketing. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of B2B marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in B2B marketing and strategic decision support."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your B2B marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our B2B marketing strategy in hours instead of weeks. The data-backed recommendations help our team move faster and make more consistent decisions.",
+                "author": "khilonfast Client",
+                "role": "B2B Marketing Lead"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         },
         "odeme-sistemleri": {
             "sectorLabel": "Payment Systems",
             "videoTag": "AI Assistant for Payment Systems Marketing Departments",
             "featuresDescription": "A strategist who understands payment systems sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in Payment Systems and Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the payment systems sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the payment systems sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help payment systems companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the payment systems sector.",
+                "title": "Accelerate Payment Systems Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the decision structure, trust-sensitive communication, and fast-changing product dynamics of payment systems. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of payment systems marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in payment systems marketing."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your payment systems marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "title": "Built for Payment Systems",
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our payment systems marketing decisions in hours instead of weeks. The data-backed recommendations help our team move faster and stay aligned.",
+                "author": "khilonfast Client",
+                "role": "Marketing Director"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         },
         "endustriyel-gida": {
             "sectorLabel": "Industrial Food & Chef Solutions",
             "videoTag": "AI Assistant for Industrial Food Sector",
             "featuresDescription": "A strategist who understands industrial food sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in Industrial Food & Chef Solutions Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Industrial Food & Chef Solutions sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Industrial Food & Chef Solutions sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help industrial food and chef solutions brands make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the industrial food and chef solutions sector.",
+                "title": "Accelerate Industrial Food Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the sales cycle, channel structure, and layered decision-making model of industrial food marketing. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of industrial food marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in industrial food and chef solutions marketing."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your industrial food and chef solutions marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "title": "Industrial Food Sector",
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our industrial food marketing decisions in hours instead of weeks. The data-backed recommendations help our team move faster and stay aligned.",
+                "author": "khilonfast Client",
+                "role": "Marketing Manager"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         },
         "fintech": {
             "sectorLabel": "FinTech",
             "videoTag": "AI Assistant for FinTech Sector",
             "featuresDescription": "A strategist who understands FinTech sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in FinTech Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the FinTech sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the FinTech sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help FinTech companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the FinTech sector.",
+                "title": "Accelerate FinTech Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the decision structure, trust-sensitive communication needs, and fast-moving market dynamics of FinTech. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of FinTech marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in FinTech marketing."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your FinTech marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our FinTech marketing decisions in hours instead of weeks. The data-backed recommendations help our team move faster and stay aligned.",
+                "author": "khilonfast Client",
+                "role": "Marketing Manager"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
+        },
+        "teknoloji-yazilim": {
+            "sectorLabel": "Technology & Software",
+            "videoTag": "AI Assistant for the Technology & Software Sector",
+            "featuresDescription": "A strategist that understands how technology and software companies market, grow, and make decisions.",
+            "strategistDesc": "Trained in technology, software, and marketing strategy",
+            "processDescription": "Strengthen your marketing strategy with our AI assistant specialized for technology and software companies.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help technology and software companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the technology and software sector.",
+                "title": "Accelerate Technology & Software Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands product-led growth dynamics, fast-moving market conditions, and technical decision processes in technology and software companies. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of technology and software marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings CRM, PR, market research, digital marketing, and strategy into a single decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in technology, software, and marketing strategy."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context, understands technical products, and helps preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit technology and software brands instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, product feedback, and market changes to produce better recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Built for technology and software companies, Maestro AI brings together market data, product positioning, and growth priorities so your team can make faster and clearer marketing decisions.",
+                "steps": {
+                    "question": {
+                        "title": "Technology & Software",
+                        "desc": "Bring in strategic questions around PMF, lead quality, product launches, content strategy, channel performance, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, product, campaign, social, and market data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, content directions, creative ideas, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our technology marketing strategy in hours instead of weeks. Translating technical product value into market-ready messaging and aligning teams has become far easier.",
+                "author": "khilonfast Client",
+                "role": "Technology Marketing Lead"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
+        },
+        "uretim": {
+            "sectorLabel": "Manufacturing",
+            "videoTag": "AI Assistant for the Manufacturing Sector",
+            "featuresDescription": "A strategist that understands how manufacturing companies market, grow, and make decisions.",
+            "strategistDesc": "Trained in manufacturing and marketing strategy",
+            "processDescription": "Strengthen your marketing strategy with our AI assistant specialized for manufacturing companies.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help manufacturing companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the manufacturing sector.",
+                "title": "Accelerate Manufacturing Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands long sales cycles, technical product narratives, and multi-stakeholder buying structures in manufacturing. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of manufacturing marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings CRM, PR, market research, digital marketing, and strategy into a single decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in manufacturing and marketing strategy."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context, understands product structures, and helps preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit manufacturing companies instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, quotation processes, and market changes to produce better recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Built for manufacturing companies, Maestro AI brings together market data, product positioning, and growth priorities so your team can make faster and clearer marketing decisions.",
+                "steps": {
+                    "question": {
+                        "title": "Manufacturing",
+                        "desc": "Bring in strategic questions around declining sales, channel performance, new product launches, trade fairs, quotation pipelines, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, quotation, campaign, social, and market data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, content directions, creative ideas, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our manufacturing marketing strategy in hours instead of weeks. Explaining technical product value more clearly and aligning teams around one direction has become far easier.",
+                "author": "khilonfast Client",
+                "role": "Manufacturing Marketing Lead"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         },
         "enerji": {
             "sectorLabel": "Energy",
             "videoTag": "AI Assistant for Energy Sector",
             "featuresDescription": "A strategist who understands energy sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in Energy Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the energy sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the energy sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help energy companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the energy sector.",
+                "title": "Accelerate Energy Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the decision structure, long sales cycles, and technical buying dynamics of the energy sector. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of energy marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in energy sector marketing."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your energy marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our energy marketing strategy in hours instead of weeks. The data-backed recommendations help our team move faster and make more consistent decisions.",
+                "author": "khilonfast Client",
+                "role": "Marketing Director"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         },
         "ofis-tasarim": {
             "sectorLabel": "Office & Corporate Interior Design",
             "videoTag": "AI Assistant for Office & Corporate Interior Design Sector",
             "featuresDescription": "A strategist who understands office & corporate interior design sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in Office & Corporate Interior Design Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Office & Corporate Interior Design sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Office & Corporate Interior Design sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help office and corporate interior design brands make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the office & corporate interior design sector.",
+                "title": "Accelerate Office Design Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the decision structure, project-led sales cycles, and multi-stakeholder customer context of office and corporate interior design. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of office and corporate interior design marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in office & corporate interior design marketing."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your office & corporate interior design marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "title": "Office & Corporate Interior Design",
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our office and corporate interior design marketing decisions in hours instead of weeks. The data-backed recommendations help our team move faster and stay aligned.",
+                "author": "khilonfast Client",
+                "role": "Marketing Manager"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         },
         "filo-kiralama": {
             "sectorLabel": "Fleet Rental",
             "videoTag": "AI Assistant for Fleet Rental Sector",
             "featuresDescription": "A strategist who understands fleet rental sector marketing processes and produces suitable solutions.",
             "strategistDesc": "Trained in Fleet Rental Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the fleet rental sector."
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the fleet rental sector.",
+            "hero": {
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help fleet rental companies make better decisions, move faster, and turn marketing into measurable outcomes."
+            },
+            "videoShowcase": {
+                "tag": "Built for the fleet rental sector.",
+                "title": "Accelerate Fleet Rental Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the decision structure, long buying cycles, and operations-heavy customer context of fleet rental marketing. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant built for the complexity of fleet rental marketing, able to connect disciplines and turn context into directly usable recommendations.",
+                "items": {
+                    "disciplines": {
+                        "title": "Integrated Disciplines",
+                        "desc": "Maestro AI brings multiple marketing disciplines together into one holistic decision layer."
+                    },
+                    "speed": {
+                        "title": "Faster Decision Making",
+                        "desc": "It compresses the learning curve that normally takes meetings, research, and years of sector experience."
+                    },
+                    "strategist": {
+                        "title": "Trained Strategist",
+                        "desc": "Trained in fleet rental marketing."
+                    },
+                    "results": {
+                        "title": "Outcome-Oriented",
+                        "desc": "Data -> recommendations -> actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI remembers company context and understands the sector, helping preserve institutional knowledge even when teams change."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Because it is shaped by sector-specific context, it guides you toward strategies that fit your business instead of generic suggestions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "It supports decisions through facts and data, helping fill the gaps where human bias or blind spots can slow progress."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "It keeps learning from new campaigns, customer signals, and market changes to produce better and more current recommendations over time."
+                    }
+                }
+            },
+            "process": {
+                "description": "Strengthen your fleet rental marketing strategy with an AI assistant designed specifically for your sector.",
+                "steps": {
+                    "question": {
+                        "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
+                    },
+                    "analysis": {
+                        "desc": "It synthesizes CRM, market, social, and advertising data to clarify the full picture."
+                    },
+                    "suggestion": {
+                        "desc": "It generates campaign messaging, channel choices, creative directions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "It helps your team clarify decisions and actions in hours instead of weeks."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we now clarify our fleet rental marketing decisions in hours instead of weeks. The data-backed recommendations help our team move faster and stay aligned.",
+                "author": "khilonfast Client",
+                "role": "Growth Manager"
+            },
+            "faqs": [
+                {
+                    "question": "Why should I choose to work with khilonfast?",
+                    "answer": "khilonfast stands out with deep digital marketing experience and a data-led operating model. The team builds solutions around your business needs, keeps campaigns optimized, and stays focused on measurable outcomes."
+                },
+                {
+                    "question": "Why do we not run face-to-face or live online meetings?",
+                    "answer": "khilonfast prefers digital communication to improve speed and efficiency. The full process runs through the platform and email, making delivery faster, more scalable, and easier to manage from anywhere."
+                },
+                {
+                    "question": "Who should not work with khilonfast?",
+                    "answer": "Companies that are uncomfortable with metrics, rarely use digital communication tools, or insist on ignoring expert guidance may not be a strong fit for the khilonfast operating model."
+                },
+                {
+                    "question": "Who is khilonfast an ideal partner for?",
+                    "answer": "khilonfast is an ideal partner for companies that value data-driven decisions, believe in modern marketing systems, use digital workflows consistently, and want expert strategic guidance."
+                },
+                {
+                    "question": "How do I communicate with khilonfast?",
+                    "answer": "All communication runs through the website workflow and email. After purchase, the required forms are shared with you, and the team reviews them before setup and launch."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
+                }
+            ]
         }
     }
 }

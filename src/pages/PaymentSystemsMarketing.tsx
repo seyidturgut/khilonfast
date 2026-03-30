@@ -31,12 +31,7 @@ export default function PaymentSystemsMarketing() {
 
     const trConfig = {
         hero: {
-            title: (
-                <>
-                    Ödeme Sistemleri İçin<br />
-                    Tek Noktadan Pazarlama Çözümleri
-                </>
-            ),
+            title: 'Ödeme Sistemleri Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
             subtitle: '',
             description: 'Ödeme sistemlerinde büyümenin sırrını keşfedin. khilonfast ile pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -115,7 +110,7 @@ export default function PaymentSystemsMarketing() {
                                         <li><HiCheck /> Zaman kaybını önler, maliyetleri düşürür</li>
                                         <li><HiCheck /> Büyümeyi hızlandırırsınız.</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/urunler/maestro-ai-odeme-sistemleri' : '/urunler/maestro-ai-odeme-sistemleri'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai-payment-systems' : '/urunler/maestro-ai-odeme-sistemleri'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
                                 <div className="sectoral-split-video">
                                     <iframe
@@ -136,7 +131,7 @@ export default function PaymentSystemsMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Tam Donanımlı Pazarlama Takımınızı Kurun</h3>
+                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Ödeme Sistemleri Firmaları İçin Tek Noktadan Pazarlama Takımınızı Kurun</h3>
                                 <p style={{ fontSize: '0.9rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
                                     Ödeme sistemleri sunan firmalar için özelleştirilmiş, stratejik pazarlama takımlarıyla işinizi hızlıca büyütün.
                                     Tüm pazarlama ihtiyaçlarınızı tek bir yerden karşılayarak operasyonel yüklerden kurtulun.
@@ -352,7 +347,7 @@ export default function PaymentSystemsMarketing() {
                                         <li><HiCheck /> Reduces wasted effort and spend</li>
                                         <li><HiCheck /> Improves growth velocity</li>
                                     </ul>
-                                    <Link to={isEn ? '/en/urunler/maestro-ai-odeme-sistemleri' : '/urunler/maestro-ai-odeme-sistemleri'} className="sectoral-btn">Learn More</Link>
+                                    <Link to={isEn ? '/en/products/maestro-ai-payment-systems' : '/urunler/maestro-ai-odeme-sistemleri'} className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

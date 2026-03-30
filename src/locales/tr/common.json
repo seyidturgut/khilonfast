@@ -176,11 +176,14 @@
         "description": "khilon as veri analitiği bilimini hem de yaratıcılık sanatını kullanarak en pazarlama faaliyetlerini ölçülmesine yardımcı olmaya çalışıyoruz. Misyonumuz, pazarlamanızı dönüştürmek, onları yalnızca daha verimli değil, aynı zamanda iş hedeflerine ulaşmada etkili hale getirmektir.",
         "rights": "Tüm hakları saklıdır.",
         "privacy": "Gizlilik Politikası",
+        "cookies": "Çerez Politikası",
         "terms": "Hizmet Şartları",
+        "refund": "İade ve İptal Politikası",
+        "manageCookies": "Çerez Tercihlerini Yönet",
         "career": "Kariyer Fırsatları",
         "columns": {
             "company": "Khilon",
-            "services": "Servisler",
+            "services": "Hizmetler",
             "info": "Bilgilendirme"
         },
         "links": {
@@ -204,7 +207,7 @@
         "openInNewTab": "Yeni Sekmede Aç"
     },
     "hero": {
-        "subtitle": "khilonfast PAZARLAMA ÇÖZÜMLERİ",
+        "subtitle": "KHILONFAST PAZARLAMA ÇÖZÜMLERİ",
         "title": "Daha Az Zaman,",
         "titleHighlight": "Daha Fazla Sonuç!",
         "description": "khilonfast, pazarlama çözümlerinde hızlı yolunuz. Büyümeyi destekleyen ve ölçülebilir sonuçlar sunan pazarlama stratejileri ile işinize değer katıyoruz."
@@ -694,13 +697,13 @@
     "eyeTracking": {
         "hero": {
             "title": "Eye Tracking Reklam Analizi",
-            "description": "Eye Tracking + AI ile; Focus, Cognitive Demand, Engagement, Memory skorlarını anında öğrenin; kazanan kreatifi yayına alın, ROI riskini azaltın.",
+            "description": "Eye Tracking + AI ile Focus, Cognitive Demand, Engagement ve Memory skorlarını anında görün; kazanan kreatifi yayına alın, ROI riskini azaltın.",
             "badge": "Veriye Dayalı Analiz"
         },
         "videoShowcase": {
             "tag": "Dakikalar İçinde Kazanan Kreatifi Bulun",
-            "title": "Reklam Performansınızı AI ve Eye Tracking ile Ölçün",
-            "description": "Görsel analiz ile kreatif performansınızı güçlendirin. Harcanan bütçenin karşılığını alıp almayacağınızı tahmin etmek yerine, doğrudan bilimsel verilere dayanın."
+            "title": "Kreatif Performansınızı AI ve Eye Tracking ile Ölçün",
+            "description": "Harcanan bütçenin karşılığını alıp almayacağınızı tahmin etmek yerine doğrudan bilimsel verilere dayanın. Görsel analiz ile kreatif performansınızı güçlendirin ve yayına çıkmadan önce riskli alanları görün."
         },
         "approach": {
             "tag": "Ana Konular",
@@ -715,22 +718,22 @@
                 "creative": {
                     "title": "Etkisiz Görseller",
                     "subtitle": "Sorun: Tıklama var, satış yok",
-                    "desc": "Çözüm: Heatmap + Focus/Engagement/Memory analizi ile zayıf öğeleri yayına girmeden düzeltin."
+                    "desc": "Çözüm: Heatmap + Focus, Engagement ve Memory analizi ile zayıf öğeleri yayına girmeden önce düzeltin."
                 },
                 "tests": {
                     "title": "Bitmeyen Testler",
                     "subtitle": "Sorun: A/B test yükü ve maliyet",
-                    "desc": "Çözüm: Ön analizle hipotezi daraltın; daha az varyantla daha hızlı ve düşük maliyetli sonuç alın."
+                    "desc": "Çözüm: Ön analizle hipotezi daraltın; daha az varyantla daha hızlı ve daha düşük maliyetli sonuç alın."
                 },
                 "cmo": {
                     "title": "CMO'lar İçin",
                     "subtitle": "ROI'yi Yayına Çıkmadan Kanıtlayın",
-                    "desc": "ROI baskısını kanıtlanabilir verilere dönüştürün, ekip hizalamasını hızlandırın, yayın öncesi riski düşürün."
+                    "desc": "ROI baskısını kanıtlanabilir verilere dönüştürün, ekip hizalamasını hızlandırın ve yayın öncesi riski azaltın."
                 },
                 "growth": {
                     "title": "Growth Marketer İçin",
                     "subtitle": "Dakikalar İçinde Kazanan Kreatifi Bulun",
-                    "desc": "Zaman/ekip kısıtında hızlı analiz ve hazır önerilerle aynı gün aksiyon alın; A/B yükünü azaltın."
+                    "desc": "Zaman ve ekip kısıtı altında hızlı analiz ve hazır önerilerle aynı gün aksiyon alın; A/B yükünü azaltın."
                 },
                 "ceo": {
                     "title": "KOBİ CEO'su İçin",
@@ -745,47 +748,47 @@
             "description": "Görsellerinizin her bir öğesini insan gözünün algısına göre puanlıyoruz.",
             "focus": {
                 "title": "Focus (Odak)",
-                "desc": "Görselin ne kadar anlaşılır olduğunu gösterir. Yüksek skor = net ve temiz mesaj."
+                "desc": "Görselin ne kadar anlaşılır olduğunu gösterir. Yüksek skor, daha net ve daha temiz mesaj anlamına gelir."
             },
             "cognitive": {
                 "title": "Cognitive Demand",
-                "desc": "Karmaşıklık düzeyini gösterir. Düşük skor, daha kolay tüketim ve daha hızlı algı sağlar."
+                "desc": "Görselin karmaşıklık düzeyini gösterir. Düşük skor, daha kolay tüketim ve daha hızlı algı sağlar."
             },
             "engagement": {
                 "title": "Engagement (İlgi)",
-                "desc": "İlgi ve heyecan tahmini. Yüksek skor, daha fazla etkileşim olasılığını simgeler."
+                "desc": "İlgi ve heyecan potansiyelini gösterir. Yüksek skor, daha fazla etkileşim olasılığına işaret eder."
             },
             "memory": {
                 "title": "Memory (Bellek)",
-                "desc": "Akılda kalıcılık. Yüksek skor, görselin hatırlanma olasılığını artırır."
+                "desc": "Akılda kalıcılığı gösterir. Yüksek skor, görselin hatırlanma olasılığını artırır."
             }
         },
         "process": {
             "tag": "Nasıl Çalışır?",
             "title": "Analiz Süreci Çok Basit",
-            "description": "Görselinizi yükleyin ve dakikalar içinde kapsamlı raporunuzu alın.",
+            "description": "Görselinizi yükleyin, AI destekli Eye Tracking analizini çalıştırın ve dakikalar içinde kapsamlı raporunuzu alın.",
             "steps": {
                 "upload": {
                     "title": "Görselinizi Yükleyin",
-                    "desc": "Sponsorlu gönderi/post görselinizi sürükleyip bırakın."
+                    "desc": "Sponsorlu gönderi ya da reklam görselinizi sisteme yükleyin."
                 },
                 "ai": {
                     "title": "AI Analizi",
-                    "desc": "Eye Tracking modeli heatmap ve skorları anında hesaplar."
+                    "desc": "Eye Tracking modeli heatmap'i ve dört temel skoru dakikalar içinde hesaplar."
                 },
                 "result": {
                     "title": "Sonuç & Öneri",
-                    "desc": "Güçlü/zayıf alanları ve iyileştirme checklist’ini içeren PDF’i alın."
+                    "desc": "Güçlü ve zayıf alanları, benchmark'ları ve iyileştirme checklist'ini içeren PDF raporunu alın."
                 }
             }
         },
         "authorization": {
             "title": "Örnek Rapor",
-            "description": "Görsel analiz ile kreatif performansınızı güçlendirin.",
+            "description": "Focus, Cognitive Demand, Engagement ve Memory skorlarını heatmap ile birlikte örnek raporda inceleyin.",
             "card": {
                 "title": "Örnek PDF Rapor",
-                "desc": "Rapor içinde Focus, Cognitive Demand, Engagement ve Memory skorları; heatmap çıktıları ve uygulanabilir kreatif öneriler yer alır.",
-                "highlight": "Demo raporu inceleyin, analiz kalitesini yayına çıkmadan görün.",
+                "desc": "Rapor içinde dört temel skor, heatmap çıktıları, benchmark karşılaştırmaları ve uygulanabilir kreatif öneriler yer alır.",
+                "highlight": "Demo raporu inceleyin, yayına çıkmadan önce analiz kalitesini görün.",
                 "button": "Örnek Rapor →"
             }
         },
@@ -809,26 +812,26 @@
             }
         },
         "testimonial": {
-            "quote": "Eye Tracking analizi ile ROI riskimizi minimize etik. Yayına çıkmadan önce kazanan görseli bilmek bütçemizi çok daha verimli kullanmamızı sağladı.",
+            "quote": "Eye Tracking analizi ile ROI riskimizi minimize ettik. Yayına çıkmadan önce kazanan görseli bilmek bütçemizi çok daha verimli kullanmamızı sağladı.",
             "author": "Deniz Erten",
             "role": "E-ticaret Direktörü"
         },
         "faqs": [
             {
                 "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
-                "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                "answer": "khilonfast, dijital pazarlama deneyimini veriye dayalı analizlerle birleştirir. Eye Tracking çözümünde sadece skor değil, doğrudan uygulanabilir kreatif içgörüler ve net aksiyon önerileri sunar."
             },
             {
                 "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
-                "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede zaman kaybına yol açan toplantıları ortadan kaldırarak daha üst düzey hizmet sunabiliyoruz."
+                "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece toplantı trafiği olmadan analiz ve raporlama daha hızlı tamamlanır."
             },
             {
-                "question": "khilonfast kimler için ideal bir iş ortağıdır?",
-                "answer": "Dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan, veriye dayalı kararlar almayı seven ve yeni nesil araçları kullanmaya istekli firmalar için khilonfast mükemmel bir iş ortağıdır."
+                "question": "Bu hizmet kimler için uygundur?",
+                "answer": "Eye Tracking reklam analizi; kreatif performansını yayına çıkmadan görmek isteyen e-ticaret ekipleri, growth marketer'lar, ajanslar ve ROI baskısı yüksek pazarlama liderleri için uygundur."
             },
             {
                 "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
-                "answer": "Satın alım sonrası size doldurmanız gereken formlar iletilir. Bu formlar doldurulduktan sonra ekibimiz analizleri yapar, kurulumları tamamlar ve süreci başlatarak periyodik raporlar sunar."
+                "answer": "Satın alım sonrası gerekli yönlendirmeler size iletilir. Görseller paylaşıldıktan sonra ekip analizleri tamamlar, raporu hazırlar ve önerilerle birlikte size teslim eder."
             }
         ]
     },
@@ -1252,6 +1255,10 @@
         "consultingFood": "danismanlik/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-danismanligi",
         "maestro": "urunler/maestro-ai",
         "eyeTracking": "urunler/eye-tracking-reklam-analizi",
+        "privacyPolicy": "gizlilik-politikasi",
+        "cookiePolicy": "cerez-politikasi",
+        "termsOfService": "hizmet-sartlari",
+        "refundPolicy": "iade-ve-iptal-politikasi",
         "login": "giris",
         "register": "kayit-ol",
         "dashboard": "dashboard",
@@ -1265,49 +1272,905 @@
             "videoTag": "B2B Sektörü Pazarlama Departmanı için Yapay Zeka Asistanı",
             "featuresDescription": "B2B sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "B2B Sektörü Pazarlama konularında eğitimli",
-            "processDescription": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; B2B şirketlerin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlama süreçlerini somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "B2B sektörü için oluşturuldu.",
+                "title": "B2B Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "B2B sektörünün karar yapısını, satış döngüsünü ve çok paydaşlı pazarlama gerçekliğini anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "B2B pazarlamanın karmaşık yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "B2B ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "B2B sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile B2B pazarlama stratejimizi haftalar değil, saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı kararlar alıyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "B2B Pazarlama Lideri"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         },
         "odeme-sistemleri": {
             "sectorLabel": "Ödeme Sistemleri",
             "videoTag": "Ödeme Sistemleri Pazarlama Departmanı için Yapay Zeka Asistanı",
             "featuresDescription": "Ödeme sistemleri sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "Ödeme Sistemleri ve Pazarlama konularında eğitimli",
-            "processDescription": "Ödeme sistemleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "Ödeme sistemleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; ödeme sistemleri şirketlerinin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Ödeme sistemleri sektörü için oluşturuldu.",
+                "title": "Ödeme Sistemleri Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Ödeme sistemleri sektörünün karar süreçlerini, güven odaklı iletişim yapısını ve hızlı değişen ürün dinamiklerini anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Ödeme sistemleri sektörünün karmaşık pazarlama yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Ödeme Sistemleri ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Ödeme sistemleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "title": "Ödeme Sistemleri Sektörüne Özel",
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile ödeme sistemleri pazarlama kararlarımızı haftalar yerine saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı hareket ediyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Pazarlama Direktörü"
+            },
+            "faqs": [
+                {
+                    "question": "Neden Khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "Khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "Khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "Khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için Khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "Khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "Khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         },
         "endustriyel-gida": {
             "sectorLabel": "Endüstriyel Gıda & Şef Çözümleri",
             "videoTag": "Endüstriyel Gıda Sektörü için Yapay Zeka Asistanı",
             "featuresDescription": "Endüstriyel gıda sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "Endüstriyel Gıda & Şef Çözümleri Sektöründe Pazarlama konularında eğitimli",
-            "processDescription": "Endüstriyel Gıda & Şef Çözümleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "Endüstriyel Gıda & Şef Çözümleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; endüstriyel gıda ve şef çözümleri markalarının daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Endüstriyel Gıda & Şef Çözümleri sektörü için oluşturuldu.",
+                "title": "Endüstriyel Gıda Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Endüstriyel gıda sektörünün satış döngüsünü, kanal yapısını ve çok katmanlı karar süreçlerini anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Endüstriyel gıda sektörünün karmaşık pazarlama yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Endüstriyel Gıda & Şef Çözümleri sektöründe pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Endüstriyel Gıda & Şef Çözümleri sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "title": "Endüstriyel Gıda Sektörü",
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile endüstriyel gıda pazarlama kararlarımızı haftalar yerine saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı hareket ediyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Pazarlama Yöneticisi"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         },
         "fintech": {
             "sectorLabel": "FinTech",
             "videoTag": "FinTech Sektörü için Yapay Zeka Asistanı",
             "featuresDescription": "FinTech sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "FinTech Sektöründe Pazarlama konularında eğitimli",
-            "processDescription": "FinTech sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "FinTech sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; FinTech şirketlerinin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "FinTech sektörü için oluşturuldu.",
+                "title": "FinTech Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "FinTech sektörünün karar süreçlerini, güven odaklı iletişim yapısını ve hızlı değişen pazar dinamiklerini anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "FinTech sektörünün karmaşık pazarlama yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "FinTech ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "FinTech sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile FinTech pazarlama kararlarımızı haftalar yerine saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı hareket ediyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Pazarlama Müdürü"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
+        },
+        "teknoloji-yazilim": {
+            "sectorLabel": "Teknoloji & Yazılım",
+            "videoTag": "Teknoloji & Yazılım sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Teknoloji ve yazılım şirketlerinin pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Teknoloji & Yazılım ve pazarlama konularında eğitimli",
+            "processDescription": "Teknoloji ve yazılım şirketlerine özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; teknoloji ve yazılım şirketlerinin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Teknoloji & Yazılım sektörü için oluşturuldu.",
+                "title": "Teknoloji & Yazılım Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Teknoloji ve yazılım şirketlerinin ürün odaklı büyüme dinamiklerini, hızlı değişen pazar koşullarını ve teknik karar süreçlerini anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Teknoloji ve yazılım pazarlamasının karmaşık yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, CRM, PR, pazar araştırması, dijital pazarlama ve stratejiyi aynı karar katmanında bir araya getirir."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Teknoloji & Yazılım ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, teknik ürün yapınızı ve sektör bağlamını tanır. Ekip değişimlerinde bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan teknoloji ve yazılım markalarına uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri, ürün geri bildirimleri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Teknoloji ve yazılım şirketleri için geliştirilen Maestro AI; pazar verilerini, ürün anlatısını ve büyüme hedeflerini bir araya getirerek daha hızlı ve daha net pazarlama kararları almanıza yardımcı olur.",
+                "steps": {
+                    "question": {
+                        "title": "Teknoloji & Yazılım",
+                        "desc": "PMF, lead kalitesi, yeni ürün lansmanı, içerik stratejisi veya kanal performansı gibi stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, ürün, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, içerik yönü, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile teknoloji pazarlama stratejimizi haftalar yerine saatler içinde netleştiriyoruz. Teknik ürün anlatısını pazara uygun mesajlara çevirmek ve ekipleri aynı yönde toplamak çok daha kolay hale geldi.",
+                "author": "khilonfast Müşterisi",
+                "role": "Teknoloji Pazarlama Lideri"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
+        },
+        "uretim": {
+            "sectorLabel": "Üretim",
+            "videoTag": "Üretim sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Üretim şirketlerinin pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Üretim sektörü ve pazarlama konularında eğitimli",
+            "processDescription": "Üretim sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; üretim şirketlerinin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Üretim sektörü için oluşturuldu.",
+                "title": "Üretim Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Üretim sektörünün uzun satış döngülerini, teknik ürün anlatısını ve çok paydaşlı satın alma yapısını anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Üretim pazarlamasının karmaşık yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, CRM, PR, pazar araştırması, dijital pazarlama ve stratejiyi aynı karar katmanında bir araya getirir."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Üretim sektörü ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, ürün yapınızı ve sektör bağlamını tanır. Ekip değişimlerinde bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan üretim şirketlerine uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri, teklif süreçleri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Üretim şirketleri için geliştirilen Maestro AI; pazar verilerini, ürün anlatısını ve büyüme hedeflerini bir araya getirerek daha hızlı ve daha net pazarlama kararları almanıza yardımcı olur.",
+                "steps": {
+                    "question": {
+                        "title": "Üretim",
+                        "desc": "Satış düşüşü, kanal performansı, yeni ürün lansmanı, fuar ve teklif süreçleri gibi stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, teklif, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, içerik yönü, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile üretim pazarlama stratejimizi haftalar yerine saatler içinde netleştiriyoruz. Teknik ürün değerini daha anlaşılır anlatmak ve ekipleri aynı hedefte toplamak çok daha kolay hale geldi.",
+                "author": "khilonfast Müşterisi",
+                "role": "Üretim Pazarlama Lideri"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         },
         "enerji": {
             "sectorLabel": "Enerji",
             "videoTag": "Enerji Sektörü için Yapay Zeka Asistanı",
             "featuresDescription": "Enerji sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "Enerji Sektörü Pazarlama konularında eğitimli",
-            "processDescription": "Enerji sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "Enerji sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; enerji şirketlerinin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Enerji sektörü için oluşturuldu.",
+                "title": "Enerji Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Enerji sektörünün karar süreçlerini, uzun satış döngülerini ve teknik satın alma dinamiklerini anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Enerji sektörünün karmaşık pazarlama yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Enerji sektörü ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Enerji sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile enerji pazarlama kararlarımızı haftalar yerine saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı hareket ediyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Pazarlama Direktörü"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         },
         "ofis-tasarim": {
             "sectorLabel": "Ofis & Kurumsal İç Tasarım",
             "videoTag": "Ofis & Kurumsal İç Tasarım Sektörü için Yapay Zeka Asistanı",
             "featuresDescription": "Ofis & kurumsal iç tasarım sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "Ofis & Kurumsal İç Tasarım Sektörü Pazarlama konularında eğitimli",
-            "processDescription": "Ofis & Kurumsal İç Tasarım sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "Ofis & Kurumsal İç Tasarım sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; ofis ve kurumsal iç tasarım markalarının daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Ofis & Kurumsal İç Tasarım sektörü için oluşturuldu.",
+                "title": "Ofis Tasarım Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Ofis ve kurumsal iç tasarım sektörünün karar süreçlerini, proje odaklı satış döngülerini ve çok paydaşlı müşteri yapısını anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Ofis ve kurumsal iç tasarım sektörünün karmaşık pazarlama yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Ofis & Kurumsal İç Tasarım ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Ofis & Kurumsal İç Tasarım sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "title": "Ofis & Kurumsal İç Tasarım",
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile ofis ve kurumsal iç tasarım pazarlama kararlarımızı haftalar yerine saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı hareket ediyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Pazarlama Yöneticisi"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         },
         "filo-kiralama": {
             "sectorLabel": "Filo Kiralama",
             "videoTag": "Filo Kiralama Sektörü için Yapay Zeka Asistanı",
             "featuresDescription": "Filo kiralama sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
             "strategistDesc": "Filo Kiralama Sektörü Pazarlama konularında eğitimli",
-            "processDescription": "Filo Kiralama sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin."
+            "processDescription": "Filo Kiralama sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; filo kiralama şirketlerinin daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlamayı somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Filo Kiralama sektörü için oluşturuldu.",
+                "title": "Filo Kiralama Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Filo kiralama sektörünün karar süreçlerini, uzun satın alma döngülerini ve operasyon odaklı müşteri yapısını anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Filo kiralama sektörünün karmaşık pazarlama yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Filo Kiralama sektörü pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Sektör hafızasını koruyarak turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
+                }
+            },
+            "process": {
+                "description": "Filo Kiralama sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+                "steps": {
+                    "question": {
+                        "desc": "Satış düşüşü, kampanya performansı, yeni ürün lansmanı ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, pazar, sosyal medya ve reklam verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile filo kiralama pazarlama kararlarımızı haftalar yerine saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde ekip içinde daha hızlı ve daha tutarlı hareket ediyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Büyüme Yöneticisi"
+            },
+            "faqs": [
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                    "answer": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak için dijital iletişim araçlarını tercih eder. Tüm işlemler site ve e-posta üzerinden yürütülür; böylece dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                },
+                {
+                    "question": "khilonfast ile kimler çalışmamalı?",
+                    "answer": "Metriğe dayalı çalışma biçimine uzak duran, dijital iletişim araçlarını düzenli kullanmayan ve uzman önerileri yerine yalnızca kendi yönteminde ısrar eden firmalar için khilonfast doğru yapı olmayabilir."
+                },
+                {
+                    "question": "khilonfast kimler için ideal bir iş ortağıdır?",
+                    "answer": "Veriye dayalı kararlar almayı seven, dijital pazarlamanın gücüne inanan, modern araçları kullanmaya açık ve uzman rehberliğini stratejik avantaj olarak gören firmalar için ideal bir iş ortağıdır."
+                },
+                {
+                    "question": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                    "answer": "Tüm iletişim, kullanıcı dostu sistem ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; ekip inceleme ve kurulum sonrası operasyonu başlatır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
+            ]
         }
     }
 }
