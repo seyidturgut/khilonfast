@@ -34,7 +34,7 @@ export default function UserIcon() {
 
     const handleRegister = () => {
         setIsDropdownOpen(false);
-        navigate('/kayil-ol');
+        navigate('/kayit-ol');
     };
 
     const handleLogout = () => {

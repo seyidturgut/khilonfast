@@ -17,6 +17,7 @@ interface AuthContextType {
     register: (data: RegisterData) => Promise<void>;
     googleLogin: (credential: string) => Promise<void>;
     activateToken: (token: string) => Promise<void>;
+    loadUser: () => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
     loading: boolean;
@@ -146,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         register,
         googleLogin,
         activateToken,
+        loadUser,
         logout,
         isAuthenticated: !!user,
         loading

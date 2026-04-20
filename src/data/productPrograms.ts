@@ -90,6 +90,22 @@ export const productProgramCatalog: LocalizedProgram[] = [
         }
     },
     {
+        path: { tr: '/urunler/maestro-ai-hediye-karti', en: '/en/products/maestro-ai-corporate-gift-card' },
+        title: { tr: 'Maestro AI (Kurumsal Hediye Kartı)', en: 'Maestro AI (Corporate Gift Card)' },
+        summary: {
+            tr: 'Kurumsal hediye kartı sektörüne özel Maestro AI pazarlama stratejisti.',
+            en: 'A Maestro AI marketing strategist tailored to the corporate gift card sector.'
+        }
+    },
+    {
+        path: { tr: '/urunler/maestro-ai-akaryakit', en: '/en/products/maestro-ai-corporate-fuel' },
+        title: { tr: 'Maestro AI (Kurumsal Akaryakıt)', en: 'Maestro AI (Corporate Fuel)' },
+        summary: {
+            tr: 'Kurumsal akaryakıt sektörüne özel Maestro AI pazarlama stratejisti.',
+            en: 'A Maestro AI marketing strategist tailored to the corporate fuel solutions sector.'
+        }
+    },
+    {
         path: { tr: '/urunler/eye-tracking-reklam-analizi', en: '/en/products/eye-tracking-ad-analysis' },
         title: { tr: 'Eye Tracking Reklam Analizi', en: 'Eye Tracking Ad Analysis' },
         summary: {

@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
+import multer, { memoryStorage as multerMemoryStorage, MulterError } from 'multer';
 import db from '../config/database.js';
 import { clearCache } from '../middleware/cache.js';
 import authMiddleware from '../middleware/auth.js';
@@ -9,6 +10,19 @@ import adminMiddleware from '../middleware/admin.js';
 
 import { fileURLToPath } from 'url';
 const router = express.Router();
+
+// Multer: memory storage for PDF uploads (we save manually)
+const pdfUpload = multer({
+    storage: multerMemoryStorage(),
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB
+    fileFilter: (_req, file, cb) => {
+        if (file.mimetype === 'application/pdf') {
+            cb(null, true);
+        } else {
+            cb(new Error('Sadece PDF dosyaları kabul edilir'));
+        }
+    }
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,6 +41,235 @@ const maskSettingValue = (value) => {
     const str = String(value);
     if (str.length <= 4) return '****';
     return `${'*'.repeat(Math.max(8, str.length - 4))}${str.slice(-4)}`;
+};
+
+let trainingAccessPagesSchemaReady = false;
+let couponsSchemaReady = false;
+
+const decodeJsonList = (value) => {
+    if (Array.isArray(value)) {
+        return value
+            .map((item) => String(item).trim())
+            .filter(Boolean);
+    }
+
+    if (typeof value === 'string') {
+        try {
+            const parsed = JSON.parse(value);
+            if (Array.isArray(parsed)) {
+                return parsed
+                    .map((item) => String(item).trim())
+                    .filter(Boolean);
+            }
+        } catch {
+            return [];
+        }
+    }
+
+    return [];
+};
+
+const normalizeCouponDateValue = (value) => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+
+    const pad = (part) => String(part).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+};
+
+const hydrateCouponRow = (row) => ({
+    ...row,
+    id: Number(row.id || 0),
+    code: String(row.code || '').trim().toUpperCase(),
+    discount_value: Number(row.discount_value || 0),
+    minimum_cart_amount: Number(row.minimum_cart_amount || 0),
+    maximum_discount_amount: row.maximum_discount_amount !== null && row.maximum_discount_amount !== undefined
+        ? Number(row.maximum_discount_amount)
+        : null,
+    is_active: Boolean(row.is_active),
+    total_usage_limit: row.total_usage_limit !== null && row.total_usage_limit !== undefined
+        ? Number(row.total_usage_limit)
+        : null,
+    per_user_limit: row.per_user_limit !== null && row.per_user_limit !== undefined
+        ? Number(row.per_user_limit)
+        : null,
+    new_customers_only: Boolean(row.new_customers_only),
+    is_stackable: Boolean(row.is_stackable),
+    usage_count: Number(row.usage_count || 0),
+    restricted_products: decodeJsonList(row.restricted_products_json).map((item) => String(Number(item))).filter(Boolean),
+    restricted_categories: decodeJsonList(row.restricted_categories_json).map((item) => item.toLowerCase()),
+    starts_at: normalizeCouponDateValue(row.starts_at),
+    ends_at: normalizeCouponDateValue(row.ends_at)
+});
+
+const buildCouponPayload = (data = {}) => {
+    const discountType = ['percentage', 'fixed'].includes(String(data.discount_type || '').trim())
+        ? String(data.discount_type).trim()
+        : 'percentage';
+    const discountValue = Number(data.discount_value || 0);
+    const minimumCartAmount = Number(data.minimum_cart_amount || 0);
+    const maximumDiscountAmount = data.maximum_discount_amount === '' || data.maximum_discount_amount == null
+        ? null
+        : Number(data.maximum_discount_amount);
+    const startsAt = normalizeCouponDateValue(data.starts_at);
+    const endsAt = normalizeCouponDateValue(data.ends_at);
+    const restrictedProducts = Array.from(new Set((Array.isArray(data.restricted_products) ? data.restricted_products : []).map((item) => Number(item)).filter((item) => Number.isFinite(item) && item > 0)));
+    const restrictedCategories = Array.from(new Set((Array.isArray(data.restricted_categories) ? data.restricted_categories : []).map((item) => String(item).trim().toLowerCase()).filter(Boolean)));
+
+    const payload = {
+        name: String(data.name || '').trim(),
+        code: String(data.code || '').trim().toUpperCase(),
+        description: String(data.description || '').trim(),
+        discount_type: discountType,
+        discount_value: Number.isFinite(discountValue) ? Math.max(0, Number(discountValue.toFixed(2))) : 0,
+        minimum_cart_amount: Number.isFinite(minimumCartAmount) ? Math.max(0, Number(minimumCartAmount.toFixed(2))) : 0,
+        maximum_discount_amount: maximumDiscountAmount !== null && Number.isFinite(maximumDiscountAmount)
+            ? Math.max(0, Number(maximumDiscountAmount.toFixed(2)))
+            : null,
+        starts_at: startsAt,
+        ends_at: endsAt,
+        is_active: data.is_active ? 1 : 0,
+        total_usage_limit: data.total_usage_limit === '' || data.total_usage_limit == null ? null : Math.max(0, Number(data.total_usage_limit)),
+        per_user_limit: data.per_user_limit === '' || data.per_user_limit == null ? null : Math.max(0, Number(data.per_user_limit)),
+        restricted_products_json: JSON.stringify(restrictedProducts),
+        restricted_categories_json: JSON.stringify(restrictedCategories),
+        new_customers_only: data.new_customers_only ? 1 : 0,
+        is_stackable: data.is_stackable ? 1 : 0
+    };
+
+    if (!payload.name || !payload.code) {
+        return { error: 'Kupon adı ve kupon kodu zorunludur.' };
+    }
+    if (payload.discount_type === 'percentage' && (payload.discount_value <= 0 || payload.discount_value > 100)) {
+        return { error: 'Yüzde indirim değeri 0 ile 100 arasında olmalıdır.' };
+    }
+    if (payload.discount_type === 'fixed' && payload.discount_value <= 0) {
+        return { error: 'Sabit indirim tutarı sıfırdan büyük olmalıdır.' };
+    }
+    if (payload.starts_at && payload.ends_at && new Date(payload.starts_at) > new Date(payload.ends_at)) {
+        return { error: 'Başlangıç tarihi bitiş tarihinden sonra olamaz.' };
+    }
+    if (payload.discount_type === 'fixed') {
+        payload.maximum_discount_amount = null;
+    }
+
+    return { payload };
+};
+
+const ensureTrainingAccessPagesSchema = async () => {
+    if (trainingAccessPagesSchemaReady) return;
+
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS training_access_pages (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            slug VARCHAR(255) NOT NULL UNIQUE,
+            product_key VARCHAR(100) NOT NULL,
+            title_tr VARCHAR(255) DEFAULT NULL,
+            title_en VARCHAR(255) DEFAULT NULL,
+            description_tr TEXT DEFAULT NULL,
+            description_en TEXT DEFAULT NULL,
+            vimeo_url_tr TEXT DEFAULT NULL,
+            vimeo_url_en TEXT DEFAULT NULL,
+            canva_url_tr TEXT DEFAULT NULL,
+            canva_url_en TEXT DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_training_access_pages_product_key (product_key)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    const requiredColumns = [
+        ['slug', 'ALTER TABLE training_access_pages ADD COLUMN slug VARCHAR(255) NOT NULL UNIQUE AFTER id'],
+        ['product_key', 'ALTER TABLE training_access_pages ADD COLUMN product_key VARCHAR(100) NOT NULL AFTER slug'],
+        ['title_tr', 'ALTER TABLE training_access_pages ADD COLUMN title_tr VARCHAR(255) DEFAULT NULL'],
+        ['title_en', 'ALTER TABLE training_access_pages ADD COLUMN title_en VARCHAR(255) DEFAULT NULL'],
+        ['description_tr', 'ALTER TABLE training_access_pages ADD COLUMN description_tr TEXT DEFAULT NULL'],
+        ['description_en', 'ALTER TABLE training_access_pages ADD COLUMN description_en TEXT DEFAULT NULL'],
+        ['vimeo_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN vimeo_url_tr TEXT DEFAULT NULL'],
+        ['vimeo_url_en', 'ALTER TABLE training_access_pages ADD COLUMN vimeo_url_en TEXT DEFAULT NULL'],
+        ['canva_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_tr TEXT DEFAULT NULL'],
+        ['canva_url_en', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_en TEXT DEFAULT NULL']
+    ];
+
+    for (const [columnName, sql] of requiredColumns) {
+        const [rows] = await db.query('SHOW COLUMNS FROM training_access_pages LIKE ?', [columnName]);
+        if (!rows.length) {
+            await db.query(sql);
+        }
+    }
+
+    const [legacyVimeo] = await db.query("SHOW COLUMNS FROM training_access_pages LIKE 'vimeo_url'");
+    const [legacyCanva] = await db.query("SHOW COLUMNS FROM training_access_pages LIKE 'canva_url'");
+
+    if (legacyVimeo.length) {
+        await db.query(`
+            UPDATE training_access_pages
+            SET vimeo_url_tr = COALESCE(NULLIF(vimeo_url_tr, ''), vimeo_url)
+            WHERE vimeo_url IS NOT NULL AND vimeo_url <> ''
+        `);
+    }
+
+    if (legacyCanva.length) {
+        await db.query(`
+            UPDATE training_access_pages
+            SET canva_url_tr = COALESCE(NULLIF(canva_url_tr, ''), canva_url)
+            WHERE canva_url IS NOT NULL AND canva_url <> ''
+        `);
+    }
+
+    trainingAccessPagesSchemaReady = true;
+};
+
+const ensureCouponsSchema = async () => {
+    if (couponsSchemaReady) return;
+
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS coupons (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            code VARCHAR(100) NOT NULL UNIQUE,
+            description TEXT NULL,
+            discount_type ENUM('percentage', 'fixed') NOT NULL DEFAULT 'percentage',
+            discount_value DECIMAL(10,2) NOT NULL DEFAULT 0,
+            minimum_cart_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+            maximum_discount_amount DECIMAL(10,2) NULL DEFAULT NULL,
+            starts_at DATETIME NULL DEFAULT NULL,
+            ends_at DATETIME NULL DEFAULT NULL,
+            is_active TINYINT(1) NOT NULL DEFAULT 1,
+            total_usage_limit INT NULL DEFAULT NULL,
+            per_user_limit INT NULL DEFAULT NULL,
+            restricted_products_json JSON NULL,
+            restricted_categories_json JSON NULL,
+            new_customers_only TINYINT(1) NOT NULL DEFAULT 0,
+            is_stackable TINYINT(1) NOT NULL DEFAULT 0,
+            usage_count INT NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_coupons_active (is_active),
+            INDEX idx_coupons_starts_at (starts_at),
+            INDEX idx_coupons_ends_at (ends_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS coupon_usages (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            coupon_id INT NOT NULL,
+            user_id INT NULL,
+            order_id INT NOT NULL,
+            discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+            used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            released_at TIMESTAMP NULL DEFAULT NULL,
+            status ENUM('used', 'released') NOT NULL DEFAULT 'used',
+            UNIQUE KEY uniq_coupon_usage_order (order_id),
+            INDEX idx_coupon_usages_coupon (coupon_id),
+            INDEX idx_coupon_usages_user_coupon (user_id, coupon_id),
+            INDEX idx_coupon_usages_status (status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    couponsSchemaReady = true;
 };
 
 // Apply auth and admin checks to all routes in this file
@@ -278,6 +521,45 @@ router.get('/pages/:id', async (req, res) => {
     } catch (error) {
         console.error('Get page error:', error);
         res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/admin/media/upload-pdf - Multipart PDF upload → public/uploads/training-pdfs/
+router.post('/media/upload-pdf', (req, res, next) => {
+    pdfUpload.single('file')(req, res, (err) => {
+        if (err instanceof MulterError) {
+            return res.status(400).json({ error: `Upload hatası: ${err.message}` });
+        } else if (err) {
+            return res.status(400).json({ error: err.message || 'Geçersiz dosya' });
+        }
+        next();
+    });
+}, async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'Dosya bulunamadı' });
+        }
+
+        const origName = req.file.originalname || 'egitim-materyali.pdf';
+        const safeBase = origName
+            .replace(/\.pdf$/i, '')
+            .toLowerCase()
+            .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+            .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+            .replace(/[^a-z0-9-_]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 80) || 'egitim-materyali';
+
+        const finalName = `${safeBase}-${Date.now()}.pdf`;
+        const projectRoot = path.resolve(__dirname, '../../');
+        const uploadDir = path.join(projectRoot, 'public', 'uploads', 'training-pdfs');
+        await fs.mkdir(uploadDir, { recursive: true });
+        await fs.writeFile(path.join(uploadDir, finalName), req.file.buffer);
+
+        res.json({ path: `/uploads/training-pdfs/${finalName}`, filename: finalName });
+    } catch (error) {
+        console.error('Upload PDF error:', error);
+        res.status(500).json({ error: 'Sunucu hatası' });
     }
 });
 
@@ -1027,6 +1309,338 @@ router.delete('/bookings/:id', authMiddleware, adminMiddleware, async (req, res)
         res.json({ success: true });
     } catch (err) {
         console.error('Admin delete booking error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ── Coupons ─────────────────────────────────────────────────────────────────
+
+router.get('/coupons', async (req, res) => {
+    try {
+        await ensureCouponsSchema();
+
+        const search = String(req.query.search || '').trim();
+        const status = String(req.query.status || 'all').trim();
+        let sql = 'SELECT * FROM coupons WHERE 1=1';
+        const params = [];
+
+        if (search) {
+            sql += ' AND (name LIKE ? OR code LIKE ?)';
+            params.push(`%${search}%`, `%${search}%`);
+        }
+        if (status === 'active') {
+            sql += ' AND is_active = 1';
+        } else if (status === 'inactive') {
+            sql += ' AND is_active = 0';
+        }
+
+        sql += ' ORDER BY created_at DESC';
+        const [rows] = await db.query(sql, params);
+        res.json(Array.isArray(rows) ? rows.map(hydrateCouponRow) : []);
+    } catch (err) {
+        console.error('Admin get coupons error:', err);
+        res.status(500).json({ error: 'Kuponlar yüklenemedi.' });
+    }
+});
+
+router.get('/coupons/:id', async (req, res) => {
+    try {
+        await ensureCouponsSchema();
+        const [rows] = await db.query('SELECT * FROM coupons WHERE id = ? LIMIT 1', [req.params.id]);
+        if (!rows.length) {
+            return res.status(404).json({ error: 'Kupon bulunamadı.' });
+        }
+        res.json(hydrateCouponRow(rows[0]));
+    } catch (err) {
+        console.error('Admin get coupon error:', err);
+        res.status(500).json({ error: 'Kupon getirilemedi.' });
+    }
+});
+
+router.post('/coupons', async (req, res) => {
+    try {
+        await ensureCouponsSchema();
+        const { payload, error } = buildCouponPayload(req.body);
+        if (error) {
+            return res.status(400).json({ error });
+        }
+
+        const [duplicates] = await db.query('SELECT id FROM coupons WHERE code = ? LIMIT 1', [payload.code]);
+        if (duplicates.length) {
+            return res.status(400).json({ error: 'Bu kupon kodu zaten kullanılıyor.' });
+        }
+
+        const [result] = await db.query(
+            `INSERT INTO coupons (
+                name, code, description, discount_type, discount_value, minimum_cart_amount, maximum_discount_amount,
+                starts_at, ends_at, is_active, total_usage_limit, per_user_limit, restricted_products_json,
+                restricted_categories_json, new_customers_only, is_stackable
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                payload.name,
+                payload.code,
+                payload.description || null,
+                payload.discount_type,
+                payload.discount_value,
+                payload.minimum_cart_amount,
+                payload.maximum_discount_amount,
+                payload.starts_at,
+                payload.ends_at,
+                payload.is_active,
+                payload.total_usage_limit,
+                payload.per_user_limit,
+                payload.restricted_products_json,
+                payload.restricted_categories_json,
+                payload.new_customers_only,
+                payload.is_stackable
+            ]
+        );
+
+        res.status(201).json({ id: result.insertId, message: 'Kupon oluşturuldu.' });
+    } catch (err) {
+        console.error('Admin create coupon error:', err);
+        res.status(500).json({ error: 'Kupon kaydedilemedi.' });
+    }
+});
+
+router.put('/coupons/:id', async (req, res) => {
+    try {
+        await ensureCouponsSchema();
+        const couponId = Number(req.params.id);
+        const { payload, error } = buildCouponPayload(req.body);
+        if (error) {
+            return res.status(400).json({ error });
+        }
+
+        const [duplicates] = await db.query('SELECT id FROM coupons WHERE code = ? AND id <> ? LIMIT 1', [payload.code, couponId]);
+        if (duplicates.length) {
+            return res.status(400).json({ error: 'Bu kupon kodu zaten kullanılıyor.' });
+        }
+
+        await db.query(
+            `UPDATE coupons SET
+                name = ?, code = ?, description = ?, discount_type = ?, discount_value = ?, minimum_cart_amount = ?,
+                maximum_discount_amount = ?, starts_at = ?, ends_at = ?, is_active = ?, total_usage_limit = ?,
+                per_user_limit = ?, restricted_products_json = ?, restricted_categories_json = ?, new_customers_only = ?,
+                is_stackable = ?
+             WHERE id = ?`,
+            [
+                payload.name,
+                payload.code,
+                payload.description || null,
+                payload.discount_type,
+                payload.discount_value,
+                payload.minimum_cart_amount,
+                payload.maximum_discount_amount,
+                payload.starts_at,
+                payload.ends_at,
+                payload.is_active,
+                payload.total_usage_limit,
+                payload.per_user_limit,
+                payload.restricted_products_json,
+                payload.restricted_categories_json,
+                payload.new_customers_only,
+                payload.is_stackable,
+                couponId
+            ]
+        );
+
+        res.json({ message: 'Kupon güncellendi.' });
+    } catch (err) {
+        console.error('Admin update coupon error:', err);
+        res.status(500).json({ error: 'Kupon kaydedilemedi.' });
+    }
+});
+
+router.patch('/coupons/:id/toggle', async (req, res) => {
+    try {
+        await ensureCouponsSchema();
+        const isActive = req.body?.is_active ? 1 : 0;
+        await db.query('UPDATE coupons SET is_active = ? WHERE id = ?', [isActive, req.params.id]);
+        res.json({ message: 'Kupon durumu güncellendi.' });
+    } catch (err) {
+        console.error('Admin toggle coupon error:', err);
+        res.status(500).json({ error: 'Kupon durumu güncellenemedi.' });
+    }
+});
+
+router.delete('/coupons/:id', async (req, res) => {
+    try {
+        await ensureCouponsSchema();
+        const [usageRows] = await db.query('SELECT COUNT(*) AS c FROM coupon_usages WHERE coupon_id = ?', [req.params.id]);
+        if (Number(usageRows?.[0]?.c || 0) > 0) {
+            return res.status(400).json({ error: 'Kullanılmış kuponlar silinemez. Pasife alabilirsiniz.' });
+        }
+
+        await db.query('DELETE FROM coupons WHERE id = ?', [req.params.id]);
+        res.json({ message: 'Kupon silindi.' });
+    } catch (err) {
+        console.error('Admin delete coupon error:', err);
+        res.status(500).json({ error: 'Kupon silinemedi.' });
+    }
+});
+
+// ── Training Access Pages ────────────────────────────────────────────────────
+
+router.get('/training-access-pages', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await ensureTrainingAccessPagesSchema();
+        const [rows] = await db.query('SELECT * FROM training_access_pages ORDER BY id DESC');
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.get('/training-access-pages/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await ensureTrainingAccessPagesSchema();
+        const [rows] = await db.query('SELECT * FROM training_access_pages WHERE id=?', [req.params.id]);
+        if (!rows.length) return res.status(404).json({ error: 'Not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.post('/training-access-pages', authMiddleware, adminMiddleware, async (req, res) => {
+    const { slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url } = req.body;
+    if (!slug || !product_key) return res.status(400).json({ error: 'slug and product_key required' });
+    try {
+        await ensureTrainingAccessPagesSchema();
+        const [result] = await db.query(
+            'INSERT INTO training_access_pages (slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+            [slug, product_key, title_tr || '', title_en || '', description_tr || '', description_en || '', vimeo_url_tr || '', vimeo_url_en || '', canva_url_tr || '', canva_url_en || '', pdf_url || null]
+        );
+        res.json({ id: result.insertId, success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.put('/training-access-pages/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url } = req.body;
+    try {
+        await ensureTrainingAccessPagesSchema();
+        await db.query(
+            'UPDATE training_access_pages SET slug=?, product_key=?, title_tr=?, title_en=?, description_tr=?, description_en=?, vimeo_url_tr=?, vimeo_url_en=?, canva_url_tr=?, canva_url_en=?, pdf_url=? WHERE id=?',
+            [slug || '', product_key || '', title_tr || '', title_en || '', description_tr || '', description_en || '', vimeo_url_tr || '', vimeo_url_en || '', canva_url_tr || '', canva_url_en || '', pdf_url || null, req.params.id]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.delete('/training-access-pages/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await ensureTrainingAccessPagesSchema();
+        await db.query('DELETE FROM training_access_pages WHERE id=?', [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ── Training Lessons CRUD ────────────────────────────────────────────────────
+
+// GET /admin/training-lessons/:trainingId
+router.get('/training-lessons/:trainingId', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT * FROM training_lessons WHERE training_id = ? ORDER BY order_index ASC`,
+            [req.params.trainingId]
+        );
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /admin/training-lessons
+router.post('/training-lessons', authMiddleware, adminMiddleware, async (req, res) => {
+    const { training_id, title_tr, title_en, description_tr, description_en,
+            vimeo_url_tr, vimeo_url_en, pdf_url, order_index, duration_label, is_published } = req.body;
+    if (!training_id || !title_tr) return res.status(400).json({ error: 'training_id ve title_tr zorunlu' });
+    try {
+        const [result] = await db.query(
+            `INSERT INTO training_lessons
+             (training_id, title_tr, title_en, description_tr, description_en,
+              vimeo_url_tr, vimeo_url_en, pdf_url, order_index, duration_label, is_published)
+             VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+            [training_id, title_tr, title_en || null, description_tr || null, description_en || null,
+             vimeo_url_tr || null, vimeo_url_en || null, pdf_url || null,
+             order_index ?? 0, duration_label || null, is_published ?? 1]
+        );
+        const [created] = await db.query('SELECT * FROM training_lessons WHERE id=?', [result.insertId]);
+        res.status(201).json(created[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PUT /admin/training-lessons/:id
+router.put('/training-lessons/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { title_tr, title_en, description_tr, description_en,
+            vimeo_url_tr, vimeo_url_en, pdf_url, order_index, duration_label, is_published } = req.body;
+    try {
+        await db.query(
+            `UPDATE training_lessons SET
+             title_tr=?, title_en=?, description_tr=?, description_en=?,
+             vimeo_url_tr=?, vimeo_url_en=?, pdf_url=?,
+             order_index=?, duration_label=?, is_published=?
+             WHERE id=?`,
+            [title_tr, title_en || null, description_tr || null, description_en || null,
+             vimeo_url_tr || null, vimeo_url_en || null, pdf_url || null,
+             order_index ?? 0, duration_label || null, is_published ?? 1, req.params.id]
+        );
+        const [updated] = await db.query('SELECT * FROM training_lessons WHERE id=?', [req.params.id]);
+        res.json(updated[0] || { success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /admin/training-lessons/:id
+router.delete('/training-lessons/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await db.query('DELETE FROM training_lessons WHERE id=?', [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ── Training Analytics ───────────────────────────────────────────────────────
+
+router.get('/training-analytics', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [summary] = await db.query(`
+            SELECT tws.product_key,
+                   COUNT(DISTINCT tws.user_id) AS total_viewers,
+                   SUM(tws.seconds_watched)    AS total_seconds,
+                   MAX(tws.updated_at)         AS last_access
+            FROM training_watch_sessions tws
+            GROUP BY tws.product_key
+            ORDER BY total_seconds DESC
+        `);
+        const [details] = await db.query(`
+            SELECT tws.product_key, tws.user_id,
+                   CONCAT(u.first_name, ' ', u.last_name) AS user_name,
+                   u.email AS user_email,
+                   SUM(tws.seconds_watched) AS total_seconds,
+                   MAX(tws.updated_at)      AS last_access
+            FROM training_watch_sessions tws
+            JOIN users u ON u.id = tws.user_id
+            GROUP BY tws.product_key, tws.user_id
+            ORDER BY tws.product_key, total_seconds DESC
+        `);
+        res.json({ summary, details });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
 });

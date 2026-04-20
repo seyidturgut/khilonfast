@@ -1,8 +1,11 @@
 <?php
 // api/routes/orders.php
+require_once __DIR__ . '/../services/CouponService.php';
 
 $db = Database::getInstance();
 ensureMustChangePasswordColumn($db);
+$hasMustChangePassword = hasMustChangePasswordColumn($db);
+ensureCouponSchema($db);
 $payload = optionalAuth();
 
 function splitFullName($fullName)
@@ -15,7 +18,7 @@ function splitFullName($fullName)
     return [$first, $last];
 }
 
-function sendWelcomeAccountEmail(PDO $db, $email, $firstName, $temporaryPassword)
+function sendWelcomeAccountEmail(PDO $db, $email, $firstName, $authToken)
 {
     $smtpHost = (string)getSetting($db, 'smtp_host', '');
     $smtpPort = (int)getSetting($db, 'smtp_port', '465');
@@ -28,19 +31,29 @@ function sendWelcomeAccountEmail(PDO $db, $email, $firstName, $temporaryPassword
         throw new Exception('SMTP settings missing');
     }
 
-    $subject = 'Khilonfast - Kayit Tamamlandi';
+    $subject = 'Khilonfast - Hesabınız Hazır, Şifrenizi Belirleyin';
     $safeFirst = htmlspecialchars((string)$firstName, ENT_QUOTES, 'UTF-8');
-    $safeEmail = htmlspecialchars((string)$email, ENT_QUOTES, 'UTF-8');
-    $safePass = htmlspecialchars((string)$temporaryPassword, ENT_QUOTES, 'UTF-8');
+    $setPasswordUrl = 'https://khilonfast.com/sifre-belirle?token=' . urlencode((string)$authToken);
 
-    $html = "<!doctype html><html lang='tr'><body style='font-family:Arial,sans-serif;background:#f6f8fb;padding:20px;'>
+    $html = "<!doctype html><html lang='tr'><body style='font-family:Arial,sans-serif;background:#f6f8fb;padding:20px;margin:0;'>
         <div style='max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden;'>
-        <div style='background:#0f766e;color:#fff;padding:18px 20px;'><h2 style='margin:0;'>Kayit Tamamlandi</h2></div>
-        <div style='padding:20px;color:#102a43;'>
-        <p>Merhaba {$safeFirst},</p>
-        <p>Satın alma sırasında hesabınız oluşturuldu.</p>
-        <p><strong>E-posta:</strong> {$safeEmail}<br/><strong>Gecici Sifre:</strong> <code>{$safePass}</code></p>
-        <p>İlk girişte güvenlik için şifrenizi değiştirmeniz zorunludur.</p>
+        <div style='background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px;'>
+            <h2 style='margin:0;font-size:1.3rem;'>Satın Alımınız Tamamlandı!</h2>
+        </div>
+        <div style='padding:24px;color:#102a43;line-height:1.7;'>
+            <p style='margin-top:0;'>Merhaba <strong>{$safeFirst}</strong>,</p>
+            <p>Satın alımınız başarıyla tamamlandı. Satın aldığınız içeriklere her zaman erişmek için bir şifre belirlemeniz yeterli.</p>
+            <div style='text-align:center;margin:28px 0;'>
+                <a href='{$setPasswordUrl}'
+                   style='background:linear-gradient(90deg,#1a3a52,#2d5570);color:#fff;text-decoration:none;
+                          padding:14px 32px;border-radius:8px;font-weight:700;font-size:1rem;display:inline-block;'>
+                    Şifremi Belirle →
+                </a>
+            </div>
+            <p style='font-size:0.85rem;color:#64748b;'>Bu butona tıklayarak hesabınıza doğrudan giriş yapıp şifrenizi oluşturabilirsiniz.
+            Link 7 gün geçerlidir.</p>
+            <hr style='border:none;border-top:1px solid #e2e8f0;margin:20px 0;'/>
+            <p style='font-size:0.82rem;color:#94a3b8;margin:0;'>Eğer bu satın alımı siz yapmadıysanız bu e-postayı görmezden gelebilirsiniz.</p>
         </div></div></body></html>";
 
     sendSmtpEmail(
@@ -70,6 +83,7 @@ if ($method === 'POST' && empty($action)) {
     $guestEmail = trim((string)($data['guest_email'] ?? ''));
     $guestName = trim((string)($data['guest_name'] ?? ''));
     $guestPhone = trim((string)($data['guest_phone'] ?? ''));
+    $couponCode = couponNormalizeCode($data['coupon_code'] ?? '');
 
     try {
         $db->beginTransaction();
@@ -91,61 +105,70 @@ if ($method === 'POST' && empty($action)) {
             $temporaryPassword = generateTemporaryPassword(12);
             $passwordHash = password_hash($temporaryPassword, PASSWORD_BCRYPT);
 
-            $stmt = $db->prepare(
-                "INSERT INTO users (email, password_hash, first_name, last_name, phone, must_change_password, role)
-                 VALUES (?, ?, ?, ?, ?, 1, 'user')"
-            );
-            $stmt->execute([$guestEmail, $passwordHash, $firstName, $lastName, ($guestPhone !== '' ? $guestPhone : null)]);
+            if ($hasMustChangePassword) {
+                $stmt = $db->prepare(
+                    "INSERT INTO users (email, password_hash, first_name, last_name, phone, must_change_password, role)
+                     VALUES (?, ?, ?, ?, ?, 1, 'user')"
+                );
+                $stmt->execute([$guestEmail, $passwordHash, $firstName, $lastName, ($guestPhone !== '' ? $guestPhone : null)]);
+            } else {
+                $stmt = $db->prepare(
+                    "INSERT INTO users (email, password_hash, first_name, last_name, phone, role)
+                     VALUES (?, ?, ?, ?, ?, 'user')"
+                );
+                $stmt->execute([$guestEmail, $passwordHash, $firstName, $lastName, ($guestPhone !== '' ? $guestPhone : null)]);
+            }
             $userId = (int)$db->lastInsertId();
 
             $authToken = encodeJWT(['id' => $userId, 'email' => $guestEmail, 'role' => 'user']);
             $accountCreated = true;
 
             try {
-                sendWelcomeAccountEmail($db, $guestEmail, $firstName, $temporaryPassword);
+                sendWelcomeAccountEmail($db, $guestEmail, $firstName, $authToken);
                 $accountEmailSent = true;
             } catch (Throwable $mailError) {
                 error_log('Welcome email send error: ' . $mailError->getMessage());
             }
         }
 
-        $totalAmount = 0.0;
-        $orderItems = [];
+        $pricing = couponBuildPricingPreview(
+            $db,
+            $items,
+            $couponCode,
+            ['id' => $userId, 'email' => $guestEmail !== '' ? $guestEmail : ($payload['email'] ?? null)],
+            $guestEmail,
+            $couponCode !== ''
+        );
 
-        foreach ($items as $item) {
-            $productId = isset($item['product_id']) ? (int)$item['product_id'] : 0;
-            $productKey = trim((string)($item['product_key'] ?? ''));
-            $quantity = max(1, (int)($item['quantity'] ?? 1));
-
-            $product = null;
-            if ($productId > 0) {
-                $stmt = $db->prepare("SELECT * FROM products WHERE id = ? AND is_active = 1 LIMIT 1");
-                $stmt->execute([$productId]);
-                $product = $stmt->fetch();
-            } elseif ($productKey !== '') {
-                $stmt = $db->prepare("SELECT * FROM products WHERE product_key = ? AND is_active = 1 LIMIT 1");
-                $stmt->execute([$productKey]);
-                $product = $stmt->fetch();
-            }
-
-            if (!$product) {
-                throw new Exception('Product not found');
-            }
-
-            $unitPrice = (float)$product['price'];
-            $itemTotal = $unitPrice * $quantity;
-            $totalAmount += $itemTotal;
-            $orderItems[] = [
-                'product_id' => (int)$product['id'],
-                'quantity' => $quantity,
-                'unit_price' => $unitPrice,
-                'total_price' => $itemTotal
+        $orderItems = array_map(static function ($line) {
+            return [
+                'product_id' => (int)$line['product_id'],
+                'quantity' => (int)$line['quantity'],
+                'unit_price' => (float)$line['unit_price'],
+                'total_price' => (float)$line['total_price']
             ];
-        }
+        }, $pricing['items']);
 
         $orderNumber = 'ORD-' . time() . '-' . $userId;
-        $stmt = $db->prepare("INSERT INTO orders (user_id, order_number, total_amount, status) VALUES (?, ?, ?, 'pending')");
-        $stmt->execute([$userId, $orderNumber, $totalAmount]);
+        $stmt = $db->prepare(
+            "INSERT INTO orders (
+                user_id, order_number, subtotal_amount, coupon_discount_amount, shipping_amount, tax_amount,
+                total_amount, coupon_id, coupon_code, coupon_name, applied_coupon_snapshot_json, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')"
+        );
+        $stmt->execute([
+            $userId,
+            $orderNumber,
+            $pricing['subtotal'],
+            $pricing['discount'],
+            $pricing['shipping'],
+            $pricing['tax'],
+            $pricing['total'],
+            $pricing['applied_coupon']['id'] ?? null,
+            $pricing['applied_coupon']['code'] ?? null,
+            $pricing['applied_coupon']['name'] ?? null,
+            $pricing['applied_coupon'] ? json_encode($pricing['applied_coupon'], JSON_UNESCAPED_UNICODE) : null
+        ]);
         $orderId = (int)$db->lastInsertId();
 
         $stmt = $db->prepare(
@@ -161,6 +184,10 @@ if ($method === 'POST' && empty($action)) {
             ]);
         }
 
+        if (!empty($pricing['applied_coupon']) && (float)$pricing['discount'] > 0) {
+            couponReserveUsage($db, $pricing['applied_coupon'], $userId, $orderId, $pricing['discount']);
+        }
+
         $db->commit();
 
         sendResponse([
@@ -168,7 +195,13 @@ if ($method === 'POST' && empty($action)) {
             'order' => [
                 'id' => $orderId,
                 'order_number' => $orderNumber,
-                'total_amount' => $totalAmount,
+                'subtotal_amount' => $pricing['subtotal'],
+                'coupon_discount_amount' => $pricing['discount'],
+                'shipping_amount' => $pricing['shipping'],
+                'tax_amount' => $pricing['tax'],
+                'total_amount' => $pricing['total'],
+                'coupon_code' => $pricing['applied_coupon']['code'] ?? null,
+                'coupon_name' => $pricing['applied_coupon']['name'] ?? null,
                 'status' => 'pending'
             ],
             'auth_token' => $authToken,
@@ -177,6 +210,9 @@ if ($method === 'POST' && empty($action)) {
                 'email_sent' => $accountEmailSent
             ]
         ], 201);
+    } catch (CouponValidationException $e) {
+        if ($db->inTransaction()) $db->rollBack();
+        sendResponse(['error' => $e->getMessage()], 400);
     } catch (Throwable $e) {
         if ($db->inTransaction()) $db->rollBack();
         sendResponse(['error' => $e->getMessage() ?: 'Server error'], 500);
@@ -219,6 +255,11 @@ if ($method === 'GET' && $action === 'user') {
     foreach ($orders as $order) {
         $order['id'] = (int)$order['id'];
         $order['user_id'] = (int)$order['user_id'];
+        $order['subtotal_amount'] = (float)($order['subtotal_amount'] ?? $order['total_amount'] ?? 0);
+        $order['coupon_discount_amount'] = (float)($order['coupon_discount_amount'] ?? 0);
+        $order['shipping_amount'] = (float)($order['shipping_amount'] ?? 0);
+        $order['tax_amount'] = (float)($order['tax_amount'] ?? 0);
+        $order['total_amount'] = (float)($order['total_amount'] ?? 0);
         $order['items'] = $order['items'] ? json_decode('[' . $order['items'] . ']', true) : [];
         $out[] = $order;
     }
@@ -252,9 +293,13 @@ if ($method === 'GET' && !empty($action)) {
     }
     $order['id'] = (int)$order['id'];
     $order['user_id'] = (int)$order['user_id'];
+    $order['subtotal_amount'] = (float)($order['subtotal_amount'] ?? $order['total_amount'] ?? 0);
+    $order['coupon_discount_amount'] = (float)($order['coupon_discount_amount'] ?? 0);
+    $order['shipping_amount'] = (float)($order['shipping_amount'] ?? 0);
+    $order['tax_amount'] = (float)($order['tax_amount'] ?? 0);
+    $order['total_amount'] = (float)($order['total_amount'] ?? 0);
     $order['items'] = $order['items'] ? json_decode('[' . $order['items'] . ']', true) : [];
     sendResponse(['order' => $order]);
 }
 
 sendResponse(['error' => 'Action not found'], 404);
-

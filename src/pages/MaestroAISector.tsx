@@ -18,7 +18,7 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
 
 interface MaestroAISectorProps {
-    sectorKey: 'b2b' | 'odeme-sistemleri' | 'endustriyel-gida' | 'fintech' | 'enerji' | 'ofis-tasarim' | 'filo-kiralama' | 'teknoloji-yazilim' | 'uretim'
+    sectorKey: 'b2b' | 'odeme-sistemleri' | 'endustriyel-gida' | 'fintech' | 'enerji' | 'ofis-tasarim' | 'filo-kiralama' | 'teknoloji-yazilim' | 'uretim' | 'hediye-karti' | 'akaryakit'
 }
 
 export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
@@ -54,9 +54,29 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
             buttonText: t('pricing.buyNow'),
             buttonLink: '#pricing',
             image: '/img/maestro-ai-hero.png',
-            videoUrl: sectorKey === 'b2b' || sectorKey === 'endustriyel-gida' || sectorKey === 'enerji' || sectorKey === 'filo-kiralama' || sectorKey === 'fintech' || sectorKey === 'odeme-sistemleri' || sectorKey === 'ofis-tasarim' || sectorKey === 'teknoloji-yazilim' || sectorKey === 'uretim'
-                ? 'https://youtu.be/fiHpDDF440M?start=8&end=32&autoplay=1&loop=1&mute=1'
-                : 'https://www.youtube.com/embed/fiHpDDF440M',
+            videoUrl: sectorKey === 'b2b'
+                ? (currentLang === 'en' ? 'https://vimeo.com/1150546193' : 'https://vimeo.com/1133020329')
+                : sectorKey === 'odeme-sistemleri'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1133021779' : 'https://vimeo.com/1131184399')
+                    : sectorKey === 'endustriyel-gida'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546239' : 'https://vimeo.com/1138078299')
+                    : sectorKey === 'fintech'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546357' : 'https://vimeo.com/1138057683')
+                : sectorKey === 'enerji'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546292' : 'https://vimeo.com/1138062770')
+                : sectorKey === 'ofis-tasarim'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546456' : 'https://vimeo.com/1138056027')
+                : sectorKey === 'filo-kiralama'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546383' : 'https://vimeo.com/1138053210')
+                : sectorKey === 'teknoloji-yazilim'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546481' : 'https://vimeo.com/1138054522')
+                : sectorKey === 'uretim'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546422' : 'https://vimeo.com/1138050853')
+                : sectorKey === 'hediye-karti'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1138057683' : 'https://vimeo.com/1138057683')
+                : sectorKey === 'akaryakit'
+                    ? (currentLang === 'en' ? 'https://vimeo.com/1138057683' : 'https://vimeo.com/1138057683')
+                        : 'https://www.youtube.com/embed/fiHpDDF440M',
             hideBadge: true,
             badgeText: t('maestroAI.hero.badge'),
             badgeIcon: <HiBolt />,

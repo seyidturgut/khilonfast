@@ -3,19 +3,48 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ordersAPI, paymentAPI } from '../services/api';
-import { HiCheckCircle, HiCreditCard, HiShieldCheck, HiShoppingBag } from 'react-icons/hi';
+import { couponAPI, emailAutomationAPI, ordersAPI, paymentAPI } from '../services/api';
+import { HiCheckCircle, HiCreditCard, HiShieldCheck, HiShoppingBag, HiLibrary } from 'react-icons/hi';
+
+interface SavedCard {
+    id: number;
+    masked_number: string;
+    card_brand: string | null;
+    expire_month: number;
+    expire_year: number;
+    card_holder_name: string | null;
+    is_default: boolean;
+}
 import './Checkout.css';
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 import { API_BASE_URL } from '../config/api';
 import { checkoutLegalContent } from '../content/legalContent';
+
+interface CheckoutPricingSummary {
+    subtotal: number;
+    discount: number;
+    shipping: number;
+    tax: number;
+    total: number;
+    currency: string;
+    applied_coupon: {
+        id: number;
+        name: string;
+        code: string;
+        description?: string;
+        discount_type: 'percentage' | 'fixed';
+        discount_value: number;
+        maximum_discount_amount?: number | null;
+        is_stackable?: boolean;
+    } | null;
+}
 
 export default function Checkout() {
     useTranslation('common');
     const useHostedPayment = false;
     const API_BASE = API_BASE_URL;
     const { user, isAuthenticated, activateToken } = useAuth();
-    const { items, getTotalPrice, clearCart } = useCart();
+    const { items, clearCart } = useCart();
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as { email?: string; name?: string; country?: string } | null;
@@ -36,9 +65,12 @@ export default function Checkout() {
     
     // Auto-advance logic: if coming with guest info, start at Step 3 (Payment)
     const [step, setStep] = useState<1 | 2 | 3>(state?.email ? 3 : 1);
-    const [termsReachedEnd, setTermsReachedEnd] = useState(state?.email ? true : false);
-    const [termsAccepted, setTermsAccepted] = useState(state?.email ? true : false);
-    const [privacyAccepted, setPrivacyAccepted] = useState(state?.email ? true : false);
+    const autoAccepted = !!state?.email;
+    const [termsAccepted, setTermsAccepted] = useState(autoAccepted);
+    const [privacyAccepted, setPrivacyAccepted] = useState(autoAccepted);
+    const [cookieAccepted, setCookieAccepted] = useState(autoAccepted);
+    const [refundAccepted, setRefundAccepted] = useState(autoAccepted);
+    const allPoliciesAccepted = termsAccepted && privacyAccepted && cookieAccepted && refundAccepted;
     const [country, setCountry] = useState(state?.country || 'Türkiye');
     const [email, setEmail] = useState(state?.email || user?.email || '');
     const [buyingAsBusiness, setBuyingAsBusiness] = useState(false);
@@ -49,6 +81,18 @@ export default function Checkout() {
     const [cardExpireMonth, setCardExpireMonth] = useState('');
     const [cardExpireYear, setCardExpireYear] = useState('');
     const [cardCvv, setCardCvv] = useState('');
+    const hasSubscription = useMemo(() => items.some(i => (i.duration_days ?? 0) > 0), [items]);
+    const [saveCard, setSaveCard] = useState(() => items.some(i => (i.duration_days ?? 0) > 0));
+    const [savedCards, setSavedCards] = useState<SavedCard[]>([]);
+    const [selectedCardId, setSelectedCardId] = useState<number>(0); // 0 = yeni kart
+    const [paymentMethod, setPaymentMethod] = useState<'card' | 'wire_transfer'>('card');
+    const [wireTransferResult, setWireTransferResult] = useState<any>(null);
+    const [couponCode, setCouponCode] = useState('');
+    const [couponLoading, setCouponLoading] = useState(false);
+    const [pricingSummary, setPricingSummary] = useState<CheckoutPricingSummary | null>(null);
+    const [showExitIntent, setShowExitIntent] = useState(false);
+    const emailEventSentRef = useRef(false);
+    const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const copy = useMemo(() => ({
         stepTitles: {
             info: isEn ? 'Purchase Information' : 'Satın Alma Bilgileri',
@@ -126,14 +170,30 @@ export default function Checkout() {
         },
         summary: {
             title: isEn ? 'Order Summary' : 'Sipariş Özeti',
-            total: isEn ? 'Total:' : 'Toplam:'
+            subtotal: isEn ? 'Subtotal' : 'Ara toplam',
+            discount: isEn ? 'Coupon Discount' : 'Kupon indirimi',
+            shipping: isEn ? 'Shipping' : 'Kargo',
+            tax: isEn ? 'Tax' : 'Vergi',
+            total: isEn ? 'Total:' : 'Genel toplam',
+            couponLabel: isEn ? 'Coupon code' : 'Kupon kodu',
+            couponApplied: isEn ? 'Applied coupon' : 'Kullanılan kupon',
+            apply: isEn ? 'Apply' : 'Uygula',
+            remove: isEn ? 'Remove' : 'Kaldır',
+            applying: isEn ? 'Applying...' : 'Uygulanıyor...'
         },
         payment: {
             title: isEn ? 'Payment Method' : 'Ödeme Yöntemi',
             providerTitle: isEn ? 'Lidio Virtual POS' : 'Lidio Sanal POS',
             providerDescription: isEn ? 'Your payment will be completed through secure payment infrastructure.' : 'Ödemeniz güvenli ödeme altyapısı üzerinden tamamlanacaktır.',
             hostedTitle: isEn ? 'Card details will be entered on the Lidio screen' : 'Kart bilgisi Lidio ekranında girilecek',
-            hostedDescription: isEn ? 'After clicking the buy button, you will be redirected to the secure Lidio payment page.' : 'Satın al butonundan sonra güvenli Lidio ödeme sayfasına yönlendirileceksiniz.'
+            hostedDescription: isEn ? 'After clicking the buy button, you will be redirected to the secure Lidio payment page.' : 'Satın al butonundan sonra güvenli Lidio ödeme sayfasına yönlendirileceksiniz.',
+            tabCard: isEn ? 'Credit / Debit Card' : 'Kredi / Banka Kartı',
+            tabWire: isEn ? 'Instant Wire Transfer' : 'Anında Havale',
+            wireDesc: isEn ? 'You will be redirected to your bank\'s portal to complete the transfer instantly.' : 'Anında ödeme için bankanızın internet bankacılığı portalına yönlendirileceksiniz.',
+            saveCard: isEn ? 'Save card for future payments' : 'Kartımı sonraki ödemeler için kaydet',
+            savedCards: isEn ? 'Your saved cards' : 'Kayıtlı kartlarım',
+            newCard: isEn ? 'Pay with a new card' : 'Yeni kart ile öde',
+            wireSuccess: isEn ? 'Wire transfer initiated! You are being redirected to your bank.' : 'Anında Havale başlatıldı! Bankanıza yönlendiriliyorsunuz.'
         },
         placeholders: {
             email: isEn ? 'example@email.com' : 'ornek@email.com',
@@ -155,7 +215,8 @@ export default function Checkout() {
             expired: isEn ? 'The card appears to be expired.' : 'Kartın son kullanma tarihi geçmiş görünüyor.',
             cvv: isEn ? 'Enter a valid CVV.' : 'Geçerli bir CVV girin.',
             companySave: isEn ? 'Business information could not be saved.' : 'İşletme bilgileri kaydedilemedi.',
-            payment: isEn ? 'Payment failed.' : 'Ödeme işlemi başarısız'
+            payment: isEn ? 'Payment failed.' : 'Ödeme işlemi başarısız',
+            couponMissing: isEn ? 'Please enter a coupon code.' : 'Lütfen bir kupon kodu girin.'
         },
         success: {
             title: isEn ? 'Payment Successful!' : 'Ödeme Başarılı!',
@@ -168,6 +229,22 @@ export default function Checkout() {
         if (step === 2) return copy.stepTitles.terms;
         return copy.stepTitles.payment;
     }, [copy.stepTitles.info, copy.stepTitles.payment, copy.stepTitles.terms, step]);
+
+    const baseCurrency = items.length > 0 && items.every((item) => item.currency === items[0].currency) ? items[0].currency : 'TRY';
+    const baseTotal = useMemo(() => items.reduce((sum, item) => sum + item.price, 0), [items]);
+    const baseSummary = useMemo<CheckoutPricingSummary>(() => ({
+        subtotal: baseTotal,
+        discount: 0,
+        shipping: 0,
+        tax: 0,
+        total: baseTotal,
+        currency: baseCurrency,
+        applied_coupon: null
+    }), [baseCurrency, baseTotal]);
+
+    useEffect(() => {
+        setPricingSummary(baseSummary);
+    }, [baseSummary]);
 
     const formatPrice = (amount: number, currency: string) => {
         const formatted = Number(amount).toLocaleString(isEn ? 'en-US' : 'tr-TR', {
@@ -191,6 +268,49 @@ export default function Checkout() {
         if (!user?.email) return;
         setEmail(user.email);
     }, [user?.email]);
+
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        paymentAPI.getSavedCards()
+            .then(res => setSavedCards(Array.isArray(res.data) ? res.data : []))
+            .catch(() => setSavedCards([]));
+    }, [isAuthenticated]);
+
+    // Exit intent: 45 saniye hareketsizlikte popup göster (session başına 1 kez)
+    useEffect(() => {
+        if (success || sessionStorage.getItem('checkout_exit_shown')) return;
+
+        const resetTimer = () => {
+            if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+            idleTimerRef.current = setTimeout(() => {
+                if (!sessionStorage.getItem('checkout_exit_shown')) {
+                    setShowExitIntent(true);
+                    sessionStorage.setItem('checkout_exit_shown', '1');
+                }
+            }, 45000);
+        };
+
+        const events = ['mousemove', 'keydown', 'scroll', 'click'];
+        events.forEach(ev => window.addEventListener(ev, resetTimer));
+        resetTimer();
+
+        return () => {
+            events.forEach(ev => window.removeEventListener(ev, resetTimer));
+            if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+        };
+    }, [success]);
+
+    const handleEmailBlur = () => {
+        if (emailEventSentRef.current) return;
+        const trimmed = email.trim();
+        if (!trimmed || !/\S+@\S+\.\S+/.test(trimmed)) return;
+        emailEventSentRef.current = true;
+        emailAutomationAPI.logEvent({
+            event_type: 'checkout_email_entered',
+            email: trimmed,
+            cart_data: items.map(i => ({ product_id: i.id, name: i.name, price: i.price, quantity: i.quantity ?? 1 }))
+        }).catch(() => {}); // sessiz hata
+    };
 
     const validateStepOne = () => {
         if (!country) {
@@ -280,11 +400,83 @@ export default function Checkout() {
         return true;
     };
 
-    const handleTermsScroll = () => {
-        if (!termsContentRef.current) return;
-        const el = termsContentRef.current;
-        const reached = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
-        if (reached) setTermsReachedEnd(true);
+    const buildOrderItems = () => items.map((item) => ({
+        product_id: item.product_id,
+        product_key: item.product_key,
+        quantity: 1
+    }));
+
+    const handleApplyCoupon = async () => {
+        const normalizedCode = couponCode.trim().toUpperCase();
+        if (!normalizedCode) {
+            setError(copy.errors.couponMissing);
+            return;
+        }
+
+        setCouponLoading(true);
+        setError('');
+
+        try {
+            const response = await couponAPI.validate({
+                code: normalizedCode,
+                items: buildOrderItems(),
+                guest_email: email.trim()
+            });
+
+            setCouponCode(normalizedCode);
+            setPricingSummary(response.data?.pricing as CheckoutPricingSummary);
+        } catch (err: any) {
+            setPricingSummary(baseSummary);
+            setError(err.response?.data?.error || err.message || copy.errors.payment);
+        } finally {
+            setCouponLoading(false);
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        setCouponCode('');
+        setPricingSummary(baseSummary);
+    };
+
+
+    const handleBankTransfer = async (e: FormEvent) => {
+        e.preventDefault();
+        setError('');
+        if (!validateBusinessInfo()) return;
+        setLoading(true);
+        try {
+            const orderData = {
+                items: buildOrderItems(),
+                coupon_code: pricingSummary?.applied_coupon?.code || null,
+                ...(isAuthenticated ? {} : {
+                    guest_email: email.trim(),
+                    guest_name: email.trim(),
+                    guest_phone: ''
+                })
+            };
+            const orderResponse = await ordersAPI.create(orderData);
+            const order = orderResponse.data.order;
+            const guestAuthToken = orderResponse.data.auth_token;
+            if (guestAuthToken) await activateToken(guestAuthToken);
+
+            const result = await paymentAPI.bankTransfer({ order_id: order.id });
+            const data = result.data;
+
+            if (data.redirect_url) {
+                setWireTransferResult(data);
+                setTimeout(() => { window.location.href = data.redirect_url; }, 1500);
+            } else {
+                setWireTransferResult(data);
+                clearCart();
+                if (user?.must_change_password) {
+                    setTimeout(() => navigate(isEn ? '/en/set-password' : '/sifre-belirle'), 2000);
+                }
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.error || err.message || copy.errors.payment);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handlePayment = async (e: FormEvent) => {
@@ -292,18 +484,16 @@ export default function Checkout() {
         setError('');
 
         if (!validateBusinessInfo()) return;
-        if (!useHostedPayment && !validateCardInfo()) return;
+        const usingSavedCard = selectedCardId > 0;
+        if (!useHostedPayment && !usingSavedCard && !validateCardInfo()) return;
         setLoading(true);
 
         try {
             // Create order
             const guestNameFromCard = cardHolderName.trim() || '';
             const orderData = {
-                items: items.map(item => ({
-                    product_id: item.product_id,
-                    product_key: item.product_key,
-                    quantity: 1
-                })),
+                items: buildOrderItems(),
+                coupon_code: pricingSummary?.applied_coupon?.code || null,
                 ...(isAuthenticated ? {} : {
                     guest_email: email.trim(),
                     guest_name: guestNameFromCard,
@@ -340,14 +530,16 @@ export default function Checkout() {
                 }
             }
 
-            // Initiate payment (using test mode for now)
+            // Initiate payment
             const paymentPayload: Record<string, any> = {
                 order_id: order.id,
                 use_3ds: true,
                 use_hosted: useHostedPayment
             };
 
-            if (!useHostedPayment) {
+            if (selectedCardId > 0) {
+                paymentPayload.saved_card_id = selectedCardId;
+            } else if (!useHostedPayment) {
                 paymentPayload.card_number = cardNumber.replace(/\D/g, '');
                 paymentPayload.card_holder_name = cardHolderName.trim();
                 paymentPayload.card_expire_month = Number(cardExpireMonth.replace(/\D/g, ''));
@@ -356,6 +548,7 @@ export default function Checkout() {
                     return Number(year.length === 2 ? `20${year}` : year);
                 })();
                 paymentPayload.card_cvv = cardCvv.replace(/\D/g, '');
+                if (saveCard && isAuthenticated) paymentPayload.save_card = true;
             }
 
             const paymentResponse = await paymentAPI.initiate(paymentPayload);
@@ -426,8 +619,12 @@ export default function Checkout() {
                 clearCart();
 
                 setTimeout(() => {
-                    // Redirect to dashboard orders tab
-                    navigate(`${dashboardPath}?tab=orders&success=true`);
+                    // Guest satın alım → şifre belirlenmesi gerekiyor
+                    if (user?.must_change_password) {
+                        navigate(isEn ? '/en/set-password' : '/sifre-belirle');
+                    } else {
+                        navigate(`${dashboardPath}?tab=orders&success=true`);
+                    }
                 }, 1500);
             } else {
                 throw new Error(
@@ -461,6 +658,7 @@ export default function Checkout() {
     }
 
     return (
+        <>
         <div className="checkout-page">
             <div className="checkout-container">
                 <h1>{stepTitle}</h1>
@@ -498,6 +696,7 @@ export default function Checkout() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    onBlur={handleEmailBlur}
                                     placeholder={copy.placeholders.email}
                                 />
                             </div>
@@ -541,7 +740,7 @@ export default function Checkout() {
                             <p>{legalCopy.termsDescription}</p>
                         </div>
 
-                        <div className="terms-content" ref={termsContentRef} onScroll={handleTermsScroll}>
+                        <div className="terms-content" ref={termsContentRef}>
                             <h3>{legalCopy.termsHeading}</h3>
                             <p>{legalCopy.termsIntro}</p>
                             <ul className="terms-list">
@@ -549,41 +748,55 @@ export default function Checkout() {
                                     <li key={item}>{item}</li>
                                 ))}
                             </ul>
-                            <div className="terms-links">
-                                <strong>{legalCopy.policyLinksLabel}</strong>
-                                <Link to={termsPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                    {isEn ? 'Terms of Service' : 'Hizmet Şartları'}
-                                </Link>
-                                <Link to={privacyPolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                    {isEn ? 'Privacy Policy' : 'Gizlilik Politikası'}
-                                </Link>
-                                <Link to={cookiePolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                    {isEn ? 'Cookie Policy' : 'Çerez Politikası'}
-                                </Link>
-                                <Link to={refundPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                    {isEn ? 'Cancellation & Refund Policy' : 'İade ve İptal Politikası'}
-                                </Link>
-                            </div>
                         </div>
 
-                        {termsReachedEnd && !termsAccepted && (
-                            <button
-                                type="button"
-                                className="btn-next"
-                                onClick={() => {
-                                    setTermsAccepted(true);
-                                    setStep(3);
-                                }}
-                            >
-                                {copy.buttons.acceptTerms}
-                            </button>
-                        )}
+                        <div className="policy-checkboxes">
+                            <label className="checkbox-row">
+                                <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)} />
+                                <span>
+                                    <Link to={termsPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                        {isEn ? 'Terms of Service' : 'Hizmet Şartları'}
+                                    </Link>
+                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
+                                </span>
+                            </label>
+                            <label className="checkbox-row">
+                                <input type="checkbox" checked={privacyAccepted} onChange={e => setPrivacyAccepted(e.target.checked)} />
+                                <span>
+                                    <Link to={privacyPolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                        {isEn ? 'Privacy Policy' : 'Gizlilik Politikası'}
+                                    </Link>
+                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
+                                </span>
+                            </label>
+                            <label className="checkbox-row">
+                                <input type="checkbox" checked={cookieAccepted} onChange={e => setCookieAccepted(e.target.checked)} />
+                                <span>
+                                    <Link to={cookiePolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                        {isEn ? 'Cookie Policy' : 'Çerez Politikası'}
+                                    </Link>
+                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
+                                </span>
+                            </label>
+                            <label className="checkbox-row">
+                                <input type="checkbox" checked={refundAccepted} onChange={e => setRefundAccepted(e.target.checked)} />
+                                <span>
+                                    <Link to={refundPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
+                                        {isEn ? 'Cancellation & Refund Policy' : 'İptal ve İade Politikası'}
+                                    </Link>
+                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
+                                </span>
+                            </label>
+                        </div>
 
-                        {!termsReachedEnd && (
-                            <div className="terms-hint">
-                                {legalCopy.termsReviewHint}
-                            </div>
-                        )}
+                        <button
+                            type="button"
+                            className="btn-next"
+                            disabled={!allPoliciesAccepted}
+                            onClick={() => setStep(3)}
+                        >
+                            {copy.buttons.acceptTerms}
+                        </button>
                     </div>
                 )}
 
@@ -594,6 +807,41 @@ export default function Checkout() {
                             <h2>
                                 <HiShoppingBag /> {copy.summary.title}
                             </h2>
+
+                            <div className="coupon-box">
+                                <label htmlFor="couponCode">{copy.summary.couponLabel}</label>
+                                <div className="coupon-row">
+                                    <input
+                                        id="couponCode"
+                                        className="form-control"
+                                        type="text"
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                        placeholder={isEn ? 'Enter coupon code' : 'Kupon kodunu girin'}
+                                        disabled={couponLoading}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="btn-next coupon-apply-btn"
+                                        onClick={handleApplyCoupon}
+                                        disabled={couponLoading || items.length === 0}
+                                    >
+                                        {couponLoading ? copy.summary.applying : copy.summary.apply}
+                                    </button>
+                                </div>
+                                {pricingSummary?.applied_coupon && (
+                                    <div className="coupon-applied">
+                                        <div>
+                                            <strong>{copy.summary.couponApplied}:</strong>{' '}
+                                            <code>{pricingSummary.applied_coupon.code}</code>
+                                            <span> {pricingSummary.applied_coupon.name}</span>
+                                        </div>
+                                        <button type="button" className="coupon-remove-btn" onClick={handleRemoveCoupon}>
+                                            {copy.summary.remove}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
 
                             <div className="summary-items">
                                 {items.map((item) => (
@@ -608,9 +856,28 @@ export default function Checkout() {
                                 ))}
                             </div>
 
+                            <div className="summary-breakdown">
+                                <div className="summary-line">
+                                    <span>{copy.summary.subtotal}</span>
+                                    <strong>{formatPrice(pricingSummary?.subtotal ?? baseSummary.subtotal, pricingSummary?.currency ?? baseSummary.currency)}</strong>
+                                </div>
+                                <div className="summary-line summary-line-discount">
+                                    <span>{copy.summary.discount}</span>
+                                    <strong>- {formatPrice(pricingSummary?.discount ?? 0, pricingSummary?.currency ?? baseSummary.currency)}</strong>
+                                </div>
+                                <div className="summary-line">
+                                    <span>{copy.summary.shipping}</span>
+                                    <strong>{formatPrice(pricingSummary?.shipping ?? 0, pricingSummary?.currency ?? baseSummary.currency)}</strong>
+                                </div>
+                                <div className="summary-line">
+                                    <span>{copy.summary.tax}</span>
+                                    <strong>{formatPrice(pricingSummary?.tax ?? 0, pricingSummary?.currency ?? baseSummary.currency)}</strong>
+                                </div>
+                            </div>
+
                             <div className="summary-total">
                                 <span>{copy.summary.total}</span>
-                                <strong>{formatPrice(getTotalPrice(), 'TL')}</strong>
+                                <strong>{formatPrice(pricingSummary?.total ?? baseSummary.total, pricingSummary?.currency ?? baseSummary.currency)}</strong>
                             </div>
                         </div>
 
@@ -628,120 +895,233 @@ export default function Checkout() {
                                 </div>
                             </div>
 
-                            {useHostedPayment ? (
-                                <div className="payment-method-box">
-                                    <HiShieldCheck />
-                                    <div>
-                                        <strong>{copy.payment.hostedTitle}</strong>
-                                        <p>{copy.payment.hostedDescription}</p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="field-grid">
-                                    <div className="form-group">
-                                        <label>{copy.fields.cardName}</label>
-                                        <input
-                                            className="form-control"
-                                            value={cardHolderName}
-                                            onChange={(e) => setCardHolderName(e.target.value)}
-                                            placeholder={copy.placeholders.cardName}
-                                            autoComplete="cc-name"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{copy.fields.cardNumber}</label>
-                                        <input
-                                            className="form-control"
-                                            value={cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ')}
-                                            onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 19))}
-                                            placeholder="0000 0000 0000 0000"
-                                            inputMode="numeric"
-                                            autoComplete="cc-number"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{copy.fields.expireMonth}</label>
-                                        <input
-                                            className="form-control"
-                                            value={cardExpireMonth}
-                                            onChange={(e) => setCardExpireMonth(e.target.value.replace(/\D/g, '').slice(0, 2))}
-                                            placeholder="AA"
-                                            inputMode="numeric"
-                                            autoComplete="cc-exp-month"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{copy.fields.expireYear}</label>
-                                        <input
-                                            className="form-control"
-                                            value={cardExpireYear}
-                                            onChange={(e) => setCardExpireYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                            placeholder="YYYY"
-                                            inputMode="numeric"
-                                            autoComplete="cc-exp-year"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>CVV</label>
-                                        <input
-                                            className="form-control"
-                                            type="password"
-                                            value={cardCvv}
-                                            onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                            placeholder="123"
-                                            inputMode="numeric"
-                                            autoComplete="cc-csc"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            <label className="checkbox-row business-buying">
-                                <input
-                                    type="checkbox"
-                                    checked={buyingAsBusiness}
-                                    onChange={(e) => setBuyingAsBusiness(e.target.checked)}
-                                />
-                                <span>{copy.fields.businessPurchase}</span>
-                            </label>
-
-                            {buyingAsBusiness && (
-                                <div className="field-grid">
-                                    <div className="form-group">
-                                        <label>{copy.fields.companyName}</label>
-                                        <input
-                                            className="form-control"
-                                            value={companyName}
-                                            onChange={(e) => setCompanyName(e.target.value)}
-                                            placeholder={copy.placeholders.companyName}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{copy.fields.taxNumber}</label>
-                                        <input
-                                            className="form-control"
-                                            value={taxNumber}
-                                            onChange={(e) => setTaxNumber(e.target.value.replace(/\D/g, ''))}
-                                            placeholder={copy.placeholders.taxNumber}
-                                            maxLength={11}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            <form onSubmit={handlePayment} className="payment-form">
-                                <button type="submit" className="btn-pay" disabled={loading}>
-                                    {loading
-                                        ? copy.buttons.processing
-                                        : buyingAsBusiness
-                                            ? copy.buttons.completePayment
-                                            : copy.buttons.buyAndPay}
+                            {/* Ödeme Yöntemi Sekmeleri */}
+                            <div className="payment-tabs">
+                                <button
+                                    type="button"
+                                    className={`payment-tab${paymentMethod === 'card' ? ' active' : ''}`}
+                                    onClick={() => setPaymentMethod('card')}
+                                >
+                                    <HiCreditCard /> {copy.payment.tabCard}
                                 </button>
-                            </form>
+                                <button
+                                    type="button"
+                                    className={`payment-tab${paymentMethod === 'wire_transfer' ? ' active' : ''}`}
+                                    onClick={() => setPaymentMethod('wire_transfer')}
+                                >
+                                    <HiLibrary /> {copy.payment.tabWire}
+                                </button>
+                            </div>
+
+                            {paymentMethod === 'wire_transfer' ? (
+                                <>
+                                    {wireTransferResult ? (
+                                        <div className="wire-transfer-success">
+                                            <HiCheckCircle style={{ fontSize: '2rem', color: '#22c55e' }} />
+                                            <p>{copy.payment.wireSuccess}</p>
+                                        </div>
+                                    ) : (
+                                        <div className="payment-method-box" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                                                <HiLibrary style={{ fontSize: '1.5rem', color: '#2563eb' }} />
+                                                <strong>{isEn ? 'Instant Wire Transfer' : 'Anında Havale'}</strong>
+                                            </div>
+                                            <p style={{ margin: '0.5rem 0 0', color: '#6b7280', fontSize: '0.9rem' }}>
+                                                {copy.payment.wireDesc}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    <label className="checkbox-row business-buying">
+                                        <input type="checkbox" checked={buyingAsBusiness} onChange={(e) => setBuyingAsBusiness(e.target.checked)} />
+                                        <span>{copy.fields.businessPurchase}</span>
+                                    </label>
+                                    {buyingAsBusiness && (
+                                        <div className="field-grid">
+                                            <div className="form-group">
+                                                <label>{copy.fields.companyName}</label>
+                                                <input className="form-control" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder={copy.placeholders.companyName} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{copy.fields.taxNumber}</label>
+                                                <input className="form-control" value={taxNumber} onChange={(e) => setTaxNumber(e.target.value.replace(/\D/g, ''))} placeholder={copy.placeholders.taxNumber} maxLength={11} />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {!wireTransferResult && (
+                                        <form onSubmit={handleBankTransfer} className="payment-form">
+                                            <button type="submit" className="btn-pay" disabled={loading}>
+                                                {loading ? copy.buttons.processing : (isEn ? 'Pay via Wire Transfer' : 'Havale ile Öde')}
+                                            </button>
+                                        </form>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    {/* Kayıtlı Kartlar */}
+                                    {isAuthenticated && savedCards.length > 0 && (
+                                        <div className="saved-cards-section">
+                                            <label className="saved-cards-label">{copy.payment.savedCards}</label>
+                                            <div className="saved-cards-list">
+                                                {savedCards.map(card => (
+                                                    <label key={card.id} className={`saved-card-item${selectedCardId === card.id ? ' selected' : ''}`}>
+                                                        <input
+                                                            type="radio"
+                                                            name="savedCard"
+                                                            value={card.id}
+                                                            checked={selectedCardId === card.id}
+                                                            onChange={() => setSelectedCardId(card.id)}
+                                                        />
+                                                        <HiCreditCard />
+                                                        <span>{card.masked_number}</span>
+                                                        {card.card_brand && <span className="card-brand">{card.card_brand}</span>}
+                                                        <span className="card-expire">{String(card.expire_month).padStart(2,'0')}/{card.expire_year}</span>
+                                                    </label>
+                                                ))}
+                                                <label className={`saved-card-item${selectedCardId === 0 ? ' selected' : ''}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="savedCard"
+                                                        value={0}
+                                                        checked={selectedCardId === 0}
+                                                        onChange={() => setSelectedCardId(0)}
+                                                    />
+                                                    <HiCreditCard />
+                                                    <span>{copy.payment.newCard}</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Yeni Kart Formu */}
+                                    {selectedCardId === 0 && !useHostedPayment && (
+                                        <div className="field-grid">
+                                            <div className="form-group">
+                                                <label>{copy.fields.cardName}</label>
+                                                <input className="form-control" value={cardHolderName} onChange={(e) => setCardHolderName(e.target.value)} placeholder={copy.placeholders.cardName} autoComplete="cc-name" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{copy.fields.cardNumber}</label>
+                                                <input className="form-control" value={cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ')} onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 19))} placeholder="0000 0000 0000 0000" inputMode="numeric" autoComplete="cc-number" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{copy.fields.expireMonth}</label>
+                                                <input className="form-control" value={cardExpireMonth} onChange={(e) => setCardExpireMonth(e.target.value.replace(/\D/g, '').slice(0, 2))} placeholder="AA" inputMode="numeric" autoComplete="cc-exp-month" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{copy.fields.expireYear}</label>
+                                                <input className="form-control" value={cardExpireYear} onChange={(e) => setCardExpireYear(e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder="YYYY" inputMode="numeric" autoComplete="cc-exp-year" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>CVV</label>
+                                                <input className="form-control" type="password" value={cardCvv} onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder="123" inputMode="numeric" autoComplete="cc-csc" />
+                                            </div>
+                                            {isAuthenticated && (
+                                                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                                    <label className="checkbox-row" style={{ marginTop: '0.5rem' }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={saveCard}
+                                                            disabled={hasSubscription}
+                                                            onChange={(e) => setSaveCard(e.target.checked)}
+                                                        />
+                                                        <span>
+                                                            {copy.payment.saveCard}
+                                                            {hasSubscription && <span style={{ color: '#64748b', fontSize: '0.82rem', marginLeft: '0.4rem' }}>{isEn ? '(required for subscription)' : '(abonelik için zorunlu)'}</span>}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    <label className="checkbox-row business-buying">
+                                        <input type="checkbox" checked={buyingAsBusiness} onChange={(e) => setBuyingAsBusiness(e.target.checked)} />
+                                        <span>{copy.fields.businessPurchase}</span>
+                                    </label>
+                                    {buyingAsBusiness && (
+                                        <div className="field-grid">
+                                            <div className="form-group">
+                                                <label>{copy.fields.companyName}</label>
+                                                <input className="form-control" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder={copy.placeholders.companyName} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>{copy.fields.taxNumber}</label>
+                                                <input className="form-control" value={taxNumber} onChange={(e) => setTaxNumber(e.target.value.replace(/\D/g, ''))} placeholder={copy.placeholders.taxNumber} maxLength={11} />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <form onSubmit={handlePayment} className="payment-form">
+                                        <button type="submit" className="btn-pay" disabled={loading}>
+                                            {loading ? copy.buttons.processing : buyingAsBusiness ? copy.buttons.completePayment : copy.buttons.buyAndPay}
+                                        </button>
+                                    </form>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
             </div>
         </div>
+
+        {/* Exit Intent Popup */}
+        {showExitIntent && (
+            <div style={{
+                position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
+            }}>
+                <div style={{
+                    background: '#fff', borderRadius: '12px', padding: '2rem', maxWidth: '440px', width: '100%',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.18)', position: 'relative'
+                }}>
+                    <button
+                        onClick={() => setShowExitIntent(false)}
+                        style={{
+                            position: 'absolute', top: '0.75rem', right: '0.75rem', background: 'none',
+                            border: 'none', fontSize: '1.4rem', cursor: 'pointer', color: '#94a3b8', lineHeight: 1
+                        }}
+                        aria-label="Kapat"
+                    >×</button>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💬</div>
+                        <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.3rem', color: '#1a3a52' }}>
+                            {isEn ? 'Need a hand?' : 'Takıldığınız bir nokta mı var?'}
+                        </h2>
+                        <p style={{ color: '#64748b', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+                            {isEn
+                                ? 'Our team is ready to help you complete your purchase. Reach out now!'
+                                : 'Ekibimiz satın alma sürecinizde size yardımcı olmak için hazır. Hemen yazın!'}
+                        </p>
+                        <a
+                            href="https://wa.me/905551234567"
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                display: 'inline-block', background: '#25d366', color: '#fff',
+                                padding: '0.75rem 1.75rem', borderRadius: '8px', fontWeight: 700,
+                                textDecoration: 'none', fontSize: '1rem'
+                            }}
+                            onClick={() => setShowExitIntent(false)}
+                        >
+                            {isEn ? 'Chat on WhatsApp' : "WhatsApp'tan Yaz"}
+                        </a>
+                        <div style={{ marginTop: '1rem' }}>
+                            <button
+                                onClick={() => setShowExitIntent(false)}
+                                style={{
+                                    background: 'none', border: 'none', color: '#94a3b8',
+                                    cursor: 'pointer', fontSize: '0.875rem', textDecoration: 'underline'
+                                }}
+                            >
+                                {isEn ? 'Continue checkout' : 'Ödemeye devam et'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
     );
 }

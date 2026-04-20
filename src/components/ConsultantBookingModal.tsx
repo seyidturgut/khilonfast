@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { API_BASE_URL } from '../config/api'
 import { useCart } from '../context/CartContext'
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
@@ -125,6 +125,11 @@ export default function ConsultantBookingModal({
     const [topic, setTopic] = useState('')
     const [formError, setFormError] = useState<string | null>(null)
     const [submitting, setSubmitting] = useState(false)
+    const [policyTerms, setPolicyTerms] = useState(false)
+    const [policyPrivacy, setPolicyPrivacy] = useState(false)
+    const [policyCookie, setPolicyCookie] = useState(false)
+    const [policyRefund, setPolicyRefund] = useState(false)
+    const allPoliciesOk = policyTerms && policyPrivacy && policyCookie && policyRefund
 
     // Confirmation state
     const [bookingId, setBookingId] = useState<number | null>(null)
@@ -134,6 +139,10 @@ export default function ConsultantBookingModal({
     const { addToCart } = useCart()
     const currentLang = useRouteLocale()
     const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout')
+    const privacyPath = getLocalizedPathByKey(currentLang, 'privacyPolicy')
+    const termsPath = getLocalizedPathByKey(currentLang, 'termsOfService')
+    const cookiePath = getLocalizedPathByKey(currentLang, 'cookiePolicy')
+    const refundPath = getLocalizedPathByKey(currentLang, 'refundPolicy')
 
     // Reset when modal opens
     useEffect(() => {
@@ -148,6 +157,10 @@ export default function ConsultantBookingModal({
             setTopic('')
             setFormError(null)
             setBookingId(null)
+            setPolicyTerms(false)
+            setPolicyPrivacy(false)
+            setPolicyCookie(false)
+            setPolicyRefund(false)
         }
     }, [isOpen])
 
@@ -482,6 +495,25 @@ export default function ConsultantBookingModal({
                                 <p className="form-error">{formError}</p>
                             )}
 
+                            <div className="booking-policy-checkboxes">
+                                <label className="booking-policy-row">
+                                    <input type="checkbox" checked={policyTerms} onChange={e => setPolicyTerms(e.target.checked)} />
+                                    <span><Link to={termsPath} target="_blank" rel="noreferrer">Hizmet Şartları</Link>'nı okudum ve kabul ediyorum.</span>
+                                </label>
+                                <label className="booking-policy-row">
+                                    <input type="checkbox" checked={policyPrivacy} onChange={e => setPolicyPrivacy(e.target.checked)} />
+                                    <span><Link to={privacyPath} target="_blank" rel="noreferrer">Gizlilik Politikası</Link>'nı okudum ve kabul ediyorum.</span>
+                                </label>
+                                <label className="booking-policy-row">
+                                    <input type="checkbox" checked={policyCookie} onChange={e => setPolicyCookie(e.target.checked)} />
+                                    <span><Link to={cookiePath} target="_blank" rel="noreferrer">Çerez Politikası</Link>'nı okudum ve kabul ediyorum.</span>
+                                </label>
+                                <label className="booking-policy-row">
+                                    <input type="checkbox" checked={policyRefund} onChange={e => setPolicyRefund(e.target.checked)} />
+                                    <span><Link to={refundPath} target="_blank" rel="noreferrer">İptal ve İade Politikası</Link>'nı okudum ve kabul ediyorum.</span>
+                                </label>
+                            </div>
+
                             <div className="booking-step-actions">
                                 <button
                                     type="button"
@@ -494,7 +526,7 @@ export default function ConsultantBookingModal({
                                 <button
                                     type="submit"
                                     className="booking-btn-primary"
-                                    disabled={submitting}
+                                    disabled={submitting || !allPoliciesOk}
                                 >
                                     {submitting ? 'Gönderiliyor...' : 'Rezervasyon Talebi Gönder'}
                                 </button>

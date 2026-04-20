@@ -112,6 +112,14 @@
                 "manufacturing": {
                     "title": "360° Marketing Management for Manufacturing Companies",
                     "desc": "Industrial and production-oriented solutions"
+                },
+                "giftCard": {
+                    "title": "360° Marketing Management for Corporate Gift Card Companies",
+                    "desc": "Tailored solutions for gift card and incentive programs"
+                },
+                "fuel": {
+                    "title": "360° Marketing Management for Corporate Fuel Solution Companies",
+                    "desc": "Tailored solutions for corporate fuel management"
                 }
             },
             "trainings": {
@@ -173,7 +181,7 @@
         }
     },
     "footer": {
-        "description": "At khilon fast, we strive to help measure marketing activities by using both the science of data analytics and the art of creativity. Our mission is to transform your marketing, making them not only more efficient but also effective in achieving business goals.",
+        "description": "At Khilon, we integrate marketing activities for businesses by combining the science of data analytics with the art of creativity. Our mission is to transform your marketing — making it not only more efficient, but also truly effective in achieving your business goals.",
         "rights": "All rights reserved.",
         "privacy": "Privacy Policy",
         "cookies": "Cookie Policy",
@@ -1145,6 +1153,21 @@
         "consultingFleet": "consulting/growth-focused-marketing-consulting-for-fleet-rental",
         "consultingFood": "consulting/growth-focused-marketing-consulting-for-industrial-food",
         "maestro": "products/maestro-ai",
+        "maestroB2B": "products/maestro-ai-b2b",
+        "maestroPayment": "products/maestro-ai-payment-systems",
+        "maestroFood": "products/maestro-ai-industrial-food",
+        "maestroFintech": "products/maestro-ai-fintech",
+        "maestroEnergy": "products/maestro-ai-energy",
+        "maestroOffice": "products/maestro-ai-office-design",
+        "maestroFleet": "products/maestro-ai-fleet-rental",
+        "maestroTech": "products/maestro-ai-technology-software",
+        "maestroManufacturing": "products/maestro-ai-manufacturing",
+        "sectoralGiftCard": "sectoral-services/corporate-gift-card-companies-360-marketing-management",
+        "sectoralFuel": "sectoral-services/corporate-fuel-solution-companies-360-marketing-management",
+        "trainingGiftCard": "trainings/growth-focused-marketing-training-for-corporate-gift-card",
+        "trainingFuel": "trainings/growth-focused-marketing-training-for-corporate-fuel-solutions",
+        "consultingGiftCard": "consulting/growth-focused-marketing-consulting-for-corporate-gift-card",
+        "consultingFuel": "consulting/growth-focused-marketing-consulting-for-corporate-fuel-solutions",
         "eyeTracking": "products/eye-tracking-ad-analysis",
         "privacyPolicy": "privacy-policy",
         "cookiePolicy": "cookie-policy",
@@ -2170,6 +2193,98 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
+            ]
+        },
+        "hediye-karti": {
+            "sectorLabel": "Corporate Gift Card",
+            "videoTag": "AI Assistant for the Corporate Gift Card Sector",
+            "featuresDescription": "A strategist that understands the marketing processes of the corporate gift card sector and produces tailored solutions.",
+            "strategistDesc": "Trained in Corporate Gift Card Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant built specifically for the corporate gift card sector.",
+            "hero": {
+                "description": "Fed by the experience of expert teams across CRM, PR, market research, digital marketing, and strategy, Maestro AI helps corporate gift card companies make better decisions, accelerates operations, and turns marketing processes into tangible results."
+            },
+            "videoShowcase": {
+                "tag": "Built for the Corporate Gift Card sector.",
+                "title": "Accelerate Your Corporate Gift Card Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the dynamics, customer decision-making structure, and competitive landscape of the corporate gift card sector — clarifying your strategic direction and making marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant that understands corporate gift card marketing, thinks across disciplines, and delivers directly actionable recommendations.",
+                "items": {
+                    "disciplines": { "title": "Multiple Disciplines in One", "desc": "Maestro AI combines different marketing disciplines to provide a holistic solution." },
+                    "speed": { "title": "Accelerates Speed", "desc": "Fast-tracks decisions, research, and sector expertise that would otherwise take years to build." },
+                    "strategist": { "title": "Wise Strategist", "desc": "Trained in corporate gift card sector marketing." },
+                    "results": { "title": "Results-Oriented", "desc": "Data → recommendations → actionable outcomes." },
+                    "memory": { "title": "Sector Memory", "desc": "Maestro AI doesn't forget your company's context and sector knowledge — preventing knowledge loss from turnover." },
+                    "guidance": { "title": "Sector-Specific Guidance", "desc": "Trained on sector-specific data, it guides you correctly — offering strategies tailored to your business, not generic solutions." },
+                    "analysis": { "title": "Unbiased Analysis", "desc": "Works without bias, supporting data-driven decision-making and filling the gaps humans leave." },
+                    "learning": { "title": "Continuous Learning", "desc": "Continuously learns from new campaigns, customer data, and market changes to provide more accurate and up-to-date recommendations." }
+                }
+            },
+            "process": {
+                "description": "Maestro AI, developed for the corporate gift card sector, brings together market data, customer narratives, and growth objectives.",
+                "steps": {
+                    "question": { "desc": "Upload strategic questions around customer acquisition, campaign performance, new segments, and more." },
+                    "analysis": { "desc": "Synthesizes CRM, campaign, social media, and market data together to clarify the picture." },
+                    "suggestion": { "desc": "Generates campaign messaging, channel selection, creative suggestions, and reporting actions." },
+                    "experience": { "desc": "Helps you clarify decisions and tasks that would take weeks — in just hours." }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we clarify our corporate gift card marketing strategy in hours, not weeks. Data-driven recommendations help us make faster and more consistent decisions.",
+                "author": "khilonfast Client",
+                "role": "Corporate Gift Card Marketing Lead"
+            },
+            "faqs": [
+                { "question": "Why should I choose khilonfast?", "answer": "khilonfast stands out with extensive digital marketing experience and a data-driven approach. It provides solutions tailored to your business needs, continuously optimizes your campaigns, and delivers results." },
+                { "question": "What happens after I purchase the service?", "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email." }
+            ]
+        },
+        "akaryakit": {
+            "sectorLabel": "Corporate Fuel Solutions",
+            "videoTag": "AI Assistant for the Corporate Fuel Solutions Sector",
+            "featuresDescription": "A strategist that understands the marketing processes of the corporate fuel solutions sector and produces tailored solutions.",
+            "strategistDesc": "Trained in Corporate Fuel Solutions Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant built specifically for the corporate fuel solutions sector.",
+            "hero": {
+                "description": "Fed by the experience of expert teams across CRM, PR, market research, digital marketing, and strategy, Maestro AI helps corporate fuel solution companies make better decisions, accelerates operations, and turns marketing processes into tangible results."
+            },
+            "videoShowcase": {
+                "tag": "Built for the Corporate Fuel Solutions sector.",
+                "title": "Accelerate Your Corporate Fuel Marketing Decisions with Maestro AI",
+                "description": "Maestro AI understands the dynamics, customer decision-making structure, and competitive landscape of the corporate fuel solutions sector — clarifying your strategic direction and making marketing more measurable."
+            },
+            "features": {
+                "description": "A strategic AI assistant that understands corporate fuel solutions marketing, thinks across disciplines, and delivers directly actionable recommendations.",
+                "items": {
+                    "disciplines": { "title": "Multiple Disciplines in One", "desc": "Maestro AI combines different marketing disciplines to provide a holistic solution." },
+                    "speed": { "title": "Accelerates Speed", "desc": "Fast-tracks decisions, research, and sector expertise that would otherwise take years to build." },
+                    "strategist": { "title": "Wise Strategist", "desc": "Trained in corporate fuel solutions sector marketing." },
+                    "results": { "title": "Results-Oriented", "desc": "Data → recommendations → actionable outcomes." },
+                    "memory": { "title": "Sector Memory", "desc": "Maestro AI doesn't forget your company's context and sector knowledge — preventing knowledge loss from turnover." },
+                    "guidance": { "title": "Sector-Specific Guidance", "desc": "Trained on sector-specific data, it guides you correctly — offering strategies tailored to your business, not generic solutions." },
+                    "analysis": { "title": "Unbiased Analysis", "desc": "Works without bias, supporting data-driven decision-making and filling the gaps humans leave." },
+                    "learning": { "title": "Continuous Learning", "desc": "Continuously learns from new campaigns, customer data, and market changes to provide more accurate and up-to-date recommendations." }
+                }
+            },
+            "process": {
+                "description": "Maestro AI, developed for the corporate fuel solutions sector, brings together market data, customer narratives, and growth objectives.",
+                "steps": {
+                    "question": { "desc": "Upload strategic questions around customer acquisition, channel performance, new segments, and more." },
+                    "analysis": { "desc": "Synthesizes CRM, campaign, social media, and market data together to clarify the picture." },
+                    "suggestion": { "desc": "Generates campaign messaging, channel selection, creative suggestions, and reporting actions." },
+                    "experience": { "desc": "Helps you clarify decisions and tasks that would take weeks — in just hours." }
+                }
+            },
+            "testimonial": {
+                "quote": "With Maestro AI, we clarify our corporate fuel marketing strategy in hours, not weeks. Data-driven recommendations help us make faster and more consistent decisions.",
+                "author": "khilonfast Client",
+                "role": "Corporate Fuel Solutions Marketing Lead"
+            },
+            "faqs": [
+                { "question": "Why should I choose khilonfast?", "answer": "khilonfast stands out with extensive digital marketing experience and a data-driven approach. It provides solutions tailored to your business needs, continuously optimizes your campaigns, and delivers results." },
+                { "question": "What happens after I purchase the service?", "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email." }
             ]
         }
     }

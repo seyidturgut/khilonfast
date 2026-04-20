@@ -1,0 +1,55 @@
+CREATE TABLE IF NOT EXISTS coupons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    code VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT NULL,
+    discount_type ENUM('percentage', 'fixed') NOT NULL DEFAULT 'percentage',
+    discount_value DECIMAL(10,2) NOT NULL DEFAULT 0,
+    minimum_cart_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+    maximum_discount_amount DECIMAL(10,2) NULL DEFAULT NULL,
+    starts_at DATETIME NULL DEFAULT NULL,
+    ends_at DATETIME NULL DEFAULT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    total_usage_limit INT NULL DEFAULT NULL,
+    per_user_limit INT NULL DEFAULT NULL,
+    restricted_products_json JSON NULL,
+    restricted_categories_json JSON NULL,
+    new_customers_only TINYINT(1) NOT NULL DEFAULT 0,
+    is_stackable TINYINT(1) NOT NULL DEFAULT 0,
+    usage_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_coupons_active (is_active),
+    INDEX idx_coupons_starts_at (starts_at),
+    INDEX idx_coupons_ends_at (ends_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS coupon_usages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    coupon_id INT NOT NULL,
+    user_id INT NULL,
+    order_id INT NOT NULL,
+    discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+    used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    released_at TIMESTAMP NULL DEFAULT NULL,
+    status ENUM('used', 'released') NOT NULL DEFAULT 'used',
+    CONSTRAINT fk_coupon_usages_coupon FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_coupon_usages_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_coupon_usages_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    UNIQUE KEY uniq_coupon_usage_order (order_id),
+    INDEX idx_coupon_usages_coupon (coupon_id),
+    INDEX idx_coupon_usages_user_coupon (user_id, coupon_id),
+    INDEX idx_coupon_usages_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE orders
+    ADD COLUMN subtotal_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER order_number,
+    ADD COLUMN coupon_discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER subtotal_amount,
+    ADD COLUMN shipping_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER coupon_discount_amount,
+    ADD COLUMN tax_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER shipping_amount,
+    ADD COLUMN coupon_id INT NULL DEFAULT NULL AFTER total_amount,
+    ADD COLUMN coupon_code VARCHAR(100) NULL DEFAULT NULL AFTER coupon_id,
+    ADD COLUMN coupon_name VARCHAR(255) NULL DEFAULT NULL AFTER coupon_code,
+    ADD COLUMN applied_coupon_snapshot_json JSON NULL AFTER coupon_name,
+    ADD INDEX idx_orders_coupon_id (coupon_id),
+    ADD CONSTRAINT fk_orders_coupon FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE SET NULL;

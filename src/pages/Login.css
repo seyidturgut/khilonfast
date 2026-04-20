@@ -6,7 +6,7 @@
     background: radial-gradient(1200px 600px at 20% 10%, rgba(137, 176, 4, 0.12), transparent 60%),
         radial-gradient(900px 500px at 85% 20%, rgba(26, 58, 82, 0.14), transparent 55%),
         linear-gradient(135deg, #f6f8fb 0%, #eef2f6 100%);
-    padding: 1.25rem;
+    padding: 100px 1.25rem 1.25rem;
 }
 
 .auth-container {

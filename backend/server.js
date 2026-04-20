@@ -10,6 +10,7 @@ import companyRoutes from './routes/company.js';
 import adminRoutes from './routes/admin.js';
 import pagesRoutes from './routes/pages.js';
 import consultantsRoutes from './routes/consultants.js';
+import trainingAnalyticsRoutes from './routes/training-analytics.js';
 
 dotenv.config();
 
@@ -21,8 +22,8 @@ app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -34,6 +35,7 @@ app.use('/api/company', companyRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/pages', pagesRoutes);
 app.use('/api/consultants', consultantsRoutes);
+app.use('/api/training-analytics', trainingAnalyticsRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

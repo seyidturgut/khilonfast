@@ -112,6 +112,14 @@
                 "manufacturing": {
                     "title": "Üretim Firmaları İçin 360° Pazarlama Yönetimi",
                     "desc": "Endüstriyel ve üretim odaklı çözümler"
+                },
+                "giftCard": {
+                    "title": "Kurumsal Hediye Kartı Firmaları İçin 360° Pazarlama Yönetimi",
+                    "desc": "Hediye kartı ve teşvik programlarına özel çözümler"
+                },
+                "fuel": {
+                    "title": "Kurumsal Akaryakıt Çözümü Firmaları İçin 360° Pazarlama Yönetimi",
+                    "desc": "Kurumsal akaryakıt yönetimine özel çözümler"
                 }
             },
             "trainings": {
@@ -173,7 +181,7 @@
         }
     },
     "footer": {
-        "description": "khilon as veri analitiği bilimini hem de yaratıcılık sanatını kullanarak en pazarlama faaliyetlerini ölçülmesine yardımcı olmaya çalışıyoruz. Misyonumuz, pazarlamanızı dönüştürmek, onları yalnızca daha verimli değil, aynı zamanda iş hedeflerine ulaşmada etkili hale getirmektir.",
+        "description": "Khilon olarak, hem veri analitiği bilimini hem de yaratıcılık sanatını kullanarak işletmeler için pazarlama faaliyetlerini entegre etmeye çalışıyoruz. Misyonumuz, pazarlamanızı dönüştürmek, onları yalnızca daha verimli değil, aynı zamanda iş hedeflerinize ulaşmada etkili hale getirmektir.",
         "rights": "Tüm hakları saklıdır.",
         "privacy": "Gizlilik Politikası",
         "cookies": "Çerez Politikası",
@@ -1232,6 +1240,8 @@
         "sectoralDesign": "sektorel-hizmetler/ofis-kurumsal-ic-tasarim-firmalari-icin-360-pazarlama-yonetimi",
         "sectoralFleet": "sektorel-hizmetler/filo-kiralama-firmalari-icin-360-pazarlama-yonetimi",
         "sectoralManufacturing": "sektorel-hizmetler/uretim-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralGiftCard": "sektorel-hizmetler/kurumsal-hediye-karti-firmalari-icin-360-pazarlama-yonetimi",
+        "sectoralFuel": "sektorel-hizmetler/kurumsal-akaryakit-cozumu-firmalari-icin-360-pazarlama-yonetimi",
         "trainings": "egitimler",
         "trainingGrowth": "egitimler/buyume-odakli-pazarlama-egitimi",
         "trainingPayment": "egitimler/odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi",
@@ -1243,6 +1253,8 @@
         "trainingDesign": "egitimler/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi",
         "trainingFleet": "egitimler/filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi",
         "trainingFood": "egitimler/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingGiftCard": "egitimler/kurumsal-hediye-karti-sektorunde-buyume-odakli-pazarlama-egitimi",
+        "trainingFuel": "egitimler/kurumsal-akaryakit-sektorunde-buyume-odakli-pazarlama-egitimi",
         "consulting": "danismanlik",
         "consultingPayment": "danismanlik/odeme-sistemlerinde-buyume-odakli-pazarlama-danismanligi",
         "consultingB2B": "danismanlik/b2b-sektorunde-buyume-odakli-pazarlama-danismanligi",
@@ -1253,6 +1265,8 @@
         "consultingDesign": "danismanlik/ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-danismanligi",
         "consultingFleet": "danismanlik/filo-kiralama-sektorunde-buyume-odakli-pazarlama-danismanligi",
         "consultingFood": "danismanlik/endustriyel-gida-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingGiftCard": "danismanlik/kurumsal-hediye-karti-sektorunde-buyume-odakli-pazarlama-danismanligi",
+        "consultingFuel": "danismanlik/kurumsal-akaryakit-sektorunde-buyume-odakli-pazarlama-danismanligi",
         "maestro": "urunler/maestro-ai",
         "eyeTracking": "urunler/eye-tracking-reklam-analizi",
         "privacyPolicy": "gizlilik-politikasi",
@@ -2170,6 +2184,98 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
+            ]
+        },
+        "hediye-karti": {
+            "sectorLabel": "Kurumsal Hediye Kartı",
+            "videoTag": "Kurumsal Hediye Kartı Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Kurumsal hediye kartı sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Kurumsal Hediye Kartı Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Kurumsal hediye kartı sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; kurumsal hediye kartı firmalarının daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlama süreçlerini somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Kurumsal Hediye Kartı sektörü için oluşturuldu.",
+                "title": "Kurumsal Hediye Kartı Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Kurumsal hediye kartı sektörünün dinamiklerini, müşteri karar yapısını ve rekabet ortamını anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Kurumsal hediye kartı pazarlamasının yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": { "title": "Farklı Disiplinler Bir Arada", "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar." },
+                    "speed": { "title": "Hız Kazandırır", "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır." },
+                    "strategist": { "title": "Bilge Stratejist", "desc": "Kurumsal hediye kartı sektörü ve pazarlama konularında eğitimli." },
+                    "results": { "title": "Sonuç Odaklı", "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar." },
+                    "memory": { "title": "Sektör Hafızası", "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Turnover nedeniyle bilginin kaybolmasını engeller." },
+                    "guidance": { "title": "Sektöre Özel Yönlendirme", "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar." },
+                    "analysis": { "title": "Tarafsız Analiz", "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar." },
+                    "learning": { "title": "Sürekli Öğrenme", "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar." }
+                }
+            },
+            "process": {
+                "description": "Kurumsal hediye kartı sektörü için geliştirilen Maestro AI; pazar verilerini, müşteri anlatısını ve büyüme hedeflerini bir araya getirir.",
+                "steps": {
+                    "question": { "desc": "Müşteri kazanımı, kampanya performansı, yeni müşteri segmenti ve benzeri stratejik sorularınızı yükleyin." },
+                    "analysis": { "desc": "CRM, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir." },
+                    "suggestion": { "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir." },
+                    "experience": { "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur." }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile kurumsal hediye kartı pazarlama stratejimizi haftalar değil, saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde daha hızlı ve tutarlı kararlar alıyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Kurumsal Hediye Kartı Pazarlama Lideri"
+            },
+            "faqs": [
+                { "question": "Neden khilonfast ile çalışmayı seçmeliyim?", "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır." },
+                { "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?", "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir." }
+            ]
+        },
+        "akaryakit": {
+            "sectorLabel": "Kurumsal Akaryakıt Çözümü",
+            "videoTag": "Kurumsal Akaryakıt Çözümü Sektörü için Yapay Zeka Asistanı",
+            "featuresDescription": "Kurumsal akaryakıt sektörünün pazarlama süreçlerini anlayan ve buna uygun çözümler üreten bir stratejist.",
+            "strategistDesc": "Kurumsal Akaryakıt Çözümü Sektörü Pazarlama konularında eğitimli",
+            "processDescription": "Kurumsal akaryakıt sektörüne özel geliştirilmiş AI asistanımız ile pazarlama stratejilerinizi güçlendirin.",
+            "hero": {
+                "description": "CRM'den PR'a, pazar araştırmasından dijital pazarlamaya, birebir pazarlamadan pazarlama stratejilerine kadar uzman ekiplerin deneyimiyle beslenen Maestro AI; kurumsal akaryakıt firmalarının daha doğru karar almasına yardımcı olur, işleri hızlandırır ve pazarlama süreçlerini somut sonuçlara dönüştürür."
+            },
+            "videoShowcase": {
+                "tag": "Kurumsal Akaryakıt sektörü için oluşturuldu.",
+                "title": "Kurumsal Akaryakıt Pazarlama Kararlarınızı Maestro AI ile Hızlandırın",
+                "description": "Kurumsal akaryakıt sektörünün dinamiklerini, müşteri karar yapısını ve rekabet ortamını anlayan Maestro AI; stratejik yönünüzü netleştirir, ekiplerin hızını artırır ve pazarlamayı daha ölçülebilir hale getirir."
+            },
+            "features": {
+                "description": "Kurumsal akaryakıt pazarlamasının yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
+                "items": {
+                    "disciplines": { "title": "Farklı Disiplinler Bir Arada", "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar." },
+                    "speed": { "title": "Hız Kazandırır", "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır." },
+                    "strategist": { "title": "Bilge Stratejist", "desc": "Kurumsal akaryakıt sektörü ve pazarlama konularında eğitimli." },
+                    "results": { "title": "Sonuç Odaklı", "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar." },
+                    "memory": { "title": "Sektör Hafızası", "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Turnover nedeniyle bilginin kaybolmasını engeller." },
+                    "guidance": { "title": "Sektöre Özel Yönlendirme", "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar." },
+                    "analysis": { "title": "Tarafsız Analiz", "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar." },
+                    "learning": { "title": "Sürekli Öğrenme", "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar." }
+                }
+            },
+            "process": {
+                "description": "Kurumsal akaryakıt sektörü için geliştirilen Maestro AI; pazar verilerini, müşteri anlatısını ve büyüme hedeflerini bir araya getirir.",
+                "steps": {
+                    "question": { "desc": "Müşteri kazanımı, kanal performansı, yeni segment ve benzeri stratejik sorularınızı yükleyin." },
+                    "analysis": { "desc": "CRM, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir." },
+                    "suggestion": { "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir." },
+                    "experience": { "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur." }
+                }
+            },
+            "testimonial": {
+                "quote": "Maestro AI ile kurumsal akaryakıt pazarlama stratejimizi haftalar değil, saatler içinde netleştiriyoruz. Veriye dayalı öneriler sayesinde daha hızlı ve tutarlı kararlar alıyoruz.",
+                "author": "khilonfast Müşterisi",
+                "role": "Kurumsal Akaryakıt Pazarlama Lideri"
+            },
+            "faqs": [
+                { "question": "Neden khilonfast ile çalışmayı seçmeliyim?", "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır." },
+                { "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?", "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir." }
             ]
         }
     }

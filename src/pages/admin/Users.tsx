@@ -296,6 +296,7 @@ export default function UsersPage() {
                                 <tr>
                                     <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 700 }}>Kullanıcı</th>
                                     <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 700 }}>Rol</th>
+                                    <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 700 }}>Şifre</th>
                                     <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 700 }}>Sipariş</th>
                                     <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 700 }}>Toplam Tutar</th>
                                     <th style={{ padding: '1rem', textAlign: 'left', color: '#6b7280', fontWeight: 700 }}>Son Satın Alma</th>
@@ -317,6 +318,12 @@ export default function UsersPage() {
                                                     <span style={{ background: '#eef6b6', color: '#4d5f09', borderRadius: '999px', fontSize: '0.78rem', padding: '3px 10px', fontWeight: 700 }}>
                                                         {u.role || 'user'}
                                                     </span>
+                                                </td>
+                                                <td style={{ padding: '1rem' }}>
+                                                    {u.must_change_password
+                                                        ? <span style={{ background: '#fef3c7', color: '#92400e', borderRadius: '999px', fontSize: '0.78rem', padding: '3px 10px', fontWeight: 700 }}>Belirlenmedi</span>
+                                                        : <span style={{ background: '#dcfce7', color: '#166534', borderRadius: '999px', fontSize: '0.78rem', padding: '3px 10px', fontWeight: 700 }}>Aktif</span>
+                                                    }
                                                 </td>
                                                 <td style={{ padding: '1rem', color: '#111827', fontWeight: 600 }}>{u.total_orders}</td>
                                                 <td style={{ padding: '1rem', color: '#111827', fontWeight: 700 }}>{u.total_spent.toLocaleString('tr-TR')} TRY</td>
@@ -374,7 +381,7 @@ export default function UsersPage() {
                                             </tr>
                                             {isOpen && (
                                                 <tr style={{ background: '#fbfdff' }}>
-                                                    <td colSpan={7} style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
+                                                    <td colSpan={8} style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
                                                         {orderLoading[u.id] ? (
                                                             <div style={{ color: '#64748b' }}>Siparişler yükleniyor...</div>
                                                         ) : (orderMap[u.id]?.length || 0) === 0 ? (

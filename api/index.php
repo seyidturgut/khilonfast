@@ -15,7 +15,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Add CORS headers
 header("Access-Control-Allow-Origin: " . ALLOWED_ORIGIN);
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
 if ($method === 'OPTIONS') {
@@ -41,6 +41,9 @@ switch ($controller) {
     case 'payment':
         require_once __DIR__ . '/routes/payment.php';
         break;
+    case 'coupons':
+        require_once __DIR__ . '/routes/coupons.php';
+        break;
     case 'profile':
         require_once __DIR__ . '/routes/profile.php';
         break;
@@ -55,6 +58,15 @@ switch ($controller) {
         break;
     case 'consultants':
         require_once __DIR__ . '/routes/consultants.php';
+        break;
+    case 'training-analytics':
+        require_once __DIR__ . '/routes/training-analytics.php';
+        break;
+    case 'subscription-renewal':
+        require_once __DIR__ . '/routes/subscription-renewal.php';
+        break;
+    case 'email-automation':
+        require_once __DIR__ . '/routes/email-automation.php';
         break;
     case 'health':
         sendResponse(['status' => 'ok', 'message' => 'khilonfast PHP API is running']);

@@ -169,6 +169,36 @@ export const trainingProgramCatalog: LocalizedProgram[] = [
             tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama eğitim akışı.',
             en: 'A growth-oriented marketing training flow tailored to the industrial food sector.'
         }
+    },
+    {
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingGiftCard'),
+            en: buildLocalizedTrainingPath('en', 'trainingGiftCard')
+        },
+        productKey: 'training-kurumsal-hediye-karti-buyume',
+        title: {
+            tr: 'Kurumsal Hediye Kartı Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training for Corporate Gift Card'
+        },
+        summary: {
+            tr: 'Kurumsal hediye kartı sektörüne özel büyüme odaklı pazarlama eğitim akışı.',
+            en: 'Growth-oriented marketing training tailored to the corporate gift card sector.'
+        }
+    },
+    {
+        path: {
+            tr: buildLocalizedTrainingPath('tr', 'trainingFuel'),
+            en: buildLocalizedTrainingPath('en', 'trainingFuel')
+        },
+        productKey: 'training-kurumsal-akaryakit-buyume',
+        title: {
+            tr: 'Kurumsal Akaryakıt Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Oriented Marketing Training for Corporate Fuel Solutions'
+        },
+        summary: {
+            tr: 'Kurumsal akaryakıt sektörüne özel büyüme odaklı pazarlama eğitim akışı.',
+            en: 'Growth-oriented marketing training tailored to the corporate fuel solutions sector.'
+        }
     }
 ]
 

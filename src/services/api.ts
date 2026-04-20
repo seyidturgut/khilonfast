@@ -74,7 +74,8 @@ export const authAPI = {
     register: (data: ApiPayload) => api.post('/auth/register', data),
     login: (data: ApiPayload) => api.post('/auth/login', data),
     google: (data: ApiPayload) => api.post('/auth/google', data),
-    getMe: () => api.get('/auth/me')
+    getMe: () => api.get('/auth/me'),
+    setPassword: (password: string) => api.post('/auth/set-password', { password })
 };
 
 export const productsAPI = {
@@ -89,9 +90,26 @@ export const ordersAPI = {
     getUserOrders: (userId: IdParam) => api.get(`/orders/user/${userId}`)
 };
 
+export const couponAPI = {
+    validate: (data: ApiPayload) => api.post('/coupons/validate', data)
+};
+
 export const paymentAPI = {
     initiate: (data: ApiPayload) => api.post('/payment/initiate', data),
-    getStatus: (orderId: IdParam) => api.get(`/payment/status/${orderId}`)
+    bankTransfer: (data: ApiPayload) => api.post('/payment/bank-transfer', data),
+    getStatus: (orderId: IdParam) => api.get(`/payment/status/${orderId}`),
+    getSavedCards: () => api.get('/payment/cards'),
+    deleteSavedCard: (cardId: IdParam) => api.delete(`/payment/cards/${cardId}`),
+    setDefaultCard: (cardId: IdParam) => api.patch(`/payment/cards/${cardId}/default`, {})
+};
+
+export const emailAutomationAPI = {
+    logEvent: (data: ApiPayload) => api.post('/email-automation/event', data),
+    getSequences: () => api.get('/admin/email-sequences'),
+    updateSequence: (id: IdParam, data: ApiPayload) => api.put(`/admin/email-sequences/${id}`, data),
+    updateStep: (id: IdParam, data: ApiPayload) => api.put(`/admin/email-sequence-steps/${id}`, data),
+    getQueue: (params?: ApiPayload) => api.get('/admin/email-queue', { params }),
+    getStats: () => api.get('/admin/email-stats')
 };
 
 export default api;

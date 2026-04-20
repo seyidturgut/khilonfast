@@ -403,6 +403,104 @@ const pageEntries: SeoEntry[] = [
         kind: 'service' as const,
         section: 'services' as const
     },
+    // Sector-specific Integrated Digital Marketing pages
+    ...([
+        {
+            tr: '/hizmetlerimiz/b2b-butunlesik-dijital-pazarlama',
+            en: '/en/services/b2b-integrated-digital-marketing',
+            titleTr: 'B2B Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'B2B Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.b2b.desc,
+            descEn: enSectoralMenu.b2b.desc
+        },
+        {
+            tr: '/hizmetlerimiz/fintech-butunlesik-dijital-pazarlama',
+            en: '/en/services/fintech-integrated-digital-marketing',
+            titleTr: 'Fintech Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Fintech Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.fintech.desc,
+            descEn: enSectoralMenu.fintech.desc
+        },
+        {
+            tr: '/hizmetlerimiz/uretim-butunlesik-dijital-pazarlama',
+            en: '/en/services/manufacturing-integrated-digital-marketing',
+            titleTr: 'Üretim Sektörü Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Manufacturing Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.manufacturing.desc,
+            descEn: enSectoralMenu.manufacturing.desc
+        },
+        {
+            tr: '/hizmetlerimiz/enerji-butunlesik-dijital-pazarlama',
+            en: '/en/services/energy-integrated-digital-marketing',
+            titleTr: 'Enerji Sektörü Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Energy Sector Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.energy.desc,
+            descEn: enSectoralMenu.energy.desc
+        },
+        {
+            tr: '/hizmetlerimiz/filo-kiralama-butunlesik-dijital-pazarlama',
+            en: '/en/services/fleet-rental-integrated-digital-marketing',
+            titleTr: 'Filo Kiralama Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Fleet Rental Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.fleet.desc,
+            descEn: enSectoralMenu.fleet.desc
+        },
+        {
+            tr: '/hizmetlerimiz/ofis-tasarim-butunlesik-dijital-pazarlama',
+            en: '/en/services/office-design-integrated-digital-marketing',
+            titleTr: 'Ofis & İç Tasarım Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Office Design Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.design.desc,
+            descEn: enSectoralMenu.design.desc
+        },
+        {
+            tr: '/hizmetlerimiz/teknoloji-yazilim-butunlesik-dijital-pazarlama',
+            en: '/en/services/tech-software-integrated-digital-marketing',
+            titleTr: 'Teknoloji & Yazılım Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Tech & Software Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.tech.desc,
+            descEn: enSectoralMenu.tech.desc
+        },
+        {
+            tr: '/hizmetlerimiz/endustriyel-gida-butunlesik-dijital-pazarlama',
+            en: '/en/services/industrial-food-integrated-digital-marketing',
+            titleTr: 'Endüstriyel Gıda Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Industrial Food Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.food.desc,
+            descEn: enSectoralMenu.food.desc
+        },
+        {
+            tr: '/hizmetlerimiz/odeme-sistemleri-butunlesik-dijital-pazarlama',
+            en: '/en/services/payment-systems-integrated-digital-marketing',
+            titleTr: 'Ödeme Sistemleri Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Payment Systems Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.payment.desc,
+            descEn: enSectoralMenu.payment.desc
+        },
+        {
+            tr: '/hizmetlerimiz/hediye-karti-butunlesik-dijital-pazarlama',
+            en: '/en/services/corporate-gift-card-integrated-digital-marketing',
+            titleTr: 'Kurumsal Hediye Kartı Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Corporate Gift Card Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.giftCard.desc,
+            descEn: enSectoralMenu.giftCard.desc
+        },
+        {
+            tr: '/hizmetlerimiz/akaryakit-butunlesik-dijital-pazarlama',
+            en: '/en/services/corporate-fuel-integrated-digital-marketing',
+            titleTr: 'Kurumsal Akaryakıt Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
+            titleEn: 'Corporate Fuel Integrated Digital Marketing and Growth Management',
+            descTr: trSectoralMenu.fuel.desc,
+            descEn: enSectoralMenu.fuel.desc
+        }
+    ] as const).map(({ tr, en, titleTr, titleEn, descTr, descEn }) => ({
+        tr,
+        en,
+        title: composeTitle({ tr: titleTr, en: titleEn }),
+        description: { tr: descTr, en: descEn },
+        kind: 'service' as const,
+        section: 'services' as const
+    })),
     ...([
         { key: 'sectoralB2B', menu: 'b2b' },
         { key: 'sectoralPayment', menu: 'payment' },
@@ -412,7 +510,9 @@ const pageEntries: SeoEntry[] = [
         { key: 'sectoralEnergy', menu: 'energy' },
         { key: 'sectoralDesign', menu: 'design' },
         { key: 'sectoralFleet', menu: 'fleet' },
-        { key: 'sectoralManufacturing', menu: 'manufacturing' }
+        { key: 'sectoralManufacturing', menu: 'manufacturing' },
+        { key: 'sectoralGiftCard', menu: 'giftCard' },
+        { key: 'sectoralFuel', menu: 'fuel' }
     ] as const).map(({ key, menu }) => ({
         key,
         tr: `/${trSlugs[key]}`,
@@ -454,6 +554,36 @@ const pageEntries: SeoEntry[] = [
         kind: 'course' as const,
         section: 'trainings' as const
     })),
+    {
+        key: 'trainingGiftCard',
+        tr: `/${trSlugs.trainingGiftCard}`,
+        en: `/en/${enSlugs.trainingGiftCard}`,
+        title: composeTitle({
+            tr: 'Kurumsal Hediye Kartı Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Focused Marketing Training for Corporate Gift Card Sector'
+        }),
+        description: {
+            tr: 'Kurumsal hediye kartı sektörüne özel büyüme odaklı pazarlama eğitimi ile satış, değer önerisi ve dönüşüm süreçlerini güçlendirin.',
+            en: 'Strengthen sales, value proposition, and conversion processes with a growth-focused marketing training tailored to the corporate gift card sector.'
+        },
+        kind: 'course' as const,
+        section: 'trainings' as const
+    },
+    {
+        key: 'trainingFuel',
+        tr: `/${trSlugs.trainingFuel}`,
+        en: `/en/${enSlugs.trainingFuel}`,
+        title: composeTitle({
+            tr: 'Kurumsal Akaryakıt Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Focused Marketing Training for Corporate Fuel Solutions Sector'
+        }),
+        description: {
+            tr: 'Kurumsal akaryakıt çözümleri sektörüne özel büyüme odaklı pazarlama eğitimi ile satış, müşteri edinimi ve ölçümleme süreçlerini yapılandırın.',
+            en: 'Structure sales, customer acquisition, and measurement processes with a growth-focused marketing training tailored to the corporate fuel solutions sector.'
+        },
+        kind: 'course' as const,
+        section: 'trainings' as const
+    },
     {
         key: 'maestro',
         tr: `/${trSlugs.maestro}`,
@@ -548,7 +678,7 @@ const aliasMap: Record<string, string> = {
 
 const noIndexPaths = new Set([
     '/giris',
-    '/kayil-ol',
+    '/kayit-ol',
     '/login',
     '/register',
     '/dashboard',
@@ -563,7 +693,8 @@ const noIndexPaths = new Set([
     '/en/payment-callback'
 ])
 
-const dynamicResolverPrefixes = ['/hizmetlerimiz/', '/sektorel-hizmetler/', '/en/services/', '/en/sectoral-services/']
+// dynamicResolverPrefixes kept for reference only (no longer used in shouldIndex)
+// const dynamicResolverPrefixes = ['/hizmetlerimiz/', '/sektorel-hizmetler/', '/en/services/', '/en/sectoral-services/']
 
 function normalizePath(pathname: string) {
     const [cleanPath] = pathname.split(/[?#]/)
@@ -917,9 +1048,6 @@ export default function SeoHead() {
         const canonicalUrl = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`
         const alternateTr = matchedEntry ? `${SITE_URL}${matchedEntry.tr === '/' ? '' : matchedEntry.tr}` : canonicalUrl
         const alternateEn = matchedEntry?.en ? `${SITE_URL}${matchedEntry.en}` : null
-        const isDynamicResolverPath = dynamicResolverPrefixes.some(
-            (prefix) => normalizedPath.startsWith(prefix) && normalizedPath.split('/').length > prefix.split('/').length
-        )
         const isConsultantDetail = resolvedPath.startsWith('/danismanlar/') || resolvedPath.startsWith('/en/consultants/')
         const isAdmin = resolvedPath.startsWith('/admin')
         const title = matchedEntry
@@ -940,8 +1068,7 @@ export default function SeoHead() {
             Boolean(matchedEntry) &&
             !isAliasPath &&
             !resolvedPath.startsWith('/admin') &&
-            !noIndexPaths.has(resolvedPath) &&
-            !isDynamicResolverPath
+            !noIndexPaths.has(resolvedPath)
         return {
             title,
             description,

@@ -255,6 +255,42 @@
     color: #1a3a52 !important;
 }
 
+.order-total-main {
+    font-weight: 800;
+    color: #1a3a52;
+}
+
+.order-pricing-breakdown {
+    margin-top: 0.5rem;
+    display: grid;
+    gap: 0.28rem;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.order-pricing-breakdown div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.order-pricing-breakdown strong {
+    color: #334155;
+    font-weight: 700;
+}
+
+.order-coupon-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.22rem 0.55rem;
+    background: #eef6b6;
+    color: #43580b;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+}
+
 .col-products {
     min-width: 250px;
 }

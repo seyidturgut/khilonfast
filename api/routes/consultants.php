@@ -58,8 +58,8 @@ if ($method === 'GET') {
         sendResponse(['consultant' => $consultant]);
     }
 
-    // GET /api/consultants?sector=fintech
-    $sector = $_GET['sector'] ?? null;
+    // GET /api/consultants?sektor=fintech (frontend) veya ?sector=fintech (fallback)
+    $sector = $_GET['sektor'] ?? $_GET['sector'] ?? null;
     if ($sector) {
         $stmt = $db->prepare("
             SELECT id, slug, name, title, photo_url, stars, review_count, sectors

@@ -3,6 +3,7 @@
 
 $db = Database::getInstance();
 ensureMustChangePasswordColumn($db);
+$hasMustChangePassword = hasMustChangePasswordColumn($db);
 $payload = requireAuth();
 
 if ($method === 'GET' && $action === 'contents') {
@@ -20,9 +21,11 @@ if ($method === 'GET' && $action === 'contents') {
             p.type,
             p.category,
             p.access_content_url,
+            tap.slug AS training_slug,
             o.status AS order_status
          FROM subscriptions s
          INNER JOIN products p ON p.id = s.product_id
+         LEFT JOIN training_access_pages tap ON tap.product_key = p.product_key
          LEFT JOIN orders o ON o.id = s.order_id
          WHERE s.user_id = ?
            AND s.status = 'active'
@@ -35,7 +38,9 @@ if ($method === 'GET' && $action === 'contents') {
 
 if ($method === 'GET' && empty($action)) {
     $stmt = $db->prepare(
-        "SELECT id, email, first_name, last_name, phone, address, must_change_password, created_at FROM users WHERE id = ? LIMIT 1"
+        $hasMustChangePassword
+            ? "SELECT id, email, first_name, last_name, phone, address, must_change_password, created_at FROM users WHERE id = ? LIMIT 1"
+            : "SELECT id, email, first_name, last_name, phone, address, created_at FROM users WHERE id = ? LIMIT 1"
     );
     $stmt->execute([$payload['id']]);
     $user = $stmt->fetch();
@@ -63,7 +68,9 @@ if ($method === 'PUT' && empty($action)) {
     $stmt->execute([$firstName, $lastName, ($phone !== '' ? $phone : null), ($address !== '' ? $address : null), $payload['id']]);
 
     $stmt = $db->prepare(
-        "SELECT id, email, first_name, last_name, phone, address, must_change_password FROM users WHERE id = ? LIMIT 1"
+        $hasMustChangePassword
+            ? "SELECT id, email, first_name, last_name, phone, address, must_change_password FROM users WHERE id = ? LIMIT 1"
+            : "SELECT id, email, first_name, last_name, phone, address FROM users WHERE id = ? LIMIT 1"
     );
     $stmt->execute([$payload['id']]);
     $user = $stmt->fetch();
@@ -93,11 +100,14 @@ if ($method === 'PUT' && $action === 'password') {
     }
 
     $newHash = password_hash($newPassword, PASSWORD_BCRYPT);
-    $stmt = $db->prepare("UPDATE users SET password_hash = ?, must_change_password = 0 WHERE id = ?");
+    $stmt = $db->prepare(
+        $hasMustChangePassword
+            ? "UPDATE users SET password_hash = ?, must_change_password = 0 WHERE id = ?"
+            : "UPDATE users SET password_hash = ? WHERE id = ?"
+    );
     $stmt->execute([$newHash, $payload['id']]);
 
     sendResponse(['message' => 'Password changed successfully']);
 }
 
 sendResponse(['error' => 'Action not found'], 404);
-

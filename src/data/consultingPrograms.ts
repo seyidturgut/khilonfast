@@ -154,6 +154,36 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama danışmanlığı.',
             en: 'Growth-focused marketing consulting tailored to the industrial food sector.'
         }
+    },
+    {
+        path: {
+            tr: buildLocalizedConsultingPath('tr', 'consultingGiftCard'),
+            en: buildLocalizedConsultingPath('en', 'consultingGiftCard')
+        },
+        productKey: 'consulting-kurumsal-hediye-karti-buyume',
+        title: {
+            tr: 'Kurumsal Hediye Kartı Sektöründe Büyüme Odaklı Pazarlama Danışmanlığı',
+            en: 'Growth-Focused Marketing Consulting for Corporate Gift Card Companies'
+        },
+        summary: {
+            tr: 'Kurumsal hediye kartı firmanızda büyüme odaklı pazarlama danışmanlığı.',
+            en: 'Growth-focused marketing consulting at your corporate gift card company.'
+        }
+    },
+    {
+        path: {
+            tr: buildLocalizedConsultingPath('tr', 'consultingFuel'),
+            en: buildLocalizedConsultingPath('en', 'consultingFuel')
+        },
+        productKey: 'consulting-kurumsal-akaryakit-buyume',
+        title: {
+            tr: 'Kurumsal Akaryakıt Sektöründe Büyüme Odaklı Pazarlama Danışmanlığı',
+            en: 'Growth-Focused Marketing Consulting for Corporate Fuel Solution Companies'
+        },
+        summary: {
+            tr: 'Kurumsal akaryakıt firmanızda büyüme odaklı pazarlama danışmanlığı.',
+            en: 'Growth-focused marketing consulting at your corporate fuel solution company.'
+        }
     }
 ]
 

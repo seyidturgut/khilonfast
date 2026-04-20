@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay } from 'react-icons/hi';
 import { useRouteLocale, getLocalizedPathByKey } from '../utils/locale';
 import { API_BASE_URL } from '../config/api';
@@ -19,8 +19,14 @@ interface Order {
     id: number;
     status: string;
     created_at: string;
+    subtotal_amount: number;
+    coupon_discount_amount: number;
+    shipping_amount: number;
+    tax_amount: number;
     total_amount: number;
     currency: string;
+    coupon_code?: string | null;
+    coupon_name?: string | null;
     items: OrderItem[];
 }
 
@@ -55,6 +61,7 @@ interface PurchasedContent {
     type?: string | null;
     category?: string | null;
     access_content_url?: string | null;
+    training_slug?: string | null;
     order_status?: string | null;
 }
 
@@ -68,6 +75,7 @@ export default function Dashboard() {
     const [activeTab, setActiveTab] = useState('orders');
     const [orders, setOrders] = useState<Order[]>([]);
     const [contents, setContents] = useState<PurchasedContent[]>([]);
+    const [trainingRoutes, setTrainingRoutes] = useState<Record<string, string>>({});
     const [, setProfile] = useState<Profile | null>(null);
     const [, setCompany] = useState<Company | null>(null);
     const [loading, setLoading] = useState(true);
@@ -126,7 +134,15 @@ export default function Dashboard() {
             status: isEn ? 'Status' : 'Durum',
             completed: isEn ? 'Completed' : 'Tamamlandı',
             pending: isEn ? 'Pending' : 'Beklemede',
-            processing: isEn ? 'Processing' : 'İşleniyor'
+            processing: isEn ? 'Processing' : 'İşleniyor',
+            failed: isEn ? 'Failed' : 'Başarısız',
+            cancelled: isEn ? 'Cancelled' : 'İptal Edildi',
+            subtotal: isEn ? 'Subtotal' : 'Ara toplam',
+            discount: isEn ? 'Coupon discount' : 'Kupon indirimi',
+            shipping: isEn ? 'Shipping' : 'Kargo',
+            tax: isEn ? 'Tax' : 'Vergi',
+            total: isEn ? 'Grand total' : 'Genel toplam',
+            coupon: isEn ? 'Coupon' : 'Kupon'
         },
         contents: {
             title: isEn ? 'My Content' : 'İçeriklerim',
@@ -205,9 +221,25 @@ export default function Dashboard() {
             fetchOrders(),
             fetchContents(),
             fetchProfile(),
-            fetchCompany()
+            fetchCompany(),
+            fetchTrainingRoutes()
         ]);
         setLoading(false);
+    };
+
+    const fetchTrainingRoutes = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/training-analytics/configs`);
+            if (!res.ok) return;
+            const data = await res.json();
+            const routes: Record<string, string> = {};
+            for (const item of data) {
+                routes[item.product_key] = `/egitimllerim/${item.slug}`;
+            }
+            setTrainingRoutes(routes);
+        } catch {
+            // silently fail — dashboard still works without training routes
+        }
     };
 
     const fetchContents = async () => {
@@ -511,12 +543,28 @@ export default function Dashboard() {
                                                         )}
                                                     </td>
                                                     <td className="col-total">
-                                                        {order.total_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}
+                                                        <div className="order-total-main">
+                                                            {order.total_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}
+                                                        </div>
+                                                        <div className="order-pricing-breakdown">
+                                                            <div><span>{copy.orders.subtotal}</span><strong>{order.subtotal_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}</strong></div>
+                                                            <div><span>{copy.orders.discount}</span><strong>- {order.coupon_discount_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}</strong></div>
+                                                            <div><span>{copy.orders.shipping}</span><strong>{order.shipping_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}</strong></div>
+                                                            <div><span>{copy.orders.tax}</span><strong>{order.tax_amount.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}</strong></div>
+                                                        </div>
                                                     </td>
                                                     <td className="col-status">
+                                                        {order.coupon_code && (
+                                                            <div className="order-coupon-chip">
+                                                                {copy.orders.coupon}: {order.coupon_code}
+                                                            </div>
+                                                        )}
                                                         <span className={`status-badge status-${order.status}`}>
                                                             {order.status === 'completed' ? copy.orders.completed :
-                                                                order.status === 'pending' ? copy.orders.pending : copy.orders.processing}
+                                                                order.status === 'pending' ? copy.orders.pending :
+                                                                    order.status === 'failed' ? copy.orders.failed :
+                                                                        order.status === 'cancelled' ? copy.orders.cancelled :
+                                                                            copy.orders.processing}
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -539,6 +587,43 @@ export default function Dashboard() {
                             ) : (
                                 <div className="content-library-grid">
                                     {contents.map((content) => {
+                                        const trainingRoute = content.training_slug
+                                            ? `/egitimllerim/${content.training_slug}`
+                                            : trainingRoutes[content.product_key];
+                                        const isTraining = content.product_key.startsWith('training-');
+
+                                        if (isTraining && trainingRoute) {
+                                            return (
+                                                <article key={`${content.subscription_id}-${content.product_id}`} className="content-library-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                                    <div className="content-library-header">
+                                                        <h3>{content.name}</h3>
+                                                        <span className="content-badge">{copy.contents.activeAccess}</span>
+                                                    </div>
+                                                    {content.description && <p className="content-library-description">{content.description}</p>}
+                                                    <div style={{ marginTop: 'auto' }}>
+                                                        <Link
+                                                            to={trainingRoute}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '8px',
+                                                                background: '#1a3a52',
+                                                                color: 'white',
+                                                                padding: '12px 24px',
+                                                                borderRadius: '10px',
+                                                                textDecoration: 'none',
+                                                                fontWeight: 600,
+                                                                fontSize: '0.95rem'
+                                                            }}
+                                                        >
+                                                            <HiPlay />
+                                                            {isEn ? 'Continue Training' : 'Eğitime Devam Et'}
+                                                        </Link>
+                                                    </div>
+                                                </article>
+                                            );
+                                        }
+
                                         const features = getFeatureList(content.features);
                                         const embedUrl = getEmbedUrl(content.access_content_url);
 

@@ -108,16 +108,102 @@ function parseBool($value, $default = false)
     return in_array($normalized, ['1', 'true', 'yes', 'on'], true);
 }
 
+function tableExists(PDO $db, $tableName)
+{
+    $stmt = $db->query("SHOW TABLES LIKE " . $db->quote((string)$tableName));
+    return (bool)$stmt->fetchColumn();
+}
+
+function columnExists(PDO $db, $tableName, $columnName)
+{
+    $stmt = $db->query("SHOW COLUMNS FROM {$tableName} LIKE " . $db->quote((string)$columnName));
+    return (bool)$stmt->fetch();
+}
+
 function ensureMustChangePasswordColumn(PDO $db)
 {
     static $checked = false;
     if ($checked) return;
 
-    $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'must_change_password'");
-    $column = $stmt->fetch();
-    if (!$column) {
-        $db->exec("ALTER TABLE users ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0 AFTER role");
+    if (tableExists($db, 'users') && !columnExists($db, 'users', 'must_change_password')) {
+        try {
+            $db->exec("ALTER TABLE users ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0 AFTER role");
+        } catch (Throwable $e) {
+            error_log('[schema] ensureMustChangePasswordColumn: ' . $e->getMessage());
+        }
     }
+    $checked = true;
+}
+
+function hasMustChangePasswordColumn(PDO $db)
+{
+    static $exists = null;
+    if ($exists !== null) {
+        return $exists;
+    }
+    $exists = tableExists($db, 'users') && columnExists($db, 'users', 'must_change_password');
+    return $exists;
+}
+
+function ensureTrainingAccessPagesSchema(PDO $db)
+{
+    static $checked = false;
+    if ($checked) return;
+
+    if (!tableExists($db, 'training_access_pages')) {
+        $db->exec(
+            "CREATE TABLE training_access_pages (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                slug VARCHAR(255) NOT NULL UNIQUE,
+                product_key VARCHAR(100) NOT NULL,
+                title_tr VARCHAR(255) DEFAULT NULL,
+                title_en VARCHAR(255) DEFAULT NULL,
+                description_tr TEXT DEFAULT NULL,
+                description_en TEXT DEFAULT NULL,
+                vimeo_url_tr TEXT DEFAULT NULL,
+                vimeo_url_en TEXT DEFAULT NULL,
+                canva_url_tr TEXT DEFAULT NULL,
+                canva_url_en TEXT DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_training_access_pages_product_key (product_key)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+        );
+    }
+
+    $requiredColumns = [
+        'title_tr' => "ALTER TABLE training_access_pages ADD COLUMN title_tr VARCHAR(255) DEFAULT NULL",
+        'title_en' => "ALTER TABLE training_access_pages ADD COLUMN title_en VARCHAR(255) DEFAULT NULL",
+        'description_tr' => "ALTER TABLE training_access_pages ADD COLUMN description_tr TEXT DEFAULT NULL",
+        'description_en' => "ALTER TABLE training_access_pages ADD COLUMN description_en TEXT DEFAULT NULL",
+        'vimeo_url_tr' => "ALTER TABLE training_access_pages ADD COLUMN vimeo_url_tr TEXT DEFAULT NULL",
+        'vimeo_url_en' => "ALTER TABLE training_access_pages ADD COLUMN vimeo_url_en TEXT DEFAULT NULL",
+        'canva_url_tr' => "ALTER TABLE training_access_pages ADD COLUMN canva_url_tr TEXT DEFAULT NULL",
+        'canva_url_en' => "ALTER TABLE training_access_pages ADD COLUMN canva_url_en TEXT DEFAULT NULL"
+    ];
+
+    foreach ($requiredColumns as $column => $sql) {
+        if (!columnExists($db, 'training_access_pages', $column)) {
+            $db->exec($sql);
+        }
+    }
+
+    $legacyVimeoExists = false;
+    $legacyCanvaExists = false;
+
+        $stmt = $db->query("SHOW COLUMNS FROM training_access_pages LIKE 'vimeo_url'");
+        $legacyVimeoExists = (bool)$stmt->fetch();
+
+        $stmt = $db->query("SHOW COLUMNS FROM training_access_pages LIKE 'canva_url'");
+        $legacyCanvaExists = (bool)$stmt->fetch();
+
+    if ($legacyVimeoExists) {
+        $db->exec("UPDATE training_access_pages SET vimeo_url_tr = COALESCE(NULLIF(vimeo_url_tr, ''), vimeo_url) WHERE vimeo_url IS NOT NULL AND vimeo_url <> ''");
+    }
+    if ($legacyCanvaExists) {
+        $db->exec("UPDATE training_access_pages SET canva_url_tr = COALESCE(NULLIF(canva_url_tr, ''), canva_url) WHERE canva_url IS NOT NULL AND canva_url <> ''");
+    }
+
     $checked = true;
 }
 

@@ -470,6 +470,39 @@
     cursor: not-allowed;
 }
 
+.booking-policy-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.9rem 1rem;
+    background: #f8faff;
+    border: 1px solid #dbe3ef;
+    border-radius: 10px;
+    margin-bottom: 0.4rem;
+}
+
+.booking-policy-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.85rem;
+    color: #374151;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.booking-policy-row input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: #1a3a52;
+}
+
+.booking-policy-row a {
+    color: #1a3a52;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 .booking-btn-secondary {
     background: #f3f4f6;
     color: #374151;

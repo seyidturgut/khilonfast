@@ -1,7 +1,17 @@
 <?php
 // api/routes/admin.php
+set_exception_handler(function (Throwable $e) {
+    header('Content-Type: application/json', true, 500);
+    echo json_encode(['error' => 'PHP Exception: ' . $e->getMessage(), 'file' => basename($e->getFile()), 'line' => $e->getLine()]);
+    exit;
+});
+
+require_once __DIR__ . '/../services/CouponService.php';
 
 $db = Database::getInstance();
+try { ensureCouponSchema($db); } catch (Throwable $e) { error_log('[admin] ensureCouponSchema: ' . $e->getMessage()); }
+try { ensureTrainingAccessPagesSchema($db); } catch (Throwable $e) { error_log('[admin] ensureTrainingAccessPagesSchema: ' . $e->getMessage()); }
+try { ensureAutomationBuilderSchema($db); } catch (Throwable $e) { error_log('[admin] ensureAutomationBuilderSchema: ' . $e->getMessage()); }
 $subAction = $routes[3] ?? '';
 
 // Auth and Admin required
@@ -101,10 +111,10 @@ function resolveProductSlugs($productKey, $category, $slug, $slugEn, $parentId =
     $tr = normalizeSlugValue($slug);
     $en = normalizeSlugValue($slugEn);
 
-    if (str_starts_with($tr, 'en/')) {
+    if (strpos($tr, 'en/') === 0) {
         $tr = preg_replace('#^en/#', '', $tr);
     }
-    if (str_starts_with($en, 'en/')) {
+    if (strpos($en, 'en/') === 0) {
         $en = preg_replace('#^en/#', '', $en);
     }
 
@@ -134,7 +144,7 @@ function resolveProductSlugs($productKey, $category, $slug, $slugEn, $parentId =
             $parentKey = trim((string)($parent['product_key'] ?? ''));
             if ($parentTr !== '' && $parentEn !== '') {
                 $leaf = $key;
-                if ($parentKey !== '' && str_starts_with($key, $parentKey . '-')) {
+                if ($parentKey !== '' && strpos($key, $parentKey . '-') === 0) {
                     $leaf = substr($key, strlen($parentKey) + 1);
                 } else {
                     $leaf = basename($leaf);
@@ -147,16 +157,75 @@ function resolveProductSlugs($productKey, $category, $slug, $slugEn, $parentId =
         }
     }
 
-    if ($tr !== '' && !str_starts_with($tr, $prefixTr . '/')) {
+    if ($tr !== '' && strpos($tr, $prefixTr . '/') !== 0) {
         $leaf = basename($tr);
         $tr = $prefixTr . '/' . $leaf;
     }
-    if ($en !== '' && !str_starts_with($en, $prefixEn . '/')) {
+    if ($en !== '' && strpos($en, $prefixEn . '/') !== 0) {
         $leaf = basename($en);
         $en = $prefixEn . '/' . $leaf;
     }
 
     return [$tr, $en];
+}
+
+function couponPayloadFromRequest($data)
+{
+    $discountType = trim((string)($data['discount_type'] ?? 'percentage'));
+    if (!in_array($discountType, ['percentage', 'fixed'], true)) {
+        $discountType = 'percentage';
+    }
+
+    $discountValue = (float)($data['discount_value'] ?? 0);
+    $minimumCartAmount = (float)($data['minimum_cart_amount'] ?? 0);
+    $maximumDiscountAmount = $data['maximum_discount_amount'] ?? null;
+    $startsAt = couponNormalizeDateValue($data['starts_at'] ?? null);
+    $endsAt = couponNormalizeDateValue($data['ends_at'] ?? null);
+    $restrictedProducts = array_values(array_unique(array_map('intval', $data['restricted_products'] ?? [])));
+    $restrictedCategories = array_values(array_unique(array_map(
+        function ($value) { return strtolower(trim((string)$value)); },
+        $data['restricted_categories'] ?? []
+    )));
+
+    $payload = [
+        'name' => trim((string)($data['name'] ?? '')),
+        'code' => couponNormalizeCode($data['code'] ?? ''),
+        'description' => trim((string)($data['description'] ?? '')),
+        'discount_type' => $discountType,
+        'discount_value' => round(max(0, $discountValue), 2),
+        'minimum_cart_amount' => round(max(0, $minimumCartAmount), 2),
+        'maximum_discount_amount' => ($maximumDiscountAmount !== null && $maximumDiscountAmount !== '')
+            ? round(max(0, (float)$maximumDiscountAmount), 2)
+            : null,
+        'starts_at' => $startsAt,
+        'ends_at' => $endsAt,
+        'is_active' => !empty($data['is_active']) ? 1 : 0,
+        'total_usage_limit' => ($data['total_usage_limit'] ?? '') !== '' ? max(0, (int)$data['total_usage_limit']) : null,
+        'per_user_limit' => ($data['per_user_limit'] ?? '') !== '' ? max(0, (int)$data['per_user_limit']) : null,
+        'restricted_products_json' => json_encode($restrictedProducts, JSON_UNESCAPED_UNICODE),
+        'restricted_categories_json' => json_encode($restrictedCategories, JSON_UNESCAPED_UNICODE),
+        'new_customers_only' => !empty($data['new_customers_only']) ? 1 : 0,
+        'is_stackable' => !empty($data['is_stackable']) ? 1 : 0,
+    ];
+
+    if ($payload['name'] === '' || $payload['code'] === '') {
+        sendResponse(['error' => 'Kupon adı ve kupon kodu zorunludur.'], 400);
+    }
+    if ($payload['discount_type'] === 'percentage' && ($payload['discount_value'] <= 0 || $payload['discount_value'] > 100)) {
+        sendResponse(['error' => 'Yüzde indirim değeri 0 ile 100 arasında olmalıdır.'], 400);
+    }
+    if ($payload['discount_type'] === 'fixed' && $payload['discount_value'] <= 0) {
+        sendResponse(['error' => 'Sabit indirim tutarı sıfırdan büyük olmalıdır.'], 400);
+    }
+    if ($payload['starts_at'] && $payload['ends_at'] && strtotime($payload['starts_at']) > strtotime($payload['ends_at'])) {
+        sendResponse(['error' => 'Başlangıç tarihi bitiş tarihinden sonra olamaz.'], 400);
+    }
+
+    if ($payload['discount_type'] === 'fixed') {
+        $payload['maximum_discount_amount'] = null;
+    }
+
+    return $payload;
 }
 
 // Settings
@@ -852,6 +921,145 @@ if ($action === 'products') {
     }
 }
 
+if ($action === 'coupons') {
+    if ($method === 'GET' && empty($id)) {
+        $search = trim((string)($_GET['search'] ?? ''));
+        $statusFilter = trim((string)($_GET['status'] ?? 'all'));
+        $query = "SELECT * FROM coupons WHERE 1=1";
+        $params = [];
+
+        if ($search !== '') {
+            $query .= " AND (name LIKE ? OR code LIKE ?)";
+            $params[] = '%' . $search . '%';
+            $params[] = '%' . $search . '%';
+        }
+        if ($statusFilter === 'active') {
+            $query .= " AND is_active = 1";
+        } elseif ($statusFilter === 'inactive') {
+            $query .= " AND is_active = 0";
+        }
+
+        $query .= " ORDER BY created_at DESC";
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll();
+        $out = array_map('couponHydrateRow', $rows);
+        sendResponse($out);
+    }
+
+    if ($method === 'GET' && !empty($id)) {
+        $stmt = $db->prepare("SELECT * FROM coupons WHERE id = ? LIMIT 1");
+        $stmt->execute([(int)$id]);
+        $coupon = $stmt->fetch();
+        if (!$coupon) {
+            sendResponse(['error' => 'Kupon bulunamadı.'], 404);
+        }
+        sendResponse(couponHydrateRow($coupon));
+    }
+
+    if ($method === 'POST' && empty($id)) {
+        $payloadData = couponPayloadFromRequest(getJsonBody());
+
+        $stmt = $db->prepare("SELECT id FROM coupons WHERE code = ? LIMIT 1");
+        $stmt->execute([$payloadData['code']]);
+        if ($stmt->fetch()) {
+            sendResponse(['error' => 'Bu kupon kodu zaten kullanılıyor.'], 400);
+        }
+
+        $stmt = $db->prepare(
+            "INSERT INTO coupons (
+                name, code, description, discount_type, discount_value, minimum_cart_amount, maximum_discount_amount,
+                starts_at, ends_at, is_active, total_usage_limit, per_user_limit, restricted_products_json,
+                restricted_categories_json, new_customers_only, is_stackable
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            $payloadData['name'],
+            $payloadData['code'],
+            $payloadData['description'] !== '' ? $payloadData['description'] : null,
+            $payloadData['discount_type'],
+            $payloadData['discount_value'],
+            $payloadData['minimum_cart_amount'],
+            $payloadData['maximum_discount_amount'],
+            $payloadData['starts_at'],
+            $payloadData['ends_at'],
+            $payloadData['is_active'],
+            $payloadData['total_usage_limit'],
+            $payloadData['per_user_limit'],
+            $payloadData['restricted_products_json'],
+            $payloadData['restricted_categories_json'],
+            $payloadData['new_customers_only'],
+            $payloadData['is_stackable']
+        ]);
+
+        sendResponse(['id' => (int)$db->lastInsertId(), 'message' => 'Kupon oluşturuldu.'], 201);
+    }
+
+    if ($method === 'PUT' && !empty($id)) {
+        $couponId = (int)$id;
+        $payloadData = couponPayloadFromRequest(getJsonBody());
+
+        $stmt = $db->prepare("SELECT id FROM coupons WHERE code = ? AND id <> ? LIMIT 1");
+        $stmt->execute([$payloadData['code'], $couponId]);
+        if ($stmt->fetch()) {
+            sendResponse(['error' => 'Bu kupon kodu zaten kullanılıyor.'], 400);
+        }
+
+        $stmt = $db->prepare(
+            "UPDATE coupons SET
+                name = ?, code = ?, description = ?, discount_type = ?, discount_value = ?, minimum_cart_amount = ?,
+                maximum_discount_amount = ?, starts_at = ?, ends_at = ?, is_active = ?, total_usage_limit = ?,
+                per_user_limit = ?, restricted_products_json = ?, restricted_categories_json = ?, new_customers_only = ?,
+                is_stackable = ?
+             WHERE id = ?"
+        );
+        $stmt->execute([
+            $payloadData['name'],
+            $payloadData['code'],
+            $payloadData['description'] !== '' ? $payloadData['description'] : null,
+            $payloadData['discount_type'],
+            $payloadData['discount_value'],
+            $payloadData['minimum_cart_amount'],
+            $payloadData['maximum_discount_amount'],
+            $payloadData['starts_at'],
+            $payloadData['ends_at'],
+            $payloadData['is_active'],
+            $payloadData['total_usage_limit'],
+            $payloadData['per_user_limit'],
+            $payloadData['restricted_products_json'],
+            $payloadData['restricted_categories_json'],
+            $payloadData['new_customers_only'],
+            $payloadData['is_stackable'],
+            $couponId
+        ]);
+
+        sendResponse(['message' => 'Kupon güncellendi.']);
+    }
+
+    if ($method === 'PATCH' && !empty($id) && $subAction === 'toggle') {
+        $couponId = (int)$id;
+        $data = getJsonBody();
+        $isActive = !empty($data['is_active']) ? 1 : 0;
+        $stmt = $db->prepare("UPDATE coupons SET is_active = ? WHERE id = ?");
+        $stmt->execute([$isActive, $couponId]);
+        sendResponse(['message' => 'Kupon durumu güncellendi.']);
+    }
+
+    if ($method === 'DELETE' && !empty($id)) {
+        $couponId = (int)$id;
+        $stmt = $db->prepare("SELECT COUNT(*) AS c FROM coupon_usages WHERE coupon_id = ?");
+        $stmt->execute([$couponId]);
+        $usageCount = (int)($stmt->fetch()['c'] ?? 0);
+        if ($usageCount > 0) {
+            sendResponse(['error' => 'Kullanılmış kuponlar silinemez. Pasife alabilirsiniz.'], 400);
+        }
+
+        $stmt = $db->prepare("DELETE FROM coupons WHERE id = ?");
+        $stmt->execute([$couponId]);
+        sendResponse(['message' => 'Kupon silindi.']);
+    }
+}
+
 // Translation (DeepL Proxy)
 if ($action === 'translate' && $method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -1113,6 +1321,925 @@ if ($action === 'sync-calendar' && $method === 'POST' && !empty($id)) {
     require_once __DIR__ . '/../sync_calendar.php';
     $result = syncConsultant((int)$id, $db, $urlOverride);
     sendResponse($result);
+}
+
+// GET /api/admin/training-analytics
+if ($action === 'training-analytics' && $method === 'GET') {
+    // Per-training summary
+    $summaryStmt = $db->query("
+        SELECT
+            tws.product_key,
+            COUNT(DISTINCT tws.user_id) AS total_viewers,
+            SUM(tws.seconds_watched) AS total_seconds,
+            MAX(tws.updated_at) AS last_access
+        FROM training_watch_sessions tws
+        GROUP BY tws.product_key
+        ORDER BY total_seconds DESC
+    ");
+    $summary = $summaryStmt->fetchAll();
+
+    // Per-user breakdown
+    $detailStmt = $db->query("
+        SELECT
+            tws.product_key,
+            tws.user_id,
+            u.name AS user_name,
+            u.email AS user_email,
+            SUM(tws.seconds_watched) AS total_seconds,
+            MAX(tws.updated_at) AS last_access
+        FROM training_watch_sessions tws
+        JOIN users u ON u.id = tws.user_id
+        GROUP BY tws.product_key, tws.user_id
+        ORDER BY tws.product_key, total_seconds DESC
+    ");
+    $details = $detailStmt->fetchAll();
+
+    sendResponse(['summary' => $summary, 'details' => $details]);
+}
+
+// GET /api/admin/training-access-pages — list all
+if ($action === 'training-access-pages' && $method === 'GET' && empty($id)) {
+    $rows = $db->query("SELECT * FROM training_access_pages ORDER BY id DESC")->fetchAll();
+    sendResponse($rows);
+}
+
+// GET /api/admin/training-access-pages/:id
+if ($action === 'training-access-pages' && $method === 'GET' && !empty($id)) {
+    $stmt = $db->prepare("SELECT * FROM training_access_pages WHERE id=?");
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    if (!$row) sendResponse(['error' => 'Not found'], 404);
+    sendResponse($row);
+}
+
+// POST /api/admin/training-access-pages — create
+if ($action === 'training-access-pages' && $method === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $slug = trim((string)($data['slug'] ?? ''));
+    $productKey = trim((string)($data['product_key'] ?? ''));
+    if ($slug === '' || $productKey === '') sendResponse(['error' => 'slug and product_key required'], 400);
+    $stmt = $db->prepare("INSERT INTO training_access_pages (slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt->execute([
+        $slug, $productKey,
+        trim((string)($data['title_tr'] ?? '')),
+        trim((string)($data['title_en'] ?? '')),
+        trim((string)($data['description_tr'] ?? '')),
+        trim((string)($data['description_en'] ?? '')),
+        trim((string)($data['vimeo_url_tr'] ?? '')),
+        trim((string)($data['vimeo_url_en'] ?? '')),
+        trim((string)($data['canva_url_tr'] ?? '')),
+        trim((string)($data['canva_url_en'] ?? '')),
+        trim((string)($data['pdf_url'] ?? ''))
+    ]);
+    sendResponse(['id' => (int)$db->lastInsertId(), 'success' => true]);
+}
+
+// PUT /api/admin/training-access-pages/:id — update
+if ($action === 'training-access-pages' && ($method === 'PUT' || $method === 'PATCH') && !empty($id)) {
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $stmt = $db->prepare("UPDATE training_access_pages SET slug=?, product_key=?, title_tr=?, title_en=?, description_tr=?, description_en=?, vimeo_url_tr=?, vimeo_url_en=?, canva_url_tr=?, canva_url_en=?, pdf_url=? WHERE id=?");
+    $stmt->execute([
+        trim((string)($data['slug'] ?? '')),
+        trim((string)($data['product_key'] ?? '')),
+        trim((string)($data['title_tr'] ?? '')),
+        trim((string)($data['title_en'] ?? '')),
+        trim((string)($data['description_tr'] ?? '')),
+        trim((string)($data['description_en'] ?? '')),
+        trim((string)($data['vimeo_url_tr'] ?? '')),
+        trim((string)($data['vimeo_url_en'] ?? '')),
+        trim((string)($data['canva_url_tr'] ?? '')),
+        trim((string)($data['canva_url_en'] ?? '')),
+        trim((string)($data['pdf_url'] ?? '')),
+        $id
+    ]);
+    sendResponse(['success' => true]);
+}
+
+// DELETE /api/admin/training-access-pages/:id
+if ($action === 'training-access-pages' && $method === 'DELETE' && !empty($id)) {
+    $db->prepare("DELETE FROM training_access_pages WHERE id=?")->execute([$id]);
+    sendResponse(['success' => true]);
+}
+
+// =====================================================================
+// TRAINING LESSONS ADMIN ENDPOINTS
+// =====================================================================
+
+// GET /api/admin/training-lessons/:trainingId
+if ($action === 'training-lessons' && $method === 'GET' && !empty($id)) {
+    $stmt = $db->prepare("SELECT * FROM training_lessons WHERE training_id = ? ORDER BY order_index ASC");
+    $stmt->execute([$id]);
+    sendResponse($stmt->fetchAll());
+}
+
+// POST /api/admin/training-lessons
+if ($action === 'training-lessons' && $method === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $training_id = (int)($data['training_id'] ?? 0);
+    $title_tr = trim((string)($data['title_tr'] ?? ''));
+    if (!$training_id || $title_tr === '') sendResponse(['error' => 'training_id and title_tr required'], 400);
+
+    $stmt = $db->prepare("
+        INSERT INTO training_lessons
+        (training_id, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, pdf_url, order_index, duration_label, is_published)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+    ");
+    $stmt->execute([
+        $training_id,
+        $title_tr,
+        trim((string)($data['title_en'] ?? '')) ?: null,
+        trim((string)($data['description_tr'] ?? '')) ?: null,
+        trim((string)($data['description_en'] ?? '')) ?: null,
+        trim((string)($data['vimeo_url_tr'] ?? '')) ?: null,
+        trim((string)($data['vimeo_url_en'] ?? '')) ?: null,
+        trim((string)($data['pdf_url'] ?? '')) ?: null,
+        (int)($data['order_index'] ?? 0),
+        trim((string)($data['duration_label'] ?? '')) ?: null,
+        isset($data['is_published']) ? (int)$data['is_published'] : 1
+    ]);
+    
+    $newId = (int)$db->lastInsertId();
+    $stmt = $db->prepare("SELECT * FROM training_lessons WHERE id=?");
+    $stmt->execute([$newId]);
+    sendResponse($stmt->fetch(), 201);
+}
+
+// PUT /api/admin/training-lessons/:id
+if ($action === 'training-lessons' && ($method === 'PUT' || $method === 'PATCH') && !empty($id)) {
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $title_tr = trim((string)($data['title_tr'] ?? ''));
+    if ($title_tr === '') sendResponse(['error' => 'title_tr required'], 400);
+
+    $stmt = $db->prepare("
+        UPDATE training_lessons SET
+        title_tr=?, title_en=?, description_tr=?, description_en=?,
+        vimeo_url_tr=?, vimeo_url_en=?, pdf_url=?, order_index=?, duration_label=?, is_published=?
+        WHERE id=?
+    ");
+    $stmt->execute([
+        $title_tr,
+        trim((string)($data['title_en'] ?? '')) ?: null,
+        trim((string)($data['description_tr'] ?? '')) ?: null,
+        trim((string)($data['description_en'] ?? '')) ?: null,
+        trim((string)($data['vimeo_url_tr'] ?? '')) ?: null,
+        trim((string)($data['vimeo_url_en'] ?? '')) ?: null,
+        trim((string)($data['pdf_url'] ?? '')) ?: null,
+        (int)($data['order_index'] ?? 0),
+        trim((string)($data['duration_label'] ?? '')) ?: null,
+        isset($data['is_published']) ? (int)$data['is_published'] : 1,
+        $id
+    ]);
+    
+    $stmt = $db->prepare("SELECT * FROM training_lessons WHERE id=?");
+    $stmt->execute([$id]);
+    sendResponse($stmt->fetch() ?: ['success' => true]);
+}
+
+// DELETE /api/admin/training-lessons/:id
+if ($action === 'training-lessons' && $method === 'DELETE' && !empty($id)) {
+    $db->prepare("DELETE FROM training_lessons WHERE id=?")->execute([$id]);
+    sendResponse(['success' => true]);
+}
+
+// =====================================================================
+// EMAIL AUTOMATION ADMIN ENDPOINTS
+// =====================================================================
+
+// GET /api/admin/email-sequences — sekanslar + adımlar
+if ($action === 'email-sequences' && $method === 'GET' && empty($id)) {
+    try {
+        $seqs = $db->query("SELECT * FROM email_sequences ORDER BY id ASC")->fetchAll();
+        $stmtSteps = $db->prepare("SELECT * FROM email_sequence_steps WHERE sequence_id = ? ORDER BY step_order ASC");
+        foreach ($seqs as &$seq) {
+            $stmtSteps->execute([$seq['id']]);
+            $seq['steps'] = $stmtSteps->fetchAll();
+            $seq['id'] = (int)$seq['id'];
+            $seq['is_active'] = (bool)$seq['is_active'];
+            foreach ($seq['steps'] as &$step) {
+                $step['id'] = (int)$step['id'];
+                $step['sequence_id'] = (int)$step['sequence_id'];
+                $step['delay_minutes'] = (int)$step['delay_minutes'];
+                $step['step_order'] = (int)$step['step_order'];
+            }
+        }
+        sendResponse(['sequences' => $seqs]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// PUT /api/admin/email-sequences/:id — aktif/pasif toggle veya restart_after_days güncelle
+if ($action === 'email-sequences' && $method === 'PUT' && !empty($id)) {
+    $data = getJsonBody();
+    $fields = [];
+    $params = [];
+    if (isset($data['is_active'])) {
+        $fields[] = 'is_active = ?';
+        $params[] = $data['is_active'] ? 1 : 0;
+    }
+    if (isset($data['restart_after_days'])) {
+        $fields[] = 'restart_after_days = ?';
+        $params[] = $data['restart_after_days'] !== null ? (int)$data['restart_after_days'] : null;
+    }
+    if (empty($fields)) {
+        sendResponse(['error' => 'No fields to update'], 400);
+    }
+    $params[] = (int)$id;
+    $db->prepare("UPDATE email_sequences SET " . implode(', ', $fields) . " WHERE id = ?")->execute($params);
+    sendResponse(['success' => true]);
+}
+
+// PUT /api/admin/email-sequence-steps/:id — adım subject/body güncelle
+if ($action === 'email-sequence-steps' && $method === 'PUT' && !empty($id)) {
+    $data = getJsonBody();
+    $subject = trim((string)($data['subject'] ?? ''));
+    $bodyHtml = trim((string)($data['body_html'] ?? ''));
+    $delayMinutes = isset($data['delay_minutes']) ? (int)$data['delay_minutes'] : null;
+
+    $fields = [];
+    $params = [];
+    if ($subject !== '') { $fields[] = 'subject = ?'; $params[] = $subject; }
+    if ($bodyHtml !== '') { $fields[] = 'body_html = ?'; $params[] = $bodyHtml; }
+    if ($delayMinutes !== null) { $fields[] = 'delay_minutes = ?'; $params[] = $delayMinutes; }
+
+    if (empty($fields)) {
+        sendResponse(['error' => 'No fields to update'], 400);
+    }
+    $params[] = (int)$id;
+    $db->prepare("UPDATE email_sequence_steps SET " . implode(', ', $fields) . " WHERE id = ?")->execute($params);
+    sendResponse(['success' => true]);
+}
+
+// GET /api/admin/email-queue — filtreli, sayfalı kuyruk listesi
+if ($action === 'email-queue' && $method === 'GET') {
+    $status = trim((string)($_GET['status'] ?? ''));
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $limit = 50;
+    $offset = ($page - 1) * $limit;
+
+    $where = [];
+    $params = [];
+    if ($status !== '' && in_array($status, ['pending', 'sent', 'failed', 'cancelled'], true)) {
+        $where[] = 'q.status = ?';
+        $params[] = $status;
+    }
+    $whereSql = count($where) > 0 ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    try {
+        $countStmt = $db->prepare("SELECT COUNT(*) FROM email_queue q $whereSql");
+        $countStmt->execute($params);
+        $total = (int)$countStmt->fetchColumn();
+
+        $listParams = array_merge($params, [$limit, $offset]);
+        $listStmt = $db->prepare(
+            "SELECT q.*, s.name AS sequence_name, st.subject AS step_subject, st.step_order
+             FROM email_queue q
+             LEFT JOIN email_sequences s ON s.id = q.sequence_id
+             LEFT JOIN email_sequence_steps st ON st.id = q.step_id
+             $whereSql
+             ORDER BY q.scheduled_at DESC
+             LIMIT ? OFFSET ?"
+        );
+        $listStmt->execute($listParams);
+        $rows = $listStmt->fetchAll();
+
+        foreach ($rows as &$row) {
+            $row['id'] = (int)$row['id'];
+            $row['user_id'] = $row['user_id'] !== null ? (int)$row['user_id'] : null;
+            $row['sequence_id'] = $row['sequence_id'] !== null ? (int)$row['sequence_id'] : null;
+            $row['step_id'] = $row['step_id'] !== null ? (int)$row['step_id'] : null;
+        }
+
+        sendResponse([
+            'queue' => $rows,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $limit,
+            'pages' => max(1, (int)ceil($total / $limit))
+        ]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// GET /api/admin/email-stats — istatistikler
+if ($action === 'email-stats' && $method === 'GET') {
+    try {
+        $totals = $db->query(
+            "SELECT status, COUNT(*) AS cnt FROM email_queue GROUP BY status"
+        )->fetchAll();
+
+        $byStatus = ['pending' => 0, 'sent' => 0, 'failed' => 0, 'cancelled' => 0];
+        foreach ($totals as $row) {
+            if (isset($byStatus[$row['status']])) {
+                $byStatus[$row['status']] = (int)$row['cnt'];
+            }
+        }
+
+        $todaySent = (int)$db->query(
+            "SELECT COUNT(*) FROM email_queue WHERE status='sent' AND DATE(sent_at) = CURDATE()"
+        )->fetchColumn();
+
+        $weekSent = (int)$db->query(
+            "SELECT COUNT(*) FROM email_queue WHERE status='sent' AND sent_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)"
+        )->fetchColumn();
+
+        $monthSent = (int)$db->query(
+            "SELECT COUNT(*) FROM email_queue WHERE status='sent' AND sent_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)"
+        )->fetchColumn();
+
+        $totalSent = $byStatus['sent'];
+        $totalFailed = $byStatus['failed'];
+        $successRate = ($totalSent + $totalFailed) > 0
+            ? round(100 * $totalSent / ($totalSent + $totalFailed), 1)
+            : 0;
+
+        $topStmt = $db->query(
+            "SELECT s.name, COUNT(*) AS sent_count
+             FROM email_queue q
+             JOIN email_sequences s ON s.id = q.sequence_id
+             WHERE q.status = 'sent'
+             GROUP BY q.sequence_id
+             ORDER BY sent_count DESC
+             LIMIT 5"
+        );
+        $topSequences = $topStmt->fetchAll();
+
+        sendResponse([
+            'by_status' => $byStatus,
+            'today_sent' => $todaySent,
+            'week_sent' => $weekSent,
+            'month_sent' => $monthSent,
+            'success_rate' => $successRate,
+            'top_sequences' => $topSequences
+        ]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// AUTOMATION BUILDER — Schema + Seed
+// ════════════════════════════════════════════════════════════════════
+
+function ensureAutomationBuilderSchema(PDO $db): void
+{
+    $db->exec("CREATE TABLE IF NOT EXISTS automations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT NULL,
+        status ENUM('draft','active','inactive') NOT NULL DEFAULT 'draft',
+        version INT NOT NULL DEFAULT 1,
+        nodes_json LONGTEXT NOT NULL,
+        edges_json LONGTEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    $db->exec("CREATE TABLE IF NOT EXISTS automation_email_templates (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        subject VARCHAR(500) NOT NULL,
+        preview_text VARCHAR(500) NULL,
+        sender_name VARCHAR(255) NOT NULL DEFAULT 'Khilonfast',
+        sender_email VARCHAR(255) NOT NULL DEFAULT 'merhaba@khilonfast.com',
+        body_html LONGTEXT NOT NULL,
+        body_text TEXT NULL,
+        cta_label VARCHAR(255) NULL,
+        cta_url VARCHAR(500) NULL,
+        variables_json TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    $tplCount = (int)$db->query("SELECT COUNT(*) FROM automation_email_templates")->fetchColumn();
+    if ($tplCount === 0) {
+        seedAutomationTemplates($db);
+    }
+
+    $autoCount = (int)$db->query("SELECT COUNT(*) FROM automations")->fetchColumn();
+    if ($autoCount === 0) {
+        seedAutomations($db);
+    }
+
+    // Seed "Aldı / Kullanmadı" automation if it doesn't exist yet
+    $aldiCount = (int)$db->query(
+        "SELECT COUNT(*) FROM automations WHERE name LIKE '%Ald%Kullanmad%'"
+    )->fetchColumn();
+    if ($aldiCount === 0) {
+        $aldiTplCount = (int)$db->query(
+            "SELECT COUNT(*) FROM automation_email_templates WHERE name LIKE '%Aldı Kullanmadı%'"
+        )->fetchColumn();
+        if ($aldiTplCount === 0) {
+            seedTemplatesAldiKullanmadi($db);
+        }
+        seedAutomationAldiKullanmadi($db);
+    }
+}
+
+function seedAutomationTemplates(PDO $db): void
+{
+    $templates = [
+        [
+            'name'         => 'Terk Edilen Sepet - 1. Saat',
+            'subject'      => 'İşleminizi sadece 2 dakikada tamamlayabilirsiniz!',
+            'preview_text' => 'Kaldığınız yerden devam etmek çok kolay.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Kaldığınız yerden satın alma işleminize devam ederek süreci kolay ve hızlı bir şekilde sonuçlandırabilirsiniz.</p><p>Devam etmek için aşağıdaki butona tıklayabilirsiniz:</p><p>Herhangi bir sorunuz olması durumunda size destek olmaktan memnuniyet duyarız.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Devam Et',
+            'cta_url'      => '{{cart_link}}',
+            'variables'    => ['first_name', 'cart_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Terk Edilen Sepet - 1. Gün',
+            'subject'      => 'Aradığınız Çözümlere Ulaşmak İçin Son 1 Adım!',
+            'preview_text' => 'Başvurunuzu henüz tamamlamadınız.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu henüz tamamlamadınız.</p><p>khilonfast hizmetlerinden yararlanan pek çok kullanıcımız gibi siz de ihtiyaçlarınıza uygun çözümlerimizle avantajlardan yararlanmaya hemen başlayabilirsiniz!</p><p>Başvurunuza devam etmek için tıklayın:</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Devam Et',
+            'cta_url'      => '{{cart_link}}',
+            'variables'    => ['first_name', 'cart_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Terk Edilen Sepet - 3. Gün',
+            'subject'      => 'Biz başlamaya hazırız! Ya siz?',
+            'preview_text' => 'Başvurunuzu henüz tamamlamadığınızı fark ettik.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu henüz tamamlamadığınızı fark ettik.</p><p>Size en uygun çözümlerimizle iş süreçlerinizde fark yaratmaya başlamak için sabırsızlanıyoruz.</p><p>Başvurunuzu tamamlamak için aşağıdaki butona tıklayabilirsiniz:</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Devam Et',
+            'cta_url'      => '{{cart_link}}',
+            'variables'    => ['first_name', 'cart_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Terk Edilen Sepet - 1. Hafta',
+            'subject'      => 'İşleminizi birlikte tamamlamak ister misiniz?',
+            'preview_text' => 'Size süreçle ilgili yardımcı olabiliriz.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Henüz tamamlamadığınızı gördüğümüz işlemleriniz için dilerseniz size süreçle ilgili yardımcı olabilir ve sorularınızı yanıtlayabiliriz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Sorularınızı Gönderin',
+            'cta_url'      => '{{contact_link}}',
+            'variables'    => ['first_name', 'cart_link', 'contact_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Terk Edilen Sepet - 1. Ay',
+            'subject'      => 'khilonfast Çözümleri Hala Gündeminizde Mi?',
+            'preview_text' => 'Tamamlanmayı bekleyen bir işleminiz var.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Hala tamamlanmayı bekleyen bir işleminiz olduğunu size hatırlatmak istedik.</p><p>Eğer şu an doğru zaman değilse sizi anlıyoruz. Dilerseniz işleminize istediğiniz zaman devam edebilir ve avantajlardan yararlanmaya başlayabilirsiniz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Devam Et',
+            'cta_url'      => '{{cart_link}}',
+            'variables'    => ['first_name', 'cart_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Terk Edilen Sepet - 3. Ay',
+            'subject'      => 'khilonfast Çözümlerine Göz Atmak İster Misiniz?',
+            'preview_text' => 'Daha evvel ilgilendiğiniz çözümleri tekrar inceleyin.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Daha evvel ilgilendiğiniz {{service_name}} ile birlikte diğer khilonfast çözümlerini tekrar incelemek ister misiniz?</p><p>Eğer ihtiyaçlarınız farklılaştıysa, sizin için yeni bir plan oluşturabiliriz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Yeni Plan Oluştur',
+            'cta_url'      => '{{cart_link}}',
+            'variables'    => ['first_name', 'service_name', 'cart_link', 'unsubscribe_link'],
+        ],
+    ];
+
+    $stmt = $db->prepare(
+        "INSERT INTO automation_email_templates
+            (name, subject, preview_text, sender_name, sender_email, body_html, cta_label, cta_url, variables_json)
+         VALUES (?, ?, ?, 'Khilonfast', 'merhaba@khilonfast.com', ?, ?, ?, ?)"
+    );
+    foreach ($templates as $t) {
+        $stmt->execute([
+            $t['name'], $t['subject'], $t['preview_text'],
+            $t['body_html'], $t['cta_label'], $t['cta_url'],
+            json_encode($t['variables'], JSON_UNESCAPED_UNICODE),
+        ]);
+    }
+}
+
+function seedAutomations(PDO $db): void
+{
+    $tplIds = $db->query(
+        "SELECT id FROM automation_email_templates ORDER BY id ASC LIMIT 6"
+    )->fetchAll(PDO::FETCH_COLUMN);
+    if (count($tplIds) < 6) return;
+    [$t1, $t2, $t3, $t4, $t5, $t6] = $tplIds;
+
+    $nodes = [
+        ['id'=>'n1',     'type'=>'trigger',   'position'=>['x'=>300,'y'=>50],   'config'=>['trigger_event'=>'checkout_email_entered']],
+        ['id'=>'n2',     'type'=>'wait',      'position'=>['x'=>300,'y'=>180],  'config'=>['delay_type'=>'hours','delay_value'=>1]],
+        ['id'=>'n3',     'type'=>'condition', 'position'=>['x'=>300,'y'=>310],  'config'=>['field'=>'purchase_completed','operator'=>'is_false','value'=>'']],
+        ['id'=>'n_end_p','type'=>'end',       'position'=>['x'=>570,'y'=>440],  'config'=>['reason'=>'Satın alma tamamlandı, akış durdu']],
+        ['id'=>'n4',     'type'=>'email',     'position'=>['x'=>300,'y'=>440],  'config'=>['mode'=>'template','template_id'=>(string)$t1,'subject'=>'İşleminizi sadece 2 dakikada tamamlayabilirsiniz!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'n5',     'type'=>'wait',      'position'=>['x'=>300,'y'=>570],  'config'=>['delay_type'=>'days','delay_value'=>1]],
+        ['id'=>'n6',     'type'=>'email',     'position'=>['x'=>300,'y'=>700],  'config'=>['mode'=>'template','template_id'=>(string)$t2,'subject'=>'Aradığınız Çözümlere Ulaşmak İçin Son 1 Adım!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'n7',     'type'=>'wait',      'position'=>['x'=>300,'y'=>830],  'config'=>['delay_type'=>'days','delay_value'=>2]],
+        ['id'=>'n8',     'type'=>'email',     'position'=>['x'=>300,'y'=>960],  'config'=>['mode'=>'template','template_id'=>(string)$t3,'subject'=>'Biz başlamaya hazırız! Ya siz?','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'n9',     'type'=>'wait',      'position'=>['x'=>300,'y'=>1090], 'config'=>['delay_type'=>'days','delay_value'=>4]],
+        ['id'=>'n10',    'type'=>'email',     'position'=>['x'=>300,'y'=>1220], 'config'=>['mode'=>'template','template_id'=>(string)$t4,'subject'=>'İşleminizi birlikte tamamlamak ister misiniz?','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'n11',    'type'=>'wait',      'position'=>['x'=>300,'y'=>1350], 'config'=>['delay_type'=>'days','delay_value'=>23]],
+        ['id'=>'n12',    'type'=>'email',     'position'=>['x'=>300,'y'=>1480], 'config'=>['mode'=>'template','template_id'=>(string)$t5,'subject'=>'khilonfast Çözümleri Hala Gündeminizde Mi?','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'n13',    'type'=>'wait',      'position'=>['x'=>300,'y'=>1610], 'config'=>['delay_type'=>'days','delay_value'=>60]],
+        ['id'=>'n14',    'type'=>'email',     'position'=>['x'=>300,'y'=>1740], 'config'=>['mode'=>'template','template_id'=>(string)$t6,'subject'=>'khilonfast Çözümlerine Göz Atmak İster Misiniz?','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'n15',    'type'=>'end',       'position'=>['x'=>300,'y'=>1870], 'config'=>['reason'=>'Terk edilen sepet akışı tamamlandı']],
+    ];
+
+    $edges = [
+        ['id'=>'e1',  'source'=>'n1',  'target'=>'n2'],
+        ['id'=>'e2',  'source'=>'n2',  'target'=>'n3'],
+        ['id'=>'e3',  'source'=>'n3',  'target'=>'n4',     'label'=>'yes'],
+        ['id'=>'e4',  'source'=>'n3',  'target'=>'n_end_p','label'=>'no'],
+        ['id'=>'e5',  'source'=>'n4',  'target'=>'n5'],
+        ['id'=>'e6',  'source'=>'n5',  'target'=>'n6'],
+        ['id'=>'e7',  'source'=>'n6',  'target'=>'n7'],
+        ['id'=>'e8',  'source'=>'n7',  'target'=>'n8'],
+        ['id'=>'e9',  'source'=>'n8',  'target'=>'n9'],
+        ['id'=>'e10', 'source'=>'n9',  'target'=>'n10'],
+        ['id'=>'e11', 'source'=>'n10', 'target'=>'n11'],
+        ['id'=>'e12', 'source'=>'n11', 'target'=>'n12'],
+        ['id'=>'e13', 'source'=>'n12', 'target'=>'n13'],
+        ['id'=>'e14', 'source'=>'n13', 'target'=>'n14'],
+        ['id'=>'e15', 'source'=>'n14', 'target'=>'n15'],
+    ];
+
+    $db->prepare(
+        "INSERT INTO automations (name, description, status, nodes_json, edges_json)
+         VALUES (?, ?, 'active', ?, ?)"
+    )->execute([
+        'Terk Edilen Sepet — Hizmetler (Tek Seferlik)',
+        "Checkout'ta email girip satın alma yapmayan kullanıcılara 6 aşamalı hatırlatma akışı (1sa → 1g → 3g → 1h → 1ay → 3ay). Restart: 30 gün.",
+        json_encode($nodes, JSON_UNESCAPED_UNICODE),
+        json_encode($edges, JSON_UNESCAPED_UNICODE),
+    ]);
+}
+
+// ─── Aldı / Kullanmadı — Template & Automation Seeds ────────────────────────
+
+function seedTemplatesAldiKullanmadi(PDO $db): void
+{
+    $templates = [
+        // ── Ana Akış (7 e-posta) ─────────────────────────────────────────
+        [
+            'name'         => 'Aldı Kullanmadı - 1. Saat',
+            'subject'      => 'khilonfast ile başlamak için son adım!',
+            'preview_text' => 'Formu doldurmanız sadece 2–3 dakikanızı alacak.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Satın aldığınız hizmet için başlangıç formunu henüz doldurmadığınızı fark ettik.</p><p>Başvurunuzu tamamlamak için son adımınız kaldı. Formu doldurmanız sadece 2–3 dakikanızı alacak ve hizmetiniz hemen devreye girecek.</p><p>Herhangi bir sorunuz olursa size yardımcı olmaktan memnuniyet duyarız.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - 1. Gün',
+            'subject'      => 'Başlamak için çok heyecanlıyız!',
+            'preview_text' => 'Başvurunuzu tamamlamadan önce bazı bilgilere ihtiyacımız var.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu tamamlamadan önce bazı bilgilere ihtiyacımız var. Bu bilgileri almadan ne yazık ki süreci başlatamıyoruz.</p><p>Formu doldurmak yalnızca birkaç dakikanızı alacak ve ardından {{service_name}} hizmetiniz aktif hale gelecek.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - 4. Gün',
+            'subject'      => 'Sürecinizi başlatmak için yardımınıza ihtiyacımız var ☹',
+            'preview_text' => 'Başvurunuzu henüz tamamlamadığınız için süreci başlatamadık.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu henüz tamamlamadığınız için süreci başlatamadık. Formu doldurarak hemen adım atabilir ve {{service_name}} avantajlarından yararlanmaya başlayabilirsiniz.</p><p>Herhangi bir sorunuz varsa lütfen bizimle iletişime geçin.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'contact_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - 11. Gün',
+            'subject'      => 'khilonfast hizmetiniz sizi bekliyor!',
+            'preview_text' => 'Başvurunuzu henüz tamamlamadığınız için hizmetiniz beklemededir.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu henüz tamamlamadığınız için {{service_name}} hizmetiniz şu anda beklemededir.</p><p>İsterseniz süreci hızlıca tamamlayarak çözümlerimizden hemen faydalanmaya başlayabilirsiniz. Sizi bekliyoruz!</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - 30. Gün',
+            'subject'      => 'Hizmetinizi başlatamadık ☹',
+            'preview_text' => 'Başvurunuzu tamamlamadığınız için süreç başlamadı.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu tamamlamadığınız için ne yazık ki {{service_name}} süreciniz başlamadı.</p><p><strong>Bilgilerinizi form üzerinden paylaşmazsanız hizmetiniz durdurulacaktır.</strong></p><p>Süreci başlatmak ve khilonfast fırsatlarından yararlanmaya devam etmek için aşağıdaki formu doldurabilirsiniz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - 60. Gün',
+            'subject'      => 'khilonfast Fırsatlarından Yararlanmaya Devam Edin!',
+            'preview_text' => 'Başvurunuzu henüz tamamlamadınız.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu henüz tamamlamadınız. Hizmetinizden kesintisiz faydalanmak için lütfen başlangıç formunu doldurun.</p><p>Formun doldurulması yalnızca birkaç dakikanızı alacak ve {{service_name}} hizmetiniz tekrar aktif hale gelecek.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - 90. Gün',
+            'subject'      => 'khilonfast Ayrıcalıkları Sizi Bekliyor!',
+            'preview_text' => 'Başvurunuzu tamamlamadığınız için hizmet erişiminiz durdurulmuştur.',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Başvurunuzu tamamlamadığınız için {{service_name}} hizmetinize erişiminiz durdurulmuştur.</p><p>Eğer şimdi devam etmek isterseniz, formu doldurarak hizmetinizi tekrar başlatabilirsiniz. Sizi tekrar aramızda görmekten mutluluk duyarız.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Hizmeti Yeniden Başlat',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'contact_link', 'unsubscribe_link'],
+        ],
+        // ── Yeniden Aktivasyon (3 e-posta — 11. ayda) ───────────────────
+        [
+            'name'         => 'Aldı Kullanmadı - Reaktivasyon 1 (11. Ay)',
+            'subject'      => 'Yeniden Başlamanın Tam Zamanı!',
+            'preview_text' => 'khilonfast hizmetinizi yeniden aktif hale getirmek ister misiniz?',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>Bir yıl öncesinde satın aldığınız {{service_name}} hizmetini hiç kullanmadınızı fark ettik.</p><p>khilonfast hizmetinizi yeniden aktif hale getirmek ister misiniz? Formu doldurarak avantajlardan tekrar yararlanmaya başlayabilirsiniz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - Reaktivasyon 2 (11. Ay + 2 Hafta)',
+            'subject'      => "khilonfast'e kaldığınız yerden devam edin!",
+            'preview_text' => 'Hizmetinizi yeniden başlatmak için sadece birkaç dakika ayırmanız yeterli.',
+            'body_html'    => "<p>Merhaba {{first_name}},</p><p>{{service_name}} hizmetinizi yeniden başlatmak için sadece birkaç dakika ayırmanız yeterli.</p><p>Formu doldurarak süreci başlatabilir ve khilonfast'in sunduğu tüm avantajlardan tekrar faydalanabilirsiniz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>",
+            'cta_label'    => 'Formu Doldur',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+        [
+            'name'         => 'Aldı Kullanmadı - Reaktivasyon 3 (Son Şans)',
+            'subject'      => 'Son fırsat: Şimdi başlayın!',
+            'preview_text' => 'Hizmetinizi yeniden aktif hale getirmek için son fırsat!',
+            'body_html'    => '<p>Merhaba {{first_name}},</p><p>{{service_name}} hizmetinizi yeniden aktif hale getirmek ve khilonfast avantajlarını kaçırmamak için son fırsatınız!</p><p>Formu doldurarak tekrar avantajlardan yararlanmaya başlayabilirsiniz. Sizi aramızda görmek için sabırsızlanıyoruz.</p><p>Saygılarımızla,<br>Khilonfast Ekibi</p>',
+            'cta_label'    => 'Hemen Başla',
+            'cta_url'      => '{{form_link}}',
+            'variables'    => ['first_name', 'service_name', 'form_link', 'unsubscribe_link'],
+        ],
+    ];
+
+    $stmt = $db->prepare(
+        "INSERT INTO automation_email_templates
+            (name, subject, preview_text, sender_name, sender_email, body_html, cta_label, cta_url, variables_json)
+         VALUES (?, ?, ?, 'Khilonfast', 'merhaba@khilonfast.com', ?, ?, ?, ?)"
+    );
+    foreach ($templates as $t) {
+        $stmt->execute([
+            $t['name'], $t['subject'], $t['preview_text'],
+            $t['body_html'], $t['cta_label'], $t['cta_url'],
+            json_encode($t['variables'], JSON_UNESCAPED_UNICODE),
+        ]);
+    }
+}
+
+function seedAutomationAldiKullanmadi(PDO $db): void
+{
+    // Get the 10 templates we just seeded (last 10 by id)
+    $tplIds = $db->query(
+        "SELECT id FROM automation_email_templates WHERE name LIKE '%Aldı Kullanmadı%' ORDER BY id ASC LIMIT 10"
+    )->fetchAll(PDO::FETCH_COLUMN);
+    if (count($tplIds) < 10) return;
+    [$t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10] = $tplIds;
+
+    // ── Timing (cumulative from purchase_completed) ──
+    // Email 1: 1h  |  Email 2: Day 1  |  Email 3: Day 4  |  Email 4: Day 11
+    // Email 5: Day 30 (wait 19d)  |  Email 6: Day 60 (wait 30d)  |  Email 7: Day 90 (wait 30d)
+    // Reactivation 1: Day 330 ≈ 11mo (wait 240d)  |  Reac 2: +14d  |  Reac 3: +7d
+
+    $nodes = [
+        ['id'=>'a1',      'type'=>'trigger',       'position'=>['x'=>300,'y'=>50],   'config'=>['trigger_event'=>'purchase_completed','description'=>'Hizmet satın alındı']],
+        ['id'=>'a2',      'type'=>'wait',           'position'=>['x'=>300,'y'=>180],  'config'=>['delay_type'=>'hours','delay_value'=>1]],
+        ['id'=>'a3',      'type'=>'condition',      'position'=>['x'=>300,'y'=>310],  'config'=>['field'=>'onboarding_form_submitted','operator'=>'is_false','value'=>'']],
+        ['id'=>'a_done',  'type'=>'end',            'position'=>['x'=>600,'y'=>440],  'config'=>['reason'=>'Form dolduruldu, hizmet başlatıldı']],
+        ['id'=>'a4',      'type'=>'email',          'position'=>['x'=>300,'y'=>440],  'config'=>['mode'=>'template','template_id'=>(string)$t1,'subject'=>'khilonfast ile başlamak için son adım!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a5',      'type'=>'wait',           'position'=>['x'=>300,'y'=>570],  'config'=>['delay_type'=>'days','delay_value'=>1]],
+        ['id'=>'a6',      'type'=>'email',          'position'=>['x'=>300,'y'=>700],  'config'=>['mode'=>'template','template_id'=>(string)$t2,'subject'=>'Başlamak için çok heyecanlıyız!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a7',      'type'=>'wait',           'position'=>['x'=>300,'y'=>830],  'config'=>['delay_type'=>'days','delay_value'=>3]],
+        ['id'=>'a8',      'type'=>'email',          'position'=>['x'=>300,'y'=>960],  'config'=>['mode'=>'template','template_id'=>(string)$t3,'subject'=>'Sürecinizi başlatmak için yardımınıza ihtiyacımız var ☹','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a9',      'type'=>'wait',           'position'=>['x'=>300,'y'=>1090], 'config'=>['delay_type'=>'days','delay_value'=>7]],
+        ['id'=>'a10',     'type'=>'email',          'position'=>['x'=>300,'y'=>1220], 'config'=>['mode'=>'template','template_id'=>(string)$t4,'subject'=>'khilonfast hizmetiniz sizi bekliyor!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a11',     'type'=>'wait',           'position'=>['x'=>300,'y'=>1350], 'config'=>['delay_type'=>'days','delay_value'=>19]],
+        ['id'=>'a12',     'type'=>'update_status',  'position'=>['x'=>300,'y'=>1480], 'config'=>['target_type'=>'service','field_name'=>'status','value'=>'paused']],
+        ['id'=>'a13',     'type'=>'email',          'position'=>['x'=>300,'y'=>1610], 'config'=>['mode'=>'template','template_id'=>(string)$t5,'subject'=>'Hizmetinizi başlatamadık ☹','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a14',     'type'=>'wait',           'position'=>['x'=>300,'y'=>1740], 'config'=>['delay_type'=>'days','delay_value'=>30]],
+        ['id'=>'a15',     'type'=>'email',          'position'=>['x'=>300,'y'=>1870], 'config'=>['mode'=>'template','template_id'=>(string)$t6,'subject'=>'khilonfast Fırsatlarından Yararlanmaya Devam Edin!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a16',     'type'=>'wait',           'position'=>['x'=>300,'y'=>2000], 'config'=>['delay_type'=>'days','delay_value'=>30]],
+        ['id'=>'a17',     'type'=>'email',          'position'=>['x'=>300,'y'=>2130], 'config'=>['mode'=>'template','template_id'=>(string)$t7,'subject'=>'khilonfast Ayrıcalıkları Sizi Bekliyor!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a18',     'type'=>'wait',           'position'=>['x'=>300,'y'=>2260], 'config'=>['delay_type'=>'days','delay_value'=>240]],
+        ['id'=>'a19',     'type'=>'email',          'position'=>['x'=>300,'y'=>2390], 'config'=>['mode'=>'template','template_id'=>(string)$t8,'subject'=>'Yeniden Başlamanın Tam Zamanı!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a20',     'type'=>'wait',           'position'=>['x'=>300,'y'=>2520], 'config'=>['delay_type'=>'days','delay_value'=>14]],
+        ['id'=>'a21',     'type'=>'email',          'position'=>['x'=>300,'y'=>2650], 'config'=>['mode'=>'template','template_id'=>(string)$t9,'subject'=>"khilonfast'e kaldığınız yerden devam edin!",'sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a22',     'type'=>'wait',           'position'=>['x'=>300,'y'=>2780], 'config'=>['delay_type'=>'days','delay_value'=>7]],
+        ['id'=>'a23',     'type'=>'email',          'position'=>['x'=>300,'y'=>2910], 'config'=>['mode'=>'template','template_id'=>(string)$t10,'subject'=>'Son fırsat: Şimdi başlayın!','sender_name'=>'Khilonfast','sender_email'=>'merhaba@khilonfast.com']],
+        ['id'=>'a24',     'type'=>'end',            'position'=>['x'=>300,'y'=>3040], 'config'=>['reason'=>'Reaktivasyon akışı tamamlandı']],
+    ];
+
+    $edges = [
+        ['id'=>'ae1',  'source'=>'a1',  'target'=>'a2'],
+        ['id'=>'ae2',  'source'=>'a2',  'target'=>'a3'],
+        ['id'=>'ae3',  'source'=>'a3',  'target'=>'a4',     'label'=>'yes'],
+        ['id'=>'ae4',  'source'=>'a3',  'target'=>'a_done', 'label'=>'no'],
+        ['id'=>'ae5',  'source'=>'a4',  'target'=>'a5'],
+        ['id'=>'ae6',  'source'=>'a5',  'target'=>'a6'],
+        ['id'=>'ae7',  'source'=>'a6',  'target'=>'a7'],
+        ['id'=>'ae8',  'source'=>'a7',  'target'=>'a8'],
+        ['id'=>'ae9',  'source'=>'a8',  'target'=>'a9'],
+        ['id'=>'ae10', 'source'=>'a9',  'target'=>'a10'],
+        ['id'=>'ae11', 'source'=>'a10', 'target'=>'a11'],
+        ['id'=>'ae12', 'source'=>'a11', 'target'=>'a12'],
+        ['id'=>'ae13', 'source'=>'a12', 'target'=>'a13'],
+        ['id'=>'ae14', 'source'=>'a13', 'target'=>'a14'],
+        ['id'=>'ae15', 'source'=>'a14', 'target'=>'a15'],
+        ['id'=>'ae16', 'source'=>'a15', 'target'=>'a16'],
+        ['id'=>'ae17', 'source'=>'a16', 'target'=>'a17'],
+        ['id'=>'ae18', 'source'=>'a17', 'target'=>'a18'],
+        ['id'=>'ae19', 'source'=>'a18', 'target'=>'a19'],
+        ['id'=>'ae20', 'source'=>'a19', 'target'=>'a20'],
+        ['id'=>'ae21', 'source'=>'a20', 'target'=>'a21'],
+        ['id'=>'ae22', 'source'=>'a21', 'target'=>'a22'],
+        ['id'=>'ae23', 'source'=>'a22', 'target'=>'a23'],
+        ['id'=>'ae24', 'source'=>'a23', 'target'=>'a24'],
+    ];
+
+    $db->prepare(
+        "INSERT INTO automations (name, description, status, nodes_json, edges_json)
+         VALUES (?, ?, 'active', ?, ?)"
+    )->execute([
+        'Hizmetler (Tek Seferlik) — Aldı / Kullanmadı',
+        "Satın alıp onboarding formunu doldurmayan kullanıcılara 7 aşamalı hatırlatma (1sa → 1g → 4g → 11g → 30g → 60g → 90g). 11. ayda 3'lü reaktivasyon akışı.",
+        json_encode($nodes, JSON_UNESCAPED_UNICODE),
+        json_encode($edges, JSON_UNESCAPED_UNICODE),
+    ]);
+}
+
+// Helper: fetch one automation row and normalize
+function fetchAutomationRow(PDO $db, int $id): ?array
+{
+    $stmt = $db->prepare("SELECT * FROM automations WHERE id = ?");
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    if (!$row) return null;
+    $row['id']    = (string)$row['id'];
+    $row['version'] = (int)$row['version'];
+    $row['nodes'] = json_decode($row['nodes_json'], true) ?? [];
+    $row['edges'] = json_decode($row['edges_json'], true) ?? [];
+    unset($row['nodes_json'], $row['edges_json']);
+    return $row;
+}
+
+// Helper: fetch one template row and normalize
+function fetchTemplateRow(PDO $db, int $id): ?array
+{
+    $stmt = $db->prepare("SELECT * FROM automation_email_templates WHERE id = ?");
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    if (!$row) return null;
+    $row['id']        = (string)$row['id'];
+    $row['variables'] = json_decode($row['variables_json'], true) ?? [];
+    unset($row['variables_json']);
+    return $row;
+}
+
+// ── AUTOMATIONS CRUD ──────────────────────────────────────────
+
+// GET /api/admin/automations
+if ($action === 'automations' && $method === 'GET' && empty($id) && empty($subAction)) {
+    try {
+        $rows = $db->query(
+            "SELECT id, name, description, status, version, created_at, updated_at,
+             JSON_LENGTH(nodes_json) AS node_count
+             FROM automations ORDER BY created_at DESC"
+        )->fetchAll();
+        foreach ($rows as &$r) {
+            $r['id']         = (string)$r['id'];
+            $r['version']    = (int)$r['version'];
+            $r['node_count'] = (int)$r['node_count'];
+        }
+        sendResponse(['automations' => $rows]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// GET /api/admin/automations/:id
+if ($action === 'automations' && $method === 'GET' && !empty($id) && empty($subAction)) {
+    $row = fetchAutomationRow($db, (int)$id);
+    if (!$row) sendResponse(['error' => 'Not found'], 404);
+    sendResponse(['automation' => $row]);
+}
+
+// POST /api/admin/automations  (create)
+if ($action === 'automations' && $method === 'POST' && empty($id)) {
+    $data = getJsonBody();
+    $name = trim((string)($data['name'] ?? ''));
+    if ($name === '') sendResponse(['error' => 'Name required'], 400);
+    $db->prepare(
+        "INSERT INTO automations (name, description, status, nodes_json, edges_json)
+         VALUES (?, ?, 'draft', '[]', '[]')"
+    )->execute([$name, $data['description'] ?? null]);
+    $row = fetchAutomationRow($db, (int)$db->lastInsertId());
+    sendResponse(['automation' => $row], 201);
+}
+
+// PUT /api/admin/automations/:id  (update)
+if ($action === 'automations' && $method === 'PUT' && !empty($id) && empty($subAction)) {
+    $data = getJsonBody();
+    $fields = ['version = version + 1', 'updated_at = NOW()'];
+    $params = [];
+    if (isset($data['name']))        { $fields[] = 'name = ?';        $params[] = trim((string)$data['name']); }
+    if (array_key_exists('description', $data)) { $fields[] = 'description = ?'; $params[] = $data['description']; }
+    if (isset($data['nodes']))       { $fields[] = 'nodes_json = ?';  $params[] = json_encode($data['nodes'], JSON_UNESCAPED_UNICODE); }
+    if (isset($data['edges']))       { $fields[] = 'edges_json = ?';  $params[] = json_encode($data['edges'], JSON_UNESCAPED_UNICODE); }
+    $params[] = (int)$id;
+    $db->prepare("UPDATE automations SET " . implode(', ', $fields) . " WHERE id = ?")->execute($params);
+    $row = fetchAutomationRow($db, (int)$id);
+    if (!$row) sendResponse(['error' => 'Not found'], 404);
+    sendResponse(['automation' => $row]);
+}
+
+// DELETE /api/admin/automations/:id
+if ($action === 'automations' && $method === 'DELETE' && !empty($id) && empty($subAction)) {
+    $db->prepare("DELETE FROM automations WHERE id = ?")->execute([(int)$id]);
+    sendResponse(['success' => true]);
+}
+
+// POST /api/admin/automations/:id/activate
+if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction === 'activate') {
+    $db->prepare("UPDATE automations SET status = 'active', updated_at = NOW() WHERE id = ?")->execute([(int)$id]);
+    sendResponse(['automation' => fetchAutomationRow($db, (int)$id)]);
+}
+
+// POST /api/admin/automations/:id/deactivate
+if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction === 'deactivate') {
+    $db->prepare("UPDATE automations SET status = 'inactive', updated_at = NOW() WHERE id = ?")->execute([(int)$id]);
+    sendResponse(['automation' => fetchAutomationRow($db, (int)$id)]);
+}
+
+// POST /api/admin/automations/:id/duplicate
+if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction === 'duplicate') {
+    $orig = $db->query("SELECT * FROM automations WHERE id = " . (int)$id)->fetch();
+    if (!$orig) sendResponse(['error' => 'Not found'], 404);
+    $db->prepare(
+        "INSERT INTO automations (name, description, status, nodes_json, edges_json)
+         VALUES (?, ?, 'draft', ?, ?)"
+    )->execute([$orig['name'] . ' (Kopya)', $orig['description'], $orig['nodes_json'], $orig['edges_json']]);
+    sendResponse(['automation' => fetchAutomationRow($db, (int)$db->lastInsertId())], 201);
+}
+
+// ── EMAIL TEMPLATES CRUD ──────────────────────────────────────
+
+// GET /api/admin/automation-templates
+if ($action === 'automation-templates' && $method === 'GET' && empty($id)) {
+    try {
+        $rows = $db->query("SELECT * FROM automation_email_templates ORDER BY id ASC")->fetchAll();
+        foreach ($rows as &$r) {
+            $r['id']        = (string)$r['id'];
+            $r['variables'] = json_decode($r['variables_json'], true) ?? [];
+            unset($r['variables_json']);
+        }
+        sendResponse(['templates' => $rows]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// POST /api/admin/automation-templates
+if ($action === 'automation-templates' && $method === 'POST' && empty($id)) {
+    $data = getJsonBody();
+    $name    = trim((string)($data['name'] ?? ''));
+    $subject = trim((string)($data['subject'] ?? ''));
+    if ($name === '' || $subject === '') sendResponse(['error' => 'Name and subject required'], 400);
+    $vars = is_array($data['variables'] ?? null) ? $data['variables'] : [];
+    $db->prepare(
+        "INSERT INTO automation_email_templates
+            (name, subject, preview_text, sender_name, sender_email, body_html, body_text, design_json, cta_label, cta_url, variables_json)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    )->execute([
+        $name, $subject,
+        $data['preview_text'] ?? null,
+        $data['sender_name']  ?? 'Khilonfast',
+        $data['sender_email'] ?? 'merhaba@khilonfast.com',
+        $data['body_html']    ?? '',
+        $data['body_text']    ?? null,
+        $data['design_json']  ?? null,
+        $data['cta_label']    ?? null,
+        $data['cta_url']      ?? null,
+        json_encode($vars, JSON_UNESCAPED_UNICODE),
+    ]);
+    sendResponse(['template' => fetchTemplateRow($db, (int)$db->lastInsertId())], 201);
+}
+
+// PUT /api/admin/automation-templates/:id
+if ($action === 'automation-templates' && $method === 'PUT' && !empty($id)) {
+    $data   = getJsonBody();
+    $fields = ['updated_at = NOW()'];
+    $params = [];
+    $cols   = ['name','subject','preview_text','sender_name','sender_email','body_html','body_text','design_json','cta_label','cta_url'];
+    foreach ($cols as $col) {
+        if (array_key_exists($col, $data)) { $fields[] = "$col = ?"; $params[] = $data[$col]; }
+    }
+    if (array_key_exists('variables', $data)) {
+        $fields[]  = 'variables_json = ?';
+        $params[]  = json_encode(is_array($data['variables']) ? $data['variables'] : [], JSON_UNESCAPED_UNICODE);
+    }
+    $params[] = (int)$id;
+    $db->prepare("UPDATE automation_email_templates SET " . implode(', ', $fields) . " WHERE id = ?")->execute($params);
+    $row = fetchTemplateRow($db, (int)$id);
+    if (!$row) sendResponse(['error' => 'Not found'], 404);
+    sendResponse(['template' => $row]);
+}
+
+// DELETE /api/admin/automation-templates/:id
+if ($action === 'automation-templates' && $method === 'DELETE' && !empty($id)) {
+    $db->prepare("DELETE FROM automation_email_templates WHERE id = ?")->execute([(int)$id]);
+    sendResponse(['success' => true]);
 }
 
 sendResponse(['error' => 'Action not found'], 404);

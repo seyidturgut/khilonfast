@@ -94,12 +94,13 @@
 }
 
 .checkbox-row {
-    display: flex;
+    display: flex !important;
     align-items: center;
     gap: 0.6rem;
     margin: 1rem 0 0;
     color: #334155;
     font-size: 0.95rem;
+    cursor: pointer;
 }
 
 .actions-row {
@@ -116,6 +117,23 @@
     padding: 0.82rem 1.4rem;
     font-weight: 700;
     cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.policy-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 1.2rem 0 1.4rem;
+    padding: 1rem 1.2rem;
+    background: #f8faff;
+    border: 1px solid #dbe3ef;
+    border-radius: 10px;
 }
 
 .terms-content {
@@ -193,6 +211,59 @@
     gap: 0.5rem;
 }
 
+.coupon-box {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 14px;
+    border: 1px solid #dbe3ef;
+    background: linear-gradient(180deg, #fbfdff 0%, #f3f7fb 100%);
+}
+
+.coupon-box label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--checkout-primary);
+    font-weight: 700;
+}
+
+.coupon-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+}
+
+.coupon-apply-btn {
+    white-space: nowrap;
+}
+
+.coupon-applied {
+    margin-top: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 0.85rem;
+    border-top: 1px dashed #cbd5e1;
+    color: #334155;
+}
+
+.coupon-applied code {
+    background: #eef6b6;
+    color: #32460a;
+    padding: 0.18rem 0.42rem;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+.coupon-remove-btn {
+    border: none;
+    background: transparent;
+    color: #c2410c;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 .summary-items {
     display: flex;
     flex-direction: column;
@@ -219,6 +290,28 @@
 .item-price {
     font-weight: 700;
     color: var(--checkout-price);
+}
+
+.summary-breakdown {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: #475569;
+    font-size: 0.96rem;
+}
+
+.summary-line strong {
+    color: var(--checkout-primary);
+}
+
+.summary-line-discount strong {
+    color: #0f766e;
 }
 
 .price-unit {
@@ -338,7 +431,120 @@
         grid-template-columns: 1fr;
     }
 
+    .coupon-row {
+        grid-template-columns: 1fr;
+    }
+
     .checkout-container h1 {
         font-size: 1.85rem;
     }
+}
+
+/* Ödeme Yöntemi Sekmeleri */
+.payment-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0;
+}
+
+.payment-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.1rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.payment-tab:hover {
+    color: var(--checkout-primary, #2563eb);
+}
+
+.payment-tab.active {
+    color: var(--checkout-primary, #2563eb);
+    border-bottom-color: var(--checkout-primary, #2563eb);
+    font-weight: 600;
+}
+
+/* Kayıtlı Kartlar */
+.saved-cards-section {
+    margin-bottom: 1.25rem;
+}
+
+.saved-cards-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+    margin-bottom: 0.6rem;
+}
+
+.saved-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.saved-card-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #374151;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.saved-card-item:hover {
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+.saved-card-item.selected {
+    border-color: var(--checkout-primary, #2563eb);
+    background: #eff6ff;
+    font-weight: 600;
+}
+
+.card-brand {
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #4b5563;
+    text-transform: uppercase;
+}
+
+.card-expire {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: #9ca3af;
+}
+
+.wire-transfer-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #166534;
 }

@@ -9,6 +9,7 @@ export interface CartItem {
     price: number;
     currency: string;
     quantity: number;
+    duration_days?: number;
 }
 
 interface CartContextType {

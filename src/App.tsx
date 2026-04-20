@@ -15,6 +15,19 @@ import Home from './pages/Home'
 import GoToMarket from './pages/GoToMarket'
 import ContentStrategy from './pages/ContentStrategy'
 import IntegratedDigitalMarketing from './pages/IntegratedDigitalMarketing'
+import B2BIntegratedMarketing from './pages/B2BIntegratedMarketing'
+import FintechIntegratedMarketing from './pages/FintechIntegratedMarketing'
+import ManufacturingIntegratedMarketing from './pages/ManufacturingIntegratedMarketing'
+import EnergyIntegratedMarketing from './pages/EnergyIntegratedMarketing'
+import FleetRentalIntegratedMarketing from './pages/FleetRentalIntegratedMarketing'
+import InteriorDesignIntegratedMarketing from './pages/InteriorDesignIntegratedMarketing'
+import SoftwareIntegratedMarketing from './pages/SoftwareIntegratedMarketing'
+import IndustrialFoodIntegratedMarketing from './pages/IndustrialFoodIntegratedMarketing'
+import PaymentSystemsIntegratedMarketing from './pages/PaymentSystemsIntegratedMarketing'
+import GiftCardMarketing from './pages/GiftCardMarketing'
+import FuelMarketing from './pages/FuelMarketing'
+import GiftCardIntegratedMarketing from './pages/GiftCardIntegratedMarketing'
+import FuelIntegratedMarketing from './pages/FuelIntegratedMarketing'
 import GoogleAds from './pages/GoogleAds'
 import SocialMediaAds from './pages/SocialMediaAds'
 import SeoService from './pages/SeoService'
@@ -40,6 +53,7 @@ import IntegratedMarketingSetupFlow from './pages/IntegratedMarketingSetupFlow'
 import ContactPage from './pages/ContactPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import SetPassword from './pages/SetPassword'
 import Checkout from './pages/Checkout'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentCallback from './pages/PaymentCallback'
@@ -72,9 +86,18 @@ import UsersPage from './pages/admin/Users'
 import PagesList from './pages/admin/Pages'
 import PageBuilder from './pages/admin/PageBuilder'
 import TrainingContentEditor from './pages/admin/TrainingContentEditor'
+import TrainingAnalytics from './pages/admin/TrainingAnalytics'
+import TrainingAccessPages from './pages/admin/TrainingAccessPages'
+import TrainingContentPage from './pages/TrainingContentPage'
 import ConsultantList from './pages/admin/ConsultantList'
 import ConsultantEditor from './pages/admin/ConsultantEditor'
 import BookingList from './pages/admin/BookingList'
+import CouponList from './pages/admin/CouponList'
+import EmailAutomation from './pages/admin/EmailAutomation'
+import AutomationListPage from './automation/pages/AutomationListPage'
+import AutomationBuilderPage from './automation/pages/AutomationBuilderPage'
+import EmailTemplatesPage from './automation/pages/EmailTemplatesPage'
+import AutomationLogsPage from './automation/pages/AutomationLogsPage'
 
 const slugsTr = trCommon.slugs as Record<string, string>
 const slugsEn = enCommon.slugs as Record<string, string>
@@ -103,6 +126,7 @@ function MainContent() {
     const location = useLocation();
     const routeLang = resolveLocaleFromPath(location.pathname);
     const isAdminRoute = location.pathname.startsWith('/admin');
+    const isPlayerRoute = location.pathname.startsWith('/egitimllerim/') || location.pathname.startsWith('/en/my-trainings/');
     const knownRoutePatterns = [
         '/',
         '/hakkimizda',
@@ -111,6 +135,24 @@ function MainContent() {
         '/hizmetlerimiz/go-to-market-stratejisi',
         '/hizmetlerimiz/icerik-stratejisi',
         '/hizmetlerimiz/butunlesik-dijital-pazarlama',
+        '/hizmetlerimiz/b2b-butunlesik-dijital-pazarlama',
+        '/en/services/b2b-integrated-digital-marketing',
+        '/hizmetlerimiz/fintech-butunlesik-dijital-pazarlama',
+        '/en/services/fintech-integrated-digital-marketing',
+        '/hizmetlerimiz/uretim-butunlesik-dijital-pazarlama',
+        '/en/services/manufacturing-integrated-digital-marketing',
+        '/hizmetlerimiz/enerji-butunlesik-dijital-pazarlama',
+        '/en/services/energy-integrated-digital-marketing',
+        '/hizmetlerimiz/filo-kiralama-butunlesik-dijital-pazarlama',
+        '/en/services/fleet-rental-integrated-digital-marketing',
+        '/hizmetlerimiz/ofis-tasarim-butunlesik-dijital-pazarlama',
+        '/en/services/office-design-integrated-digital-marketing',
+        '/hizmetlerimiz/teknoloji-yazilim-butunlesik-dijital-pazarlama',
+        '/en/services/tech-software-integrated-digital-marketing',
+        '/hizmetlerimiz/endustriyel-gida-butunlesik-dijital-pazarlama',
+        '/en/services/industrial-food-integrated-digital-marketing',
+        '/hizmetlerimiz/odeme-sistemleri-butunlesik-dijital-pazarlama',
+        '/en/services/payment-systems-integrated-digital-marketing',
         '/hizmetlerimiz/google-ads',
         '/hizmetlerimiz/sosyal-medya-reklamciligi',
         '/hizmetlerimiz/seo-yonetimi',
@@ -149,8 +191,16 @@ function MainContent() {
         '/urunler/maestro-ai-filo-kiralama',
         '/urunler/maestro-ai-teknoloji-yazilim',
         '/urunler/maestro-ai-uretim',
+        '/urunler/maestro-ai-hediye-karti',
+        '/urunler/maestro-ai-akaryakit',
         '/products/maestro-ai-technology-software',
         '/products/maestro-ai-manufacturing',
+        '/products/maestro-ai-corporate-gift-card',
+        '/products/maestro-ai-corporate-fuel',
+        '/hizmetlerimiz/hediye-karti-butunlesik-dijital-pazarlama',
+        '/hizmetlerimiz/akaryakit-butunlesik-dijital-pazarlama',
+        '/en/services/corporate-gift-card-integrated-digital-marketing',
+        '/en/services/corporate-fuel-integrated-digital-marketing',
         '/hizmetlerimiz/eye-tracking-reklam-analizi',
         '/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy',
         '/hizmetler/eye-tracking-reklam-analizi',
@@ -160,7 +210,7 @@ function MainContent() {
         '/egitimler',
         '/giris',
         '/iletisim',
-        '/kayil-ol',
+        '/kayit-ol',
         '/login',
         '/register',
         '/checkout',
@@ -182,6 +232,10 @@ function MainContent() {
         '/admin/consultants/new',
         '/admin/consultants/:id',
         '/admin/bookings',
+        '/admin/training-analytics',
+        '/admin/training-content',
+        '/admin/coupons',
+        '/egitimllerim/:slug',
         '/danismanlar',
         '/danismanlar/:slug',
         '/consultants',
@@ -236,7 +290,7 @@ function MainContent() {
         <>
             <SeoHead />
             <ScrollToTop />
-            {!isAdminRoute && !isLegacyRoute && <Header />}
+            {!isAdminRoute && !isLegacyRoute && !isPlayerRoute && <Header />}
             <main
                 key={`lang-${routeLang}`}
                 className={isAdminRoute ? 'admin-main' : isLegacyRoute ? 'legacy-main' : ''}
@@ -256,6 +310,17 @@ function MainContent() {
                         <Route path={slugsEn.gtm} element={<GoToMarket />} />
                         <Route path={slugsEn.contentStrategy} element={<ContentStrategy />} />
                         <Route path={slugsEn.idm} element={<IntegratedDigitalMarketing />} />
+                        <Route path="services/b2b-integrated-digital-marketing" element={<B2BIntegratedMarketing />} />
+                        <Route path="services/fintech-integrated-digital-marketing" element={<FintechIntegratedMarketing />} />
+                        <Route path="services/manufacturing-integrated-digital-marketing" element={<ManufacturingIntegratedMarketing />} />
+                        <Route path="services/energy-integrated-digital-marketing" element={<EnergyIntegratedMarketing />} />
+                        <Route path="services/fleet-rental-integrated-digital-marketing" element={<FleetRentalIntegratedMarketing />} />
+                        <Route path="services/office-design-integrated-digital-marketing" element={<InteriorDesignIntegratedMarketing />} />
+                        <Route path="services/tech-software-integrated-digital-marketing" element={<SoftwareIntegratedMarketing />} />
+                        <Route path="services/industrial-food-integrated-digital-marketing" element={<IndustrialFoodIntegratedMarketing />} />
+                        <Route path="services/payment-systems-integrated-digital-marketing" element={<PaymentSystemsIntegratedMarketing />} />
+                        <Route path="services/corporate-gift-card-integrated-digital-marketing" element={<GiftCardIntegratedMarketing />} />
+                        <Route path="services/corporate-fuel-integrated-digital-marketing" element={<FuelIntegratedMarketing />} />
                         <Route path={slugsEn.googleAds} element={<GoogleAds />} />
                         <Route path={slugsEn.socialAds} element={<SocialMediaAds />} />
                         <Route path={slugsEn.seo} element={<SeoService />} />
@@ -270,6 +335,8 @@ function MainContent() {
                         <Route path={slugsEn.sectoralDesign} element={<InteriorDesignMarketing />} />
                         <Route path={slugsEn.sectoralFleet} element={<FleetRentalMarketing />} />
                         <Route path={slugsEn.sectoralManufacturing} element={<ManufacturingMarketing />} />
+                        <Route path={slugsEn.sectoralGiftCard} element={<GiftCardMarketing />} />
+                        <Route path={slugsEn.sectoralFuel} element={<FuelMarketing />} />
                         <Route path={slugsEn.maestro} element={<MaestroAI />} />
                         <Route path={slugsEn.eyeTracking} element={<EyeTracking />} />
                         <Route path={slugsEn.contact} element={<ContactPage />} />
@@ -279,6 +346,7 @@ function MainContent() {
                         <Route path={slugsEn.refundPolicy} element={<LegalPage documentKey="refundPolicy" />} />
                         <Route path={slugsEn.login} element={<Login />} />
                         <Route path={slugsEn.register} element={<Register />} />
+                        <Route path="set-password" element={<SetPassword />} />
                         <Route path={slugsEn.dashboard} element={<Dashboard />} />
                         <Route path={slugsEn.checkout} element={<Checkout />} />
                         <Route path={slugsEn.paymentSuccess} element={<PaymentSuccess />} />
@@ -290,7 +358,7 @@ function MainContent() {
                         <Route path="hakkimizda" element={<About />} />
                         <Route path="iletisim" element={<ContactPage />} />
                         <Route path="giris" element={<Login />} />
-                        <Route path="kayil-ol" element={<Register />} />
+                        <Route path="kayit-ol" element={<Register />} />
                         <Route path="egitimler" element={<Trainings />} />
                         <Route path="egitimler/:id" element={<TrainingProgramPage />} />
                         <Route path="danismanlik" element={<Consulting />} />
@@ -300,6 +368,7 @@ function MainContent() {
                         <Route path="hizmetlerimiz/go-to-market-stratejisi" element={<GoToMarket />} />
                         <Route path="hizmetlerimiz/icerik-stratejisi" element={<ContentStrategy />} />
                         <Route path="hizmetlerimiz/butunlesik-dijital-pazarlama" element={<IntegratedDigitalMarketing />} />
+                        <Route path="services/b2b-integrated-digital-marketing" element={<B2BIntegratedMarketing />} />
                         <Route path="hizmetlerimiz/google-ads" element={<GoogleAds />} />
                         <Route path="hizmetlerimiz/sosyal-medya-reklamciligi" element={<SocialMediaAds />} />
                         <Route path="hizmetlerimiz/seo-yonetimi" element={<SeoService />} />
@@ -342,6 +411,8 @@ function MainContent() {
                         <Route path="products/maestro-ai-fleet-rental" element={<MaestroAISector sectorKey="filo-kiralama" />} />
                         <Route path="products/maestro-ai-technology-software" element={<MaestroAISector sectorKey="teknoloji-yazilim" />} />
                         <Route path="products/maestro-ai-manufacturing" element={<MaestroAISector sectorKey="uretim" />} />
+                        <Route path="products/maestro-ai-corporate-gift-card" element={<MaestroAISector sectorKey="hediye-karti" />} />
+                        <Route path="products/maestro-ai-corporate-fuel" element={<MaestroAISector sectorKey="akaryakit" />} />
                         <Route path="urunler/eye-tracking-reklam-analizi" element={<EyeTracking />} />
                     </Route>
 
@@ -355,6 +426,17 @@ function MainContent() {
                     <Route path={`/${slugsTr.gtm}`} element={<GoToMarket />} />
                     <Route path={`/${slugsTr.contentStrategy}`} element={<ContentStrategy />} />
                     <Route path={`/${slugsTr.idm}`} element={<IntegratedDigitalMarketing />} />
+                    <Route path="/hizmetlerimiz/b2b-butunlesik-dijital-pazarlama" element={<B2BIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/fintech-butunlesik-dijital-pazarlama" element={<FintechIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/uretim-butunlesik-dijital-pazarlama" element={<ManufacturingIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/enerji-butunlesik-dijital-pazarlama" element={<EnergyIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/filo-kiralama-butunlesik-dijital-pazarlama" element={<FleetRentalIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/ofis-tasarim-butunlesik-dijital-pazarlama" element={<InteriorDesignIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/teknoloji-yazilim-butunlesik-dijital-pazarlama" element={<SoftwareIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/endustriyel-gida-butunlesik-dijital-pazarlama" element={<IndustrialFoodIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/odeme-sistemleri-butunlesik-dijital-pazarlama" element={<PaymentSystemsIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/hediye-karti-butunlesik-dijital-pazarlama" element={<GiftCardIntegratedMarketing />} />
+                    <Route path="/hizmetlerimiz/akaryakit-butunlesik-dijital-pazarlama" element={<FuelIntegratedMarketing />} />
                     <Route path={`/${slugsTr.googleAds}`} element={<GoogleAds />} />
                     <Route path={`/${slugsTr.socialAds}`} element={<SocialMediaAds />} />
                     <Route path={`/${slugsTr.seo}`} element={<SeoService />} />
@@ -369,6 +451,8 @@ function MainContent() {
                     <Route path={`/${slugsTr.sectoralDesign}`} element={<InteriorDesignMarketing />} />
                     <Route path={`/${slugsTr.sectoralFleet}`} element={<FleetRentalMarketing />} />
                     <Route path={`/${slugsTr.sectoralManufacturing}`} element={<ManufacturingMarketing />} />
+                    <Route path={`/${slugsTr.sectoralGiftCard}`} element={<GiftCardMarketing />} />
+                    <Route path={`/${slugsTr.sectoralFuel}`} element={<FuelMarketing />} />
                     <Route path="/sektorel-hizmetler/b2b-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralB2B}`} replace />} />
                     <Route path="/sektorel-hizmetler/odeme-sistemleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralPayment}`} replace />} />
                     <Route path="/sektorel-hizmetler/endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi" element={<Navigate to={`/${slugsTr.sectoralFood}`} replace />} />
@@ -400,6 +484,8 @@ function MainContent() {
                     <Route path="/urunler/maestro-ai-filo-kiralama" element={<MaestroAISector sectorKey="filo-kiralama" />} />
                     <Route path="/urunler/maestro-ai-teknoloji-yazilim" element={<MaestroAISector sectorKey="teknoloji-yazilim" />} />
                     <Route path="/urunler/maestro-ai-uretim" element={<MaestroAISector sectorKey="uretim" />} />
+                    <Route path="/urunler/maestro-ai-hediye-karti" element={<MaestroAISector sectorKey="hediye-karti" />} />
+                    <Route path="/urunler/maestro-ai-akaryakit" element={<MaestroAISector sectorKey="akaryakit" />} />
                     <Route path="/hizmetlerimiz/maestro-ai" element={<Navigate to="/urunler/maestro-ai" replace />} />
                     <Route path="/b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy" element={<Navigate to="/urunler/maestro-ai" replace />} />
                     <Route path="/hizmetlerimiz/eye-tracking-reklam-analizi" element={<Navigate to="/urunler/eye-tracking-reklam-analizi" replace />} />
@@ -431,8 +517,10 @@ function MainContent() {
                     <Route path={`/${slugsTr.termsOfService}`} element={<LegalPage documentKey="termsOfService" />} />
                     <Route path={`/${slugsTr.refundPolicy}`} element={<LegalPage documentKey="refundPolicy" />} />
                     <Route path={`/${slugsTr.register}`} element={<Register />} />
+                    <Route path="/kayit-ol" element={<Register />} />
+                    <Route path="/sifre-belirle" element={<SetPassword />} />
                     <Route path="/login" element={<Navigate to="/giris" replace />} />
-                    <Route path="/register" element={<Navigate to="/kayil-ol" replace />} />
+                    <Route path="/register" element={<Navigate to="/kayit-ol" replace />} />
                     <Route path={`/${slugsTr.checkout}`} element={<Checkout />} />
                     <Route path={`/${slugsTr.paymentSuccess}`} element={<PaymentSuccess />} />
                     <Route path={`/${slugsTr.paymentCallback}`} element={<PaymentCallback />} />
@@ -455,11 +543,23 @@ function MainContent() {
                     <Route path="/admin/consultants/new" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
                     <Route path="/admin/consultants/:id" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
                     <Route path="/admin/bookings" element={<RequireAdmin><BookingList /></RequireAdmin>} />
+                    <Route path="/admin/training-analytics" element={<RequireAdmin><TrainingAnalytics /></RequireAdmin>} />
+                    <Route path="/admin/training-content" element={<RequireAdmin><TrainingAccessPages /></RequireAdmin>} />
+                    <Route path="/admin/coupons" element={<RequireAdmin><CouponList /></RequireAdmin>} />
+                    <Route path="/admin/email-automation" element={<RequireAdmin><EmailAutomation /></RequireAdmin>} />
+                    <Route path="/admin/automations" element={<RequireAdmin><AutomationListPage /></RequireAdmin>} />
+                    <Route path="/admin/automations/:id" element={<RequireAdmin><AutomationBuilderPage /></RequireAdmin>} />
+                    <Route path="/admin/email-templates" element={<RequireAdmin><EmailTemplatesPage /></RequireAdmin>} />
+                    <Route path="/admin/automation-logs" element={<RequireAdmin><AutomationLogsPage /></RequireAdmin>} />
+
+                    {/* Training Content Routes */}
+                    <Route path="/egitimllerim/:slug" element={<TrainingContentPage />} />
+
                     <Route path="*" element={<LegacyWordpressPage />} />
                 </Routes>
             </main>
-            {!isAdminRoute && !isLegacyRoute && <Footer />}
-            {!isAdminRoute && !isLegacyRoute && <CookieConsent />}
+            {!isAdminRoute && !isLegacyRoute && !isPlayerRoute && <Footer />}
+            {!isAdminRoute && !isLegacyRoute && !isPlayerRoute && <CookieConsent />}
         </>
     );
 }

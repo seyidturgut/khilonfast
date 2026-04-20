@@ -3,6 +3,7 @@
 
 $db = Database::getInstance();
 ensureMustChangePasswordColumn($db);
+$hasMustChangePassword = hasMustChangePasswordColumn($db);
 
 if ($action === 'register' && $method === 'POST') {
     $data = getJsonBody();
@@ -24,10 +25,17 @@ if ($action === 'register' && $method === 'POST') {
     }
 
     $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-    $stmt = $db->prepare(
-        "INSERT INTO users (email, password_hash, first_name, last_name, phone, must_change_password) VALUES (?, ?, ?, ?, ?, 0)"
-    );
-    $stmt->execute([$email, $passwordHash, $firstName, $lastName, ($phone !== '' ? $phone : null)]);
+    if ($hasMustChangePassword) {
+        $stmt = $db->prepare(
+            "INSERT INTO users (email, password_hash, first_name, last_name, phone, must_change_password) VALUES (?, ?, ?, ?, ?, 0)"
+        );
+        $stmt->execute([$email, $passwordHash, $firstName, $lastName, ($phone !== '' ? $phone : null)]);
+    } else {
+        $stmt = $db->prepare(
+            "INSERT INTO users (email, password_hash, first_name, last_name, phone) VALUES (?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([$email, $passwordHash, $firstName, $lastName, ($phone !== '' ? $phone : null)]);
+    }
 
     $userId = (int)$db->lastInsertId();
     $token = encodeJWT(['id' => $userId, 'email' => $email, 'role' => 'user']);
@@ -112,10 +120,17 @@ if ($action === 'google' && $method === 'POST') {
     if (!$user) {
         $randomPass = bin2hex(random_bytes(16));
         $passwordHash = password_hash($randomPass, PASSWORD_BCRYPT);
-        $stmt = $db->prepare(
-            "INSERT INTO users (email, password_hash, first_name, last_name, must_change_password) VALUES (?, ?, ?, ?, 0)"
-        );
-        $stmt->execute([$email, $passwordHash, $firstName, $lastName]);
+        if ($hasMustChangePassword) {
+            $stmt = $db->prepare(
+                "INSERT INTO users (email, password_hash, first_name, last_name, must_change_password) VALUES (?, ?, ?, ?, 0)"
+            );
+            $stmt->execute([$email, $passwordHash, $firstName, $lastName]);
+        } else {
+            $stmt = $db->prepare(
+                "INSERT INTO users (email, password_hash, first_name, last_name) VALUES (?, ?, ?, ?)"
+            );
+            $stmt->execute([$email, $passwordHash, $firstName, $lastName]);
+        }
         $userId = (int)$db->lastInsertId();
         $role = 'user';
         $user = [
@@ -150,7 +165,9 @@ if ($action === 'google' && $method === 'POST') {
 if ($action === 'me' && $method === 'GET') {
     $payload = requireAuth();
     $stmt = $db->prepare(
-        "SELECT id, email, first_name, last_name, phone, role, must_change_password, created_at FROM users WHERE id = ? LIMIT 1"
+        $hasMustChangePassword
+            ? "SELECT id, email, first_name, last_name, phone, role, must_change_password, created_at FROM users WHERE id = ? LIMIT 1"
+            : "SELECT id, email, first_name, last_name, phone, role, created_at FROM users WHERE id = ? LIMIT 1"
     );
     $stmt->execute([$payload['id']]);
     $user = $stmt->fetch();
@@ -163,6 +180,34 @@ if ($action === 'me' && $method === 'GET') {
     $user['must_change_password'] = (bool)($user['must_change_password'] ?? 0);
 
     sendResponse(['user' => $user]);
+}
+
+// POST /api/auth/set-password — must_change_password=1 olan kullanıcı ilk şifresini belirler
+if ($action === 'set-password' && $method === 'POST') {
+    $payload = requireAuth();
+    $data = getJsonBody();
+
+    $password = (string)($data['password'] ?? '');
+    if (strlen($password) < 6) {
+        sendResponse(['error' => 'Şifre en az 6 karakter olmalıdır'], 400);
+    }
+
+    $stmt = $db->prepare("SELECT id, must_change_password FROM users WHERE id = ? LIMIT 1");
+    $stmt->execute([$payload['id']]);
+    $user = $stmt->fetch();
+
+    if (!$user) {
+        sendResponse(['error' => 'User not found'], 404);
+    }
+
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+    if ($hasMustChangePassword) {
+        $db->prepare("UPDATE users SET password_hash = ?, must_change_password = 0 WHERE id = ?")->execute([$hash, $payload['id']]);
+    } else {
+        $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?")->execute([$hash, $payload['id']]);
+    }
+
+    sendResponse(['message' => 'Şifreniz başarıyla oluşturuldu']);
 }
 
 sendResponse(['error' => 'Action not found'], 404);

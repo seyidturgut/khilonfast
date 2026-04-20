@@ -23,9 +23,11 @@ router.get('/contents', authMiddleware, async (req, res) => {
                 p.type,
                 p.category,
                 p.access_content_url,
+                tap.slug AS training_slug,
                 o.status AS order_status
             FROM subscriptions s
             INNER JOIN products p ON p.id = s.product_id
+            LEFT JOIN training_access_pages tap ON tap.product_key = p.product_key
             LEFT JOIN orders o ON o.id = s.order_id
             WHERE s.user_id = ?
               AND s.status = 'active'

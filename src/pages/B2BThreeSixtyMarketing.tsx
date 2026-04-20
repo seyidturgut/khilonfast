@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -12,18 +12,13 @@ import {
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
 import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
-import { useCart } from '../context/CartContext'
-import { API_BASE_URL } from '../config/api'
 
 export default function B2BThreeSixtyMarketing() {
     const { t, i18n } = useTranslation('common')
     const location = useLocation()
-    const { addToCart } = useCart()
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
     const langPrefix = isEn ? '/en' : ''
-    const API_BASE = API_BASE_URL
-    const [packageMap, setPackageMap] = useState<Record<string, any>>({})
 
     useEffect(() => {
         const activeLang = i18n.language.split('-')[0]
@@ -32,49 +27,6 @@ export default function B2BThreeSixtyMarketing() {
         }
     }, [currentLang, i18n])
     const path = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/')
-
-    useEffect(() => {
-        const fetchPackages = async () => {
-            try {
-                const res = await fetch(`${API_BASE}/products/key/service-b2b-360?lang=${currentLang}`)
-                if (!res.ok) return
-                const data = await res.json()
-                const packages = Array.isArray(data?.product?.packages) ? data.product.packages : []
-                const mapped: Record<string, any> = {}
-                for (const pkg of packages) {
-                    const key = String(pkg?.product_key || '')
-                    if (key.endsWith('-core')) mapped.core = pkg
-                    else if (key.endsWith('-growth')) mapped.growth = pkg
-                    else if (key.endsWith('-ultimate')) mapped.ultimate = pkg
-                }
-                setPackageMap(mapped)
-            } catch (err) {
-                console.error('Failed to load B2B package map:', err)
-            }
-        }
-        void fetchPackages()
-    }, [API_BASE, currentLang])
-
-    const fallbackIdmPath = useMemo(() => path('idm'), [currentLang, i18n.language])
-
-    const handlePackageBuy = (tier: 'core' | 'growth' | 'ultimate') => {
-        const pkg = packageMap[tier]
-        if (!pkg) {
-            window.location.href = fallbackIdmPath
-            return
-        }
-        const priceNum = Number(pkg.price)
-        addToCart({
-            id: String(pkg.product_key || `service-b2b-360-${tier}`),
-            product_id: 0,
-            product_key: String(pkg.product_key || `service-b2b-360-${tier}`),
-            name: String(pkg.name || (tier === 'core' ? 'Core' : tier === 'growth' ? 'Growth' : 'Ultimate')),
-            description: String(pkg.description || ''),
-            price: Number.isFinite(priceNum) ? priceNum : 0,
-            currency: String(pkg.currency || 'TRY')
-        })
-        window.dispatchEvent(new Event('khilon:open-cart'))
-    }
 
     const trConfig = {
         hero: {
@@ -170,51 +122,23 @@ export default function B2BThreeSixtyMarketing() {
                     icon: <HiArrowsPointingIn />,
                     content: (
                         <div className="sectoral-tabs-content">
-                            <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>B2B Firmaları İçin Tek Noktadan Pazarlama Takımınızı Kurun</h3>
-                                <p style={{ fontSize: '0.9rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
-                                    B2B hizmet sunan firmalar için özelleştirilmiş, stratejik pazarlama takımlarıyla işinizi hızlıca büyütün.
-                                    Tüm pazarlama ihtiyaçlarınızı tek bir yerden karşılayarak operasyonel yüklerden kurtulun.
-                                </p>
-                            </div>
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ border: '1px solid #eef2d0' }}>
-                                    <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>B2B markaları için pazarlama faaliyetlerine hızlıca başlamaya odaklanır.</p>
-                                    <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Süreçleri hızlıca devreye alır ve operasyonel yükten kurtarır.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Ekip kurma derdi olmadan hemen başlayın.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Kaynak yönetimini sadeleştirmek isteyen KOBİ'ler.</li>
-                                    </ul>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <button type="button" onClick={() => handlePackageBuy('core')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
-                                    </div>
+                            <div className="sectoral-split-layout">
+                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="B2B Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
                                 </div>
-
-                                <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
-                                    <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>B2B markaları için büyümeye ve derinlemesine çözümlere odaklanır.</p>
-                                    <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Müşteri tabanınızı sürdürülebilir büyütür.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> İşletme etkisini artırarak rekabet avantajı sağlar.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Dijitalde büyümeye yatırım yapan işletmeler.</li>
-                                    </ul>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <button type="button" onClick={() => handlePackageBuy('growth')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
-                                    </div>
-                                </div>
-
-                                <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
-                                    <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Marka gücünü maksimize eden en üst seviye çözümlere odaklanır.</p>
-                                    <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm kanalları entegre eden marka stratejisi.</li>
-                                        <li><HiCheck /> <strong>Fark:</strong> Sektörde lider konuma getiren tam kapsamlı strateji.</li>
-                                        <li><HiCheck /> <strong>Uygun:</strong> Rekabette öne çıkmak isteyen büyük işletmeler.</li>
-                                    </ul>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <button type="button" onClick={() => handlePackageBuy('ultimate')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</button>
-                                    </div>
+                                <div className="sectoral-card">
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>B2B Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. SEO, reklam, içerik ve sosyal medyayı tek bir bütünleşik stratejide birleştirin.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        B2B Sektöründe Bütünleşik Dijital Pazarlama ile hedef kitlenize doğru mesajı, doğru kanaldan, doğru zamanda ulaştırın.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '20px' }}>
+                                        B2B Sektörü İçin Bütünleşik Dijital Pazarlama Çözümleri ile rakiplerinizin önüne geçin ve sürdürülebilir büyüme elde edin.
+                                    </p>
+                                    <Link to="/hizmetlerimiz/b2b-butunlesik-dijital-pazarlama" className="sectoral-btn">Detaylı Bilgi</Link>
                                 </div>
                             </div>
                         </div>
@@ -430,28 +354,24 @@ export default function B2BThreeSixtyMarketing() {
                     label: '360 Digital Marketing Management',
                     icon: tabIcon('packages') || <HiArrowsPointingIn />,
                     content: (
-                        <div className='sectoral-tabs-content'>
-                            <div className='tab-grid grid-cols-3'>
-                                <div className='sectoral-card' style={{ border: '1px solid #eef2d0' }}>
-                                    <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Launch quickly with a lean execution setup focused on traction.</p>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <button type="button" onClick={() => handlePackageBuy('core')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
-                                    </div>
+                        <div className="sectoral-tabs-content">
+                            <div className="sectoral-split-layout">
+                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="B2B Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
                                 </div>
-                                <div className='sectoral-card' style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
-                                    <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Scale demand generation and conversion performance with stronger orchestration.</p>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <button type="button" onClick={() => handlePackageBuy('growth')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
-                                    </div>
-                                </div>
-                                <div className='sectoral-card' style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
-                                    <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Operate a full-spectrum growth system with strategic and executional depth.</p>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <button type="button" onClick={() => handlePackageBuy('ultimate')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</button>
-                                    </div>
+                                <div className="sectoral-card">
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Unify B2B Digital Channels Into a Single Strategy!</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Grow your brand with integrated marketing strategies!</h4>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        With khilonfast, direct your budget to the right channels and strengthen your digital marketing. Combine SEO, ads, content, and social media in one integrated strategy.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        Reach your B2B target audience with the right message, through the right channel, at the right time with Integrated Digital Marketing.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '20px' }}>
+                                        Get ahead of your competitors and achieve sustainable growth with Integrated Digital Marketing Solutions for the B2B Sector.
+                                    </p>
+                                    <Link to="/en/services/b2b-integrated-digital-marketing" className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

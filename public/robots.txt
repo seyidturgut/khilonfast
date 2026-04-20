@@ -6,7 +6,7 @@ Disallow: /checkout
 Disallow: /payment-callback
 Disallow: /payment-success
 Disallow: /giris
-Disallow: /kayil-ol
+Disallow: /kayit-ol
 Disallow: /login
 Disallow: /register
 Disallow: /api/

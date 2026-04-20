@@ -9,7 +9,10 @@ import {
     HiSparkles,
     HiDocumentText,
     HiUserGroup,
-    HiCalendar
+    HiCalendar,
+    HiPlay,
+    HiTicket,
+    HiMail
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 import '../styles/admin-light.css';
@@ -34,6 +37,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         { icon: HiDocumentText, label: 'Sayfalar', path: '/admin/pages' },
         { icon: HiUserGroup, label: 'Danışmanlar', path: '/admin/consultants' },
         { icon: HiCalendar, label: 'Rezervasyonlar', path: '/admin/bookings' },
+        { icon: HiPlay, label: 'Eğitim İçerikleri', path: '/admin/training-content' },
+        { icon: HiPlay, label: 'Eğitim Analitikleri', path: '/admin/training-analytics' },
+        { icon: HiTicket, label: 'Kuponlar', path: '/admin/coupons' },
+        { icon: HiPlay, label: 'Otomasyon Akışları', path: '/admin/automations' },
+        { icon: HiMail, label: 'E-posta Şablonları', path: '/admin/email-templates' },
+        { icon: HiDocumentText, label: 'Otomasyon Logları', path: '/admin/automation-logs' },
         { icon: HiUsers, label: 'Kullanıcılar', path: '/admin/users' },
         { icon: HiCog, label: 'Ayarlar', path: '/admin/settings' },
     ];

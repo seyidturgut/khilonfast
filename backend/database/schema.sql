@@ -43,7 +43,15 @@ CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     order_number VARCHAR(50) UNIQUE NOT NULL,
+    subtotal_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    coupon_discount_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    shipping_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    tax_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
     total_amount DECIMAL(10, 2) NOT NULL,
+    coupon_id INT DEFAULT NULL,
+    coupon_code VARCHAR(100) DEFAULT NULL,
+    coupon_name VARCHAR(255) DEFAULT NULL,
+    applied_coupon_snapshot_json JSON DEFAULT NULL,
     currency VARCHAR(3) DEFAULT 'TRY',
     status ENUM('pending', 'processing', 'completed', 'failed', 'cancelled') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -51,7 +59,8 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_order_number (order_number),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_orders_coupon_id (coupon_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Order Items table
@@ -84,6 +93,48 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     INDEX idx_order_id (order_id),
     INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS coupons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    code VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    discount_type ENUM('percentage', 'fixed') NOT NULL DEFAULT 'percentage',
+    discount_value DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    minimum_cart_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    maximum_discount_amount DECIMAL(10, 2) DEFAULT NULL,
+    starts_at DATETIME DEFAULT NULL,
+    ends_at DATETIME DEFAULT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    total_usage_limit INT DEFAULT NULL,
+    per_user_limit INT DEFAULT NULL,
+    restricted_products_json JSON DEFAULT NULL,
+    restricted_categories_json JSON DEFAULT NULL,
+    new_customers_only BOOLEAN DEFAULT FALSE,
+    is_stackable BOOLEAN DEFAULT FALSE,
+    usage_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_coupon_code (code),
+    INDEX idx_coupon_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS coupon_usages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    coupon_id INT NOT NULL,
+    user_id INT DEFAULT NULL,
+    order_id INT NOT NULL,
+    discount_amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    released_at TIMESTAMP NULL DEFAULT NULL,
+    status ENUM('used', 'released') DEFAULT 'used',
+    FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE RESTRICT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    UNIQUE KEY uniq_coupon_usage_order (order_id),
+    INDEX idx_coupon_usage_coupon (coupon_id),
+    INDEX idx_coupon_usage_user_coupon (user_id, coupon_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Subscriptions table

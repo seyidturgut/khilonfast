@@ -132,48 +132,23 @@ export default function InteriorDesignMarketing() {
                     icon: <HiArrowsPointingIn />,
                     content: (
                         <div className="sectoral-tabs-content">
-                            <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-                                <h3 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '8px' }}>Ofis & Kurumsal İç Tasarım Firmaları İçin Tek Noktadan Pazarlama Takımınızı Kurun</h3>
-                                <p style={{ fontSize: '0.9rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
-                                    İç tasarım ofisleri için özelleştirilmiş, stratejik pazarlama takımlarıyla projelerinizi daha geniş kitlelere duyurun.
-                                </p>
-                            </div>
-                            <div className="tab-grid grid-cols-3">
-                                <div className="sectoral-card" style={{ border: '1px solid #eef2d0' }}>
-                                    <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Ofis & Kurumsal İç Tasarım sektörü markaları için pazarlama faaliyetlerine hızlıca başlamaya ve sonuç almaya odaklanır.</p>
-                                    <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital pazarlama süreçlerinizi hızlıca devreye alır ve operasyonel yüklerden kurtarır.</li>
-                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> Ekstra toplantılar veya ekip kurma derdi olmadan pazarlama faaliyetlerine hemen başlayabilir, sonuçları kısa sürede görebilirsiniz.</li>
-                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Zaman ve kaynak yönetimini sadeleştirmek isteyen küçük ve orta ölçekli işletmeler.</li>
-                                    </ul>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
+                            <div className="sectoral-split-layout">
+                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="Ofis İç Tasarım Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
                                 </div>
-                                <div className="sectoral-card" style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
-                                    <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Ofis & Kurumsal İç Tasarım sektörü markaları için büyümeye ve derinlemesine pazarlama çözümlerine odaklanır.</p>
-                                    <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Dijital varlığınızı genişletmek ve müşteri tabanınızı büyütmek için dengeli ve sürdürülebilir çözümler sunar.</li>
-                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> İşletmenizin pazarlama etkisini artırarak, büyümeye odaklanmanızı sağlar ve rakiplerinize karşı avantaj kazandırır.</li>
-                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Dijital pazarlamada bir adım ileri gitmek isteyen ve büyümeye yatırım yapmayı hedefleyen işletmeler.</li>
-                                    </ul>
-                                    <div style={{ marginTop: 'auto', textAlign: 'center' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ display: 'block', width: '100%', padding: '12px', textAlign: 'center' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
-                                </div>
-                                <div className="sectoral-card" style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
-                                    <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Ofis & Kurumsal İç Tasarım sektörü markaları için pazarlama süreçlerini en üst seviyeye taşıyan ve marka gücünü maksimize eden çözümlere odaklanır.</p>
-                                    <ul className="sectoral-features" style={{ fontSize: '0.82rem' }}>
-                                        <li><HiCheck /> <strong>Faydalar:</strong> Tüm pazarlama kanallarını entegre ederek güçlü bir marka stratejisi oluşturur ve kalıcı bir etki yaratır.</li>
-                                        <li><HiCheck /> <strong>Öne Çıkan Fark:</strong> Pazarda lider konuma gelmenizi sağlayacak tam kapsamlı bir strateji ile yüksek seviyede rekabet avantajı sunar.</li>
-                                        <li><HiCheck /> <strong>Kimler İçin Uygun:</strong> Tam donanımlı bir pazarlama stratejisiyle sektörde öne çıkmak isteyen büyük işletmeler.</li>
-                                    </ul>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className="sectoral-btn" style={{ width: '100%', padding: '12px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
-                                    </div>
+                                <div className="sectoral-card">
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Ofis & Kurumsal İç Tasarım Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        Ofis & Kurumsal İç Tasarım Sektöründe Bütünleşik Dijital Pazarlama ile Başarıya Ulaşın. Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '20px' }}>
+                                        Ofis & Kurumsal İç Tasarım Sektörü İçin Bütünleşik Dijital Pazarlama Çözümleri
+                                    </p>
+                                    <Link to="/hizmetlerimiz/ofis-tasarim-butunlesik-dijital-pazarlama" className="sectoral-btn">Detaylı Bilgi</Link>
                                 </div>
                             </div>
                         </div>
@@ -365,28 +340,24 @@ export default function InteriorDesignMarketing() {
                     label: '360 Digital Marketing Management',
                     icon: tabIcon('packages') || <HiArrowsPointingIn />,
                     content: (
-                        <div className='sectoral-tabs-content'>
-                            <div className='tab-grid grid-cols-3'>
-                                <div className='sectoral-card' style={{ border: '1px solid #eef2d0' }}>
-                                    <h3>Core</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Launch quickly with a lean execution setup focused on traction.</p>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                    </div>
+                        <div className="sectoral-tabs-content">
+                            <div className="sectoral-split-layout">
+                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="Office & Interior Design Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
                                 </div>
-                                <div className='sectoral-card' style={{ border: '1px solid #d0e7f2', background: '#fdfdff' }}>
-                                    <h3>Growth</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Scale demand generation and conversion performance with stronger orchestration.</p>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                    </div>
-                                </div>
-                                <div className='sectoral-card' style={{ border: '1px solid #1a3a52', transform: 'scale(1.02)', position: 'relative', zIndex: '2' }}>
-                                    <h3>Ultimate</h3>
-                                    <p style={{ fontSize: '0.85rem' }}>Operate a full-spectrum growth system with strategic and executional depth.</p>
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <Link to={path('idm')} className='sectoral-btn' style={{ width: '100%', padding: '12px' }}>{t('pricing.buyNow')}</Link>
-                                    </div>
+                                <div className="sectoral-card">
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Unify Office & Interior Design Digital Channels Into a Single Strategy!</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Grow your brand with integrated marketing strategies!</h4>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        With khilonfast, direct your budget to the right channels and strengthen your digital marketing. Manage all your channels with a single strategy to boost performance.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
+                                        Achieve success with Integrated Digital Marketing in the Office & Interior Design Sector. Get more engagement and more conversions through digital channel integration. Optimize your marketing investments with khilonfast.
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '20px' }}>
+                                        Integrated Digital Marketing Solutions for the Office & Interior Design Sector
+                                    </p>
+                                    <Link to="/en/services/office-design-integrated-digital-marketing" className="sectoral-btn">Learn More</Link>
                                 </div>
                             </div>
                         </div>

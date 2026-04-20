@@ -71,11 +71,31 @@ class LidioService
         return '';
     }
 
-    private function buildCardPaymentRequest($data, $use3d = true)
+    private function buildCardPaymentRequest($data, $use3d = true, $saveCard = false)
     {
         $month = (int)preg_replace('/\D+/', '', (string)($data['cardExpireMonth'] ?? ''));
         $year = (int)preg_replace('/\D+/', '', (string)($data['cardExpireYear'] ?? ''));
         $installmentCount = max(0, (int)($data['installment'] ?? 0));
+
+        $newCardInfo = [
+            'processType' => 'sales',
+            'cardInfo' => [
+                'cardHolderName' => (string)($data['cardHolderName'] ?? ''),
+                'cardNumber' => preg_replace('/\s+/', '', (string)($data['cardNumber'] ?? '')),
+                'lastMonth' => $month,
+                'lastYear' => $year
+            ],
+            'cvv' => (string)($data['cardCvv'] ?? ''),
+            'use3DSecure' => (bool)$use3d,
+            'installmentCount' => $installmentCount,
+            'loyaltyPointUsage' => 'None',
+            'merchantDataShareApproved' => true,
+            'termsConditionsApproved' => true
+        ];
+
+        if ($saveCard) {
+            $newCardInfo['saveCard'] = true;
+        }
 
         return [
             'orderId' => (string)$data['orderId'],
@@ -90,15 +110,34 @@ class LidioService
             ],
             'paymentInstrument' => 'NewCard',
             'paymentInstrumentInfo' => [
-                'newCard' => [
+                'newCard' => $newCardInfo
+            ],
+            'returnUrl' => (string)($data['returnUrl'] ?? ''),
+            'notificationUrl' => (string)($data['notificationUrl'] ?? ''),
+            'clientIp' => (string)($data['customerInfo']['customerIpAddress'] ?? '')
+        ];
+    }
+
+    private function buildSavedCardPaymentRequest($data, $token, $use3d = true)
+    {
+        $installmentCount = max(0, (int)($data['installment'] ?? 0));
+
+        return [
+            'orderId' => (string)$data['orderId'],
+            'merchantProcessId' => (string)($data['merchantProcessId'] ?? $data['orderId']),
+            'totalAmount' => (float)$data['amount'],
+            'currency' => (string)($data['currency'] ?? 'TRY'),
+            'customerInfo' => [
+                'customerId' => (string)($data['customerInfo']['customerId'] ?? ''),
+                'name' => trim((string)(($data['customerInfo']['customerName'] ?? '') . ' ' . ($data['customerInfo']['customerSurname'] ?? ''))),
+                'email' => (string)($data['customerInfo']['customerEmail'] ?? ''),
+                'phone' => (string)($data['customerInfo']['customerPhoneNumber'] ?? '')
+            ],
+            'paymentInstrument' => 'SavedCard',
+            'paymentInstrumentInfo' => [
+                'savedCard' => [
                     'processType' => 'sales',
-                    'cardInfo' => [
-                        'cardHolderName' => (string)($data['cardHolderName'] ?? ''),
-                        'cardNumber' => preg_replace('/\s+/', '', (string)($data['cardNumber'] ?? '')),
-                        'lastMonth' => $month,
-                        'lastYear' => $year
-                    ],
-                    'cvv' => (string)($data['cardCvv'] ?? ''),
+                    'token' => $token,
                     'use3DSecure' => (bool)$use3d,
                     'installmentCount' => $installmentCount,
                     'loyaltyPointUsage' => 'None',
@@ -110,6 +149,70 @@ class LidioService
             'notificationUrl' => (string)($data['notificationUrl'] ?? ''),
             'clientIp' => (string)($data['customerInfo']['customerIpAddress'] ?? '')
         ];
+    }
+
+    public function extractCardToken($lidioResponse)
+    {
+        if (!is_array($lidioResponse)) return null;
+
+        $candidates = [
+            $lidioResponse['cardToken'] ?? null,
+            $lidioResponse['savedCardToken'] ?? null,
+            $lidioResponse['token'] ?? null,
+            isset($lidioResponse['paymentInfo']) ? ($lidioResponse['paymentInfo']['cardToken'] ?? null) : null,
+            isset($lidioResponse['paymentInfo']) ? ($lidioResponse['paymentInfo']['savedCardToken'] ?? null) : null,
+            isset($lidioResponse['raw']) ? ($lidioResponse['raw']['cardToken'] ?? null) : null,
+            isset($lidioResponse['raw']) ? ($lidioResponse['raw']['savedCardToken'] ?? null) : null,
+            isset($lidioResponse['raw']['paymentInfo']) ? ($lidioResponse['raw']['paymentInfo']['cardToken'] ?? null) : null,
+        ];
+
+        foreach ($candidates as $val) {
+            if ($val !== null && $val !== '') {
+                return (string)$val;
+            }
+        }
+
+        return null;
+    }
+
+    public function extractMaskedCardNumber($lidioResponse)
+    {
+        if (!is_array($lidioResponse)) return null;
+
+        $candidates = [
+            $lidioResponse['maskedCardNumber'] ?? null,
+            $lidioResponse['maskedPan'] ?? null,
+            isset($lidioResponse['paymentInfo']) ? ($lidioResponse['paymentInfo']['maskedCardNumber'] ?? null) : null,
+            isset($lidioResponse['raw']['paymentInfo']) ? ($lidioResponse['raw']['paymentInfo']['maskedCardNumber'] ?? null) : null,
+        ];
+
+        foreach ($candidates as $val) {
+            if ($val !== null && $val !== '') {
+                return (string)$val;
+            }
+        }
+
+        return null;
+    }
+
+    public function extractCardBrand($lidioResponse)
+    {
+        if (!is_array($lidioResponse)) return null;
+
+        $candidates = [
+            $lidioResponse['cardBrand'] ?? null,
+            $lidioResponse['cardType'] ?? null,
+            isset($lidioResponse['paymentInfo']) ? ($lidioResponse['paymentInfo']['cardBrand'] ?? null) : null,
+            isset($lidioResponse['raw']['paymentInfo']) ? ($lidioResponse['raw']['paymentInfo']['cardBrand'] ?? null) : null,
+        ];
+
+        foreach ($candidates as $val) {
+            if ($val !== null && $val !== '') {
+                return (string)$val;
+            }
+        }
+
+        return null;
     }
 
     private function normalizeResponse($raw)
@@ -133,10 +236,10 @@ class LidioService
         ]);
     }
 
-    public function process3DSPayment($data)
+    public function process3DSPayment($data, $saveCard = false)
     {
         $cfg = $this->resolveConfig();
-        $requestData = $this->buildCardPaymentRequest($data, true);
+        $requestData = $this->buildCardPaymentRequest($data, true, $saveCard);
 
         $headers = [
             'Content-Type: application/json'
@@ -174,6 +277,117 @@ class LidioService
         }
 
         return $this->normalizeResponse($decoded);
+    }
+
+    public function processPaymentWithSavedCard($data, $token)
+    {
+        $cfg = $this->resolveConfig();
+        $requestData = $this->buildSavedCardPaymentRequest($data, $token, true);
+
+        $headers = ['Content-Type: application/json'];
+        $auth = $this->buildAuthorizationHeader($cfg);
+        if ($auth !== '') $headers[] = 'Authorization: ' . $auth;
+        if (!empty($cfg['merchantCode'])) $headers[] = 'MerchantCode: ' . $cfg['merchantCode'];
+
+        $url = $cfg['apiUrl'] . $cfg['processPath'];
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($requestData),
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_TIMEOUT => 40
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr = curl_error($ch);
+
+        if ($response === false) {
+            throw new Exception('Lidio saved card request failed: ' . $curlErr);
+        }
+
+        $decoded = json_decode($response, true);
+        if (!is_array($decoded)) {
+            throw new Exception('Invalid Lidio saved card response');
+        }
+
+        if ($httpCode >= 400) {
+            $msg = $decoded['resultMessage'] ?? ('Saved card request failed with status code ' . $httpCode);
+            throw new Exception($msg);
+        }
+
+        return $this->normalizeResponse($decoded);
+    }
+
+    public function startDirectWireTransfer($data)
+    {
+        // Anında Havale: /ProcessPayment endpoint'i, paymentInstrument: DirectWireTransfer
+        // Kullanıcı bankasının online portalına yönlendirilir (redirect flow)
+        $cfg = $this->resolveConfig();
+
+        $headers = ['Content-Type: application/json'];
+        $auth = $this->buildAuthorizationHeader($cfg);
+        if ($auth !== '') $headers[] = 'Authorization: ' . $auth;
+        if (!empty($cfg['merchantCode'])) $headers[] = 'MerchantCode: ' . $cfg['merchantCode'];
+
+        $requestData = [
+            'orderId'           => (string)($data['orderId'] ?? ''),
+            'merchantProcessId' => (string)($data['merchantProcessId'] ?? $data['orderId'] ?? ''),
+            'totalAmount'       => (float)($data['amount'] ?? 0),
+            'currency'          => (string)($data['currency'] ?? 'TRY'),
+            'customerInfo'      => [
+                'customerId'  => (string)($data['customerInfo']['customerId'] ?? ''),
+                'name'        => trim((string)(($data['customerInfo']['customerName'] ?? '') . ' ' . ($data['customerInfo']['customerSurname'] ?? ''))),
+                'email'       => (string)($data['customerInfo']['customerEmail'] ?? ''),
+                'phone'       => (string)($data['customerInfo']['customerPhoneNumber'] ?? '')
+            ],
+            'paymentInstrument'     => 'DirectWireTransfer',
+            'paymentInstrumentInfo' => [
+                'directWireTransfer' => [
+                    'processType'                 => 'sales',
+                    'merchantDataShareApproved'   => true,
+                    'termsConditionsApproved'     => true
+                ]
+            ],
+            'returnUrl'       => (string)($data['returnUrl'] ?? ''),
+            'notificationUrl' => (string)($data['notificationUrl'] ?? ''),
+            'clientIp'        => (string)($data['customerInfo']['customerIpAddress'] ?? '')
+        ];
+
+        $url = $cfg['apiUrl'] . $cfg['processPath'];
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => json_encode($requestData),
+            CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_TIMEOUT        => 40
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr  = curl_error($ch);
+        curl_close($ch);
+
+        if ($response === false) {
+            throw new Exception('Lidio wire transfer request failed: ' . $curlErr);
+        }
+
+        $decoded = json_decode($response, true);
+        if (!is_array($decoded)) {
+            throw new Exception('Invalid Lidio wire transfer response');
+        }
+
+        if ($httpCode >= 400) {
+            $msg = $decoded['resultMessage'] ?? ('Wire transfer request failed with status code ' . $httpCode);
+            throw new Exception($msg);
+        }
+
+        $normalized = $this->normalizeResponse($decoded);
+        $normalized['requiresRedirect'] = !empty($normalized['redirectUrl']);
+
+        return $normalized;
     }
 
     public function startHostedPaymentProcess($data)
