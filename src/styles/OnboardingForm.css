@@ -1,0 +1,210 @@
+.onboarding-page {
+    min-height: 100vh;
+    background: #f4f7fb;
+    padding: 7rem 16px 80px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.onboarding-container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #d9e2ec;
+    overflow: hidden;
+}
+
+.onboarding-header {
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7a 100%);
+    padding: 28px 32px;
+    color: #fff;
+}
+
+.onboarding-header h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.onboarding-product-name {
+    margin: 0 0 8px;
+    font-size: 13px;
+    opacity: 0.85;
+    font-weight: 600;
+}
+
+.onboarding-intro {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.onboarding-progress-bar {
+    height: 5px;
+    background: #e2e8f0;
+}
+
+.onboarding-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a3a52, #89b004);
+    transition: width 0.3s ease;
+}
+
+.onboarding-progress-text {
+    text-align: right;
+    font-size: 12px;
+    color: #64748b;
+    margin: 6px 32px 0;
+}
+
+.onboarding-section {
+    padding: 28px 32px 8px;
+}
+
+.onboarding-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a3a52;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #89b004;
+}
+
+.onboarding-field {
+    margin-bottom: 18px;
+}
+
+.onboarding-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334e68;
+    margin-bottom: 6px;
+}
+
+.onboarding-field input,
+.onboarding-field textarea {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fafafa;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.onboarding-field input:focus,
+.onboarding-field textarea:focus {
+    outline: none;
+    border-color: #1a3a52;
+    background: #fff;
+}
+
+.onboarding-error {
+    margin: 0 32px;
+    padding: 10px 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 13px;
+}
+
+.onboarding-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 32px 24px;
+}
+
+.onboarding-btn-primary,
+.onboarding-btn-secondary,
+.onboarding-btn-submit {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s;
+}
+
+.onboarding-btn-primary {
+    background: #89b004;
+    color: #1a3a52;
+}
+
+.onboarding-btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.onboarding-btn-submit {
+    background: #1a3a52;
+    color: #fff;
+    padding: 11px 32px;
+}
+
+.onboarding-btn-primary:hover,
+.onboarding-btn-submit:hover {
+    opacity: 0.88;
+}
+
+.onboarding-btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.onboarding-skip {
+    text-align: center;
+    font-size: 13px;
+    color: #64748b;
+    padding: 0 32px 28px;
+    margin: 0;
+}
+
+.onboarding-link {
+    background: none;
+    border: none;
+    color: #1a3a52;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.onboarding-already-done {
+    padding: 48px 32px;
+    text-align: center;
+}
+
+.onboarding-check {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #1a3a52, #89b004);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #fff;
+    margin: 0 auto 20px;
+}
+
+.onboarding-already-done h2 {
+    font-size: 20px;
+    color: #1e293b;
+    margin: 0 0 12px;
+}
+
+.onboarding-already-done p {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0 0 24px;
+    line-height: 1.6;
+}

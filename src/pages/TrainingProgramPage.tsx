@@ -1,5 +1,6 @@
 import { useMemo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import {
     HiAcademicCap,
@@ -132,18 +133,19 @@ export default function TrainingProgramPage() {
     const cmsSlug = matchedTrainingKey ? trSlugs[matchedTrainingKey] : (normalizedCandidates[0] || '');
     const cmsSlugEncoded = encodeURIComponent(cmsSlug);
     const [cmsContent, setCmsContent] = useState<any | null>(null);
-    const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
+    const { user } = useAuth();
+    const canShowCms = user?.role === 'admin';
     const API_BASE = API_BASE_URL;
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
     const [cmsEditorData, setCmsEditorData] = useState<any | null>(null);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
     const [cmsSection, setCmsSection] = useState<'hero' | 'video' | 'features' | 'faqs'>('hero');
+    const [cmsOpen, setCmsOpen] = useState(false);
     const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
     const [activeFaqIndex, setActiveFaqIndex] = useState(0);
     const [cmsSaving, setCmsSaving] = useState(false);
     const [cmsLoading, setCmsLoading] = useState(false);
     const [cmsError, setCmsError] = useState('');
-    const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
 
     useEffect(() => {
         setCmsContent(null);
@@ -1112,13 +1114,13 @@ export default function TrainingProgramPage() {
     };
 
     useEffect(() => {
-        if (!isCmsMode) return;
+        if (!canShowCms) return;
         if (!cmsEditorData) {
             setCmsEditorData(defaultEditorData);
             return;
         }
         setCmsContent(cmsEditorData);
-    }, [isCmsMode, cmsEditorData, currentLang]);
+    }, [canShowCms, cmsEditorData, currentLang]);
 
     useEffect(() => {
         const count = Array.isArray(cmsEditorData?.featuresSection?.features)
@@ -1335,10 +1337,17 @@ export default function TrainingProgramPage() {
                 {...config}
                 serviceKey={training.productKey}
                 disableApiHeroTextOverride
-                cmsMode={canShowCms}
-                onCmsEditSection={(section) => setCmsSection(section)}
+                onCmsEditSection={(section) => { setCmsSection(section); setCmsOpen(true); }}
             />
-            {canShowCms && (
+            {canShowCms && !cmsOpen && (
+                <button
+                    onClick={() => setCmsOpen(true)}
+                    style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999, background: '#0f172a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 13, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0,0,0,0.25)' }}
+                >
+                    ✏️ Düzenle
+                </button>
+            )}
+            {canShowCms && cmsOpen && (
                 <div style={{
                     position: 'fixed',
                     top: 90,
@@ -1353,8 +1362,11 @@ export default function TrainingProgramPage() {
                     zIndex: 9999,
                     padding: 14
                 }}>
-                    <div style={{ fontWeight: 800, marginBottom: 10, color: '#0f172a' }}>
-                        CMS Editor ({currentLang.toUpperCase()})
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <div style={{ fontWeight: 800, color: '#0f172a' }}>
+                            CMS Editor ({currentLang.toUpperCase()})
+                        </div>
+                        <button onClick={() => setCmsOpen(false)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#64748b', lineHeight: 1 }}>✕</button>
                     </div>
                     <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
                         {(['hero', 'video', 'features', 'faqs'] as const).map((section) => (

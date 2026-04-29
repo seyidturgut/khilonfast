@@ -24,7 +24,8 @@ router.get('/slug/:slug(*)', cacheMiddleware(3600), async (req, res) => {
 
     try {
         const [pages] = await db.query('SELECT id, slug FROM cms_pages WHERE slug = ? LIMIT 1', [slug]);
-        if (!pages.length) return res.status(404).json({ error: 'Page not found' });
+        // CMS'de kayıt yoksa 404 yerine boş içerik dön — frontend i18n fallback'e düşsün, konsol kirlenmesin
+        if (!pages.length) return res.json({ content: null });
 
         const pageId = pages[0].id;
         const [rows] = await db.query(

@@ -4,6 +4,8 @@ import { HiOutlineUser } from 'react-icons/hi2';
 import { useAuth } from '../context/AuthContext';
 import './UserIcon.css';
 
+const isEn = () => window.location.pathname.startsWith('/en');
+
 export default function UserIcon() {
     const { user, logout } = useAuth();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -67,23 +69,23 @@ export default function UserIcon() {
                                     onClick={() => { setIsDropdownOpen(false); navigate('/admin'); }}
                                     style={{ color: '#0ea5e9', fontWeight: 600 }}
                                 >
-                                    Yönetim Paneli
+                                    {isEn() ? 'Admin Panel' : 'Yönetim Paneli'}
                                 </button>
                             )}
-                            <button className="user-dropdown-item" onClick={() => { setIsDropdownOpen(false); navigate('/dashboard'); }}>
-                                Hesabım
+                            <button className="user-dropdown-item" onClick={() => { setIsDropdownOpen(false); navigate(isEn() ? '/en/dashboard' : '/dashboard'); }}>
+                                {isEn() ? 'My Account' : 'Hesabım'}
                             </button>
                             <button className="user-dropdown-item" onClick={handleLogout}>
-                                Çıkış Yap
+                                {isEn() ? 'Logout' : 'Çıkış Yap'}
                             </button>
                         </>
                     ) : (
                         <>
                             <button className="user-dropdown-item" onClick={handleLogin}>
-                                Giriş Yap
+                                {isEn() ? 'Login' : 'Giriş Yap'}
                             </button>
                             <button className="user-dropdown-item" onClick={handleRegister}>
-                                Kayıt Ol
+                                {isEn() ? 'Sign Up' : 'Kayıt Ol'}
                             </button>
                         </>
                     )}

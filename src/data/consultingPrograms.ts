@@ -16,7 +16,8 @@ const enSlugs = enCommon.slugs as Record<string, string>
 
 function buildLocalizedConsultingPath(locale: AppLocale, slugKey: string): string {
     const slugMap = locale === 'en' ? enSlugs : trSlugs
-    return `/${slugMap[slugKey]}`.replace(/\/{2,}/g, '/')
+    const prefix = locale === 'en' ? '/en' : ''
+    return `${prefix}/${slugMap[slugKey]}`.replace(/\/{2,}/g, '/')
 }
 
 export const consultingProgramCatalog: LocalizedProgram[] = [

@@ -77,6 +77,7 @@ export default function UsersPage() {
     const [openUserId, setOpenUserId] = useState<number | null>(null);
     const [orderMap, setOrderMap] = useState<Record<number, UserOrder[]>>({});
     const [orderLoading, setOrderLoading] = useState<Record<number, boolean>>({});
+    const [onboardingMap, setOnboardingMap] = useState<Record<number, any[]>>({});
     const [query, setQuery] = useState('');
     const [showFormModal, setShowFormModal] = useState(false);
     const [formSubmitting, setFormSubmitting] = useState(false);
@@ -124,6 +125,20 @@ export default function UsersPage() {
         }
     };
 
+    const fetchOnboardingForUser = async (userId: number) => {
+        if (onboardingMap[userId]) return;
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${ADMIN_API_BASE}/onboarding-form/admin/user/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json();
+            setOnboardingMap(prev => ({ ...prev, [userId]: Array.isArray(data) ? data : [] }));
+        } catch {
+            setOnboardingMap(prev => ({ ...prev, [userId]: [] }));
+        }
+    };
+
     const toggleUserOrders = async (userId: number) => {
         if (openUserId === userId) {
             setOpenUserId(null);
@@ -131,6 +146,7 @@ export default function UsersPage() {
         }
         setOpenUserId(userId);
         await fetchOrdersForUser(userId);
+        await fetchOnboardingForUser(userId);
     };
 
     const openCreateModal = () => {
@@ -401,6 +417,39 @@ export default function UsersPage() {
                                                                                 </div>
                                                                             ))}
                                                                         </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                        {(onboardingMap[u.id]?.length || 0) > 0 && (
+                                                            <div style={{ marginTop: '1rem', borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem' }}>
+                                                                <div style={{ fontWeight: 700, color: '#0f766e', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+                                                                    B2B Growth Onboarding Formu
+                                                                </div>
+                                                                {onboardingMap[u.id].map((form: any) => (
+                                                                    <div key={form.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: '8px', padding: '0.6rem 0.9rem', marginBottom: '0.4rem' }}>
+                                                                        <span style={{ fontSize: '0.83rem', color: '#334e68' }}>
+                                                                            Sipariş #{form.order_number} • {new Date(form.submitted_at).toLocaleString('tr-TR')}
+                                                                            {form.product_names && <span style={{ marginLeft: '8px', color: '#64748b' }}>— {form.product_names}</span>}
+                                                                        </span>
+                                                                        <button
+                                                                            onClick={async () => {
+                                                                                const token = localStorage.getItem('token');
+                                                                                const res = await fetch(`${ADMIN_API_BASE}/onboarding-form/admin/${form.id}/pdf`, {
+                                                                                    headers: { Authorization: `Bearer ${token}` }
+                                                                                });
+                                                                                const blob = await res.blob();
+                                                                                const url = URL.createObjectURL(blob);
+                                                                                const a = document.createElement('a');
+                                                                                a.href = url;
+                                                                                a.download = `onboarding-${form.order_number}.pdf`;
+                                                                                a.click();
+                                                                                URL.revokeObjectURL(url);
+                                                                            }}
+                                                                            style={{ fontSize: '0.8rem', background: '#0f766e', color: '#fff', padding: '4px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+                                                                        >
+                                                                            PDF İndir
+                                                                        </button>
                                                                     </div>
                                                                 ))}
                                                             </div>

@@ -12,11 +12,14 @@ import {
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
 import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
+import EditableMedia from '../components/cms/EditableMedia'
+import { usePageSlug } from '../hooks/usePageSlug'
 
 export default function B2BThreeSixtyMarketing() {
     const { t, i18n } = useTranslation('common')
     const location = useLocation()
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
+    const cmsSlug = usePageSlug()
     const isEn = currentLang === 'en'
     const langPrefix = isEn ? '/en' : ''
 
@@ -69,13 +72,19 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video">
-                                    <iframe
-                                        src="https://player.vimeo.com/video/1131284512?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                        title="Büyüme Odaklı Pazarlama Eğitimi"
-                                    ></iframe>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_education_video" type="video" src="https://player.vimeo.com/video/1131284512?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Büyüme Odaklı Pazarlama Eğitimi"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
                                     <h3>B2B Sektöründe Büyüme Odaklı Pazarlama</h3>
@@ -104,13 +113,19 @@ export default function B2BThreeSixtyMarketing() {
                                     </ul>
                                     <Link to={isEn ? '/en/products/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                 </div>
-                                <div className="sectoral-split-video">
-                                    <iframe
-                                        src="https://player.vimeo.com/video/1133020329?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                        title="Maestro AI"
-                                    ></iframe>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_ai_video" type="video" src="https://player.vimeo.com/video/1133020329?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Maestro AI"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                             </div>
                         </div>
@@ -123,8 +138,14 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="B2B Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                                <img src={src} alt="B2B Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
                                     <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>B2B Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
@@ -209,13 +230,19 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video">
-                                    <iframe
-                                        src="https://player.vimeo.com/video/1131181115"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                        title="Reklam Görsel Analizi"
-                                    ></iframe>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_analysis_video" type="video" src="https://player.vimeo.com/video/1131181115" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Reklam Görsel Analizi"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card" style={{ padding: '30px' }}>
                                     <h3 style={{ color: '#1a3a52', fontSize: '1.8rem', marginBottom: '25px' }}>Sosyal Medya Reklam Analizi</h3>
@@ -318,6 +345,20 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_education_video" type="video" src="https://player.vimeo.com/video/1131284512?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Growth-Focused Marketing Training"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
+                                </div>
                                 <div className="sectoral-card">
                                     <h3>Growth-Focused Training for B2B Companies</h3>
                                     <p>Master a proven operating system that aligns strategy, channel execution, and commercial outcomes.</p>
@@ -345,6 +386,20 @@ export default function B2BThreeSixtyMarketing() {
                                     </ul>
                                     <Link to={isEn ? '/en/products/maestro-ai-b2b' : '/urunler/maestro-ai-b2b'} className="sectoral-btn">Learn More</Link>
                                 </div>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_ai_video" type="video" src="https://player.vimeo.com/video/1133020329?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Maestro AI"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
+                                </div>
                             </div>
                         </div>
                     )
@@ -356,8 +411,14 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="B2B Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                                <img src={src} alt="B2B Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
                                     <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Unify B2B Digital Channels Into a Single Strategy!</h2>
@@ -425,6 +486,20 @@ export default function B2BThreeSixtyMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_analysis_video" type="video" src="https://player.vimeo.com/video/1131181115" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Ad Creative Analysis"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
+                                </div>
                                 <div className="sectoral-card">
                                     <h3>Visual Performance Intelligence</h3>
                                     <p>Identify weak points in your ad creatives before scaling media budgets.</p>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay } from 'react-icons/hi';
+import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay, HiClipboardList } from 'react-icons/hi';
 import { useRouteLocale, getLocalizedPathByKey } from '../utils/locale';
 import { API_BASE_URL } from '../config/api';
 import './Dashboard.css';
@@ -10,6 +10,7 @@ interface OrderItem {
     id: number;
     product_id: number;
     product_name: string;
+    product_category?: string;
     quantity: number;
     unit_price: number;
     total_price: number;
@@ -56,8 +57,11 @@ interface PurchasedContent {
     product_id: number;
     product_key: string;
     name: string;
+    name_en?: string | null;
     description?: string | null;
+    description_en?: string | null;
     features?: string | null;
+    features_en?: string | null;
     type?: string | null;
     category?: string | null;
     access_content_url?: string | null;
@@ -72,6 +76,7 @@ export default function Dashboard() {
     const currentLang = useRouteLocale();
     const isEn = currentLang === 'en';
     const loginPath = getLocalizedPathByKey(currentLang, 'login');
+    const onboardingFormPath = getLocalizedPathByKey(currentLang, 'onboardingForm');
     const [activeTab, setActiveTab] = useState('orders');
     const [orders, setOrders] = useState<Order[]>([]);
     const [contents, setContents] = useState<PurchasedContent[]>([]);
@@ -79,6 +84,7 @@ export default function Dashboard() {
     const [, setProfile] = useState<Profile | null>(null);
     const [, setCompany] = useState<Company | null>(null);
     const [loading, setLoading] = useState(true);
+    const [onboardingStatus, setOnboardingStatus] = useState<Record<number, boolean>>({});
 
     // Form states
     const [profileForm, setProfileForm] = useState({
@@ -300,8 +306,27 @@ export default function Dashboard() {
             });
             if (response.ok) {
                 const data = await response.json();
-                // Backend returns { orders: [...] }
-                setOrders(Array.isArray(data.orders) ? data.orders : []);
+                const fetchedOrders: Order[] = Array.isArray(data.orders) ? data.orders : [];
+                setOrders(fetchedOrders);
+
+                const serviceOrders = fetchedOrders.filter(o =>
+                    o.items?.some(i => i.product_category === 'hizmetler' || i.product_category === 'sektorler')
+                );
+                if (serviceOrders.length > 0) {
+                    const statusMap: Record<number, boolean> = {};
+                    await Promise.all(serviceOrders.map(async (order) => {
+                        try {
+                            const res = await fetch(`${API_BASE}/onboarding-form/order/${order.id}`, {
+                                headers: { Authorization: `Bearer ${token}` }
+                            });
+                            const d = await res.json();
+                            statusMap[order.id] = d.exists === true;
+                        } catch {
+                            statusMap[order.id] = false;
+                        }
+                    }));
+                    setOnboardingStatus(statusMap);
+                }
             } else {
                 setOrders([]);
             }
@@ -470,31 +495,31 @@ export default function Dashboard() {
                         className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('orders'); setMessage(''); setError(''); }}
                     >
-                        <HiShoppingBag /> {copy.tabs.orders}
+                        <HiShoppingBag /> <span className="tab-label">{copy.tabs.orders}</span>
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'contents' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('contents'); setMessage(''); setError(''); }}
                     >
-                        <HiPlay /> {copy.tabs.contents}
+                        <HiPlay /> <span className="tab-label">{copy.tabs.contents}</span>
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('profile'); setMessage(''); setError(''); }}
                     >
-                        <HiUser /> {copy.tabs.profile}
+                        <HiUser /> <span className="tab-label">{copy.tabs.profile}</span>
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'password' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('password'); setMessage(''); setError(''); }}
                     >
-                        <HiLockClosed /> {copy.tabs.password}
+                        <HiLockClosed /> <span className="tab-label">{copy.tabs.password}</span>
                     </button>
                     <button
                         className={`tab-button ${activeTab === 'company' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('company'); setMessage(''); setError(''); }}
                     >
-                        <HiBriefcase /> {copy.tabs.company}
+                        <HiBriefcase /> <span className="tab-label">{copy.tabs.company}</span>
                     </button>
                 </div>
 
@@ -566,11 +591,61 @@ export default function Dashboard() {
                                                                         order.status === 'cancelled' ? copy.orders.cancelled :
                                                                             copy.orders.processing}
                                                         </span>
+                                                        {onboardingStatus[order.id] === false && (
+                                                            <Link
+                                                                to={`${onboardingFormPath}?order_id=${order.id}`}
+                                                                className="btn-fill-form"
+                                                            >
+                                                                {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                            </Link>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
+
+                                    {/* Mobil kart görünümü */}
+                                    <div className="orders-cards">
+                                        {orders.map((order) => (
+                                            <div key={order.id} className="order-card">
+                                                <div className="order-card-header">
+                                                    <div>
+                                                        <div className="order-card-id">#{order.id}</div>
+                                                        <div className="order-card-date">{new Date(order.created_at).toLocaleDateString(isEn ? 'en-US' : 'tr-TR')}</div>
+                                                    </div>
+                                                    <div className="order-card-right">
+                                                        {order.coupon_code && (
+                                                            <span className="order-card-coupon">{order.coupon_code}</span>
+                                                        )}
+                                                        <span className={`status-badge status-${order.status}`}>
+                                                            {order.status === 'completed' ? copy.orders.completed :
+                                                                order.status === 'pending' ? copy.orders.pending :
+                                                                    order.status === 'failed' ? copy.orders.failed :
+                                                                        order.status === 'cancelled' ? copy.orders.cancelled :
+                                                                            copy.orders.processing}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="order-card-products">
+                                                    {order.items?.map(i => i.product_name).filter(Boolean).join(', ') || '-'}
+                                                </div>
+                                                <div className="order-card-footer">
+                                                    <span className="order-card-amount">
+                                                        {order.total_amount?.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}
+                                                    </span>
+                                                    {onboardingStatus[order.id] === false && (
+                                                        <Link
+                                                            to={`${onboardingFormPath}?order_id=${order.id}`}
+                                                            className="btn-fill-form"
+                                                        >
+                                                            {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                        </Link>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -580,15 +655,50 @@ export default function Dashboard() {
                     {activeTab === 'contents' && (
                         <div className="tab-content">
                             <h2>{copy.contents.title}</h2>
-                            {contents.length === 0 ? (
-                                <div className="empty-state">
-                                    <p>{copy.contents.empty}</p>
-                                </div>
-                            ) : (
+                            {(() => {
+                                const pendingOrders = orders.filter(o => onboardingStatus[o.id] === false);
+                                const hasContent = contents.length > 0 || pendingOrders.length > 0;
+                                if (!hasContent) return (
+                                    <div className="empty-state">
+                                        <p>{copy.contents.empty}</p>
+                                    </div>
+                                );
+                                return (
                                 <div className="content-library-grid">
+                                    {pendingOrders.map(order => {
+                                        const serviceItems = order.items?.filter(i =>
+                                            i.product_category === 'hizmetler' || i.product_category === 'sektorler'
+                                        ) || order.items || [];
+                                        const productLabel = serviceItems.map(i => i.product_name).filter(Boolean).join(', ') || '-';
+                                        return (
+                                            <article key={`pending-${order.id}`} className="onboarding-pending-card">
+                                                <div className="content-library-header">
+                                                    <h3>{productLabel}</h3>
+                                                    <span className="onboarding-pending-badge">
+                                                        {isEn ? 'Form Required' : 'Form Bekliyor'}
+                                                    </span>
+                                                </div>
+                                                <p className="content-library-description">
+                                                    {isEn
+                                                        ? 'Please fill the onboarding form to get started with your service.'
+                                                        : 'Hizmete başlamak için onboarding formunu doldurmanız gerekiyor.'}
+                                                </p>
+                                                <div style={{ marginTop: 'auto' }}>
+                                                    <Link
+                                                        to={`${onboardingFormPath}?order_id=${order.id}`}
+                                                        className="onboarding-pending-btn"
+                                                    >
+                                                        <HiClipboardList />
+                                                        {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                    </Link>
+                                                </div>
+                                            </article>
+                                        );
+                                    })}
                                     {contents.map((content) => {
+                                        const trainingBase = isEn ? '/en/egitimllerim' : '/egitimllerim';
                                         const trainingRoute = content.training_slug
-                                            ? `/egitimllerim/${content.training_slug}`
+                                            ? `${trainingBase}/${content.training_slug}`
                                             : trainingRoutes[content.product_key];
                                         const isTraining = content.product_key.startsWith('training-');
 
@@ -596,10 +706,10 @@ export default function Dashboard() {
                                             return (
                                                 <article key={`${content.subscription_id}-${content.product_id}`} className="content-library-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                                     <div className="content-library-header">
-                                                        <h3>{content.name}</h3>
+                                                        <h3>{isEn ? (content.name_en || content.name) : content.name}</h3>
                                                         <span className="content-badge">{copy.contents.activeAccess}</span>
                                                     </div>
-                                                    {content.description && <p className="content-library-description">{content.description}</p>}
+                                                    {(isEn ? content.description_en || content.description : content.description) && <p className="content-library-description">{isEn ? content.description_en || content.description : content.description}</p>}
                                                     <div style={{ marginTop: 'auto' }}>
                                                         <Link
                                                             to={trainingRoute}
@@ -630,10 +740,10 @@ export default function Dashboard() {
                                         return (
                                             <article key={`${content.subscription_id}-${content.product_id}`} className="content-library-card">
                                                 <div className="content-library-header">
-                                                    <h3>{content.name}</h3>
+                                                    <h3>{isEn ? (content.name_en || content.name) : content.name}</h3>
                                                     <span className="content-badge">{copy.contents.activeAccess}</span>
                                                 </div>
-                                                {content.description && <p className="content-library-description">{content.description}</p>}
+                                                {(isEn ? content.description_en || content.description : content.description) && <p className="content-library-description">{isEn ? content.description_en || content.description : content.description}</p>}
                                                 {features.length > 0 && (
                                                     <ul className="content-library-features">
                                                         {features.map((feature, idx) => (
@@ -645,7 +755,7 @@ export default function Dashboard() {
                                                     <div className="content-video-frame">
                                                         <iframe
                                                             src={embedUrl}
-                                                            title={content.name}
+                                                            title={isEn ? (content.name_en || content.name) : content.name}
                                                             allow="autoplay; fullscreen; picture-in-picture"
                                                             allowFullScreen
                                                         />
@@ -659,7 +769,8 @@ export default function Dashboard() {
                                         );
                                     })}
                                 </div>
-                            )}
+                                );
+                            })()}
                         </div>
                     )}
 

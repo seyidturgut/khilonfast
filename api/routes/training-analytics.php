@@ -33,6 +33,54 @@ if ($action === 'config' && $method === 'GET' && !empty($id)) {
 
 $payload = requireAuth();
 
+// GET /api/training-analytics/pdf/:slug?lang=tr|en — auth-protected, streams PDF as blob
+if ($action === 'pdf' && $method === 'GET' && !empty($id)) {
+    $slug = $id;
+    $lang = ($_GET['lang'] ?? 'tr') === 'en' ? 'en' : 'tr';
+
+    $stmt = $db->prepare("SELECT id, product_key, pdf_url, pdf_url_tr, pdf_url_en FROM training_access_pages WHERE slug=? LIMIT 1");
+    $stmt->execute([$slug]);
+    $row = $stmt->fetch();
+    if (!$row) sendResponse(['error' => 'Not found'], 404);
+
+    // Verify user has active subscription
+    $sub = $db->prepare("
+        SELECT s.id FROM subscriptions s
+        JOIN products p ON p.id = s.product_id
+        WHERE s.user_id = ? AND p.product_key = ? AND s.status = 'active'
+        LIMIT 1
+    ");
+    $sub->execute([$payload['id'], $row['product_key']]);
+    if (!$sub->fetch()) {
+        // Allow admin to view
+        $u = $db->prepare("SELECT role FROM users WHERE id=?");
+        $u->execute([$payload['id']]);
+        $usr = $u->fetch();
+        if (!$usr || $usr['role'] !== 'admin') sendResponse(['error' => 'No access'], 403);
+    }
+
+    $pdfUrl = $lang === 'en'
+        ? ($row['pdf_url_en'] ?: $row['pdf_url_tr'] ?: $row['pdf_url'])
+        : ($row['pdf_url_tr'] ?: $row['pdf_url_en'] ?: $row['pdf_url']);
+    $pdfUrl = trim((string)$pdfUrl);
+    if ($pdfUrl === '') sendResponse(['error' => 'PDF not configured'], 404);
+
+    // Resolve to local file path (only allow local /uploads or /egitim-dokumanlar)
+    $rel = ltrim(parse_url($pdfUrl, PHP_URL_PATH) ?: '', '/');
+    $base = realpath(__DIR__ . '/../..');
+    $candidate = $base ? realpath($base . '/' . $rel) : false;
+    if (!$candidate || strpos($candidate, $base) !== 0 || !is_file($candidate)) {
+        sendResponse(['error' => 'PDF file not found'], 404);
+    }
+
+    header('Content-Type: application/pdf');
+    header('Content-Length: ' . filesize($candidate));
+    header('Content-Disposition: inline; filename="training.pdf"');
+    header('Cache-Control: private, no-store');
+    readfile($candidate);
+    exit;
+}
+
 // POST /api/training-analytics/heartbeat
 if ($action === 'heartbeat' && $method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true) ?? [];

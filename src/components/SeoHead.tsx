@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import trCommon from '../locales/tr/common.json'
 import enCommon from '../locales/en/common.json'
 import { setupFlows } from '../data/setupFlows'
-import { consultingPrograms } from '../data/consultingPrograms'
+import { consultingProgramCatalog } from '../data/consultingPrograms'
 import { productProgramCatalog } from '../data/productPrograms'
 import { legalContent } from '../content/legalContent'
 
@@ -629,21 +629,39 @@ const pageEntries: SeoEntry[] = [
         kind: 'howto' as const,
         section: 'flows' as const
     })),
-    ...consultingPrograms.map((program) => ({
-        key: program.path,
-        tr: program.path,
-        en: program.path.replace(/^\//, '/en/'),
+    ...consultingProgramCatalog.map((program) => ({
+        key: program.path.tr,
+        tr: program.path.tr,
+        en: program.path.en, // ÖNEMLİ: '/danismanlik/...' yerine doğru '/en/consulting/...' EN URL'i
         title: composeTitle({
-            tr: program.title,
-            en: program.title
+            tr: program.title.tr,
+            en: program.title.en
         }),
         description: {
-            tr: program.summary,
-            en: program.summary
+            tr: program.summary.tr,
+            en: program.summary.en
         },
         kind: 'service' as const,
         section: 'trainings' as const
-    }))
+    })),
+    {
+        tr: '/dashboard',
+        en: '/en/dashboard',
+        title: { tr: 'Hesabım | khilonfast', en: 'My Account | khilonfast' },
+        description: { tr: 'Hesap bilgileriniz, siparişleriniz ve satın aldığınız içerikler.', en: 'Your account details, orders and purchased content.' }
+    },
+    {
+        tr: '/onboarding-formu',
+        en: '/en/onboarding-form',
+        title: { tr: 'Onboarding Formu | khilonfast', en: 'Onboarding Form | khilonfast' },
+        description: { tr: 'Hizmet başlangıç bilgilerini doldurun.', en: 'Fill in your service onboarding details.' }
+    },
+    {
+        tr: '/sifre-belirle',
+        en: '/en/set-password',
+        title: { tr: 'Şifre Belirle | khilonfast', en: 'Set Password | khilonfast' },
+        description: { tr: 'Hesabınız için yeni şifre belirleyin.', en: 'Set a new password for your account.' }
+    }
 ]
 
 const aliasMap: Record<string, string> = {
@@ -1050,15 +1068,18 @@ export default function SeoHead() {
         const alternateEn = matchedEntry?.en ? `${SITE_URL}${matchedEntry.en}` : null
         const isConsultantDetail = resolvedPath.startsWith('/danismanlar/') || resolvedPath.startsWith('/en/consultants/')
         const isAdmin = resolvedPath.startsWith('/admin')
+        const isTrainingContent = resolvedPath.startsWith('/egitimllerim/') || resolvedPath.startsWith('/en/egitimllerim/')
         const title = matchedEntry
             ? matchedEntry.title[isEnglish ? 'en' : 'tr']
             : isAdmin
                 ? 'Admin Panel | khilonfast'
                 : isConsultantDetail
                     ? isEnglish ? 'Consultant Profile | khilonfast' : 'Danışman Profili | khilonfast'
-                    : isEnglish
-                        ? 'Page Not Found | khilonfast'
-                        : 'Sayfa Bulunamadı | khilonfast'
+                    : isTrainingContent
+                        ? isEnglish ? 'Training | khilonfast' : 'Eğitim İçeriği | khilonfast'
+                        : isEnglish
+                            ? 'Page Not Found | khilonfast'
+                            : 'Sayfa Bulunamadı | khilonfast'
         const description = matchedEntry
             ? matchedEntry.description[isEnglish ? 'en' : 'tr']
             : isEnglish

@@ -11,6 +11,7 @@ import Footer from './components/Footer'
 import CookieConsent from './components/CookieConsent'
 import ScrollToTop from './components/ScrollToTop'
 import SeoHead from './components/SeoHead'
+import CurrencyConflictModal from './components/CurrencyConflictModal'
 import Home from './pages/Home'
 import GoToMarket from './pages/GoToMarket'
 import ContentStrategy from './pages/ContentStrategy'
@@ -89,10 +90,13 @@ import TrainingContentEditor from './pages/admin/TrainingContentEditor'
 import TrainingAnalytics from './pages/admin/TrainingAnalytics'
 import TrainingAccessPages from './pages/admin/TrainingAccessPages'
 import TrainingContentPage from './pages/TrainingContentPage'
+import OnboardingForm from './pages/OnboardingForm'
 import ConsultantList from './pages/admin/ConsultantList'
 import ConsultantEditor from './pages/admin/ConsultantEditor'
 import BookingList from './pages/admin/BookingList'
 import CouponList from './pages/admin/CouponList'
+import BankAccountsAdmin from './pages/admin/BankAccounts'
+import OnboardingFormsList from './pages/admin/OnboardingFormsList'
 import EmailAutomation from './pages/admin/EmailAutomation'
 import AutomationListPage from './automation/pages/AutomationListPage'
 import AutomationBuilderPage from './automation/pages/AutomationBuilderPage'
@@ -103,6 +107,11 @@ const slugsTr = trCommon.slugs as Record<string, string>
 const slugsEn = enCommon.slugs as Record<string, string>
 const slugValuesTr = Object.values(slugsTr).filter(Boolean)
 const slugValuesEn = Object.values(slugsEn).filter(Boolean)
+
+function RedirectWithQuery({ to }: { to: string }) {
+    const location = useLocation();
+    return <Navigate to={`${to}${location.search}`} replace />;
+}
 
 function RequireAdmin({ children }: { children: ReactElement }) {
     const { user, loading } = useAuth();
@@ -126,7 +135,7 @@ function MainContent() {
     const location = useLocation();
     const routeLang = resolveLocaleFromPath(location.pathname);
     const isAdminRoute = location.pathname.startsWith('/admin');
-    const isPlayerRoute = location.pathname.startsWith('/egitimllerim/') || location.pathname.startsWith('/en/my-trainings/');
+    const isPlayerRoute = location.pathname.startsWith('/egitimllerim/') || location.pathname.startsWith('/en/egitimllerim/');
     const knownRoutePatterns = [
         '/',
         '/hakkimizda',
@@ -218,6 +227,8 @@ function MainContent() {
         '/payment-success',
         '/payment-callback',
         '/dashboard',
+        `/${slugsTr.onboardingForm}`,
+        `/en/${slugsEn.onboardingForm}`,
         '/admin',
         '/admin/settings',
         '/admin/products',
@@ -235,7 +246,10 @@ function MainContent() {
         '/admin/training-analytics',
         '/admin/training-content',
         '/admin/coupons',
+        '/admin/bank-accounts',
+        '/admin/onboarding-forms',
         '/egitimllerim/:slug',
+        '/en/egitimllerim/:slug',
         '/danismanlar',
         '/danismanlar/:slug',
         '/consultants',
@@ -348,6 +362,7 @@ function MainContent() {
                         <Route path={slugsEn.register} element={<Register />} />
                         <Route path="set-password" element={<SetPassword />} />
                         <Route path={slugsEn.dashboard} element={<Dashboard />} />
+                        <Route path={slugsEn.onboardingForm} element={<OnboardingForm />} />
                         <Route path={slugsEn.checkout} element={<Checkout />} />
                         <Route path={slugsEn.paymentSuccess} element={<PaymentSuccess />} />
                         <Route path={slugsEn.paymentCallback} element={<PaymentCallback />} />
@@ -355,6 +370,7 @@ function MainContent() {
                         <Route path="sectoral-services/:slug" element={<ProductSlugResolver />} />
 
                         {/* Backward-compatible EN aliases with legacy Turkish slugs */}
+                        <Route path={slugsTr.onboardingForm} element={<RedirectWithQuery to={`/en/${slugsEn.onboardingForm}`} />} />
                         <Route path="hakkimizda" element={<About />} />
                         <Route path="iletisim" element={<ContactPage />} />
                         <Route path="giris" element={<Login />} />
@@ -525,6 +541,7 @@ function MainContent() {
                     <Route path={`/${slugsTr.paymentSuccess}`} element={<PaymentSuccess />} />
                     <Route path={`/${slugsTr.paymentCallback}`} element={<PaymentCallback />} />
                     <Route path={`/${slugsTr.dashboard}`} element={<Dashboard />} />
+                    <Route path={`/${slugsTr.onboardingForm}`} element={<OnboardingForm />} />
                     <Route path="/hizmetlerimiz/:slug" element={<ProductSlugResolver />} />
                     <Route path="/sektorel-hizmetler/:slug" element={<ProductSlugResolver />} />
 
@@ -546,6 +563,8 @@ function MainContent() {
                     <Route path="/admin/training-analytics" element={<RequireAdmin><TrainingAnalytics /></RequireAdmin>} />
                     <Route path="/admin/training-content" element={<RequireAdmin><TrainingAccessPages /></RequireAdmin>} />
                     <Route path="/admin/coupons" element={<RequireAdmin><CouponList /></RequireAdmin>} />
+                    <Route path="/admin/bank-accounts" element={<RequireAdmin><BankAccountsAdmin /></RequireAdmin>} />
+                    <Route path="/admin/onboarding-forms" element={<RequireAdmin><OnboardingFormsList /></RequireAdmin>} />
                     <Route path="/admin/email-automation" element={<RequireAdmin><EmailAutomation /></RequireAdmin>} />
                     <Route path="/admin/automations" element={<RequireAdmin><AutomationListPage /></RequireAdmin>} />
                     <Route path="/admin/automations/:id" element={<RequireAdmin><AutomationBuilderPage /></RequireAdmin>} />
@@ -554,6 +573,7 @@ function MainContent() {
 
                     {/* Training Content Routes */}
                     <Route path="/egitimllerim/:slug" element={<TrainingContentPage />} />
+                    <Route path="/en/egitimllerim/:slug" element={<TrainingContentPage />} />
 
                     <Route path="*" element={<LegacyWordpressPage />} />
                 </Routes>
@@ -570,6 +590,7 @@ function App() {
             <ConsentProvider>
                 <AuthProvider>
                     <CartProvider>
+                        <CurrencyConflictModal />
                         <MainContent />
                     </CartProvider>
                 </AuthProvider>

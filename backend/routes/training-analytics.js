@@ -1,6 +1,13 @@
 import express from 'express';
 import db from '../config/database.js';
 import authMiddleware from '../middleware/auth.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '../../');
 
 const router = express.Router();
 let trainingAccessPagesSchemaReady = false;
@@ -40,7 +47,9 @@ const ensureTrainingAccessPagesSchema = async () => {
         ['vimeo_url_en', 'ALTER TABLE training_access_pages ADD COLUMN vimeo_url_en TEXT DEFAULT NULL'],
         ['canva_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_tr TEXT DEFAULT NULL'],
         ['canva_url_en', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_en TEXT DEFAULT NULL'],
-        ['pdf_url', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url TEXT DEFAULT NULL']
+        ['pdf_url', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url TEXT DEFAULT NULL'],
+        ['pdf_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url_tr TEXT DEFAULT NULL'],
+        ['pdf_url_en', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url_en TEXT DEFAULT NULL']
     ];
 
     for (const [columnName, sql] of requiredColumns) {
@@ -180,6 +189,49 @@ router.get('/configs', async (req, res) => {
         res.json(rows);
     } catch (err) {
         console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/training-analytics/pdf/:slug?lang=tr|en — auth + abonelik zorunlu, gerçek path gizli
+router.get('/pdf/:slug', authMiddleware, async (req, res) => {
+    const lang = req.query.lang === 'en' ? 'en' : 'tr';
+    const userId = req.user.id;
+
+    try {
+        await ensureTrainingAccessPagesSchema();
+
+        const [rows] = await db.query(
+            'SELECT * FROM training_access_pages WHERE slug = ? LIMIT 1',
+            [req.params.slug]
+        );
+        if (!rows.length) return res.status(404).json({ error: 'Not found' });
+        const training = rows[0];
+
+        // Abonelik kontrolü
+        const [subs] = await db.query(
+            `SELECT s.id FROM subscriptions s
+             JOIN products p ON p.id = s.product_id
+             WHERE s.user_id = ? AND p.product_key = ? AND s.status = 'active'`,
+            [userId, training.product_key]
+        );
+        if (!subs.length) return res.status(403).json({ error: 'Access denied' });
+
+        // Dil bazlı PDF seç
+        const pdfRelPath = (lang === 'en' ? training.pdf_url_en : training.pdf_url_tr)
+            || training.pdf_url;
+        if (!pdfRelPath) return res.status(404).json({ error: 'No PDF' });
+
+        const filePath = path.join(projectRoot, 'public', pdfRelPath);
+        if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline');
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        fs.createReadStream(filePath).pipe(res);
+    } catch (err) {
+        console.error('PDF serve error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });

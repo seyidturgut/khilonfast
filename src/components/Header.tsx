@@ -89,7 +89,7 @@ export default function Header() {
     const [currentMenu, setCurrentMenu] = useState<'main' | 'services' | 'sectoral' | 'trainings' | 'products'>('main')
     const [scrolled, setScrolled] = useState(false)
     const [cartOpen, setCartOpen] = useState(false)
-    const { isAuthenticated } = useAuth()
+    const { isAuthenticated, logout } = useAuth()
     const isHome = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/'
     const useSolidHeader =
         location.pathname === '/butunlesik-pazarlama-kurulum-akisi' ||
@@ -368,7 +368,16 @@ export default function Header() {
 
                             <div className="mobile-menu-footer">
                                 {!isAuthenticated && (
-                                    <Link to={toLocalized('howItWorks')} className="btn btn-primary" onClick={closeMobileMenu}>{t('header.howItWorks')}</Link>
+                                    <>
+                                        <Link to={toLocalized('login')} className="btn btn-outline" onClick={closeMobileMenu}>{t('header.login')}</Link>
+                                        <Link to={toLocalized('howItWorks')} className="btn btn-primary" onClick={closeMobileMenu}>{t('header.howItWorks')}</Link>
+                                    </>
+                                )}
+                                {isAuthenticated && (
+                                    <>
+                                        <Link to={toLocalized('dashboard')} className="btn btn-primary" onClick={closeMobileMenu}>{t('header.dashboard') || 'Hesabım'}</Link>
+                                        <button className="btn btn-outline" onClick={() => { logout(); closeMobileMenu(); }}>{currentLang === 'en' ? 'Logout' : 'Çıkış Yap'}</button>
+                                    </>
                                 )}
                             </div>
                         </div>

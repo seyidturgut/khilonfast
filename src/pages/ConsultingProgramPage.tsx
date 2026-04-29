@@ -1,5 +1,6 @@
 import { useMemo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import {
     HiBriefcase,
@@ -98,7 +99,8 @@ export default function ConsultingProgramPage() {
     const cmsSlug = matchedConsultingKey ? trSlugs[matchedConsultingKey] : (normalizedCandidates[0] || '');
     const cmsSlugEncoded = encodeURIComponent(cmsSlug);
     const [cmsContent, setCmsContent] = useState<any | null>(null);
-    const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
+    const { user } = useAuth();
+    const canShowCms = user?.role === 'admin';
     const API_BASE = API_BASE_URL;
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
     const [cmsEditorData, setCmsEditorData] = useState<any | null>(null);
@@ -109,7 +111,6 @@ export default function ConsultingProgramPage() {
     const [cmsSaving] = useState(false);
     const [cmsLoading, setCmsLoading] = useState(false);
     const [cmsError, setCmsError] = useState('');
-    const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
 
     useEffect(() => {
         setCmsContent(null);

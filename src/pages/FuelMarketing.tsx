@@ -12,6 +12,8 @@ import {
     HiTruck
 } from 'react-icons/hi2'
 import SectoralSolutionTemplate from './templates/SectoralSolutionTemplate'
+import EditableMedia from '../components/cms/EditableMedia'
+import { usePageSlug } from '../hooks/usePageSlug'
 import StrategyAdvisoryTabContent from '../components/sectoral/StrategyAdvisoryTabContent'
 
 export default function FuelMarketing() {
@@ -19,6 +21,7 @@ export default function FuelMarketing() {
     const location = useLocation()
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr'
     const isEn = currentLang === 'en'
+    const cmsSlug = usePageSlug()
     const langPrefix = isEn ? '/en' : ''
 
     useEffect(() => {
@@ -75,13 +78,19 @@ export default function FuelMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video">
-                                    <iframe
-                                        src="https://player.vimeo.com/video/1131284512?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                        title="Büyüme Odaklı Pazarlama Eğitimi"
-                                    ></iframe>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_education_video" type="video" src="https://player.vimeo.com/video/1131284512?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Büyüme Odaklı Pazarlama Eğitimi"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card" style={{ background: '#f7f9f2', border: '1px solid #e2ebb4' }}>
                                     <h3 style={{ color: '#1b3d2d', fontSize: '1.6rem' }}>Kurumsal Akaryakıt Sektöründe Büyüme Odaklı Pazarlama</h3>
@@ -114,13 +123,19 @@ export default function FuelMarketing() {
                                         <Link to={isEn ? '/en/products/maestro-ai-corporate-fuel' : '/urunler/maestro-ai-akaryakit'} className="sectoral-btn" style={{ background: '#d4f04d', color: '#1b3d2d', fontWeight: '700', width: '100%', textAlign: 'center' }}>{isEn ? 'Learn More' : 'Detaylı Bilgi'}</Link>
                                     </div>
                                 </div>
-                                <div className="sectoral-split-video">
-                                    <iframe
-                                        src="https://player.vimeo.com/video/1138057683?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                        title="Maestro AI"
-                                    ></iframe>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_ai_video" type="video" src="https://player.vimeo.com/video/1138057683?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Maestro AI"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                             </div>
                         </div>
@@ -133,8 +148,14 @@ export default function FuelMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="Kurumsal Akaryakıt Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                                <img src={src} alt="Kurumsal Akaryakıt Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
                                     <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Kurumsal Akaryakıt Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
@@ -216,13 +237,19 @@ export default function FuelMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video">
-                                    <iframe
-                                        src="https://player.vimeo.com/video/1131181115"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                        title="Reklam Görsel Analizi"
-                                    ></iframe>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_analysis_video" type="video" src="https://player.vimeo.com/video/1131181115" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Reklam Görsel Analizi"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card" style={{ padding: '30px' }}>
                                     <h3 style={{ color: '#1a3a52', fontSize: '1.8rem', marginBottom: '25px' }}>Sosyal Medya Reklam Analizi</h3>
@@ -303,6 +330,20 @@ export default function FuelMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_education_video" type="video" src="https://player.vimeo.com/video/1131284512?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Growth-Focused Marketing Training"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
+                                </div>
                                 <div className="sectoral-card">
                                     <h3>Growth-Focused Training for Corporate Fuel Solution Companies</h3>
                                     <p>Master a proven operating system that aligns strategy, channel execution, and commercial outcomes.</p>
@@ -330,6 +371,20 @@ export default function FuelMarketing() {
                                     </ul>
                                     <Link to="/en/products/maestro-ai-corporate-fuel" className="sectoral-btn">Learn More</Link>
                                 </div>
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_ai_video" type="video" src="https://player.vimeo.com/video/1138057683?color&autopause=0&loop=0&muted=0&title=1&portrait=1&byline=1" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Maestro AI"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
+                                </div>
                             </div>
                         </div>
                     )
@@ -341,8 +396,14 @@ export default function FuelMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
-                                <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                    <img src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" alt="Corporate Fuel Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
+                                                <img src={src} alt="Corporate Fuel Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                            </div>
+                                        )}
+                                    </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
                                     <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Unify Corporate Fuel Digital Channels Into a Single Strategy!</h2>
@@ -404,6 +465,20 @@ export default function FuelMarketing() {
                     content: (
                         <div className="sectoral-tabs-content">
                             <div className="sectoral-split-layout">
+                                <div style={{ position: 'relative' }}>
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="tab_analysis_video" type="video" src="https://player.vimeo.com/video/1131181115" currentLang={currentLang}>
+                                        {(src) => (
+                                            <div className="sectoral-split-video">
+                                                <iframe
+                                                    src={src}
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Ad Creative Analysis"
+                                                ></iframe>
+                                            </div>
+                                        )}
+                                    </EditableMedia>
+                                </div>
                                 <div className="sectoral-card">
                                     <h3>Visual Performance Intelligence</h3>
                                     <p>Identify weak points in your ad creatives before scaling media budgets.</p>

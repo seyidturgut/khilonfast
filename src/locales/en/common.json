@@ -38,6 +38,7 @@
         "contact": "Contact",
         "login": "Login",
         "register": "Register",
+        "dashboard": "My Account",
         "home": "Home",
         "allTrainings": "All Trainings",
         "backMenu": "Back: Menu",
@@ -1178,7 +1179,8 @@
         "dashboard": "dashboard",
         "checkout": "checkout",
         "paymentSuccess": "payment-success",
-        "paymentCallback": "payment-callback"
+        "paymentCallback": "payment-callback",
+        "onboardingForm": "onboarding-form"
     },
     "serviceIDM": {
         "hero": {

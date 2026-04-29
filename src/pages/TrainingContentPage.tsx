@@ -1,8 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { API_BASE_URL } from '../config/api'
-import { HiLockClosed, HiPlay, HiDocumentText, HiCheckCircle, HiMenuAlt3, HiChevronLeft } from 'react-icons/hi'
+import { HiLockClosed, HiPlay, HiDocumentText, HiCheckCircle, HiMenuAlt3, HiChevronLeft, HiChevronRight } from 'react-icons/hi'
+import { Document, Page, pdfjs } from 'react-pdf'
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+import 'react-pdf/dist/Page/TextLayer.css'
+
+// pdf.worker'ı CDN'den yükle: bazı hostlar (cpanel) `.mjs` dosyalarını
+// `application/octet-stream` olarak servis ediyor ve tarayıcı modülü reddediyor.
+// jsDelivr doğru `application/javascript` Content-Type'ı ile döndürüyor.
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 interface PurchasedContent {
     subscription_status: 'active' | 'expired' | 'cancelled'
@@ -35,6 +43,8 @@ interface TrainingConfig {
     canva_url_tr: string
     canva_url_en: string
     pdf_url: string
+    pdf_url_tr: string
+    pdf_url_en: string
     lessons: Lesson[]
 }
 
@@ -69,6 +79,11 @@ export default function TrainingContentPage() {
     const [activeLesson, setActiveLesson] = useState<Lesson | null>(null)
     const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null)
+    const [pdfNumPages, setPdfNumPages] = useState<number>(0)
+    const [pdfPage, setPdfPage] = useState<number>(1)
+    const [pdfWidth, setPdfWidth] = useState<number>(800)
+    const pdfContainerRef = useRef<HTMLDivElement>(null)
 
     const secondsRef = useRef(0)
     const lastHeartbeatRef = useRef(Date.now())
@@ -109,6 +124,50 @@ export default function TrainingContentPage() {
             })
             .catch(() => setHasAccess(false))
     }, [user, config, API_BASE])
+
+    // PDF blob — gerçek dosya yolu asla DOM/network'te görünmez
+    useEffect(() => {
+        if (!hasAccess || !config || config === 'not_found') return
+        const cfg = config as TrainingConfig
+        const hasPdf = cfg.pdf_url_tr || cfg.pdf_url_en || cfg.pdf_url
+        if (!hasPdf) return
+
+        const token = localStorage.getItem('token')
+        let objectUrl: string | null = null
+
+        fetch(`${API_BASE}/training-analytics/pdf/${encodeURIComponent(cfg.slug)}?lang=${isEn ? 'en' : 'tr'}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(r => r.ok ? r.blob() : null)
+            .then(blob => {
+                if (!blob) return
+                objectUrl = URL.createObjectURL(blob)
+                setPdfBlobUrl(objectUrl)
+            })
+            .catch(() => {})
+
+        return () => {
+            if (objectUrl) URL.revokeObjectURL(objectUrl)
+        }
+    }, [hasAccess, config, isEn, API_BASE])
+
+    // PDF container width tracker
+    useEffect(() => {
+        const el = pdfContainerRef.current
+        if (!el) return
+        const ro = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                setPdfWidth(entry.contentRect.width - 2)
+            }
+        })
+        ro.observe(el)
+        return () => ro.disconnect()
+    }, [pdfBlobUrl])
+
+    const onPdfLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
+        setPdfNumPages(numPages)
+        setPdfPage(1)
+    }, [])
 
     // Heartbeat (lesson_id destekli)
     useEffect(() => {
@@ -197,8 +256,7 @@ export default function TrainingContentPage() {
     if (hasLessons) {
         const activeLessonTitle = activeLesson ? (isEn ? (activeLesson.title_en || activeLesson.title_tr) : activeLesson.title_tr) : ''
         const activeVideoUrl = activeLesson ? vimeoEmbedUrl(isEn ? (activeLesson.vimeo_url_en || activeLesson.vimeo_url_tr) : activeLesson.vimeo_url_tr) : ''
-        // PDF eğitim seviyesinde — tüm dersler için aynı
-        const trainingPdf = config.pdf_url || null
+        // PDF blob URL ile korumalı yükleniyor (pdfBlobUrl state)
 
         const selectLesson = (lesson: Lesson) => {
             setActiveLesson(lesson)
@@ -219,13 +277,11 @@ export default function TrainingContentPage() {
                 <div style={{ background: '#1a1f2e', borderBottom: '1px solid #2d3748', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '14px', position: 'sticky', top: 0, zIndex: 50 }}>
                     {/* Logo */}
                     <Link to="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
-                        <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-                            <span style={{ color: '#e5e7eb' }}>khilon</span><span style={{ color: '#facc15' }}>fast</span>
-                        </span>
+                        <img src="/fast-logo-big.svg" alt="khilonfast" style={{ height: '28px', display: 'block', filter: 'brightness(0) invert(1)' }} />
                     </Link>
                     <div style={{ width: '1px', height: '16px', background: '#374151' }} />
                     {/* Geri */}
-                    <Link to="/hesabim" style={{ color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 500, flexShrink: 0 }}>
+                    <Link to={isEn ? '/en/dashboard' : '/dashboard'} style={{ color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 500, flexShrink: 0 }}>
                         <HiChevronLeft style={{ fontSize: '1rem' }} />
                         {isEn ? 'My Account' : 'Hesabım'}
                     </Link>
@@ -239,9 +295,7 @@ export default function TrainingContentPage() {
                     </span>
                     {/* Mobile: dersler butonu */}
                     <button onClick={() => setSidebarOpen(!sidebarOpen)}
-                        style={{ display: 'none', alignItems: 'center', gap: '6px', background: '#374151', color: '#e5e7eb', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
-                            ['@media (max-width: 768px)' as any]: { display: 'flex' }
-                        }}
+                        style={{ display: 'none', alignItems: 'center', gap: '6px', background: '#374151', color: '#e5e7eb', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}
                         className="lesson-sidebar-toggle">
                         <HiMenuAlt3 /> {isEn ? 'Lessons' : 'Dersler'}
                     </button>
@@ -290,36 +344,95 @@ export default function TrainingContentPage() {
                         )}
 
                         {/* PDF Görüntüleyici */}
-                        {trainingPdf && (
+                        {(config.pdf_url_tr || config.pdf_url_en || config.pdf_url) && (
                             <div style={{ padding: '24px 28px' }}>
-                                {/* Başlık + indirme */}
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <HiDocumentText style={{ color: '#a78bfa', fontSize: '1.3rem' }} />
-                                        <span style={{ color: '#f3f4f6', fontWeight: 700, fontSize: '1rem' }}>
-                                            {isEn ? 'Course Material' : 'Eğitim Materyali'}
-                                        </span>
-                                        <span style={{ color: '#6b7280', fontSize: '0.8rem' }}>
-                                            {isEn ? '(scroll or use arrows to navigate pages)' : '(sayfalar arası geçiş için ok tuşlarını veya kaydırmayı kullanın)'}
-                                        </span>
-                                    </div>
-                                    <a
-                                        href={trainingPdf}
-                                        download
-                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#7c3aed', color: 'white', padding: '8px 18px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', flexShrink: 0 }}
-                                    >
-                                        ⬇ {isEn ? 'Download PDF' : 'İndir'}
-                                    </a>
+                                {/* Başlık — indirme butonu yok */}
+                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', gap: '10px' }}>
+                                    <HiDocumentText style={{ color: '#a78bfa', fontSize: '1.3rem' }} />
+                                    <span style={{ color: '#f3f4f6', fontWeight: 700, fontSize: '1rem' }}>
+                                        {isEn ? 'Course Material' : 'Eğitim Materyali'}
+                                    </span>
+                                    <span style={{ color: '#6b7280', fontSize: '0.8rem' }}>
+                                        {isEn ? '(scroll or use arrows to navigate pages)' : '(sayfalar arası geçiş için ok tuşlarını veya kaydırmayı kullanın)'}
+                                    </span>
                                 </div>
 
-                                {/* PDF iframe — tarayıcının kendi görüntüleyicisi (sayfa navigasyonu dahil) */}
-                                <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid #2d3748', background: '#1a1f2e' }}>
-                                    <iframe
-                                        src={`${trainingPdf}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
-                                        style={{ width: '100%', height: '820px', border: 'none', display: 'block' }}
-                                        title={isEn ? 'Course Material' : 'Eğitim Materyali'}
-                                    />
-                                </div>
+                                {pdfBlobUrl ? (
+                                    <div
+                                        ref={pdfContainerRef}
+                                        style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid #2d3748', background: '#111827', position: 'relative', userSelect: 'none' }}
+                                        onContextMenu={e => e.preventDefault()}
+                                    >
+                                        {/* Şeffaf overlay — sağ tık + seçim engeller */}
+                                        <div style={{ position: 'absolute', inset: 0, zIndex: 10 }}
+                                            onContextMenu={e => e.preventDefault()} />
+
+                                        <Document
+                                            file={pdfBlobUrl}
+                                            onLoadSuccess={onPdfLoadSuccess}
+                                            loading={
+                                                <div style={{ height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+                                                    {isEn ? 'Loading PDF…' : 'PDF yükleniyor…'}
+                                                </div>
+                                            }
+                                        >
+                                            <Page
+                                                pageNumber={pdfPage}
+                                                width={pdfWidth || 800}
+                                                renderAnnotationLayer={false}
+                                                renderTextLayer={false}
+                                            />
+                                        </Document>
+
+                                        {/* Navigasyon barı */}
+                                        {pdfNumPages > 0 && (
+                                            <div style={{
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px',
+                                                padding: '12px 20px', background: '#1a1f2e', borderTop: '1px solid #2d3748'
+                                            }}>
+                                                <button
+                                                    onClick={() => setPdfPage(p => Math.max(1, p - 1))}
+                                                    disabled={pdfPage <= 1}
+                                                    style={{
+                                                        background: pdfPage <= 1 ? '#1f2937' : '#374151',
+                                                        border: 'none', borderRadius: '8px', padding: '8px 16px',
+                                                        color: pdfPage <= 1 ? '#4b5563' : '#f3f4f6',
+                                                        cursor: pdfPage <= 1 ? 'default' : 'pointer',
+                                                        display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.88rem', fontWeight: 600,
+                                                        zIndex: 20, position: 'relative'
+                                                    }}
+                                                >
+                                                    <HiChevronLeft style={{ fontSize: '1.1rem' }} />
+                                                    {isEn ? 'Prev' : 'Önceki'}
+                                                </button>
+
+                                                <span style={{ color: '#9ca3af', fontSize: '0.88rem', minWidth: '70px', textAlign: 'center' }}>
+                                                    {pdfPage} / {pdfNumPages}
+                                                </span>
+
+                                                <button
+                                                    onClick={() => setPdfPage(p => Math.min(pdfNumPages, p + 1))}
+                                                    disabled={pdfPage >= pdfNumPages}
+                                                    style={{
+                                                        background: pdfPage >= pdfNumPages ? '#1f2937' : '#374151',
+                                                        border: 'none', borderRadius: '8px', padding: '8px 16px',
+                                                        color: pdfPage >= pdfNumPages ? '#4b5563' : '#f3f4f6',
+                                                        cursor: pdfPage >= pdfNumPages ? 'default' : 'pointer',
+                                                        display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.88rem', fontWeight: 600,
+                                                        zIndex: 20, position: 'relative'
+                                                    }}
+                                                >
+                                                    {isEn ? 'Next' : 'Sonraki'}
+                                                    <HiChevronRight style={{ fontSize: '1.1rem' }} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div style={{ height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280', fontSize: '0.9rem' }}>
+                                        {isEn ? 'Loading PDF…' : 'PDF yükleniyor…'}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
@@ -378,9 +491,6 @@ export default function TrainingContentPage() {
                                             <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                                                 {lesson.duration_label && (
                                                     <span style={{ fontSize: '0.72rem', color: '#4b5563' }}>⏱ {lesson.duration_label}</span>
-                                                )}
-                                                {lesson.pdf_url && (
-                                                    <span style={{ fontSize: '0.7rem', color: '#7c3aed' }}>📄</span>
                                                 )}
                                             </div>
                                         </div>

@@ -173,6 +173,9 @@ const ensureTrainingAccessPagesSchema = async () => {
             vimeo_url_en TEXT DEFAULT NULL,
             canva_url_tr TEXT DEFAULT NULL,
             canva_url_en TEXT DEFAULT NULL,
+            pdf_url TEXT DEFAULT NULL,
+            pdf_url_tr TEXT DEFAULT NULL,
+            pdf_url_en TEXT DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_training_access_pages_product_key (product_key)
@@ -189,7 +192,10 @@ const ensureTrainingAccessPagesSchema = async () => {
         ['vimeo_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN vimeo_url_tr TEXT DEFAULT NULL'],
         ['vimeo_url_en', 'ALTER TABLE training_access_pages ADD COLUMN vimeo_url_en TEXT DEFAULT NULL'],
         ['canva_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_tr TEXT DEFAULT NULL'],
-        ['canva_url_en', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_en TEXT DEFAULT NULL']
+        ['canva_url_en', 'ALTER TABLE training_access_pages ADD COLUMN canva_url_en TEXT DEFAULT NULL'],
+        ['pdf_url', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url TEXT DEFAULT NULL'],
+        ['pdf_url_tr', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url_tr TEXT DEFAULT NULL'],
+        ['pdf_url_en', 'ALTER TABLE training_access_pages ADD COLUMN pdf_url_en TEXT DEFAULT NULL']
     ];
 
     for (const [columnName, sql] of requiredColumns) {
@@ -1521,12 +1527,12 @@ router.post('/training-access-pages', authMiddleware, adminMiddleware, async (re
 });
 
 router.put('/training-access-pages/:id', authMiddleware, adminMiddleware, async (req, res) => {
-    const { slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url } = req.body;
+    const { slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url, pdf_url_tr, pdf_url_en } = req.body;
     try {
         await ensureTrainingAccessPagesSchema();
         await db.query(
-            'UPDATE training_access_pages SET slug=?, product_key=?, title_tr=?, title_en=?, description_tr=?, description_en=?, vimeo_url_tr=?, vimeo_url_en=?, canva_url_tr=?, canva_url_en=?, pdf_url=? WHERE id=?',
-            [slug || '', product_key || '', title_tr || '', title_en || '', description_tr || '', description_en || '', vimeo_url_tr || '', vimeo_url_en || '', canva_url_tr || '', canva_url_en || '', pdf_url || null, req.params.id]
+            'UPDATE training_access_pages SET slug=?, product_key=?, title_tr=?, title_en=?, description_tr=?, description_en=?, vimeo_url_tr=?, vimeo_url_en=?, canva_url_tr=?, canva_url_en=?, pdf_url=?, pdf_url_tr=?, pdf_url_en=? WHERE id=?',
+            [slug || '', product_key || '', title_tr || '', title_en || '', description_tr || '', description_en || '', vimeo_url_tr || '', vimeo_url_en || '', canva_url_tr || '', canva_url_en || '', pdf_url || null, pdf_url_tr || null, pdf_url_en || null, req.params.id]
         );
         res.json({ success: true });
     } catch (err) {
@@ -1641,6 +1647,97 @@ router.get('/training-analytics', authMiddleware, adminMiddleware, async (req, r
         res.json({ summary, details });
     } catch (err) {
         console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ──────────────────────────────────────────────────
+// Bank Accounts (Anında Havale) — admin yönetimi
+// ──────────────────────────────────────────────────
+
+router.get('/bank-accounts', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT id, lidio_bank_account_id, bank_name, bank_code, logo_url,
+                    is_active, display_order, created_at, updated_at
+             FROM bank_accounts
+             ORDER BY display_order ASC, bank_name ASC`
+        );
+        res.json({ banks: rows });
+    } catch (err) {
+        console.error('Admin bank-accounts list error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.post('/bank-accounts', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const {
+            lidio_bank_account_id,
+            bank_name,
+            bank_code = null,
+            logo_url = null,
+            is_active = true,
+            display_order = 0
+        } = req.body;
+
+        if (!lidio_bank_account_id || !bank_name) {
+            return res.status(400).json({ error: 'lidio_bank_account_id ve bank_name zorunlu.' });
+        }
+
+        const [result] = await db.query(
+            `INSERT INTO bank_accounts
+                (lidio_bank_account_id, bank_name, bank_code, logo_url, is_active, display_order)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+                Number(lidio_bank_account_id),
+                String(bank_name).slice(0, 100),
+                bank_code,
+                logo_url,
+                is_active ? 1 : 0,
+                Number(display_order || 0)
+            ]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({ error: 'Bu Lidio bank account ID zaten kayıtlı.' });
+        }
+        console.error('Admin bank-accounts create error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.put('/bank-accounts/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const { lidio_bank_account_id, bank_name, bank_code, logo_url, is_active, display_order } = req.body;
+        const fields = [];
+        const values = [];
+
+        if (lidio_bank_account_id !== undefined) { fields.push('lidio_bank_account_id = ?'); values.push(Number(lidio_bank_account_id)); }
+        if (bank_name !== undefined) { fields.push('bank_name = ?'); values.push(String(bank_name).slice(0, 100)); }
+        if (bank_code !== undefined) { fields.push('bank_code = ?'); values.push(bank_code); }
+        if (logo_url !== undefined) { fields.push('logo_url = ?'); values.push(logo_url); }
+        if (is_active !== undefined) { fields.push('is_active = ?'); values.push(is_active ? 1 : 0); }
+        if (display_order !== undefined) { fields.push('display_order = ?'); values.push(Number(display_order || 0)); }
+
+        if (!fields.length) return res.status(400).json({ error: 'Güncellenecek alan yok.' });
+
+        values.push(req.params.id);
+        await db.query(`UPDATE bank_accounts SET ${fields.join(', ')} WHERE id = ?`, values);
+        res.json({ message: 'Banka hesabı güncellendi.' });
+    } catch (err) {
+        console.error('Admin bank-accounts update error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.delete('/bank-accounts/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        await db.query('DELETE FROM bank_accounts WHERE id = ?', [req.params.id]);
+        res.json({ message: 'Banka hesabı silindi.' });
+    } catch (err) {
+        console.error('Admin bank-accounts delete error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });

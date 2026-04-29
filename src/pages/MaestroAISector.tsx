@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
 import {
     HiStar,
     HiBolt,
@@ -16,6 +17,37 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
+import { productsAPI } from '../services/api'
+
+const formatProductPrice = (price: number, currency: string, isEn: boolean): string => {
+    try {
+        const fmt = new Intl.NumberFormat(isEn ? 'en-US' : 'tr-TR', {
+            style: 'currency', currency, maximumFractionDigits: 2, minimumFractionDigits: 0
+        });
+        return fmt.format(price);
+    } catch {
+        return `${price} ${currency}`;
+    }
+};
+
+/**
+ * Frontend route'undaki sectorKey, DB'deki product_key ile birebir eşleşmiyor.
+ * DB'de bazı sektörler kısaltılmış kaydedilmiş (örn. "odeme-sistemleri" → "odeme").
+ * Burada route key'ini DB'deki kısa key'e çeviriyoruz.
+ */
+const sectorToDbKey: Record<string, string> = {
+    'b2b': 'b2b',
+    'odeme-sistemleri': 'odeme',
+    'endustriyel-gida': 'gida',
+    'fintech': 'fintech',
+    'enerji': 'enerji',
+    'ofis-tasarim': 'ofis',
+    'filo-kiralama': 'filo',
+    'teknoloji-yazilim': 'teknoloji',
+    'uretim': 'uretim',
+    'hediye-karti': 'hediye',
+    'akaryakit': 'akaryakit'
+};
 
 interface MaestroAISectorProps {
     sectorKey: 'b2b' | 'odeme-sistemleri' | 'endustriyel-gida' | 'fintech' | 'enerji' | 'ofis-tasarim' | 'filo-kiralama' | 'teknoloji-yazilim' | 'uretim' | 'hediye-karti' | 'akaryakit'
@@ -26,6 +58,37 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
     const currentLang = useRouteLocale()
     const contactPath = getLocalizedPathByKey(currentLang, 'contact')
     const homePath = getLocalizedPathByKey(currentLang, 'home')
+    const isEn = currentLang === 'en'
+
+    // Backend ürünlerinden bu sektöre ait fiyatları çek (admin'de güncellenebilir)
+    const dbSectorKey = sectorToDbKey[sectorKey] || sectorKey
+    const kredliKey = `maestro-${dbSectorKey}-kredili`
+    const sinirsizKey = `maestro-${dbSectorKey}-sinirsiz`
+    const [productPrices, setProductPrices] = useState<Record<string, { price: number; currency: string }>>({})
+
+    useEffect(() => {
+        let cancelled = false
+        Promise.all([
+            productsAPI.getByKey(kredliKey).catch(() => null),
+            productsAPI.getByKey(sinirsizKey).catch(() => null)
+        ]).then(([kredliRes, sinirsizRes]) => {
+            if (cancelled) return
+            const map: Record<string, { price: number; currency: string }> = {}
+            const kredli = kredliRes?.data?.product || kredliRes?.data
+            const sinirsiz = sinirsizRes?.data?.product || sinirsizRes?.data
+            if (kredli?.price !== undefined) map[kredliKey] = { price: Number(kredli.price), currency: kredli.currency || 'TRY' }
+            if (sinirsiz?.price !== undefined) map[sinirsizKey] = { price: Number(sinirsiz.price), currency: sinirsiz.currency || 'TRY' }
+            setProductPrices(map)
+        })
+        return () => { cancelled = true }
+    }, [kredliKey, sinirsizKey])
+
+    const kredliPriceLabel = productPrices[kredliKey]
+        ? formatProductPrice(productPrices[kredliKey].price, productPrices[kredliKey].currency, isEn)
+        : '—'
+    const sinirsizPriceLabel = productPrices[sinirsizKey]
+        ? formatProductPrice(productPrices[sinirsizKey].price, productPrices[sinirsizKey].currency, isEn)
+        : '—'
 
     const sk = `maestroAISectors.${sectorKey}`
     const sectorLabel = t(`${sk}.sectorLabel`)
@@ -187,7 +250,7 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
                     id: `kredili-maestro-${sectorKey}`,
                     productKey: `maestro-${sectorKey}-kredili`,
                     name: t('maestroAI.pricing.plans.kredili.name'),
-                    price: '1.200TL',
+                    price: kredliPriceLabel,
                     period: t('pricing.monthly'),
                     description: t('maestroAI.pricing.plans.kredili.desc'),
                     icon: <HiChartBar />,
@@ -212,7 +275,7 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
                     id: `sinirsiz-maestro-${sectorKey}`,
                     productKey: `maestro-${sectorKey}-sinirsiz`,
                     name: t('maestroAI.pricing.plans.growth.name'),
-                    price: '2.000TL',
+                    price: sinirsizPriceLabel,
                     period: t('pricing.monthly'),
                     description: t('maestroAI.pricing.plans.growth.desc'),
                     icon: <HiSparkles />,

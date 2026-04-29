@@ -45,7 +45,7 @@ function sendWelcomeAccountEmail(PDO $db, $email, $firstName, $authToken)
             <p>Satın alımınız başarıyla tamamlandı. Satın aldığınız içeriklere her zaman erişmek için bir şifre belirlemeniz yeterli.</p>
             <div style='text-align:center;margin:28px 0;'>
                 <a href='{$setPasswordUrl}'
-                   style='background:linear-gradient(90deg,#1a3a52,#2d5570);color:#fff;text-decoration:none;
+                   style='background-color:#1a3a52;color:#ffffff !important;text-decoration:none;
                           padding:14px 32px;border-radius:8px;font-weight:700;font-size:1rem;display:inline-block;'>
                     Şifremi Belirle →
                 </a>

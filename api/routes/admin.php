@@ -642,6 +642,46 @@ if ($action === 'pages') {
         } catch (Exception $e) {
             sendResponse(['error' => 'İçerik güncellenemedi: ' . $e->getMessage()], 500);
         }
+    } elseif ($id === 'slug' && !empty($subAction) && ($routes[4] ?? '') === 'content') {
+        // /api/admin/pages/slug/{urlencoded-slug}/content — slug-based access (auto-creates page)
+        $slug = normalizeSlugValue(urldecode($subAction));
+        if ($slug === '') sendResponse(['error' => 'slug zorunludur.'], 400);
+
+        $stmt = $db->prepare("SELECT id FROM cms_pages WHERE slug = ? LIMIT 1");
+        $stmt->execute([$slug]);
+        $page = $stmt->fetch();
+        $pageId = $page ? (int)$page['id'] : 0;
+
+        if ($method === 'GET') {
+            if (!$pageId) sendResponse(['content_json' => null, 'is_published' => false]);
+            $stmt = $db->prepare("SELECT content_json, is_published FROM cms_page_contents WHERE page_id = ? ORDER BY id DESC LIMIT 1");
+            $stmt->execute([$pageId]);
+            $row = $stmt->fetch();
+            if (!$row) sendResponse(['content_json' => null, 'is_published' => false]);
+            sendResponse($row);
+        } elseif ($method === 'PUT') {
+            try {
+                $data = getJsonBody();
+                $contentJson = $data['content_json'] ?? [];
+                $isPublished = isset($data['is_published']) ? (int)!!$data['is_published'] : 1;
+
+                if (!$pageId) {
+                    $stmt = $db->prepare("INSERT INTO cms_pages (title, slug, meta_title, meta_description, is_active) VALUES (?, ?, '', '', 1)");
+                    $stmt->execute([$slug, $slug]);
+                    $pageId = (int)$db->lastInsertId();
+                }
+
+                $stmt = $db->prepare("DELETE FROM cms_page_contents WHERE page_id = ?");
+                $stmt->execute([$pageId]);
+
+                $stmt = $db->prepare("INSERT INTO cms_page_contents (page_id, content_json, is_published) VALUES (?, ?, ?)");
+                $stmt->execute([$pageId, json_encode($contentJson, JSON_UNESCAPED_UNICODE), $isPublished]);
+
+                sendResponse(['message' => 'Content updated', 'page_id' => $pageId]);
+            } catch (Exception $e) {
+                sendResponse(['error' => 'İçerik güncellenemedi: ' . $e->getMessage()], 500);
+            }
+        }
     }
 }
 
@@ -696,6 +736,47 @@ if ($action === 'media' && $method === 'POST' && $id === 'upload-base64') {
         sendResponse(['path' => '/uploads/cms/' . $finalName]);
     } catch (Exception $e) {
         sendResponse(['error' => 'Upload failed: ' . $e->getMessage()], 500);
+    }
+}
+
+// PDF Upload (Admin) — multipart/form-data, $_FILES['file']
+if ($action === 'media' && $method === 'POST' && $id === 'upload-pdf') {
+    try {
+        if (!isset($_FILES['file']) || !is_uploaded_file($_FILES['file']['tmp_name'])) {
+            sendResponse(['error' => 'Yüklenecek PDF bulunamadı.'], 400);
+        }
+
+        $file = $_FILES['file'];
+        $mime = strtolower(mime_content_type($file['tmp_name']) ?: '');
+        $origName = basename((string)($file['name'] ?? 'upload.pdf'));
+        $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+
+        if ($mime !== 'application/pdf' && $ext !== 'pdf') {
+            sendResponse(['error' => 'Yalnızca PDF dosyaları yüklenebilir.'], 400);
+        }
+        if ($file['size'] > 50 * 1024 * 1024) { // 50 MB limit
+            sendResponse(['error' => 'Dosya boyutu 50 MB sınırını aşıyor.'], 400);
+        }
+
+        $uploadDir = __DIR__ . '/../../uploads/training-pdfs';
+        if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+            sendResponse(['error' => 'Upload dizini oluşturulamadı.'], 500);
+        }
+
+        $safeBase = preg_replace('/[^a-z0-9_\\-]+/i', '_', strtolower(pathinfo($origName, PATHINFO_FILENAME)));
+        $safeBase = trim((string)$safeBase, '_');
+        if ($safeBase === '') $safeBase = 'training-pdf';
+        $safeBase = substr($safeBase, 0, 80);
+        $finalName = $safeBase . '-' . time() . '.pdf';
+        $targetPath = rtrim($uploadDir, '/') . '/' . $finalName;
+
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            sendResponse(['error' => 'Dosya kaydedilemedi.'], 500);
+        }
+
+        sendResponse(['path' => '/uploads/training-pdfs/' . $finalName]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => 'PDF yükleme hatası: ' . $e->getMessage()], 500);
     }
 }
 
@@ -1378,7 +1459,7 @@ if ($action === 'training-access-pages' && $method === 'POST') {
     $slug = trim((string)($data['slug'] ?? ''));
     $productKey = trim((string)($data['product_key'] ?? ''));
     if ($slug === '' || $productKey === '') sendResponse(['error' => 'slug and product_key required'], 400);
-    $stmt = $db->prepare("INSERT INTO training_access_pages (slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt = $db->prepare("INSERT INTO training_access_pages (slug, product_key, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, canva_url_tr, canva_url_en, pdf_url, pdf_url_tr, pdf_url_en) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
     $stmt->execute([
         $slug, $productKey,
         trim((string)($data['title_tr'] ?? '')),
@@ -1389,7 +1470,9 @@ if ($action === 'training-access-pages' && $method === 'POST') {
         trim((string)($data['vimeo_url_en'] ?? '')),
         trim((string)($data['canva_url_tr'] ?? '')),
         trim((string)($data['canva_url_en'] ?? '')),
-        trim((string)($data['pdf_url'] ?? ''))
+        trim((string)($data['pdf_url'] ?? '')),
+        trim((string)($data['pdf_url_tr'] ?? '')),
+        trim((string)($data['pdf_url_en'] ?? ''))
     ]);
     sendResponse(['id' => (int)$db->lastInsertId(), 'success' => true]);
 }
@@ -1397,7 +1480,7 @@ if ($action === 'training-access-pages' && $method === 'POST') {
 // PUT /api/admin/training-access-pages/:id — update
 if ($action === 'training-access-pages' && ($method === 'PUT' || $method === 'PATCH') && !empty($id)) {
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
-    $stmt = $db->prepare("UPDATE training_access_pages SET slug=?, product_key=?, title_tr=?, title_en=?, description_tr=?, description_en=?, vimeo_url_tr=?, vimeo_url_en=?, canva_url_tr=?, canva_url_en=?, pdf_url=? WHERE id=?");
+    $stmt = $db->prepare("UPDATE training_access_pages SET slug=?, product_key=?, title_tr=?, title_en=?, description_tr=?, description_en=?, vimeo_url_tr=?, vimeo_url_en=?, canva_url_tr=?, canva_url_en=?, pdf_url=?, pdf_url_tr=?, pdf_url_en=? WHERE id=?");
     $stmt->execute([
         trim((string)($data['slug'] ?? '')),
         trim((string)($data['product_key'] ?? '')),
@@ -1410,6 +1493,8 @@ if ($action === 'training-access-pages' && ($method === 'PUT' || $method === 'PA
         trim((string)($data['canva_url_tr'] ?? '')),
         trim((string)($data['canva_url_en'] ?? '')),
         trim((string)($data['pdf_url'] ?? '')),
+        trim((string)($data['pdf_url_tr'] ?? '')),
+        trim((string)($data['pdf_url_en'] ?? '')),
         $id
     ]);
     sendResponse(['success' => true]);
@@ -1441,8 +1526,8 @@ if ($action === 'training-lessons' && $method === 'POST') {
 
     $stmt = $db->prepare("
         INSERT INTO training_lessons
-        (training_id, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, pdf_url, order_index, duration_label, is_published)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+        (training_id, title_tr, title_en, description_tr, description_en, vimeo_url_tr, vimeo_url_en, pdf_url, pdf_url_tr, pdf_url_en, order_index, duration_label, is_published)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
     ");
     $stmt->execute([
         $training_id,
@@ -1453,6 +1538,8 @@ if ($action === 'training-lessons' && $method === 'POST') {
         trim((string)($data['vimeo_url_tr'] ?? '')) ?: null,
         trim((string)($data['vimeo_url_en'] ?? '')) ?: null,
         trim((string)($data['pdf_url'] ?? '')) ?: null,
+        trim((string)($data['pdf_url_tr'] ?? '')) ?: null,
+        trim((string)($data['pdf_url_en'] ?? '')) ?: null,
         (int)($data['order_index'] ?? 0),
         trim((string)($data['duration_label'] ?? '')) ?: null,
         isset($data['is_published']) ? (int)$data['is_published'] : 1
@@ -1473,7 +1560,8 @@ if ($action === 'training-lessons' && ($method === 'PUT' || $method === 'PATCH')
     $stmt = $db->prepare("
         UPDATE training_lessons SET
         title_tr=?, title_en=?, description_tr=?, description_en=?,
-        vimeo_url_tr=?, vimeo_url_en=?, pdf_url=?, order_index=?, duration_label=?, is_published=?
+        vimeo_url_tr=?, vimeo_url_en=?, pdf_url=?, pdf_url_tr=?, pdf_url_en=?,
+        order_index=?, duration_label=?, is_published=?
         WHERE id=?
     ");
     $stmt->execute([
@@ -1484,6 +1572,8 @@ if ($action === 'training-lessons' && ($method === 'PUT' || $method === 'PATCH')
         trim((string)($data['vimeo_url_tr'] ?? '')) ?: null,
         trim((string)($data['vimeo_url_en'] ?? '')) ?: null,
         trim((string)($data['pdf_url'] ?? '')) ?: null,
+        trim((string)($data['pdf_url_tr'] ?? '')) ?: null,
+        trim((string)($data['pdf_url_en'] ?? '')) ?: null,
         (int)($data['order_index'] ?? 0),
         trim((string)($data['duration_label'] ?? '')) ?: null,
         isset($data['is_published']) ? (int)$data['is_published'] : 1,
@@ -2240,6 +2330,100 @@ if ($action === 'automation-templates' && $method === 'PUT' && !empty($id)) {
 if ($action === 'automation-templates' && $method === 'DELETE' && !empty($id)) {
     $db->prepare("DELETE FROM automation_email_templates WHERE id = ?")->execute([(int)$id]);
     sendResponse(['success' => true]);
+}
+
+// ──────────────────────────────────────────────────
+// Bank Accounts (Anında Havale) — admin CRUD
+// ──────────────────────────────────────────────────
+
+// Tablo yoksa otomatik oluştur (idempotent — ilk çağrıda yaratılır)
+function ensureBankAccountsSchema(PDO $db): void
+{
+    try {
+        $db->exec("
+            CREATE TABLE IF NOT EXISTS bank_accounts (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                lidio_bank_account_id INT NOT NULL,
+                bank_name VARCHAR(100) NOT NULL,
+                bank_code VARCHAR(20) DEFAULT NULL,
+                logo_url VARCHAR(500) DEFAULT NULL,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                display_order INT NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                UNIQUE KEY uniq_lidio_bank_account_id (lidio_bank_account_id),
+                KEY idx_active_order (is_active, display_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ");
+    } catch (Throwable $e) {
+        error_log('ensureBankAccountsSchema error: ' . $e->getMessage());
+    }
+}
+
+if ($action === 'bank-accounts' && $method === 'GET') {
+    ensureBankAccountsSchema($db);
+    $stmt = $db->query(
+        "SELECT id, lidio_bank_account_id, bank_name, bank_code, logo_url, is_active, display_order, created_at, updated_at
+         FROM bank_accounts ORDER BY display_order ASC, bank_name ASC"
+    );
+    sendResponse(['banks' => $stmt ? $stmt->fetchAll() : []]);
+}
+
+if ($action === 'bank-accounts' && $method === 'POST' && empty($id)) {
+    ensureBankAccountsSchema($db);
+    $data = getJsonBody();
+    $lidioId = (int)($data['lidio_bank_account_id'] ?? 0);
+    $bankName = trim((string)($data['bank_name'] ?? ''));
+    if ($lidioId <= 0 || $bankName === '') {
+        sendResponse(['error' => 'lidio_bank_account_id ve bank_name zorunlu.'], 400);
+    }
+    try {
+        $stmt = $db->prepare(
+            "INSERT INTO bank_accounts (lidio_bank_account_id, bank_name, bank_code, logo_url, is_active, display_order)
+             VALUES (?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            $lidioId,
+            mb_substr($bankName, 0, 100),
+            !empty($data['bank_code']) ? (string)$data['bank_code'] : null,
+            !empty($data['logo_url']) ? (string)$data['logo_url'] : null,
+            !empty($data['is_active']) ? 1 : 0,
+            (int)($data['display_order'] ?? 0)
+        ]);
+        sendResponse(['id' => (int)$db->lastInsertId()], 201);
+    } catch (Throwable $e) {
+        if (strpos($e->getMessage(), 'Duplicate') !== false || strpos($e->getMessage(), '1062') !== false) {
+            sendResponse(['error' => 'Bu Lidio bank account ID zaten kayıtlı.'], 409);
+        }
+        sendResponse(['error' => 'Server error'], 500);
+    }
+}
+
+if ($action === 'bank-accounts' && $method === 'PUT' && !empty($id)) {
+    ensureBankAccountsSchema($db);
+    $data = getJsonBody();
+    $fields = [];
+    $params = [];
+    if (array_key_exists('lidio_bank_account_id', $data)) { $fields[] = 'lidio_bank_account_id = ?'; $params[] = (int)$data['lidio_bank_account_id']; }
+    if (array_key_exists('bank_name', $data)) { $fields[] = 'bank_name = ?'; $params[] = mb_substr((string)$data['bank_name'], 0, 100); }
+    if (array_key_exists('bank_code', $data)) { $fields[] = 'bank_code = ?'; $params[] = $data['bank_code'] === '' ? null : (string)$data['bank_code']; }
+    if (array_key_exists('logo_url', $data)) { $fields[] = 'logo_url = ?'; $params[] = $data['logo_url'] === '' ? null : (string)$data['logo_url']; }
+    if (array_key_exists('is_active', $data)) { $fields[] = 'is_active = ?'; $params[] = !empty($data['is_active']) ? 1 : 0; }
+    if (array_key_exists('display_order', $data)) { $fields[] = 'display_order = ?'; $params[] = (int)$data['display_order']; }
+
+    if (empty($fields)) {
+        sendResponse(['error' => 'Güncellenecek alan yok.'], 400);
+    }
+
+    $params[] = (int)$id;
+    $db->prepare("UPDATE bank_accounts SET " . implode(', ', $fields) . " WHERE id = ?")->execute($params);
+    sendResponse(['message' => 'Banka hesabı güncellendi.']);
+}
+
+if ($action === 'bank-accounts' && $method === 'DELETE' && !empty($id)) {
+    ensureBankAccountsSchema($db);
+    $db->prepare("DELETE FROM bank_accounts WHERE id = ?")->execute([(int)$id]);
+    sendResponse(['message' => 'Banka hesabı silindi.']);
 }
 
 sendResponse(['error' => 'Action not found'], 404);

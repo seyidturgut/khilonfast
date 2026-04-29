@@ -95,6 +95,21 @@ CREATE TABLE IF NOT EXISTS payments (
     INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Anında Havale (Lidio DirectWireTransfer) için banka hesap listesi
+CREATE TABLE IF NOT EXISTS bank_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    lidio_bank_account_id INT NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    bank_code VARCHAR(20) DEFAULT NULL,
+    logo_url VARCHAR(500) DEFAULT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    display_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_lidio_bank_account_id (lidio_bank_account_id),
+    KEY idx_active_order (is_active, display_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS coupons (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -146,6 +161,8 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     status ENUM('active', 'expired', 'cancelled') DEFAULT 'active',
     starts_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NULL,
+    auto_renew TINYINT(1) NOT NULL DEFAULT 0,
+    next_renewal_at TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authAPI } from '../services/api';
+import { authAPI, clearApiCache } from '../services/api';
 
 interface User {
     id: number;
@@ -76,6 +76,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             const response = await authAPI.login({ email, password });
             const { token: newToken, user: userData } = response.data;
 
+            // Önceki oturumdan kalan tüm cache'lenmiş verileri temizle
+            clearApiCache();
             setToken(newToken);
             setUser(userData);
             localStorage.setItem('token', newToken);
@@ -99,6 +101,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             const response = await authAPI.register(data);
             const { token: newToken, user: userData } = response.data;
 
+            clearApiCache();
             setToken(newToken);
             setUser(userData);
             localStorage.setItem('token', newToken);
@@ -113,6 +116,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             const response = await authAPI.google({ credential });
             const { token: newToken, user: userData } = response.data;
 
+            clearApiCache();
             setToken(newToken);
             setUser(userData);
             localStorage.setItem('token', newToken);
@@ -124,6 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const activateToken = async (newToken: string) => {
         setLoading(true);
+        clearApiCache();
         setToken(newToken);
         localStorage.setItem('token', newToken);
         try {
@@ -135,6 +140,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     const logout = () => {
+        clearApiCache();
         setUser(null);
         setToken(null);
         localStorage.removeItem('token');

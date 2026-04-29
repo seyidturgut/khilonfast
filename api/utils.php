@@ -204,6 +204,27 @@ function ensureTrainingAccessPagesSchema(PDO $db)
         $db->exec("UPDATE training_access_pages SET canva_url_tr = COALESCE(NULLIF(canva_url_tr, ''), canva_url) WHERE canva_url IS NOT NULL AND canva_url <> ''");
     }
 
+    // Ensure i18n PDF columns on training_access_pages
+    if (!columnExists($db, 'training_access_pages', 'pdf_url')) {
+        $db->exec("ALTER TABLE training_access_pages ADD COLUMN pdf_url TEXT DEFAULT NULL");
+    }
+    if (!columnExists($db, 'training_access_pages', 'pdf_url_tr')) {
+        $db->exec("ALTER TABLE training_access_pages ADD COLUMN pdf_url_tr TEXT DEFAULT NULL");
+    }
+    if (!columnExists($db, 'training_access_pages', 'pdf_url_en')) {
+        $db->exec("ALTER TABLE training_access_pages ADD COLUMN pdf_url_en TEXT DEFAULT NULL");
+    }
+
+    // Ensure i18n PDF columns on training_lessons (table exists from main DB schema)
+    if (tableExists($db, 'training_lessons')) {
+        if (!columnExists($db, 'training_lessons', 'pdf_url_tr')) {
+            $db->exec("ALTER TABLE training_lessons ADD COLUMN pdf_url_tr TEXT DEFAULT NULL");
+        }
+        if (!columnExists($db, 'training_lessons', 'pdf_url_en')) {
+            $db->exec("ALTER TABLE training_lessons ADD COLUMN pdf_url_en TEXT DEFAULT NULL");
+        }
+    }
+
     $checked = true;
 }
 

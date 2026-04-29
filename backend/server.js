@@ -11,6 +11,9 @@ import adminRoutes from './routes/admin.js';
 import pagesRoutes from './routes/pages.js';
 import consultantsRoutes from './routes/consultants.js';
 import trainingAnalyticsRoutes from './routes/training-analytics.js';
+import onboardingRoutes from './routes/onboarding.js';
+import couponRoutes from './routes/coupons.js';
+import emailAutomationRoutes from './routes/email-automation.js';
 
 dotenv.config();
 
@@ -36,6 +39,9 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/pages', pagesRoutes);
 app.use('/api/consultants', consultantsRoutes);
 app.use('/api/training-analytics', trainingAnalyticsRoutes);
+app.use('/api/onboarding-form', onboardingRoutes);
+app.use('/api/coupons', couponRoutes);
+app.use('/api/email-automation', emailAutomationRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

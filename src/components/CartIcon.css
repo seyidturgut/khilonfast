@@ -27,6 +27,57 @@
     transform: translateY(-1px);
 }
 
+.cart-currency-error {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #1e293b;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 10px 12px;
+    border-radius: 10px;
+    white-space: nowrap;
+    max-width: 320px;
+    white-space: normal;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.cart-currency-error::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #1e293b;
+}
+
+.cart-currency-error span {
+    flex: 1;
+}
+
+.cart-currency-error button {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.cart-currency-error button:hover {
+    color: #fff;
+}
+
 .cart-badge {
     position: absolute;
     top: 0;

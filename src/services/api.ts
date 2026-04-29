@@ -14,16 +14,61 @@ const api = axios.create({
 const frontendCache = new Map();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Kullanıcıya/oturuma bağlı cevaplar cache'lenmemeli — yoksa kullanıcı değişince
+// önceki kullanıcının verisi geri okunur (ör. admin → user geçişinde admin paneli açılır).
+const NON_CACHEABLE_PATTERNS = [
+    /^\/auth\//,
+    /^\/profile/,
+    /^\/orders/,
+    /^\/payment\//,
+    /^\/admin\//,
+    /^\/onboarding-form/,
+    /^\/company/,
+    // Ürün fiyatları admin tarafından güncellenebildiği için 5 dk cache çok uzun;
+    // bunun yerine her isteği taze çekiyoruz (backend zaten kendi node-cache'ini admin write'larında flush ediyor).
+    /^\/products/,
+    /^\/coupons/
+];
+
+const isCacheable = (url?: string) => {
+    if (!url) return false;
+    return !NON_CACHEABLE_PATTERNS.some((re) => re.test(url));
+};
+
+/**
+ * Cache'i sıfırla. Login / logout / activateToken sırasında çağrılır ki bir önceki
+ * oturumun verisi yeni oturuma sızmasın.
+ */
+export const clearApiCache = () => {
+    frontendCache.clear();
+};
+
+// Build-time prerender (puppeteer) sırasında API isteklerini hemen boş cevapla short-circuit et —
+// aksi halde axios sonsuza kadar bekler ve prerender timeout olur.
+const isPrerendering = typeof window !== 'undefined' && (window as any).__PRERENDER__ === true;
+
 // Add token to requests
 api.interceptors.request.use(
     (config) => {
+        if (isPrerendering) {
+            // Tüm istekleri boş cevap döndür, network'e çıkma
+            config.adapter = () => Promise.resolve({
+                data: {},
+                status: 200,
+                statusText: 'OK (prerender stub)',
+                headers: config.headers,
+                config,
+                request: {}
+            });
+            return config;
+        }
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
 
-        // Cache handling for GET requests
-        if (config.method === 'get') {
+        // Cache handling for GET requests (kullanıcıya özel endpointler hariç)
+        if (config.method === 'get' && isCacheable(config.url)) {
             const cacheKey = config.url + JSON.stringify(config.params || {});
             const cachedValue = frontendCache.get(cacheKey);
 
@@ -52,7 +97,11 @@ api.interceptors.request.use(
 // Interceptor to save successful GET responses to cache
 api.interceptors.response.use(
     (response) => {
-        if (response.config.method === 'get' && response.status === 200) {
+        if (
+            response.config.method === 'get' &&
+            response.status === 200 &&
+            isCacheable(response.config.url)
+        ) {
             const cacheKey = response.config.url + JSON.stringify(response.config.params || {});
             frontendCache.set(cacheKey, {
                 data: response.data,
@@ -100,7 +149,15 @@ export const paymentAPI = {
     getStatus: (orderId: IdParam) => api.get(`/payment/status/${orderId}`),
     getSavedCards: () => api.get('/payment/cards'),
     deleteSavedCard: (cardId: IdParam) => api.delete(`/payment/cards/${cardId}`),
-    setDefaultCard: (cardId: IdParam) => api.patch(`/payment/cards/${cardId}/default`, {})
+    setDefaultCard: (cardId: IdParam) => api.patch(`/payment/cards/${cardId}/default`, {}),
+    getBankAccounts: () => api.get('/payment/bank-accounts')
+};
+
+export const adminBankAccountsAPI = {
+    list: () => api.get('/admin/bank-accounts'),
+    create: (data: ApiPayload) => api.post('/admin/bank-accounts', data),
+    update: (id: IdParam, data: ApiPayload) => api.put(`/admin/bank-accounts/${id}`, data),
+    delete: (id: IdParam) => api.delete(`/admin/bank-accounts/${id}`)
 };
 
 export const emailAutomationAPI = {

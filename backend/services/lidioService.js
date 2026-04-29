@@ -30,7 +30,9 @@ class LidioService {
             process3dsPath: this.resolveEndpointPath('process3ds', runtimeConfig.process3dsPath || '/payment/process3ds'),
             startHostedPaymentPath: this.resolveEndpointPath('startHostedPayment', runtimeConfig.startHostedPaymentPath || '/StartHostedPaymentProcess'),
             queryPaymentPath: runtimeConfig.queryPaymentPath || '/payment/query/{transactionId}',
-            refundPaymentPath: runtimeConfig.refundPaymentPath || '/payment/refund'
+            refundPaymentPath: runtimeConfig.refundPaymentPath || '/payment/refund',
+            finishPaymentPath: runtimeConfig.finishPaymentPath || '/FinishPaymentProcess',
+            saveCardPath: runtimeConfig.saveCardPath || '/SaveCard'
         };
     }
 
@@ -205,6 +207,29 @@ class LidioService {
             root?.MerchantPaymentId
         ]);
 
+        // Lidio "saveAfterSuccess" / SaveCard cevaplarında token tüm seviyelerde gelebilir.
+        const cardToken = this.pickFirstDefined([
+            payload.cardToken, payload.CardToken, payload.savedCardToken,
+            payload.savedCard?.cardToken, payload.savedCard?.CardToken,
+            payload.paymentInstrumentInfo?.newCard?.cardToken,
+            payload.paymentInstrumentInfo?.savedCard?.cardToken,
+            root?.cardToken, root?.CardToken, root?.savedCardToken,
+            root?.savedCard?.cardToken,
+            root?.paymentInstrumentInfo?.newCard?.cardToken
+        ]);
+
+        const maskedCardNumber = this.pickFirstDefined([
+            payload.maskedCardNumber, payload.MaskedCardNumber,
+            payload.savedCard?.maskedCardNumber, payload.cardInfo?.maskedCardNumber,
+            root?.maskedCardNumber, root?.savedCard?.maskedCardNumber,
+            root?.cardInfo?.maskedCardNumber
+        ]);
+        const cardBrand = this.pickFirstDefined([
+            payload.cardBrand, payload.CardBrand, payload.cardAssociation, payload.CardAssociation,
+            payload.savedCard?.cardBrand, payload.cardInfo?.cardBrand,
+            root?.cardBrand, root?.savedCard?.cardBrand, root?.cardInfo?.cardBrand
+        ]);
+
         return {
             ...payload,
             success,
@@ -214,7 +239,22 @@ class LidioService {
             redirectForm: payload.redirectForm || root?.redirectForm || null,
             redirectFormParams: payload.redirectFormParams || root?.redirectFormParams || null,
             transactionId,
+            cardToken: cardToken || null,
+            maskedCardNumber: maskedCardNumber || null,
+            cardBrand: cardBrand || null,
             raw: payload
+        };
+    }
+
+    buildCustomerInfo(paymentData) {
+        return {
+            customerId: String(paymentData.customerInfo?.customerId || ''),
+            name: [paymentData.customerInfo?.customerName, paymentData.customerInfo?.customerSurname]
+                .filter(Boolean)
+                .join(' ')
+                .trim() || paymentData.customerInfo?.customerName || '',
+            email: paymentData.customerInfo?.customerEmail || '',
+            phone: paymentData.customerInfo?.customerPhoneNumber || ''
         };
     }
 
@@ -230,39 +270,94 @@ class LidioService {
             lastYear: year
         };
 
-        const customerInfo = {
-            customerId: String(paymentData.customerInfo?.customerId || ''),
-            name: [paymentData.customerInfo?.customerName, paymentData.customerInfo?.customerSurname]
-                .filter(Boolean)
-                .join(' ')
-                .trim() || paymentData.customerInfo?.customerName || '',
-            email: paymentData.customerInfo?.customerEmail || '',
-            phone: paymentData.customerInfo?.customerPhoneNumber || ''
+        const newCard = {
+            processType: 'sales',
+            cardInfo,
+            cvv: String(paymentData.cardCvv || ''),
+            use3DSecure: Boolean(use3DSecure),
+            installmentCount,
+            loyaltyPointUsage: 'None',
+            merchantDataShareApproved: true,
+            termsConditionsApproved: true
         };
+
+        // "Kartımı sakla" işaretliyse: başarılı 3DS sonrası Lidio kartı tokenize edip
+        // response'da cardToken döner. Bizim callback handler'ımız bu token'ı user_cards'e yazar.
+        if (paymentData.saveCardAfterSuccess) {
+            newCard.saveAfterSuccess = true;
+            if (paymentData.cardNamebyUser) {
+                newCard.cardNamebyUser = paymentData.cardNamebyUser;
+            }
+        }
 
         return {
             orderId: String(paymentData.orderId || ''),
             merchantProcessId: String(paymentData.merchantProcessId || paymentData.orderId || ''),
             totalAmount: Number(paymentData.amount || 0),
             currency: paymentData.currency || 'TRY',
-            customerInfo,
+            customerInfo: this.buildCustomerInfo(paymentData),
             paymentInstrument: 'NewCard',
+            paymentInstrumentInfo: { newCard },
+            returnUrl: paymentData.returnUrl || paymentData.callbackUrl || undefined,
+            notificationUrl: paymentData.notificationUrl || undefined,
+            clientIp: paymentData.customerInfo?.customerIpAddress || undefined,
+            clientType: 'Web'
+        };
+    }
+
+    /**
+     * Kayıtlı kart ile ödeme — paymentInstrument: "StoredCard"
+     * Token user_cards.lidio_token'dan gelir. CVV her ödemede tekrar girilir (PCI gereği).
+     */
+    buildStoredCardPaymentRequest(paymentData, use3DSecure) {
+        const installmentCount = Number(paymentData.installment || 0);
+
+        return {
+            orderId: String(paymentData.orderId || ''),
+            merchantProcessId: String(paymentData.merchantProcessId || paymentData.orderId || ''),
+            totalAmount: Number(paymentData.amount || 0),
+            currency: paymentData.currency || 'TRY',
+            customerInfo: this.buildCustomerInfo(paymentData),
+            paymentInstrument: 'StoredCard',
             paymentInstrumentInfo: {
-                newCard: {
+                storedCard: {
                     processType: 'sales',
-                    cardInfo,
+                    cardToken: String(paymentData.cardToken || ''),
                     cvv: String(paymentData.cardCvv || ''),
                     use3DSecure: Boolean(use3DSecure),
                     installmentCount,
-                    loyaltyPointUsage: 'None',
-                    // Docs export marks these as required for newCard.
-                    merchantDataShareApproved: true,
-                    termsConditionsApproved: true
+                    loyaltyPointUsage: 'None'
                 }
             },
             returnUrl: paymentData.returnUrl || paymentData.callbackUrl || undefined,
             notificationUrl: paymentData.notificationUrl || undefined,
-            clientIp: paymentData.customerInfo?.customerIpAddress || undefined
+            clientIp: paymentData.customerInfo?.customerIpAddress || undefined,
+            clientType: 'Web'
+        };
+    }
+
+    /**
+     * Anında Havale (DirectWireTransfer) — kullanıcı bankaya yönlendirilir,
+     * bankada onay verince ReturnUrl'e döner. Sonra FinishPaymentProcess çağrılır.
+     * Lidio dokümantasyonu: paymentInstrumentInfo.directWireTransfer.bankAccountId zorunlu.
+     */
+    buildDirectWireTransferRequest(paymentData) {
+        return {
+            orderId: String(paymentData.orderId || ''),
+            merchantProcessId: String(paymentData.merchantProcessId || paymentData.orderId || ''),
+            totalAmount: Number(paymentData.amount || 0),
+            currency: paymentData.currency || 'TRY',
+            customerInfo: this.buildCustomerInfo(paymentData),
+            paymentInstrument: 'DirectWireTransfer',
+            paymentInstrumentInfo: {
+                directWireTransfer: {
+                    bankAccountId: Number(paymentData.bankAccountId || 0)
+                }
+            },
+            returnUrl: paymentData.returnUrl || paymentData.callbackUrl || undefined,
+            notificationUrl: paymentData.notificationUrl || undefined,
+            clientIp: paymentData.customerInfo?.customerIpAddress || undefined,
+            clientType: 'Web'
         };
     }
 
@@ -356,6 +451,166 @@ class LidioService {
             .createHmac('sha256', secretKey)
             .update(dataString)
             .digest('hex');
+    }
+
+    /**
+     * Kayıtlı kart ile ödeme (3DS dahil — paymentData.use3DSecure flag'iyle).
+     */
+    async processStoredCardPayment(paymentData, runtimeConfig = {}) {
+        try {
+            const cfg = this.resolveConfig(runtimeConfig);
+            if (!cfg.authorization && !cfg.merchantKey && !cfg.apiKey) {
+                return {
+                    success: true,
+                    requires3DS: false,
+                    transactionId: `TEST-STORED-${Date.now()}`,
+                    status: 'success',
+                    message: 'Test stored-card payment (Lidio credentials not configured)',
+                    testMode: true
+                };
+            }
+
+            const requestData = this.buildStoredCardPaymentRequest(paymentData, paymentData.use3DSecure !== false);
+            const authHash = this.generateAuthHash(requestData, cfg.secretKey);
+
+            console.info('[lidio:request] processStoredCardPayment', {
+                orderId: requestData.orderId,
+                totalAmount: requestData.totalAmount,
+                hasToken: Boolean(requestData.paymentInstrumentInfo?.storedCard?.cardToken),
+                use3DSecure: requestData.paymentInstrumentInfo?.storedCard?.use3DSecure
+            });
+
+            const response = await this.postWithFallback(
+                cfg, cfg.processPaymentPath, ['/ProcessPayment'], requestData, authHash
+            );
+            return this.normalizePaymentResponse(response.data);
+        } catch (error) {
+            console.error('Lidio stored-card payment error:', error.message, error?.response?.data || '');
+            throw new Error('Stored card payment failed: ' + error.message);
+        }
+    }
+
+    /**
+     * Anında Havale (DirectWireTransfer) — ilk aşama.
+     * Cevap: redirectForm/redirectUrl döner; kullanıcı bankaya gider, dönüşte FinishPaymentProcess çağrılır.
+     */
+    async processDirectWireTransfer(paymentData, runtimeConfig = {}) {
+        try {
+            const cfg = this.resolveConfig(runtimeConfig);
+            if (!cfg.authorization && !cfg.merchantKey && !cfg.apiKey) {
+                return {
+                    success: true,
+                    requires3DS: true,
+                    status: 'success',
+                    redirectUrl: `https://test.lidio.com/wire/mock/${Date.now()}`,
+                    message: 'Test wire-transfer (Lidio credentials not configured)',
+                    testMode: true
+                };
+            }
+
+            const requestData = this.buildDirectWireTransferRequest(paymentData);
+            const authHash = this.generateAuthHash(requestData, cfg.secretKey);
+
+            console.info('[lidio:request] processDirectWireTransfer', {
+                orderId: requestData.orderId,
+                totalAmount: requestData.totalAmount,
+                bankAccountId: requestData.paymentInstrumentInfo?.directWireTransfer?.bankAccountId
+            });
+
+            const response = await this.postWithFallback(
+                cfg, cfg.processPaymentPath, ['/ProcessPayment'], requestData, authHash
+            );
+            return this.normalizePaymentResponse(response.data);
+        } catch (error) {
+            console.error('Lidio direct-wire-transfer error:', error.message, error?.response?.data || '');
+            throw new Error('Direct wire transfer failed: ' + error.message);
+        }
+    }
+
+    /**
+     * İki aşamalı ödemenin son adımı (3DS, Anında Havale, BkmExpress, GarantiPay vs).
+     * İlk aşamada Lidio bize transactionId verir; client banka/3DS'ten geri döndüğünde
+     * bunu çağırırız ki ödeme finansallaşsın.
+     */
+    async finishPaymentProcess({ transactionId, merchantProcessId } = {}, runtimeConfig = {}) {
+        try {
+            const cfg = this.resolveConfig(runtimeConfig);
+            if (!cfg.authorization && !cfg.merchantKey && !cfg.apiKey) {
+                return {
+                    success: true,
+                    transactionId: transactionId || `TEST-FINISH-${Date.now()}`,
+                    status: 'success',
+                    testMode: true
+                };
+            }
+
+            const requestData = {};
+            if (transactionId) requestData.transactionId = String(transactionId);
+            if (merchantProcessId) requestData.merchantProcessId = String(merchantProcessId);
+
+            const authHash = this.generateAuthHash(requestData, cfg.secretKey);
+            console.info('[lidio:request] finishPaymentProcess', { hasTxn: Boolean(transactionId) });
+
+            const response = await this.postWithFallback(
+                cfg, cfg.finishPaymentPath, ['/FinishPaymentProcess'], requestData, authHash
+            );
+            return this.normalizePaymentResponse(response.data);
+        } catch (error) {
+            console.error('Lidio finishPaymentProcess error:', error.message, error?.response?.data || '');
+            throw new Error('Finish payment failed: ' + error.message);
+        }
+    }
+
+    /**
+     * Bağımsız Kart Saklama (SaveCard endpoint'i).
+     * NewCard ödemesinde saveAfterSuccess=true verirsek ödeme cevabında token döner;
+     * ödemeden bağımsız kart kaydetmek istersek (ör. kullanıcı paneli) bunu kullanırız.
+     */
+    async saveCard(cardData, runtimeConfig = {}) {
+        try {
+            const cfg = this.resolveConfig(runtimeConfig);
+            if (!cfg.authorization && !cfg.merchantKey && !cfg.apiKey) {
+                return {
+                    success: true,
+                    cardToken: `TEST-TOKEN-${Date.now()}`,
+                    testMode: true
+                };
+            }
+
+            const requestData = {
+                customerInfo: {
+                    customerId: String(cardData.customerId || ''),
+                    email: cardData.email || '',
+                    name: cardData.name || '',
+                    phone: cardData.phone || ''
+                },
+                cardHolderName: cardData.cardHolderName || '',
+                cardNumber: String(cardData.cardNumber || '').replace(/\s+/g, ''),
+                cardMonth: Number(cardData.cardMonth || 0),
+                cardYear: Number(cardData.cardYear || 0),
+                isTemporary: Boolean(cardData.isTemporary),
+                setCardAsDefault: Boolean(cardData.setCardAsDefault),
+                clientType: 'Web'
+            };
+            if (cardData.cardNamebyUser) requestData.cardNamebyUser = cardData.cardNamebyUser;
+            if (cardData.groupCode) requestData.groupCode = cardData.groupCode;
+            if (cardData.clientIp) requestData.clientIp = cardData.clientIp;
+            if (cardData.clientUserAgent) requestData.clientUserAgent = cardData.clientUserAgent;
+
+            const authHash = this.generateAuthHash(requestData, cfg.secretKey);
+            console.info('[lidio:request] saveCard', {
+                customerId: requestData.customerInfo.customerId,
+                isTemporary: requestData.isTemporary
+            });
+
+            const response = await this.postWithFallback(
+                cfg, cfg.saveCardPath, ['/SaveCard'], requestData, authHash
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Lidio saveCard error:', error.message, error?.response?.data || '');
+            throw new Error('Save card failed: ' + error.message);
+        }
     }
 
     /**

@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiMail, HiLockClosed } from 'react-icons/hi';
 import { useTranslation } from 'react-i18next';
-import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 
@@ -53,19 +52,6 @@ export default function Login() {
         }
     };
 
-    const handleGoogleCredential = async (credential: string) => {
-        setError('');
-        setLoading(true);
-        try {
-            await googleLogin(credential);
-            navigate(dashboardPath);
-        } catch (err: any) {
-            setError(err.message || t('authPages.login.errors.google'));
-        } finally {
-            setLoading(false);
-        }
-    };
-
     return (
         <div className="auth-page">
             <div className="auth-container">
@@ -108,13 +94,6 @@ export default function Login() {
                             {loading ? t('authPages.login.loading') : t('authPages.login.submit')}
                         </button>
                     </form>
-
-                    <div className="auth-divider">
-                        <span>{t('authPages.or')}</span>
-                    </div>
-                    <div className="auth-google">
-                        <GoogleLoginButton onCredential={handleGoogleCredential} />
-                    </div>
 
                     <p className="auth-link">
                         {t('authPages.login.switchPrompt')} <Link to={registerPath}>{t('authPages.register.submit')}</Link>

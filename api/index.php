@@ -69,7 +69,46 @@ switch ($controller) {
         require_once __DIR__ . '/routes/email-automation.php';
         break;
     case 'health':
-        sendResponse(['status' => 'ok', 'message' => 'khilonfast PHP API is running']);
+        $health = [
+            'status' => 'ok',
+            'message' => 'khilonfast PHP API is running',
+            'php_version' => PHP_VERSION,
+            'time' => date('c')
+        ];
+        // DB bağlantısını test et — kritik tabloların satır sayılarını dön
+        try {
+            $db = Database::getInstance();
+            $checks = [];
+            foreach (['users','products','orders','coupons','settings','bank_accounts','cms_pages'] as $table) {
+                try {
+                    $stmt = $db->query("SELECT COUNT(*) AS c FROM `$table`");
+                    $row = $stmt->fetch();
+                    $checks[$table] = (int)($row['c'] ?? 0);
+                } catch (Throwable $tableErr) {
+                    $checks[$table] = 'MISSING: ' . $tableErr->getMessage();
+                }
+            }
+            // Lidio konfigürasyonu (sadece varlık kontrolü, key'leri dökmüyoruz)
+            try {
+                $stmt = $db->query("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('lidio_test_mode','lidio_api_url','lidio_merchant_code','lidio_merchant_key','lidio_api_password')");
+                $lidioCfg = ['test_mode' => null, 'api_url' => null, 'has_merchant_code' => false, 'has_merchant_key' => false, 'has_api_password' => false];
+                while ($row = $stmt->fetch()) {
+                    if ($row['setting_key'] === 'lidio_test_mode') $lidioCfg['test_mode'] = $row['setting_value'];
+                    if ($row['setting_key'] === 'lidio_api_url') $lidioCfg['api_url'] = $row['setting_value'];
+                    if ($row['setting_key'] === 'lidio_merchant_code') $lidioCfg['has_merchant_code'] = !empty(trim((string)$row['setting_value']));
+                    if ($row['setting_key'] === 'lidio_merchant_key') $lidioCfg['has_merchant_key'] = !empty(trim((string)$row['setting_value']));
+                    if ($row['setting_key'] === 'lidio_api_password') $lidioCfg['has_api_password'] = !empty(trim((string)$row['setting_value']));
+                }
+                $health['lidio'] = $lidioCfg;
+            } catch (Throwable $lidioErr) {
+                $health['lidio'] = 'check_failed: ' . $lidioErr->getMessage();
+            }
+            $health['db'] = ['connected' => true, 'tables' => $checks];
+        } catch (Throwable $e) {
+            $health['db'] = ['connected' => false, 'error' => $e->getMessage()];
+            $health['status'] = 'db_error';
+        }
+        sendResponse($health);
         break;
     default:
         sendResponse(['error' => 'API Endpoint not found: ' . $path], 404);

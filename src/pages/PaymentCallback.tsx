@@ -24,7 +24,9 @@ export default function PaymentCallback() {
                 const search = location.search || '';
                 const response = await api.get(`/payment/callback${search}`);
                 const status = String(response?.data?.status || '').toLowerCase();
-                const success = ['success', '3dsuccess', 'approved', 'completed'].includes(status);
+                // Backend "finalSuccess" döner: ilk callback başarılı + FinishPaymentProcess da başarılı
+                const finalSuccess = response?.data?.finalSuccess === true;
+                const success = finalSuccess || ['success', '3dsuccess', 'approved', 'completed'].includes(status);
 
                 if (!active) return;
                 if (success) {

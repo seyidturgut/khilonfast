@@ -13,7 +13,8 @@ if ($method === 'GET' && $action === 'slug' && !empty($id)) {
     $stmt->execute([$slug]);
     $page = $stmt->fetch();
     if (!$page) {
-        sendResponse(['error' => 'Page not found'], 404);
+        // CMS'de kayıt yoksa 404 yerine null content dön — frontend i18n fallback'e düşsün, konsol kirlenmesin
+        sendResponse(['content' => null]);
     }
 
     $stmt = $db->prepare(

@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import db from '../config/database.js';
 import authMiddleware, { optionalAuthMiddleware } from '../middleware/auth.js';
 import { sendWelcomeAccountEmail } from '../services/emailService.js';
+import { dispatchOrderEmails } from '../services/orderNotifications.js';
 
 const router = express.Router();
 
@@ -51,7 +52,7 @@ router.post('/',
 
             await connection.beginTransaction();
 
-            const { items, guest_email, guest_name, guest_phone } = req.body;
+            const { items, guest_email, guest_name, guest_phone, coupon_code } = req.body;
             let userId = req.user?.id || null;
             let authToken = null;
             let accountCreated = false;
@@ -104,9 +105,12 @@ router.post('/',
                 }
             }
 
-            // Calculate total amount
-            let totalAmount = 0;
+            // Calculate subtotal
+            let subtotal = 0;
+            let currency = 'TRY';
             const orderItems = [];
+            const productCategories = [];
+            const productIds = [];
 
             for (const item of items) {
                 let product;
@@ -131,7 +135,10 @@ router.post('/',
                 }
 
                 const itemTotal = parseFloat(product.price) * item.quantity;
-                totalAmount += itemTotal;
+                subtotal += itemTotal;
+                if (product.currency) currency = product.currency;
+                productCategories.push(product.category);
+                productIds.push(product.id);
 
                 orderItems.push({
                     product_id: product.id, // Use the actual DB product ID
@@ -141,13 +148,103 @@ router.post('/',
                 });
             }
 
+            // Validate coupon (server-side) and compute discount
+            let couponRow = null;
+            let discountAmount = 0;
+            let couponSnapshot = null;
+
+            if (coupon_code && String(coupon_code).trim()) {
+                const [couponRows] = await connection.query(
+                    'SELECT * FROM coupons WHERE code = ? LIMIT 1 FOR UPDATE',
+                    [String(coupon_code).trim().toUpperCase()]
+                );
+
+                if (couponRows.length === 0) {
+                    throw new Error('Kupon bulunamadı.');
+                }
+                const c = couponRows[0];
+                const now = new Date();
+
+                if (!c.is_active) throw new Error('Bu kupon artık aktif değil.');
+                if (c.starts_at && new Date(c.starts_at) > now) throw new Error('Bu kupon henüz geçerli değil.');
+                if (c.ends_at && new Date(c.ends_at) < now) throw new Error('Bu kuponun süresi dolmuş.');
+                if (c.total_usage_limit !== null && c.usage_count >= c.total_usage_limit) {
+                    throw new Error('Bu kuponun kullanım limiti dolmuş.');
+                }
+                if (c.minimum_cart_amount > 0 && subtotal < Number(c.minimum_cart_amount)) {
+                    throw new Error(`Bu kupon için minimum sepet tutarı ${c.minimum_cart_amount} ${currency}.`);
+                }
+                if (c.restricted_categories_json) {
+                    try {
+                        const allowed = typeof c.restricted_categories_json === 'string'
+                            ? JSON.parse(c.restricted_categories_json)
+                            : c.restricted_categories_json;
+                        if (Array.isArray(allowed) && allowed.length > 0) {
+                            const hasMatch = productCategories.some(cat => allowed.includes(cat));
+                            if (!hasMatch) throw new Error('Bu kupon sepetinizdeki ürünlere uygulanamaz.');
+                        }
+                    } catch (e) { if (e.message?.startsWith('Bu kupon')) throw e; }
+                }
+                if (c.restricted_products_json) {
+                    try {
+                        const allowed = typeof c.restricted_products_json === 'string'
+                            ? JSON.parse(c.restricted_products_json)
+                            : c.restricted_products_json;
+                        if (Array.isArray(allowed) && allowed.length > 0) {
+                            const hasMatch = productIds.some(id => allowed.includes(id));
+                            if (!hasMatch) throw new Error('Bu kupon sepetinizdeki ürünlere uygulanamaz.');
+                        }
+                    } catch (e) { if (e.message?.startsWith('Bu kupon')) throw e; }
+                }
+
+                if (c.discount_type === 'percentage') {
+                    discountAmount = (subtotal * Number(c.discount_value)) / 100;
+                    if (c.maximum_discount_amount !== null) {
+                        discountAmount = Math.min(discountAmount, Number(c.maximum_discount_amount));
+                    }
+                } else {
+                    discountAmount = Math.min(Number(c.discount_value), subtotal);
+                }
+                discountAmount = Math.round(discountAmount * 100) / 100;
+
+                couponRow = c;
+                couponSnapshot = {
+                    id: c.id,
+                    code: c.code,
+                    name: c.name,
+                    discount_type: c.discount_type,
+                    discount_value: Number(c.discount_value),
+                    maximum_discount_amount: c.maximum_discount_amount ? Number(c.maximum_discount_amount) : null,
+                    discount_applied: discountAmount
+                };
+            }
+
+            const totalAmount = Math.max(0, Math.round((subtotal - discountAmount) * 100) / 100);
+            const isFreeOrder = totalAmount <= 0;
+            const orderStatus = isFreeOrder ? 'completed' : 'pending';
+
             // Generate order number
             const orderNumber = `ORD-${Date.now()}-${userId}`;
 
-            // Create order
+            // Create order (with coupon + breakdown)
             const [orderResult] = await connection.query(
-                'INSERT INTO orders (user_id, order_number, total_amount, status) VALUES (?, ?, ?, ?)',
-                [userId, orderNumber, totalAmount, 'pending']
+                `INSERT INTO orders
+                    (user_id, order_number, subtotal_amount, coupon_discount_amount, total_amount,
+                     coupon_id, coupon_code, coupon_name, applied_coupon_snapshot_json, currency, status)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    userId,
+                    orderNumber,
+                    subtotal,
+                    discountAmount,
+                    totalAmount,
+                    couponRow ? couponRow.id : null,
+                    couponRow ? couponRow.code : null,
+                    couponRow ? couponRow.name : null,
+                    couponSnapshot ? JSON.stringify(couponSnapshot) : null,
+                    currency,
+                    orderStatus
+                ]
             );
 
             const orderId = orderResult.insertId;
@@ -160,16 +257,57 @@ router.post('/',
                 );
             }
 
+            // For free orders (100% coupon), increment coupon usage, create 0-amount payment AND subscriptions
+            if (isFreeOrder) {
+                if (couponRow) {
+                    await connection.query(
+                        'UPDATE coupons SET usage_count = usage_count + 1 WHERE id = ?',
+                        [couponRow.id]
+                    );
+                }
+                await connection.query(
+                    `INSERT INTO payments (order_id, payment_method, amount, currency, status, lidio_response)
+                     VALUES (?, ?, ?, ?, ?, ?)`,
+                    [orderId, 'coupon_free', 0, currency, 'completed', JSON.stringify({ free_order: true, coupon: couponSnapshot })]
+                );
+
+                // Ücretli siparişlerde subscription'ları payment.js callback'i oluşturuyor;
+                // ücretsiz siparişlerde gateway'e hiç gitmediğimiz için burada oluşturmalıyız.
+                // Aksi halde "Hesabım › İçeriklerim"de ürün görünmez ve eğitim erişimi açılmaz.
+                for (const item of orderItems) {
+                    const [exists] = await connection.query(
+                        'SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1',
+                        [userId, item.product_id, orderId]
+                    );
+                    if (exists.length === 0) {
+                        await connection.query(
+                            'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
+                            [userId, item.product_id, orderId, 'active']
+                        );
+                    }
+                }
+            }
+
             await connection.commit();
+
+            // Ücretsiz siparişlerde sipariş zaten "completed" — onay + admin mailini hemen tetikle
+            if (isFreeOrder) {
+                dispatchOrderEmails(orderId, { isNewCustomer: accountCreated })
+                    .catch(err => console.error('Free order mail dispatch error:', err.message));
+            }
 
             res.status(201).json({
                 message: 'Order created successfully',
                 order: {
                     id: orderId,
                     order_number: orderNumber,
+                    subtotal_amount: subtotal,
+                    coupon_discount_amount: discountAmount,
                     total_amount: totalAmount,
-                    status: 'pending'
+                    currency,
+                    status: orderStatus
                 },
+                payment_required: !isFreeOrder,
                 auth_token: authToken,
                 account: {
                     created: accountCreated,
@@ -190,12 +328,13 @@ router.post('/',
 router.get('/:id', authMiddleware, async (req, res) => {
     try {
         const [orders] = await db.query(
-            `SELECT o.*, 
+            `SELECT o.*,
                     GROUP_CONCAT(
                         JSON_OBJECT(
                             'id', oi.id,
                             'product_id', oi.product_id,
                             'product_name', p.name,
+                            'product_category', p.category,
                             'quantity', oi.quantity,
                             'unit_price', oi.unit_price,
                             'total_price', oi.total_price
@@ -232,12 +371,13 @@ router.get('/user/:userId', authMiddleware, async (req, res) => {
         }
 
         const [orders] = await db.query(
-            `SELECT o.*, 
+            `SELECT o.*,
                     GROUP_CONCAT(
                         JSON_OBJECT(
                             'id', oi.id,
                             'product_id', oi.product_id,
                             'product_name', p.name,
+                            'product_category', p.category,
                             'quantity', oi.quantity,
                             'unit_price', oi.unit_price,
                             'total_price', oi.total_price

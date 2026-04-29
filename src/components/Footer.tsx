@@ -16,7 +16,7 @@ export default function Footer() {
     return (
         <footer className="footer">
             <div className="footer-pattern-bg">
-                <img src="/footer-pattern.svg" alt="" className="footer-pattern" />
+                <img src="/footer-pattern.svg" alt="Khilonfast dekoratif arkaplan deseni" aria-hidden="true" className="footer-pattern" />
             </div>
 
             <div className="container footer-container">

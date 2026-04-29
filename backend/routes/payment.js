@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import db from '../config/database.js';
 import authMiddleware from '../middleware/auth.js';
 import lidioService from '../services/lidioService.js';
+import { dispatchOrderEmails } from '../services/orderNotifications.js';
 
 const router = express.Router();
 const paymentAttemptStore = new Map();
@@ -248,6 +249,54 @@ const resolveCallbackOrder = async (connection, orderNumber, merchantProcessId) 
 };
 
 // Initiate payment
+const maskCardNumber = (raw) => {
+    const digits = String(raw || '').replace(/\D/g, '');
+    if (digits.length < 8) return digits ? `**** **** **** ${digits.slice(-4)}` : '';
+    return `${digits.slice(0, 6)}******${digits.slice(-4)}`;
+};
+
+/**
+ * Yeni bir kayıtlı kart yazar ya da aynı token zaten varsa idempotent davranır.
+ * UNIQUE (user_id, lidio_token) olduğu için INSERT IGNORE kullanılır.
+ */
+const persistSavedCard = async (connection, data) => {
+    if (!data?.token || !data?.userId) return null;
+    const [existing] = await connection.query(
+        'SELECT id FROM user_cards WHERE user_id = ? AND lidio_token = ? LIMIT 1',
+        [data.userId, data.token]
+    );
+    if (existing.length) return existing[0].id;
+
+    const [result] = await connection.query(
+        `INSERT INTO user_cards
+            (user_id, lidio_token, masked_number, card_brand, expire_month, expire_year, card_holder_name, is_default)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+            data.userId,
+            data.token,
+            data.maskedNumber || '',
+            data.cardBrand || null,
+            data.expireMonth || 0,
+            data.expireYear || 0,
+            data.cardHolderName || null,
+            0
+        ]
+    );
+
+    // Eğer kullanıcının başka kartı yoksa bunu default yap
+    const [count] = await connection.query(
+        'SELECT COUNT(*) AS c FROM user_cards WHERE user_id = ? AND is_active = 1',
+        [data.userId]
+    );
+    if (Number(count[0]?.c || 0) === 1) {
+        await connection.query(
+            'UPDATE user_cards SET is_default = 1 WHERE id = ?',
+            [result.insertId]
+        );
+    }
+    return result.insertId;
+};
+
 router.post('/initiate',
     authMiddleware,
     [
@@ -258,7 +307,10 @@ router.post('/initiate',
         body('card_expire_year').optional().isInt(),
         body('card_cvv').optional().isString(),
         body('use_3ds').optional().isBoolean(),
-        body('use_hosted').optional().isBoolean()
+        body('use_hosted').optional().isBoolean(),
+        body('save_card').optional().isBoolean(),
+        body('saved_card_id').optional().isInt({ min: 1 }),
+        body('card_name_by_user').optional().isString()
     ],
     async (req, res) => {
         const connection = await db.getConnection();
@@ -277,7 +329,10 @@ router.post('/initiate',
                 card_expire_year,
                 card_cvv,
                 use_3ds = true,
-                use_hosted
+                use_hosted,
+                save_card = false,
+                saved_card_id = 0,
+                card_name_by_user
             } = req.body;
 
             const lidioRuntimeConfig = await getLidioRuntimeConfig(connection);
@@ -336,6 +391,24 @@ router.post('/initiate',
                 ['processing', order_id]
             );
 
+            // Kayıtlı kart kullanımı: token'ı user_cards'tan çek (sadece bu kullanıcıya ait)
+            let storedCardRow = null;
+            if (saved_card_id > 0) {
+                const [rows] = await connection.query(
+                    'SELECT * FROM user_cards WHERE id = ? AND user_id = ? AND is_active = 1 LIMIT 1',
+                    [saved_card_id, req.user.id]
+                );
+                if (!rows.length) {
+                    await connection.rollback();
+                    return res.status(404).json({ error: 'Kayıtlı kart bulunamadı.' });
+                }
+                if (!String(card_cvv || '').trim()) {
+                    await connection.rollback();
+                    return res.status(400).json({ error: 'Kayıtlı kart için CVV zorunludur.' });
+                }
+                storedCardRow = rows[0];
+            }
+
             // Prepare payment data
             const paymentData = {
                 orderId: `KHL${Date.now()}${order.id}`.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 20),
@@ -348,6 +421,10 @@ router.post('/initiate',
                 cardExpireMonth: card_expire_month,
                 cardExpireYear: card_expire_year,
                 cardCvv: card_cvv,
+                cardToken: storedCardRow?.lidio_token,
+                use3DSecure: lidioRuntimeConfig.force3ds ? true : !!use_3ds,
+                saveCardAfterSuccess: !storedCardRow && Boolean(save_card),
+                cardNamebyUser: card_name_by_user || undefined,
                 callbackUrl: `${process.env.FRONTEND_URL}/payment-callback`,
                 returnUrl: `${process.env.FRONTEND_URL}/payment-callback`,
                 notificationUrl: `${process.env.BACKEND_PUBLIC_URL || process.env.BACKEND_URL || 'http://localhost:3002'}/api/payment/callback`,
@@ -368,14 +445,16 @@ router.post('/initiate',
                 String(card_expire_year || '').trim() &&
                 String(card_cvv || '').trim()
             );
-            const effectiveUseHosted = hasCardInput
+            const effectiveUseHosted = (storedCardRow || hasCardInput)
                 ? false
                 : (typeof use_hosted === 'boolean' ? use_hosted : lidioRuntimeConfig.useHosted);
             const effectiveUse3ds = lidioRuntimeConfig.force3ds ? true : !!use_3ds;
 
             // Process payment
             let paymentResult;
-            if (effectiveUseHosted) {
+            if (storedCardRow) {
+                paymentResult = await lidioService.processStoredCardPayment(paymentData, lidioRuntimeConfig);
+            } else if (effectiveUseHosted) {
                 paymentResult = await lidioService.startHostedPaymentProcess(paymentData, lidioRuntimeConfig);
             } else if (effectiveUse3ds) {
                 paymentResult = await lidioService.process3DSPayment(paymentData, lidioRuntimeConfig);
@@ -421,21 +500,47 @@ router.post('/initiate',
                     ['success', order_id]
                 );
 
-                // Create subscriptions for each product
+                // Create subscriptions for each product (idempotent)
                 const [orderItems] = await connection.query(
                     'SELECT * FROM order_items WHERE order_id = ?',
                     [order_id]
                 );
 
                 for (const item of orderItems) {
-                    await connection.query(
-                        'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
-                        [req.user.id, item.product_id, order_id, 'active']
+                    const [exists] = await connection.query(
+                        'SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1',
+                        [req.user.id, item.product_id, order_id]
                     );
+                    if (exists.length === 0) {
+                        await connection.query(
+                            'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
+                            [req.user.id, item.product_id, order_id, 'active']
+                        );
+                    }
+                }
+
+                // Yeni kart + "kartımı sakla" işaretliyse Lidio cevabındaki token'ı user_cards'a yaz
+                if (paymentData.saveCardAfterSuccess && paymentResult.cardToken) {
+                    await persistSavedCard(connection, {
+                        userId: req.user.id,
+                        token: paymentResult.cardToken,
+                        maskedNumber: paymentResult.maskedCardNumber || maskCardNumber(card_number),
+                        cardBrand: paymentResult.cardBrand,
+                        cardHolderName: card_holder_name,
+                        expireMonth: Number(card_expire_month),
+                        expireYear: Number(card_expire_year)
+                    });
                 }
             }
 
             await connection.commit();
+
+            // Direkt başarılı (3DS gerekmedi) ödemelerde sipariş onay + admin bildirim maili
+            if (paymentResult.success && !paymentResult.requires3DS) {
+                dispatchOrderEmails(order_id).catch(err =>
+                    console.error('Order mail dispatch (initiate) error:', err.message));
+            }
+
             registerPaymentAttempt(rateKey);
 
             res.json({
@@ -497,14 +602,61 @@ const handleCallback = async (req, res) => {
 
         const order = orders[0];
 
+        // İdempotency: Lidio aynı ödeme için 2 callback gönderebilir
+        //   1) Senkron: kullanıcı browser ReturnURL'e döndüğünde (frontend → /api/payment/callback)
+        //   2) Asenkron: Lidio sahtecilik kontrolü/POS notification webhook'u (server-to-server)
+        // Sipariş zaten "completed" ise tekrar FinishPaymentProcess çağırma, subscription INSERT etme,
+        // mail tekrar gönderme — sadece OK dön.
+        if (order.status === 'completed') {
+            await connection.commit();
+            return res.json({
+                message: 'Payment already finalized (idempotent return)',
+                status: 'success',
+                transactionId,
+                finalSuccess: true,
+                alreadyProcessed: true
+            });
+        }
+
+        // Lidio'nun iki aşamalı akışında (3DS, Anında Havale, BkmExpress…) callback geldiğinde
+        // ilk aşama "ön yetkilendirme" gibi düşünülmeli — finansallaşması için FinishPaymentProcess
+        // çağrılmalı. Başarılı dönüşse bu adımı uygula; cevabı ana lidio_response'a birleştir.
+        let finishResponse = null;
+        let combinedLidioResponse = { ...payload };
+        if (isSuccessStatus && transactionId) {
+            try {
+                finishResponse = await lidioService.finishPaymentProcess(
+                    { transactionId, merchantProcessId: merchantProcessId || String(order.id) },
+                    lidioRuntimeConfig
+                );
+                combinedLidioResponse = {
+                    initial: payload,
+                    finishPaymentProcess: finishResponse
+                };
+            } catch (finishErr) {
+                console.error('[payment:callback] FinishPaymentProcess failed:', finishErr.message);
+                // Finalize edilemediyse "pending" bırakıp manuel müdahaleye düş
+                combinedLidioResponse = {
+                    initial: payload,
+                    finishError: finishErr.message
+                };
+            }
+        }
+
+        const finalSuccess = isSuccessStatus && (!finishResponse || finishResponse.success !== false);
+
         // Update payment status
         await connection.query(
             'UPDATE payments SET status = ?, lidio_response = ? WHERE order_id = ?',
-            [isSuccessStatus ? 'success' : 'failed', JSON.stringify(payload), order.id]
+            [
+                finalSuccess ? 'success' : (isSuccessStatus ? 'pending' : 'failed'),
+                JSON.stringify(combinedLidioResponse),
+                order.id
+            ]
         );
 
         // Update order status
-        if (isSuccessStatus) {
+        if (finalSuccess) {
             await connection.query(
                 'UPDATE orders SET status = ? WHERE id = ?',
                 ['completed', order.id]
@@ -516,22 +668,51 @@ const handleCallback = async (req, res) => {
                 [order.id]
             );
 
+            // Idempotent INSERT: aynı (user_id, product_id, order_id) zaten varsa atlama
             for (const item of orderItems) {
-                await connection.query(
-                    'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
-                    [order.user_id, item.product_id, order.id, 'active']
+                const [existing] = await connection.query(
+                    'SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1',
+                    [order.user_id, item.product_id, order.id]
                 );
+                if (existing.length === 0) {
+                    await connection.query(
+                        'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
+                        [order.user_id, item.product_id, order.id, 'active']
+                    );
+                }
+            }
+
+            // 3DS sonrası "kartımı sakla" işaretliyse Lidio finishResponse içinde token döner
+            const savedToken = finishResponse?.cardToken
+                || valueFromPayload(payload, 'cardToken')
+                || payload.savedCardToken;
+            if (savedToken) {
+                await persistSavedCard(connection, {
+                    userId: order.user_id,
+                    token: savedToken,
+                    maskedNumber: finishResponse?.maskedCardNumber || valueFromPayload(payload, 'maskedCardNumber') || '',
+                    cardBrand: finishResponse?.cardBrand || valueFromPayload(payload, 'cardBrand') || null,
+                    cardHolderName: valueFromPayload(payload, 'cardHolderName') || null,
+                    expireMonth: Number(valueFromPayload(payload, 'cardMonth') || valueFromPayload(payload, 'expireMonth') || 0),
+                    expireYear: Number(valueFromPayload(payload, 'cardYear') || valueFromPayload(payload, 'expireYear') || 0)
+                });
             }
         } else {
             await connection.query(
                 'UPDATE orders SET status = ? WHERE id = ?',
-                ['failed', order.id]
+                [isSuccessStatus ? 'processing' : 'failed', order.id]
             );
         }
 
         await connection.commit();
 
-        res.json({ message: 'Payment callback processed', status, transactionId });
+        // Yalnızca son success durumunda mail at
+        if (finalSuccess) {
+            dispatchOrderEmails(order.id).catch(err =>
+                console.error('Order mail dispatch (callback) error:', err.message));
+        }
+
+        res.json({ message: 'Payment callback processed', status, transactionId, finalSuccess });
     } catch (error) {
         await connection.rollback();
         console.error('Payment callback error:', error);
@@ -566,5 +747,220 @@ router.get('/status/:orderId', authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// ──────────────────────────────────────────────────
+// Saved Cards (Kart Saklama) — listele, sil, default yap
+// ──────────────────────────────────────────────────
+
+router.get('/cards', authMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT id, masked_number, card_brand, expire_month, expire_year,
+                    card_holder_name, is_default, created_at
+             FROM user_cards
+             WHERE user_id = ? AND is_active = 1
+             ORDER BY is_default DESC, created_at DESC`,
+            [req.user.id]
+        );
+        res.json({ cards: rows });
+    } catch (error) {
+        console.error('Get saved cards error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.delete('/cards/:id', authMiddleware, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            'SELECT id, is_default FROM user_cards WHERE id = ? AND user_id = ? LIMIT 1',
+            [req.params.id, req.user.id]
+        );
+        if (!rows.length) return res.status(404).json({ error: 'Kart bulunamadı.' });
+
+        // Soft delete: ileride Lidio kayıt kaybolmasın diye is_active=0
+        await db.query('UPDATE user_cards SET is_active = 0, is_default = 0 WHERE id = ?', [req.params.id]);
+
+        // Silinen default ise başka aktif bir kartı default yap
+        if (rows[0].is_default) {
+            const [next] = await db.query(
+                'SELECT id FROM user_cards WHERE user_id = ? AND is_active = 1 ORDER BY created_at DESC LIMIT 1',
+                [req.user.id]
+            );
+            if (next.length) {
+                await db.query('UPDATE user_cards SET is_default = 1 WHERE id = ?', [next[0].id]);
+            }
+        }
+        res.json({ message: 'Kart silindi.' });
+    } catch (error) {
+        console.error('Delete saved card error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.patch('/cards/:id/default', authMiddleware, async (req, res) => {
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+        const [rows] = await connection.query(
+            'SELECT id FROM user_cards WHERE id = ? AND user_id = ? AND is_active = 1 LIMIT 1',
+            [req.params.id, req.user.id]
+        );
+        if (!rows.length) {
+            await connection.rollback();
+            return res.status(404).json({ error: 'Kart bulunamadı.' });
+        }
+        await connection.query('UPDATE user_cards SET is_default = 0 WHERE user_id = ?', [req.user.id]);
+        await connection.query('UPDATE user_cards SET is_default = 1 WHERE id = ?', [req.params.id]);
+        await connection.commit();
+        res.json({ message: 'Varsayılan kart güncellendi.' });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Set default card error:', error);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        connection.release();
+    }
+});
+
+// ──────────────────────────────────────────────────
+// Bank Accounts — Anında Havale için kullanılabilir bankalar
+// ──────────────────────────────────────────────────
+
+router.get('/bank-accounts', async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT id, lidio_bank_account_id, bank_name, bank_code, logo_url
+             FROM bank_accounts
+             WHERE is_active = 1
+             ORDER BY display_order ASC, bank_name ASC`
+        );
+        res.json({ banks: rows });
+    } catch (error) {
+        console.error('Get bank accounts error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ──────────────────────────────────────────────────
+// Anında Havale (DirectWireTransfer) başlatma
+// İki aşamalı: ProcessPayment → bank redirect → return → FinishPaymentProcess
+// ──────────────────────────────────────────────────
+
+router.post('/bank-transfer',
+    authMiddleware,
+    [
+        body('order_id').isInt().withMessage('Valid order ID required'),
+        body('bank_account_id').optional().isInt({ min: 1 })
+    ],
+    async (req, res) => {
+        const connection = await db.getConnection();
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
+            const { order_id, bank_account_id } = req.body;
+            const lidioRuntimeConfig = await getLidioRuntimeConfig(connection);
+            const ip = getClientIp(req);
+            const rateKey = `${req.user.id}:${ip}`;
+
+            if (isRateLimited(rateKey, lidioRuntimeConfig.rateLimitWindowSeconds, lidioRuntimeConfig.rateLimitMaxAttempts)) {
+                return res.status(429).json({ error: 'Çok fazla ödeme denemesi. Lütfen daha sonra tekrar deneyin.' });
+            }
+
+            const [orders] = await connection.query(
+                'SELECT * FROM orders WHERE id = ? AND user_id = ?',
+                [order_id, req.user.id]
+            );
+            if (!orders.length) return res.status(404).json({ error: 'Order not found' });
+
+            const order = orders[0];
+            const orderAmount = parseFloat(order.total_amount || 0);
+            if (orderAmount <= 0) return res.status(400).json({ error: 'Bu sipariş için ödeme gerekmiyor.' });
+            if (order.status === 'completed') return res.status(400).json({ error: 'Order already completed' });
+
+            // Banka hesabı kontrolü — admin tanımlamamışsa Anında Havale kapalı sayılır
+            let bankAccountLidioId = null;
+            if (bank_account_id) {
+                const [bankRows] = await connection.query(
+                    'SELECT lidio_bank_account_id FROM bank_accounts WHERE id = ? AND is_active = 1 LIMIT 1',
+                    [bank_account_id]
+                );
+                if (!bankRows.length) return res.status(400).json({ error: 'Geçersiz banka.' });
+                bankAccountLidioId = bankRows[0].lidio_bank_account_id;
+            } else {
+                // Default bank account (admin tek banka tanımlamışsa otomatik)
+                const [defaultBank] = await connection.query(
+                    'SELECT lidio_bank_account_id FROM bank_accounts WHERE is_active = 1 ORDER BY display_order ASC LIMIT 1'
+                );
+                if (!defaultBank.length) {
+                    return res.status(503).json({ error: 'Anında Havale şu anda kullanılamıyor. Lütfen kart ile ödeme yapın.' });
+                }
+                bankAccountLidioId = defaultBank[0].lidio_bank_account_id;
+            }
+
+            const [users] = await connection.query(
+                'SELECT id, email, first_name, last_name, phone FROM users WHERE id = ? LIMIT 1',
+                [req.user.id]
+            );
+            const user = users[0];
+
+            await connection.beginTransaction();
+            await connection.query('UPDATE orders SET status = ? WHERE id = ?', ['processing', order_id]);
+
+            const paymentData = {
+                orderId: `KHL${Date.now()}${order.id}`.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 20),
+                merchantProcessId: String(order.id),
+                amount: orderAmount,
+                currency: order.currency,
+                bankAccountId: bankAccountLidioId,
+                callbackUrl: `${process.env.FRONTEND_URL}/payment-callback`,
+                returnUrl: `${process.env.FRONTEND_URL}/payment-callback`,
+                notificationUrl: `${process.env.BACKEND_PUBLIC_URL || process.env.BACKEND_URL || 'http://localhost:3002'}/api/payment/callback`,
+                customerInfo: {
+                    customerId: String(req.user.id),
+                    customerName: user?.first_name || 'Customer',
+                    customerSurname: user?.last_name || 'User',
+                    customerEmail: user?.email || req.user.email || '',
+                    customerPhoneNumber: normalizePhone(user?.phone),
+                    customerIpAddress: ip
+                }
+            };
+
+            const result = await lidioService.processDirectWireTransfer(paymentData, lidioRuntimeConfig);
+
+            await connection.query(
+                'INSERT INTO payments (order_id, payment_method, lidio_transaction_id, amount, currency, status, lidio_response) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    order_id,
+                    'wire_transfer',
+                    result.transactionId || null,
+                    orderAmount,
+                    order.currency,
+                    'pending',
+                    JSON.stringify(result)
+                ]
+            );
+
+            await connection.commit();
+            registerPaymentAttempt(rateKey);
+
+            res.json({
+                message: 'Wire transfer initiated',
+                redirect_url: result.redirectUrl || null,
+                redirect_form: result.redirectForm || null,
+                redirect_form_params: result.redirectFormParams || null,
+                transaction_id: result.transactionId || null
+            });
+        } catch (error) {
+            await connection.rollback().catch(() => {});
+            console.error('Bank transfer error:', error);
+            res.status(500).json({ error: error.message || 'Server error' });
+        } finally {
+            connection.release();
+        }
+    }
+);
 
 export default router;

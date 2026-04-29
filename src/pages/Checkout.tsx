@@ -44,7 +44,7 @@ export default function Checkout() {
     const useHostedPayment = false;
     const API_BASE = API_BASE_URL;
     const { user, isAuthenticated, activateToken } = useAuth();
-    const { items, clearCart } = useCart();
+    const { items, clearCart, refreshPrices } = useCart();
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as { email?: string; name?: string; country?: string } | null;
@@ -56,6 +56,7 @@ export default function Checkout() {
     const cookiePolicyPath = getLocalizedPathByKey(currentLang, 'cookiePolicy');
     const termsPath = getLocalizedPathByKey(currentLang, 'termsOfService');
     const refundPath = getLocalizedPathByKey(currentLang, 'refundPolicy');
+    const onboardingFormPath = getLocalizedPathByKey(currentLang, 'onboardingForm');
     const termsContentRef = useRef<HTMLDivElement | null>(null);
     const legalCopy = checkoutLegalContent[currentLang];
 
@@ -82,11 +83,12 @@ export default function Checkout() {
     const [cardExpireYear, setCardExpireYear] = useState('');
     const [cardCvv, setCardCvv] = useState('');
     const hasSubscription = useMemo(() => items.some(i => (i.duration_days ?? 0) > 0), [items]);
-    const [saveCard, setSaveCard] = useState(() => items.some(i => (i.duration_days ?? 0) > 0));
     const [savedCards, setSavedCards] = useState<SavedCard[]>([]);
     const [selectedCardId, setSelectedCardId] = useState<number>(0); // 0 = yeni kart
     const [paymentMethod, setPaymentMethod] = useState<'card' | 'wire_transfer'>('card');
     const [wireTransferResult, setWireTransferResult] = useState<any>(null);
+    const [bankAccounts, setBankAccounts] = useState<Array<{ id: number; bank_name: string; bank_code: string | null; logo_url: string | null }>>([]);
+    const [selectedBankId, setSelectedBankId] = useState<number>(0);
     const [couponCode, setCouponCode] = useState('');
     const [couponLoading, setCouponLoading] = useState(false);
     const [pricingSummary, setPricingSummary] = useState<CheckoutPricingSummary | null>(null);
@@ -190,7 +192,7 @@ export default function Checkout() {
             tabCard: isEn ? 'Credit / Debit Card' : 'Kredi / Banka Kartı',
             tabWire: isEn ? 'Instant Wire Transfer' : 'Anında Havale',
             wireDesc: isEn ? 'You will be redirected to your bank\'s portal to complete the transfer instantly.' : 'Anında ödeme için bankanızın internet bankacılığı portalına yönlendirileceksiniz.',
-            saveCard: isEn ? 'Save card for future payments' : 'Kartımı sonraki ödemeler için kaydet',
+            saveCard: isEn ? 'Your card will be securely saved for recurring payments.' : 'Aylık ödemeler için kartınız güvenli şekilde kaydedilecektir.',
             savedCards: isEn ? 'Your saved cards' : 'Kayıtlı kartlarım',
             newCard: isEn ? 'Pay with a new card' : 'Yeni kart ile öde',
             wireSuccess: isEn ? 'Wire transfer initiated! You are being redirected to your bank.' : 'Anında Havale başlatıldı! Bankanıza yönlendiriliyorsunuz.'
@@ -272,9 +274,30 @@ export default function Checkout() {
     useEffect(() => {
         if (!isAuthenticated) return;
         paymentAPI.getSavedCards()
-            .then(res => setSavedCards(Array.isArray(res.data) ? res.data : []))
+            .then(res => {
+                const list = Array.isArray(res.data?.cards) ? res.data.cards : (Array.isArray(res.data) ? res.data : []);
+                setSavedCards(list);
+            })
             .catch(() => setSavedCards([]));
     }, [isAuthenticated]);
+
+    // Checkout'a giriş anında sepetteki ürün fiyatlarını backend'den taze çek
+    // (admin son dakikada fiyat değiştirmiş olabilir).
+    useEffect(() => {
+        refreshPrices();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Anında Havale için banka listesi (auth gerektirmez, public endpoint)
+    useEffect(() => {
+        paymentAPI.getBankAccounts()
+            .then(res => {
+                const list = Array.isArray(res.data?.banks) ? res.data.banks : [];
+                setBankAccounts(list);
+                if (list.length === 1) setSelectedBankId(list[0].id);
+            })
+            .catch(() => setBankAccounts([]));
+    }, []);
 
     // Exit intent: 45 saniye hareketsizlikte popup göster (session başına 1 kez)
     useEffect(() => {
@@ -459,12 +482,34 @@ export default function Checkout() {
             const guestAuthToken = orderResponse.data.auth_token;
             if (guestAuthToken) await activateToken(guestAuthToken);
 
-            const result = await paymentAPI.bankTransfer({ order_id: order.id });
+            const result = await paymentAPI.bankTransfer({
+                order_id: order.id,
+                bank_account_id: selectedBankId || undefined
+            });
             const data = result.data;
 
+            // Lidio iki aşamalı flow: önce redirect_url veya redirect_form_params dönerse
+            // kullanıcı bankaya yönlendirilir; bankadan dönüşte /payment/callback finalize eder.
             if (data.redirect_url) {
                 setWireTransferResult(data);
                 setTimeout(() => { window.location.href = data.redirect_url; }, 1500);
+            } else if (data.redirect_form_params?.action) {
+                // POST form-based redirect (Lidio bazı bankalar için form gönderiyor)
+                const fp = data.redirect_form_params;
+                const form = document.createElement('form');
+                form.method = String(fp.method || 'POST').toUpperCase() === 'GET' ? 'GET' : 'POST';
+                form.action = String(fp.action);
+                form.style.display = 'none';
+                Object.entries(fp.params || fp.fields || fp.data || {}).forEach(([k, v]) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = k;
+                    input.value = String(v ?? '');
+                    form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
+                return;
             } else {
                 setWireTransferResult(data);
                 clearCart();
@@ -505,6 +550,7 @@ export default function Checkout() {
             const order = orderResponse.data.order;
             const guestAuthToken = orderResponse.data.auth_token;
             const activeToken = guestAuthToken || localStorage.getItem('token');
+            const paymentRequired = orderResponse.data.payment_required !== false;
 
             if (guestAuthToken) {
                 await activateToken(guestAuthToken);
@@ -530,6 +576,23 @@ export default function Checkout() {
                 }
             }
 
+            // Free order (e.g. 100% discount coupon): skip payment gateway
+            if (!paymentRequired) {
+                setSuccess(true);
+                const needsOnboarding = items.some(i => i.category === 'hizmetler' || i.category === 'sektorler');
+                clearCart();
+                setTimeout(() => {
+                    if (user?.must_change_password) {
+                        navigate(isEn ? '/en/set-password' : '/sifre-belirle');
+                    } else if (needsOnboarding) {
+                        navigate(`${onboardingFormPath}?order_id=${order.id}`);
+                    } else {
+                        navigate(`${dashboardPath}?tab=orders&success=true`);
+                    }
+                }, 1500);
+                return;
+            }
+
             // Initiate payment
             const paymentPayload: Record<string, any> = {
                 order_id: order.id,
@@ -548,7 +611,7 @@ export default function Checkout() {
                     return Number(year.length === 2 ? `20${year}` : year);
                 })();
                 paymentPayload.card_cvv = cardCvv.replace(/\D/g, '');
-                if (saveCard && isAuthenticated) paymentPayload.save_card = true;
+                if (hasSubscription) paymentPayload.save_card = true;
             }
 
             const paymentResponse = await paymentAPI.initiate(paymentPayload);
@@ -616,12 +679,14 @@ export default function Checkout() {
 
             if (payment.success) {
                 setSuccess(true);
+                const needsOnboarding = items.some(i => i.category === 'hizmetler' || i.category === 'sektorler');
                 clearCart();
 
                 setTimeout(() => {
-                    // Guest satın alım → şifre belirlenmesi gerekiyor
                     if (user?.must_change_password) {
                         navigate(isEn ? '/en/set-password' : '/sifre-belirle');
+                    } else if (needsOnboarding) {
+                        navigate(`${onboardingFormPath}?order_id=${order.id}`);
                     } else {
                         navigate(`${dashboardPath}?tab=orders&success=true`);
                     }
@@ -887,14 +952,6 @@ export default function Checkout() {
                                 <HiCreditCard /> {copy.payment.title}
                             </h2>
 
-                            <div className="payment-method-box">
-                                <HiShieldCheck />
-                                <div>
-                                    <strong>{copy.payment.providerTitle}</strong>
-                                    <p>{copy.payment.providerDescription}</p>
-                                </div>
-                            </div>
-
                             {/* Ödeme Yöntemi Sekmeleri */}
                             <div className="payment-tabs">
                                 <button
@@ -929,6 +986,44 @@ export default function Checkout() {
                                             <p style={{ margin: '0.5rem 0 0', color: '#6b7280', fontSize: '0.9rem' }}>
                                                 {copy.payment.wireDesc}
                                             </p>
+
+                                            {bankAccounts.length === 0 && (
+                                                <p style={{ margin: '0.75rem 0 0', color: '#dc2626', fontSize: '0.85rem' }}>
+                                                    {isEn ? 'No banks available right now. Please pay by card.' : 'Şu anda banka tanımlı değil. Lütfen kart ile ödeyin.'}
+                                                </p>
+                                            )}
+
+                                            {bankAccounts.length > 1 && (
+                                                <div style={{ marginTop: '1rem', width: '100%', display: 'grid', gap: '0.5rem' }}>
+                                                    <label style={{ fontSize: '0.85rem', color: '#374151', fontWeight: 600 }}>
+                                                        {isEn ? 'Select your bank' : 'Bankanızı seçin'}
+                                                    </label>
+                                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.5rem' }}>
+                                                        {bankAccounts.map(bank => (
+                                                            <button
+                                                                key={bank.id}
+                                                                type="button"
+                                                                onClick={() => setSelectedBankId(bank.id)}
+                                                                style={{
+                                                                    padding: '0.75rem',
+                                                                    border: `2px solid ${selectedBankId === bank.id ? '#2563eb' : '#e5e7eb'}`,
+                                                                    borderRadius: '8px',
+                                                                    background: selectedBankId === bank.id ? '#eff6ff' : '#fff',
+                                                                    cursor: 'pointer',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    gap: '0.5rem',
+                                                                    fontSize: '0.85rem'
+                                                                }}
+                                                            >
+                                                                {bank.logo_url && <img src={bank.logo_url} alt={bank.bank_name} style={{ height: '24px' }} />}
+                                                                <span>{bank.bank_name}</span>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
@@ -951,7 +1046,11 @@ export default function Checkout() {
 
                                     {!wireTransferResult && (
                                         <form onSubmit={handleBankTransfer} className="payment-form">
-                                            <button type="submit" className="btn-pay" disabled={loading}>
+                                            <button
+                                                type="submit"
+                                                className="btn-pay"
+                                                disabled={loading || bankAccounts.length === 0 || (bankAccounts.length > 1 && !selectedBankId)}
+                                            >
                                                 {loading ? copy.buttons.processing : (isEn ? 'Pay via Wire Transfer' : 'Havale ile Öde')}
                                             </button>
                                         </form>
@@ -1017,20 +1116,12 @@ export default function Checkout() {
                                                 <label>CVV</label>
                                                 <input className="form-control" type="password" value={cardCvv} onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder="123" inputMode="numeric" autoComplete="cc-csc" />
                                             </div>
-                                            {isAuthenticated && (
+                                            {hasSubscription && (
                                                 <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                                                    <label className="checkbox-row" style={{ marginTop: '0.5rem' }}>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={saveCard}
-                                                            disabled={hasSubscription}
-                                                            onChange={(e) => setSaveCard(e.target.checked)}
-                                                        />
-                                                        <span>
-                                                            {copy.payment.saveCard}
-                                                            {hasSubscription && <span style={{ color: '#64748b', fontSize: '0.82rem', marginLeft: '0.4rem' }}>{isEn ? '(required for subscription)' : '(abonelik için zorunlu)'}</span>}
-                                                        </span>
-                                                    </label>
+                                                    <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                                        <HiShieldCheck style={{ flexShrink: 0 }} />
+                                                        {copy.payment.saveCard}
+                                                    </p>
                                                 </div>
                                             )}
                                         </div>

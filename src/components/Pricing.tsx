@@ -12,7 +12,7 @@ export default function Pricing({ tx }: { tx?: (key: string) => string }) {
     return (
         <section id="pricing" className="pricing">
             <div className="pricing-background">
-                <img src="/oval-top.png" alt="" className="oval-pattern" />
+                <img src="/oval-top.png" alt="Khilonfast dekoratif oval desen" aria-hidden="true" className="oval-pattern" />
             </div>
 
             <div className="container pricing-container">

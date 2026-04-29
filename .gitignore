@@ -114,3 +114,18 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude Code worktrees ve session datası
+.claude/worktrees/
+.claude/
+
+# Deploy zip arşivleri (binary, repo'da tutmaya gerek yok)
+*.zip
+khilonfastnisan2026/
+
+# Lokal yedekler
+*.bak

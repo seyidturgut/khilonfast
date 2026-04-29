@@ -18,8 +18,11 @@ router.get('/contents', authMiddleware, async (req, res) => {
                 p.id AS product_id,
                 p.product_key,
                 p.name,
+                p.name_en,
                 p.description,
+                p.description_en,
                 p.features,
+                p.features_en,
                 p.type,
                 p.category,
                 p.access_content_url,
@@ -36,7 +39,15 @@ router.get('/contents', authMiddleware, async (req, res) => {
             [req.user.id]
         );
 
-        res.json({ contents: rows });
+        // product_key başına bir kayıt — duplicate subscription'ları gizle
+        const seen = new Set();
+        const unique = rows.filter(r => {
+            if (seen.has(r.product_key)) return false;
+            seen.add(r.product_key);
+            return true;
+        });
+
+        res.json({ contents: unique });
     } catch (error) {
         console.error('Contents fetch error:', error);
         res.status(500).json({ error: 'Server error' });

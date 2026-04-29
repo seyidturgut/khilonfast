@@ -1,6 +1,7 @@
 import { useState, ReactNode, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
 import { useCart } from '../../context/CartContext'
@@ -9,6 +10,7 @@ import { HiCheck } from 'react-icons/hi2'
 import './SectoralSolutionTemplate.css'
 import { resolveLocaleFromPath } from '../../utils/locale'
 import { API_BASE_URL } from '../../config/api'
+import EditableMedia from '../../components/cms/EditableMedia'
 
 const API_BASE = API_BASE_URL;
 
@@ -75,8 +77,8 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
     const { i18n, t } = useTranslation('common');
     const location = useLocation();
     const currentLang = resolveLocaleFromPath(location.pathname);
-    const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
-    const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
+    const { user } = useAuth();
+    const canShowCms = user?.role === 'admin';
     const cmsSlug = location.pathname
         .replace(/^\/en(\/|$)/, '')
         .replace(/^\/+/, '')
@@ -85,6 +87,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
     const { addToCart } = useCart();
     const [dynamicPackages, setDynamicPackages] = useState<any[]>([]);
     const [dynamicHero, setDynamicHero] = useState(props.hero);
+    const [cmsOpen, setCmsOpen] = useState(false);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
     const [cmsContent, setCmsContent] = useState<any | null>(null);
@@ -325,7 +328,8 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
             name: pkg.fullName || pkg.name,
             description: pkg.description,
             price: priceNum,
-            currency: pkg.price.includes('$') ? 'USD' : 'TRY'
+            currency: pkg.price.includes('$') ? 'USD' : 'TRY',
+            category: 'sektorler'
         });
         window.dispatchEvent(new Event('khilon:open-cart'));
     };
@@ -602,7 +606,9 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                                         allowFullScreen
                                     />
                                 ) : (
-                                    <img src={displayHero.image} alt={displayHero.title} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />
+                                    <EditableMedia pageSlug={cmsSlug} fieldKey="heroImage" type="image" src={displayHero.image} currentLang={currentLang}>
+                                        {(src) => <img src={src} alt={displayHero.title} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />}
+                                    </EditableMedia>
                                 )}
                                 {!displayHero.hideBadge && (
                                     <div className="circular-badge">
@@ -633,20 +639,24 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                             <h2 className="showcase-title">{displayVideoShowcase.title}</h2>
                             <p className="showcase-description">{displayVideoShowcase.description}</p>
                         </div>
-                        <div className="showcase-video">
-                            <div className="video-glass-wrapper">
-                                <div className="video-container">
-                                    <iframe
-                                        src={displayVideoShowcase.vimeoUrl}
-                                        title="Showcase Video"
-                                        width="100%"
-                                        height="100%"
-                                        className="video-iframe"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
-                                </div>
-                            </div>
+                        <div className="showcase-video" style={{ position: 'relative' }}>
+                            <EditableMedia pageSlug={cmsSlug} fieldKey="videoShowcaseUrl" type="video" src={displayVideoShowcase.vimeoUrl} currentLang={currentLang}>
+                                {(src) => (
+                                    <div className="video-glass-wrapper">
+                                        <div className="video-container">
+                                            <iframe
+                                                src={src}
+                                                title="Showcase Video"
+                                                width="100%"
+                                                height="100%"
+                                                className="video-iframe"
+                                                allow="autoplay; fullscreen; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </div>
+                                    </div>
+                                )}
+                            </EditableMedia>
                         </div>
                     </div>
                 </div>
@@ -768,7 +778,15 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                 </section>
             )}
 
-            {canShowCms && (
+            {canShowCms && !cmsOpen && (
+                <button
+                    onClick={() => setCmsOpen(true)}
+                    style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999, background: '#0f172a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 13, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0,0,0,0.25)' }}
+                >
+                    ✏️ Düzenle
+                </button>
+            )}
+            {canShowCms && cmsOpen && (
                 <div style={{
                     position: 'fixed',
                     top: 90,
@@ -783,8 +801,9 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                     zIndex: 9999,
                     padding: 14
                 }}>
-                    <div style={{ fontWeight: 800, marginBottom: 10, color: '#0f172a' }}>
-                        CMS Editor ({currentLang.toUpperCase()})
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <div style={{ fontWeight: 800, color: '#0f172a' }}>CMS Editor ({currentLang.toUpperCase()})</div>
+                        <button onClick={() => setCmsOpen(false)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#64748b', lineHeight: 1 }}>✕</button>
                     </div>
                     <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
                         {([

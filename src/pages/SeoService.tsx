@@ -114,7 +114,7 @@ export default function SeoService() {
                 {
                     stepNumber: 2,
                     title: 'Yetkilendir',
-                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
                     icon: <HiKey />
                 },
                 {
@@ -382,7 +382,7 @@ export default function SeoService() {
                 {
                     stepNumber: 2,
                     title: 'Yetkilendir',
-                    description: <p>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></p>,
+                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
                     icon: <HiKey />
                 },
                 {

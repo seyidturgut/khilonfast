@@ -4,9 +4,9 @@ require_once __DIR__ . '/../services/LidioService.php';
 require_once __DIR__ . '/../services/CouponService.php';
 
 $db = Database::getInstance();
-ensureMustChangePasswordColumn($db);
-ensureCouponSchema($db);
-ensureUserCardsSchema($db);
+try { ensureMustChangePasswordColumn($db); } catch (Throwable $e) { error_log('ensureMustChangePasswordColumn: ' . $e->getMessage()); }
+try { ensureCouponSchema($db); } catch (Throwable $e) { error_log('ensureCouponSchema: ' . $e->getMessage()); }
+try { ensureUserCardsSchema($db); } catch (Throwable $e) { error_log('ensureUserCardsSchema: ' . $e->getMessage()); }
 $lidio = new LidioService($db);
 
 function ensureUserCardsSchema(PDO $db)
@@ -196,6 +196,32 @@ if ($action === 'initiate' && $method === 'POST') {
     $user = $stmt->fetch();
     if (!$user) {
         sendResponse(['error' => 'User not found'], 404);
+    }
+
+    // %100 kupon veya ücretsiz sipariş — Lidio'ya gitme, direkt tamamla
+    if ((float)$order['total_amount'] == 0) {
+        try {
+            $db->beginTransaction();
+            $db->prepare("UPDATE orders SET status = 'completed' WHERE id = ?")->execute([$orderId]);
+            $itemsStmt = $db->prepare(
+                "SELECT oi.product_id, p.duration_days FROM order_items oi
+                 LEFT JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?"
+            );
+            $itemsStmt->execute([$orderId]);
+            foreach ($itemsStmt->fetchAll() as $item) {
+                $days = (int)($item['duration_days'] ?? 365);
+                $db->prepare(
+                    "INSERT INTO subscriptions (user_id, product_id, order_id, status, starts_at, expires_at)
+                     VALUES (?, ?, ?, 'active', NOW(), DATE_ADD(NOW(), INTERVAL ? DAY))
+                     ON DUPLICATE KEY UPDATE status='active', expires_at=DATE_ADD(NOW(), INTERVAL ? DAY)"
+                )->execute([$payload['id'], $item['product_id'], $orderId, $days, $days]);
+            }
+            $db->commit();
+            sendResponse(['success' => true, 'free_order' => true, 'message' => 'Ücretsiz sipariş tamamlandı.']);
+        } catch (Throwable $e) {
+            $db->rollBack();
+            sendResponse(['error' => 'Sipariş tamamlanamadı: ' . $e->getMessage()], 500);
+        }
     }
 
     try {
@@ -449,6 +475,24 @@ if ($action === 'bank-transfer' && $method === 'POST') {
     }
 }
 
+// GET /api/payment/bank-accounts — Anında Havale için public banka listesi
+if ($action === 'bank-accounts' && $method === 'GET') {
+    try {
+        // bank_accounts tablosu yoksa boş liste dön (admin henüz tanımlamamış)
+        $stmt = $db->query(
+            "SELECT id, lidio_bank_account_id, bank_name, bank_code, logo_url
+             FROM bank_accounts
+             WHERE is_active = 1
+             ORDER BY display_order ASC, bank_name ASC"
+        );
+        $banks = $stmt ? $stmt->fetchAll() : [];
+        sendResponse(['banks' => $banks]);
+    } catch (Throwable $e) {
+        // Tablo yoksa frontend'in çuvallaması yerine boş liste dön
+        sendResponse(['banks' => []]);
+    }
+}
+
 if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
     $callback = array_merge($_GET, getJsonBody());
     $orderIdLike = (string)($callback['OrderId'] ?? $callback['orderId'] ?? '');
@@ -461,6 +505,20 @@ if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
         $order = resolveOrderByCallback($db, $orderIdLike, $merchantProcessId);
         if (!$order) {
             throw new Exception('Order not found');
+        }
+
+        // İdempotency: Lidio aynı ödeme için 2 callback gönderebilir
+        //   1) Senkron: kullanıcı browser ReturnURL'e döndüğünde
+        //   2) Asenkron: Lidio sahtecilik/POS notification webhook'u
+        // Sipariş zaten completed ise tekrar UPDATE/INSERT/mail yapma — idempotent OK dön.
+        if (($order['status'] ?? '') === 'completed') {
+            $db->commit();
+            sendResponse([
+                'message' => 'Payment already finalized (idempotent)',
+                'status' => 'success',
+                'transactionId' => $transactionId,
+                'alreadyProcessed' => true
+            ]);
         }
 
         $normalizedStatus = strtolower($status);

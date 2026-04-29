@@ -1,5 +1,5 @@
 import { useCart } from '../context/CartContext';
-import { HiOutlineShoppingCart } from 'react-icons/hi2';
+import { HiOutlineShoppingCart } from 'react-icons/hi';
 import './CartIcon.css';
 
 interface CartIconProps {

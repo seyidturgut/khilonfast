@@ -377,6 +377,11 @@
     align-items: center;
 }
 
+.sectoral-split-layout > *:only-child {
+    grid-column: 1 / -1;
+    direction: ltr;
+}
+
 .sectoral-split-layout.reverse {
     direction: rtl;
 }

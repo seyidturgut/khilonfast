@@ -110,4 +110,35 @@ if ($method === 'PUT' && $action === 'password') {
     sendResponse(['message' => 'Password changed successfully']);
 }
 
+// GET /api/profile/protected-pdf/:filename — auth gated PDF stream
+if ($method === 'GET' && $action === 'protected-pdf' && !empty($id)) {
+    $filename = basename(urldecode((string)$id));
+
+    // Güvenlik: path traversal engelle
+    if ($filename === '' || strpos($filename, '..') !== false || strpos($filename, '/') !== false || strpos($filename, '\\') !== false) {
+        sendResponse(['error' => 'Invalid filename'], 400);
+    }
+
+    // Kullanıcının aktif aboneliği var mı?
+    $stmt = $db->prepare("SELECT id FROM subscriptions WHERE user_id = ? AND status = 'active' LIMIT 1");
+    $stmt->execute([$payload['id']]);
+    if (!$stmt->fetch()) {
+        sendResponse(['error' => 'Access denied'], 403);
+    }
+
+    // PDF dosya yolu: public_html/uploads/training-pdfs/
+    $filePath = dirname(__DIR__, 2) . '/uploads/training-pdfs/' . $filename;
+    if (!file_exists($filePath)) {
+        sendResponse(['error' => 'File not found'], 404);
+    }
+
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline');
+    header('Cache-Control: no-store, no-cache');
+    header('X-Content-Type-Options: nosniff');
+    header('Content-Length: ' . filesize($filePath));
+    readfile($filePath);
+    exit;
+}
+
 sendResponse(['error' => 'Action not found'], 404);

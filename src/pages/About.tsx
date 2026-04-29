@@ -1,6 +1,7 @@
 import { HiRocketLaunch, HiChartBar, HiMagnifyingGlass, HiSparkles, HiCommandLine, HiXMark } from 'react-icons/hi2'
 import Breadcrumbs from '../components/Breadcrumbs'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { resolveLocalizedText } from '../utils/localizedContent'
@@ -47,9 +48,10 @@ export default function About() {
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
     const langPrefix = currentLang === 'en' ? '/en' : '';
     const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
-    const isCmsMode = new URLSearchParams(location.search).get('cms') === '1';
-    const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
+    const { user } = useAuth();
+    const canShowCms = user?.role === 'admin';
     const API_BASE = API_BASE_URL;
+    const [cmsOpen, setCmsOpen] = useState(false);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
     const [cmsTexts, setCmsTexts] = useState<Record<string, string> | null>(null);
@@ -640,9 +642,20 @@ export default function About() {
                     </div>
                 </div>
             </section>
-            {canShowCms && (
+            {canShowCms && !cmsOpen && (
+                <button
+                    onClick={() => setCmsOpen(true)}
+                    style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999, background: '#0f172a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 13, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0,0,0,0.25)' }}
+                >
+                    ✏️ Düzenle
+                </button>
+            )}
+            {canShowCms && cmsOpen && (
                 <div style={{ position: 'fixed', top: 90, right: 16, width: 420, maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 14, boxShadow: '0 18px 40px rgba(15,23,42,0.15)', zIndex: 9999, padding: 14 }}>
-                    <div style={{ fontWeight: 800, marginBottom: 10, color: '#0f172a' }}>CMS Editor ({currentLang.toUpperCase()})</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <div style={{ fontWeight: 800, color: '#0f172a' }}>CMS Editor ({currentLang.toUpperCase()})</div>
+                        <button onClick={() => setCmsOpen(false)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#64748b', lineHeight: 1 }}>✕</button>
+                    </div>
                     <div style={{ display: 'grid', gap: 8 }}>
                         {ABOUT_TEXT_KEYS.map((key) => (
                             <div key={key} style={{ display: 'grid', gap: 4 }}>

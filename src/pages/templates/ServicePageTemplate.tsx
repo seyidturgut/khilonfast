@@ -1,5 +1,6 @@
 import { MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import {
     HiShoppingCart,
@@ -18,6 +19,7 @@ import trCommon from '../../locales/tr/common.json'
 import enCommon from '../../locales/en/common.json'
 import { getLocalePrefix, resolveLocaleFromPath } from '../../utils/locale'
 import { API_BASE_URL } from '../../config/api'
+import EditableMedia from '../../components/cms/EditableMedia'
 
 export interface PricingPackage {
     id: string;
@@ -220,7 +222,6 @@ export interface ServicePageProps {
     };
     serviceKey?: string;
     disableApiHeroTextOverride?: boolean;
-    cmsMode?: boolean;
     onCmsEditSection?: (section: 'hero' | 'video' | 'features' | 'faqs') => void;
 }
 
@@ -229,8 +230,8 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     const API_BASE = API_BASE_URL;
     const location = useLocation();
     const currentLang = resolveLocaleFromPath(location.pathname);
-    const isCmsMode = props.cmsMode ?? (new URLSearchParams(location.search).get('cms') === '1');
-    const canShowCms = isCmsMode && typeof window !== 'undefined' && Boolean(localStorage.getItem('token'));
+    const { user } = useAuth();
+    const canShowCms = user?.role === 'admin';
     const hasExternalCmsController = Boolean(props.onCmsEditSection);
     const shouldUseInternalCms = canShowCms && !hasExternalCmsController;
     const cmsSlug = location.pathname
@@ -247,6 +248,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     const [dynamicHero, setDynamicHero] = useState(props.hero);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
+    const [cmsOpen, setCmsOpen] = useState(false);
     const [cmsContent, setCmsContent] = useState<any | null>(null);
     const [cmsEditorData, setCmsEditorData] = useState<any | null>(null);
     const [cmsSection, setCmsSection] = useState<'hero' | 'video' | 'features' | 'faqs'>('hero');
@@ -657,6 +659,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
             return;
         }
         setCmsSection(section);
+        setCmsOpen(true);
     };
 
     const renderCmsButton = (section: 'hero' | 'video' | 'features' | 'faqs') => {
@@ -923,7 +926,8 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 name: (pkg as any).fullName || pkg.name, // Use full name if available
                 description: pkg.description,
                 price: priceNum,
-                currency: (pkg.price.includes('$') || pkg.price.toUpperCase().includes('USD')) ? 'USD' : 'TRY'
+                currency: (pkg.price.includes('$') || pkg.price.toUpperCase().includes('USD')) ? 'USD' : 'TRY',
+                category: 'hizmetler'
             });
 
             // Auto-open cart after adding
@@ -1090,15 +1094,21 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                             {!isHeroPriceOnly && (
                                 <div className={`hero-image-container ${displayHero.hideBadge ? 'no-badge' : ''} ${displayHero.imageContainerClassName || ''}`}>
                                     {displayHero.videoUrl ? (
-                                        <iframe
-                                            src={resolveEmbedVideoUrl(displayHero.videoUrl)}
-                                            title={displayHero.title}
-                                            className="hero-main-video"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                            allowFullScreen
-                                        />
+                                        <EditableMedia pageSlug={cmsSlug} fieldKey="heroVideo" type="video" src={displayHero.videoUrl} currentLang={currentLang}>
+                                            {(src) => (
+                                                <iframe
+                                                    src={resolveEmbedVideoUrl(src)}
+                                                    title={displayHero.title}
+                                                    className="hero-main-video"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                    allowFullScreen
+                                                />
+                                            )}
+                                        </EditableMedia>
                                     ) : (
-                                        <img src={displayHero.image} alt={displayHero.title} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />
+                                        <EditableMedia pageSlug={cmsSlug} fieldKey="heroImage" type="image" src={displayHero.image} currentLang={currentLang}>
+                                            {(src) => <img src={src} alt={displayHero.title} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />}
+                                        </EditableMedia>
                                     )}
                                     {!displayHero.hideBadge && (
                                         <div className="circular-badge">
@@ -1174,20 +1184,24 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                             <p className="showcase-description">{displayVideoShowcase.description}</p>
                         </div>
                         {displayVideoShowcase.videoUrl && (
-                            <div className="showcase-video">
-                                <div className="video-glass-wrapper">
-                                    <div className="video-container">
-                                        <iframe
-                                            src={resolveEmbedVideoUrl(displayVideoShowcase.videoUrl)}
-                                            title="Showcase Video"
-                                            width="100%"
-                                            height="100%"
-                                            className="video-iframe"
-                                            allow="autoplay; fullscreen; picture-in-picture"
-                                            allowFullScreen
-                                        ></iframe>
-                                    </div>
-                                </div>
+                            <div className="showcase-video" style={{ position: 'relative' }}>
+                                <EditableMedia pageSlug={cmsSlug} fieldKey="videoShowcaseUrl" type="video" src={displayVideoShowcase.videoUrl} currentLang={currentLang}>
+                                    {(src) => (
+                                        <div className="video-glass-wrapper">
+                                            <div className="video-container">
+                                                <iframe
+                                                    src={resolveEmbedVideoUrl(src)}
+                                                    title="Showcase Video"
+                                                    width="100%"
+                                                    height="100%"
+                                                    className="video-iframe"
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                ></iframe>
+                                            </div>
+                                        </div>
+                                    )}
+                                </EditableMedia>
                             </div>
                         )}
                     </div>
@@ -1250,8 +1264,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 {displayFeaturesSection.features.map((feature: ServiceFeature, idx: number) => (
                                     <div key={idx} className={`feature-card-linear ${displayFeaturesSection.compact ? 'compact' : ''} ${feature.image ? 'has-image' : ''} ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-score-card' : ''}`}>
                                         {feature.image ? (
-                                            <div className="feature-image-box">
-                                                <img src={feature.image} alt={feature.title} />
+                                            <div className="feature-image-box" style={{ position: 'relative' }}>
+                                                <EditableMedia pageSlug={cmsSlug} fieldKey={`feature_image_${idx}`} type="image" src={feature.image} currentLang={currentLang}>
+                                                    {(src) => <img src={src} alt={feature.title} />}
+                                                </EditableMedia>
                                             </div>
                                         ) : (
                                             <div className={`feature-icon-box ${featureVariant === 'eye-tracking-scoreboard' ? 'eye-tracking-score-icon' : ''}`}>{feature.icon}</div>
@@ -1580,18 +1596,22 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 {/* Video or Final Card if needed */}
                                 {props.processSection.videoUrl && (
                                     <div className="process-card-video">
-                                        <div className="video-glass-wrapper">
-                                            <div className="video-container">
-                                                <iframe
-                                                    src={resolveEmbedVideoUrl(props.processSection.videoUrl)}
-                                                    title="Process Video"
-                                                    width="100%"
-                                                    height="100%"
-                                                    className="video-iframe"
-                                                    allow="autoplay; fullscreen; picture-in-picture"
-                                                    allowFullScreen
-                                                ></iframe>
-                                            </div>
+                                        <div className="video-glass-wrapper" style={{ position: 'relative' }}>
+                                            <EditableMedia pageSlug={cmsSlug} fieldKey="processVideo" type="video" src={props.processSection.videoUrl!} currentLang={currentLang}>
+                                                {(src) => (
+                                                    <div className="video-container">
+                                                        <iframe
+                                                            src={resolveEmbedVideoUrl(src)}
+                                                            title="Process Video"
+                                                            width="100%"
+                                                            height="100%"
+                                                            className="video-iframe"
+                                                            allow="autoplay; fullscreen; picture-in-picture"
+                                                            allowFullScreen
+                                                        ></iframe>
+                                                    </div>
+                                                )}
+                                            </EditableMedia>
                                         </div>
                                     </div>
                                 )}
@@ -1734,8 +1754,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 {approachSection.items.map((item, idx) => (
                                     <div key={idx} className={`approach-card-linear ${approachSection.compact ? 'compact' : ''}`}>
                                         {item.image && (
-                                            <div className="approach-image-box">
-                                                <img src={item.image} alt={item.title} className="approach-image" />
+                                            <div className="approach-image-box" style={{ position: 'relative' }}>
+                                                <EditableMedia pageSlug={cmsSlug} fieldKey={`approach_image_${idx}`} type="image" src={item.image} currentLang={currentLang}>
+                                                    {(src) => <img src={src} alt={item.title} className="approach-image" />}
+                                                </EditableMedia>
                                             </div>
                                         )}
                                         {item.icon && !item.image && (
@@ -1794,7 +1816,15 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                 )
             }
 
-            {shouldUseInternalCms && (
+            {shouldUseInternalCms && !cmsOpen && (
+                <button
+                    onClick={() => setCmsOpen(true)}
+                    style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999, background: '#0f172a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 13, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0,0,0,0.25)' }}
+                >
+                    ✏️ Düzenle
+                </button>
+            )}
+            {shouldUseInternalCms && cmsOpen && (
                 <div style={{
                     position: 'fixed',
                     top: 90,
@@ -1809,8 +1839,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     zIndex: 9999,
                     padding: 14
                 }}>
-                    <div style={{ fontWeight: 800, marginBottom: 10, color: '#0f172a' }}>
-                        CMS Editor ({currentLang.toUpperCase()})
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <div style={{ fontWeight: 800, color: '#0f172a' }}>CMS Editor ({currentLang.toUpperCase()})</div>
+                        <button onClick={() => setCmsOpen(false)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#64748b', lineHeight: 1 }}>✕</button>
                     </div>
                     <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
                         {(['hero', 'video', 'features', 'faqs'] as const).map((section) => (

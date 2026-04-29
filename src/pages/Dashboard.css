@@ -434,22 +434,55 @@
         font-size: 2rem;
     }
 
+    /* Tab'lar mobilede eşit genişlik, ikon + küçük yazı */
     .dashboard-tabs {
-        gap: 0.5rem;
-        padding: 0.375rem;
+        gap: 0.25rem;
+        padding: 0.3rem;
+        justify-content: space-between;
     }
 
     .tab-button {
-        font-size: 0.9rem;
-        padding: 0.75rem 1rem;
+        flex: 1;
+        flex-direction: column;
+        gap: 0.2rem;
+        font-size: 0.65rem;
+        padding: 0.6rem 0.3rem;
+        border-radius: 10px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.1;
+    }
+
+    .tab-button svg {
+        font-size: 1.25rem;
+    }
+
+    .tab-label {
+        font-size: 0.62rem;
+        line-height: 1.1;
     }
 
     .dashboard-content {
-        padding: 1.5rem;
+        padding: 1.25rem 1rem;
     }
 
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    /* Sipariş tablosu mobilede gizle, kart görünümü göster */
+    .orders-table-container {
+        overflow: visible;
+    }
+
+    .orders-table {
+        display: none;
+    }
+
+    .orders-cards {
+        display: flex !important;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     .order-header {
@@ -472,4 +505,137 @@
     .content-library-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Sipariş kart görünümü (mobil) - varsayılan gizli */
+.orders-cards {
+    display: none;
+}
+
+.order-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.order-card-id {
+    font-weight: 700;
+    color: #1a3a52;
+    font-size: 1rem;
+}
+
+.order-card-date {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.order-card-products {
+    font-size: 0.88rem;
+    color: #334e68;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.order-card-amount {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0f172a;
+}
+
+.order-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+}
+
+.order-card-coupon {
+    font-size: 0.72rem;
+    background: #eef6b6;
+    color: #4d5f09;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-weight: 700;
+}
+
+/* Onboarding form butonu - sipariş satırında */
+.btn-fill-form {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 5px 12px;
+    background: #f59e0b;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+.btn-fill-form:hover {
+    background: #d97706;
+}
+
+/* Onboarding pending cards - içeriklerim tab'ı */
+.onboarding-pending-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 24px;
+}
+
+.onboarding-pending-card {
+    border: 1px solid #fcd34d;
+    border-radius: 14px;
+    padding: 1rem;
+    background: #fffbeb;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.onboarding-pending-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #92400e;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 999px;
+    padding: 0.3rem 0.6rem;
+    white-space: nowrap;
+}
+
+.onboarding-pending-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f59e0b;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+}
+
+.onboarding-pending-btn:hover {
+    background: #d97706;
 }

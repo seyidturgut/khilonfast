@@ -38,6 +38,7 @@
         "contact": "İletişim",
         "login": "Giriş Yap",
         "register": "Kayıt Ol",
+        "dashboard": "Hesabım",
         "home": "Ana Sayfa",
         "allTrainings": "Tüm Eğitimler",
         "backMenu": "Geri: Menü",
@@ -1278,7 +1279,8 @@
         "dashboard": "dashboard",
         "checkout": "odeme",
         "paymentSuccess": "payment-success",
-        "paymentCallback": "payment-callback"
+        "paymentCallback": "payment-callback",
+        "onboardingForm": "onboarding-formu"
     },
     "maestroAISectors": {
         "b2b": {

@@ -15,6 +15,8 @@ interface TrainingPage {
     canva_url_tr: string
     canva_url_en: string
     pdf_url: string
+    pdf_url_tr: string
+    pdf_url_en: string
 }
 
 interface Product {
@@ -31,6 +33,8 @@ interface Lesson {
     vimeo_url_tr: string
     vimeo_url_en: string
     pdf_url: string
+    pdf_url_tr: string
+    pdf_url_en: string
     order_index: number
     duration_label: string
     is_published: number
@@ -40,12 +44,12 @@ const emptyPage = (): Omit<TrainingPage, 'id'> => ({
     slug: '', product_key: '', title_tr: '', title_en: '',
     description_tr: '', description_en: '',
     vimeo_url_tr: '', vimeo_url_en: '',
-    canva_url_tr: '', canva_url_en: '', pdf_url: ''
+    canva_url_tr: '', canva_url_en: '', pdf_url: '', pdf_url_tr: '', pdf_url_en: ''
 })
 
 const emptyLesson = (trainingId: number, nextOrder: number): Omit<Lesson, 'id'> => ({
     training_id: trainingId, title_tr: '', title_en: '',
-    vimeo_url_tr: '', vimeo_url_en: '', pdf_url: '',
+    vimeo_url_tr: '', vimeo_url_en: '', pdf_url: '', pdf_url_tr: '', pdf_url_en: '',
     order_index: nextOrder, duration_label: '', is_published: 1
 })
 
@@ -76,7 +80,7 @@ export default function TrainingAccessPages() {
 
     const token = () => localStorage.getItem('token') || ''
 
-    const uploadPdf = (file: File, target: 'page' | 'lesson') => {
+    const uploadPdf = (file: File, target: 'page' | 'lesson', lang: 'tr' | 'en') => {
         setPdfProgress({ target, pct: 0 })
 
         const formData = new FormData()
@@ -95,10 +99,11 @@ export default function TrainingAccessPages() {
             try {
                 const data = JSON.parse(xhr.responseText)
                 if (xhr.status >= 200 && xhr.status < 300 && data.path) {
+                    const field = lang === 'tr' ? 'pdf_url_tr' : 'pdf_url_en'
                     if (target === 'page') {
-                        setPageForm(f => ({ ...f, pdf_url: data.path }))
+                        setPageForm(f => ({ ...f, [field]: data.path }))
                     } else {
-                        setLessonForm(f => f ? { ...f, pdf_url: data.path } : f)
+                        setLessonForm(f => f ? { ...f, [field]: data.path } : f)
                     }
                 } else {
                     alert(data.error || `Yükleme hatası (${xhr.status})`)
@@ -171,7 +176,7 @@ export default function TrainingAccessPages() {
             description_tr: page.description_tr || '', description_en: page.description_en || '',
             vimeo_url_tr: page.vimeo_url_tr || '', vimeo_url_en: page.vimeo_url_en || '',
             canva_url_tr: page.canva_url_tr || '', canva_url_en: page.canva_url_en || '',
-            pdf_url: page.pdf_url || ''
+            pdf_url: page.pdf_url || '', pdf_url_tr: page.pdf_url_tr || '', pdf_url_en: page.pdf_url_en || ''
         })
         setPageLang('tr')
         setPageError('')
@@ -235,7 +240,7 @@ export default function TrainingAccessPages() {
     }
 
     const openEditLesson = (lesson: Lesson) => {
-        setLessonForm({ ...lesson, title_tr: lesson.title_tr || '', title_en: lesson.title_en || '', vimeo_url_tr: lesson.vimeo_url_tr || '', vimeo_url_en: lesson.vimeo_url_en || '', pdf_url: lesson.pdf_url || '', duration_label: lesson.duration_label || '' })
+        setLessonForm({ ...lesson, title_tr: lesson.title_tr || '', title_en: lesson.title_en || '', vimeo_url_tr: lesson.vimeo_url_tr || '', vimeo_url_en: lesson.vimeo_url_en || '', pdf_url: lesson.pdf_url || '', pdf_url_tr: lesson.pdf_url_tr || '', pdf_url_en: lesson.pdf_url_en || '', duration_label: lesson.duration_label || '' })
         setLessonLang('tr')
     }
 
@@ -341,54 +346,47 @@ export default function TrainingAccessPages() {
                                         ))}
                                     </select>
                                 </div>
-                                {/* PDF — eğitimin tamamına ait */}
+                                {/* PDF — TR ve EN ayrı */}
                                 <div style={{ marginBottom: '14px' }}>
-                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '5px' }}>
-                                        📄 Eğitim PDF'i <span style={{ fontWeight: 400, color: '#9ca3af' }}>(tüm eğitime ait)</span>
+                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '8px' }}>
+                                        📄 Eğitim PDF'i
                                     </label>
-                                    {/* Hidden file input */}
-                                    <input
-                                        ref={pagePdfInputRef}
-                                        type="file"
-                                        accept="application/pdf,.pdf"
-                                        style={{ display: 'none' }}
-                                        onChange={e => {
-                                            const file = e.target.files?.[0]
-                                            if (file) uploadPdf(file, 'page')
-                                            e.target.value = ''
-                                        }}
-                                    />
-                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                        <button
-                                            type="button"
-                                            onClick={() => pagePdfInputRef.current?.click()}
-                                            disabled={!!pdfProgress}
-                                            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', border: '1px solid #d1d5db', borderRadius: '8px', background: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', color: '#374151', whiteSpace: 'nowrap', opacity: pdfProgress ? 0.5 : 1 }}>
-                                            <HiUpload /> PDF Yükle
-                                        </button>
-                                        <input
-                                            value={pageForm.pdf_url}
-                                            onChange={e => setPageForm(f => ({ ...f, pdf_url: e.target.value }))}
-                                            placeholder="/uploads/training-pdfs/dosya.pdf"
-                                            style={{ flex: 1, padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '0.82rem', boxSizing: 'border-box' }}
-                                        />
-                                    </div>
-                                    {pdfProgress?.target === 'page' && (
-                                        <div style={{ marginTop: '8px' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#374151', marginBottom: '4px' }}>
-                                                <span>Yükleniyor...</span>
-                                                <span style={{ fontWeight: 700 }}>{pdfProgress.pct}%</span>
+                                    <input ref={pagePdfInputRef} type="file" accept="application/pdf,.pdf" style={{ display: 'none' }}
+                                        onChange={e => { const file = e.target.files?.[0]; if (file) uploadPdf(file, 'page', 'tr'); e.target.value = '' }} />
+                                    {(['tr', 'en'] as const).map(lang => {
+                                        const field = lang === 'tr' ? 'pdf_url_tr' : 'pdf_url_en'
+                                        const val = pageForm[field]
+                                        return (
+                                            <div key={lang} style={{ marginBottom: '10px' }}>
+                                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: lang === 'tr' ? '#c53030' : '#2563eb', marginBottom: '4px' }}>
+                                                    {lang === 'tr' ? '🇹🇷 Türkçe PDF' : '🇬🇧 English PDF'}
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                    <button type="button" disabled={!!pdfProgress}
+                                                        onClick={() => {
+                                                            const inp = document.createElement('input')
+                                                            inp.type = 'file'; inp.accept = 'application/pdf,.pdf'
+                                                            inp.onchange = (ev) => { const f = (ev.target as HTMLInputElement).files?.[0]; if (f) uploadPdf(f, 'page', lang) }
+                                                            inp.click()
+                                                        }}
+                                                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 14px', border: '1px solid #d1d5db', borderRadius: '8px', background: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem', color: '#374151', whiteSpace: 'nowrap', opacity: pdfProgress ? 0.5 : 1 }}>
+                                                        <HiUpload /> Yükle
+                                                    </button>
+                                                    <input value={val} onChange={e => setPageForm(f => ({ ...f, [field]: e.target.value }))}
+                                                        placeholder="/uploads/training-pdfs/dosya.pdf"
+                                                        style={{ flex: 1, padding: '7px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '0.82rem', boxSizing: 'border-box' }} />
+                                                </div>
+                                                {val && <a href={val} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '4px', fontSize: '0.75rem', color: '#7c3aed', textDecoration: 'none' }}><HiDocumentText /> Önizle</a>}
                                             </div>
+                                        )
+                                    })}
+                                    {pdfProgress?.target === 'page' && (
+                                        <div style={{ marginTop: '4px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#374151', marginBottom: '4px' }}><span>Yükleniyor...</span><span style={{ fontWeight: 700 }}>{pdfProgress.pct}%</span></div>
                                             <div style={{ width: '100%', height: '6px', background: '#e5e7eb', borderRadius: '99px', overflow: 'hidden' }}>
                                                 <div style={{ height: '100%', width: `${pdfProgress.pct}%`, background: 'linear-gradient(90deg, #1a3a52, #2563eb)', borderRadius: '99px', transition: 'width 0.2s ease' }} />
                                             </div>
                                         </div>
-                                    )}
-                                    {pageForm.pdf_url && (
-                                        <a href={pageForm.pdf_url} target="_blank" rel="noopener noreferrer"
-                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '6px', fontSize: '0.75rem', color: '#7c3aed', textDecoration: 'none' }}>
-                                            <HiDocumentText /> Önizle
-                                        </a>
                                     )}
                                 </div>
                             </div>
@@ -471,51 +469,43 @@ export default function TrainingAccessPages() {
                                         <div>
                                             {/* Ders PDF upload */}
                                             <div style={{ marginBottom: '14px' }}>
-                                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '5px' }}>
-                                                    📄 Ders PDF'i <span style={{ fontWeight: 400, color: '#9ca3af' }}>(TR ve EN için ortak)</span>
+                                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '8px' }}>
+                                                    📄 Ders PDF'i
                                                 </label>
-                                                <input
-                                                    ref={lessonPdfInputRef}
-                                                    type="file"
-                                                    accept="application/pdf,.pdf"
-                                                    style={{ display: 'none' }}
-                                                    onChange={e => {
-                                                        const file = e.target.files?.[0]
-                                                        if (file) uploadPdf(file, 'lesson')
-                                                        e.target.value = ''
-                                                    }}
-                                                />
-                                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => lessonPdfInputRef.current?.click()}
-                                                        disabled={!!pdfProgress}
-                                                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', border: '1px solid #d1d5db', borderRadius: '8px', background: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem', color: '#374151', whiteSpace: 'nowrap', opacity: pdfProgress ? 0.5 : 1 }}>
-                                                        <HiUpload /> PDF Yükle
-                                                    </button>
-                                                    <input
-                                                        value={lessonForm.pdf_url || ''}
-                                                        onChange={e => setLessonForm(f => f ? { ...f, pdf_url: e.target.value } : f)}
-                                                        placeholder="/uploads/training-pdfs/dosya.pdf"
-                                                        style={{ flex: 1, padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '0.8rem', boxSizing: 'border-box' }}
-                                                    />
-                                                </div>
-                                                {pdfProgress?.target === 'lesson' && (
-                                                    <div style={{ marginTop: '8px' }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#374151', marginBottom: '4px' }}>
-                                                            <span>Yükleniyor...</span>
-                                                            <span style={{ fontWeight: 700 }}>{pdfProgress.pct}%</span>
+                                                {(['tr', 'en'] as const).map(lang => {
+                                                    const field = lang === 'tr' ? 'pdf_url_tr' : 'pdf_url_en'
+                                                    const val = lessonForm?.[field] || ''
+                                                    return (
+                                                        <div key={lang} style={{ marginBottom: '8px' }}>
+                                                            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: lang === 'tr' ? '#c53030' : '#2563eb', marginBottom: '3px' }}>
+                                                                {lang === 'tr' ? '🇹🇷 Türkçe PDF' : '🇬🇧 English PDF'}
+                                                            </div>
+                                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                                <button type="button" disabled={!!pdfProgress}
+                                                                    onClick={() => {
+                                                                        const inp = document.createElement('input')
+                                                                        inp.type = 'file'; inp.accept = 'application/pdf,.pdf'
+                                                                        inp.onchange = (ev) => { const f = (ev.target as HTMLInputElement).files?.[0]; if (f) uploadPdf(f, 'lesson', lang) }
+                                                                        inp.click()
+                                                                    }}
+                                                                    style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', border: '1px solid #d1d5db', borderRadius: '8px', background: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.78rem', color: '#374151', whiteSpace: 'nowrap', opacity: pdfProgress ? 0.5 : 1 }}>
+                                                                    <HiUpload /> Yükle
+                                                                </button>
+                                                                <input value={val} onChange={e => setLessonForm(f => f ? { ...f, [field]: e.target.value } : f)}
+                                                                    placeholder="/uploads/training-pdfs/dosya.pdf"
+                                                                    style={{ flex: 1, padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '0.78rem', boxSizing: 'border-box' }} />
+                                                            </div>
+                                                            {val && <a href={val} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', marginTop: '3px', fontSize: '0.72rem', color: '#7c3aed', textDecoration: 'none' }}><HiDocumentText /> Önizle</a>}
                                                         </div>
+                                                    )
+                                                })}
+                                                {pdfProgress?.target === 'lesson' && (
+                                                    <div style={{ marginTop: '4px' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#374151', marginBottom: '4px' }}><span>Yükleniyor...</span><span style={{ fontWeight: 700 }}>{pdfProgress.pct}%</span></div>
                                                         <div style={{ width: '100%', height: '6px', background: '#e5e7eb', borderRadius: '99px', overflow: 'hidden' }}>
                                                             <div style={{ height: '100%', width: `${pdfProgress.pct}%`, background: 'linear-gradient(90deg, #1a3a52, #2563eb)', borderRadius: '99px', transition: 'width 0.2s ease' }} />
                                                         </div>
                                                     </div>
-                                                )}
-                                                {lessonForm.pdf_url && (
-                                                    <a href={lessonForm.pdf_url} target="_blank" rel="noopener noreferrer"
-                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '5px', fontSize: '0.72rem', color: '#7c3aed', textDecoration: 'none' }}>
-                                                        <HiDocumentText /> Önizle
-                                                    </a>
                                                 )}
                                             </div>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 12px' }}>
