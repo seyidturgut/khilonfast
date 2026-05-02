@@ -129,3 +129,12 @@ khilonfastnisan2026/
 
 # Lokal yedekler
 *.bak
+
+# Production'da admin tarafından yüklenen kullanıcı dosyaları
+# (deploy zip'i bunları include etmemeli, canlı versiyonu üzerine yazmasın)
+public/uploads/
+public/egitim-dokumanlar/
+
+# api/config/config.php — ortama özel (local geliştirme veya prod credentials)
+# config.example.php template'inden kopyalanır, git'te tutmuyoruz
+api/config/config.php
