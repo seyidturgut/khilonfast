@@ -108,18 +108,18 @@ if ($action === 'run' && $method === 'POST') {
             if ($isSuccess) {
                 $db->prepare("UPDATE orders SET status = 'completed' WHERE id = ?")->execute([$newOrderId]);
 
-                // Aboneliği uzat
+                // Aboneliği uzat — SADECE mevcut kaydı güncelle.
+                // (Önceden ek bir INSERT yapılıyordu → aynı ürün için çift aktif
+                //  abonelik + sonraki cron'da çift tahsilat riski. INSERT kaldırıldı.)
                 $days = (int)($sub['duration_days'] ?? 30);
                 if ($days <= 0) $days = 30;
                 $newExpires = date('Y-m-d H:i:s', strtotime("+{$days} days"));
                 $db->prepare(
-                    "UPDATE subscriptions SET expires_at = ?, next_renewal_at = ?, status = 'active' WHERE id = ?"
-                )->execute([$newExpires, $newExpires, $subId]);
-
-                $db->prepare(
-                    "INSERT INTO subscriptions (user_id, product_id, order_id, status, starts_at, expires_at, auto_renew, renewal_card_id, next_renewal_at)
-                     VALUES (?, ?, ?, 'active', NOW(), ?, 1, ?, ?)"
-                )->execute([$sub['user_id'], $sub['product_id'], $newOrderId, $newExpires, $sub['renewal_card_id'], $newExpires]);
+                    "UPDATE subscriptions
+                     SET expires_at = ?, next_renewal_at = ?, status = 'active',
+                         last_renewal_at = NOW(), renewal_attempts = 0, order_id = ?
+                     WHERE id = ?"
+                )->execute([$newExpires, $newExpires, $newOrderId, $subId]);
 
                 subscriptionSendMail($sub['email'], $sub['first_name'], $sub['product_name'], 'renewed', $newExpires);
                 $results[] = ['subscription_id' => $subId, 'result' => 'renewed', 'new_order_id' => $newOrderId];

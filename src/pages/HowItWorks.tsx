@@ -14,12 +14,15 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Breadcrumbs from '../components/Breadcrumbs'
 import FAQ from '../components/FAQ'
+import EditableMedia from '../components/cms/EditableMedia'
+import { usePageSlug } from '../hooks/usePageSlug'
 import './HowItWorks.css'
 import { buildLocalizedPath, getLocalePrefix, useRouteLocale } from '../utils/locale'
 
 export default function HowItWorks() {
   const { t } = useTranslation('common');
   const currentLang = useRouteLocale();
+  const cmsSlug = usePageSlug();
   const langPrefix = getLocalePrefix(currentLang);
   const toLocalized = (key: string) => buildLocalizedPath(currentLang, t(`slugs.${key}`));
   const withLang = (path: string) => `${langPrefix}${path}`.replace(/\/{2,}/g, '/');
@@ -156,11 +159,21 @@ export default function HowItWorks() {
               <span>{t('howItWorksPage.hero.tag3')}</span>
             </div>
           </div>
-          <div className="how-hero-video">
-            <img
+          <div className="how-hero-video" style={{ position: 'relative' }}>
+            <EditableMedia
+              pageSlug={cmsSlug}
+              fieldKey="hero_image"
+              type="image"
               src="/TR_nasilcalisir.avif"
-              alt={t('howItWorksPage.hero.title')}
-            />
+              currentLang={currentLang}
+            >
+              {(src) => (
+                <img
+                  src={src}
+                  alt={t('howItWorksPage.hero.title')}
+                />
+              )}
+            </EditableMedia>
           </div>
         </div>
       </section>
@@ -194,13 +207,25 @@ export default function HowItWorks() {
             <h2>{t('howItWorksPage.auth.title')}</h2>
             <p>{t('howItWorksPage.auth.description')}</p>
           </div>
-          <div className="how-auth-video">
-            <iframe
-              src="https://player.vimeo.com/showcase/11932505/embed"
-              title={t('howItWorksPage.auth.videoTitle')}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-            />
+          <div className="how-auth-video" style={{ position: 'relative' }}>
+            <EditableMedia
+              pageSlug={cmsSlug}
+              fieldKey="auth_video"
+              type="video"
+              src={currentLang === 'en'
+                ? 'https://player.vimeo.com/showcase/11960331/embed'
+                : 'https://player.vimeo.com/showcase/11932505/embed'}
+              currentLang={currentLang}
+            >
+              {(src) => (
+                <iframe
+                  src={src}
+                  title={t('howItWorksPage.auth.videoTitle')}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
+            </EditableMedia>
           </div>
           <div className="how-auth-grid">
             {authorizationLinks.map((item) => (

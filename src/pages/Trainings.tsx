@@ -48,11 +48,14 @@ export default function Trainings() {
 
             <section className="trainings-list">
                 <div className="container">
+                    <h2 style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                        {t('trainingsPage.list.title', { defaultValue: 'Sektörel Eğitim Programları' })}
+                    </h2>
                     <div className="trainings-grid">
                         {trainingCards.map((program) => (
                             <article key={program.path} className="training-card">
                                 <div className="training-card-image">
-                                    <img src={program.image} alt={program.title} />
+                                    <img src={program.image} alt={program.title} width={400} height={225} loading="lazy" />
                                     <div className="training-card-badge">
                                         <HiAcademicCap />
                                     </div>

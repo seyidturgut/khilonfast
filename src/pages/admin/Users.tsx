@@ -438,13 +438,13 @@ export default function UsersPage() {
                                                                                 const res = await fetch(`${ADMIN_API_BASE}/onboarding-form/admin/${form.id}/pdf`, {
                                                                                     headers: { Authorization: `Bearer ${token}` }
                                                                                 });
-                                                                                const blob = await res.blob();
-                                                                                const url = URL.createObjectURL(blob);
-                                                                                const a = document.createElement('a');
-                                                                                a.href = url;
-                                                                                a.download = `onboarding-${form.order_number}.pdf`;
-                                                                                a.click();
-                                                                                URL.revokeObjectURL(url);
+                                                                                if (!res.ok) { alert('Form alınamadı: HTTP ' + res.status); return; }
+                                                                                const html = await res.text();
+                                                                                const w = window.open('', '_blank', 'width=900,height=900');
+                                                                                if (!w) { alert('Pop-up engellenmiş — tarayıcıda izin verin.'); return; }
+                                                                                w.document.open();
+                                                                                w.document.write(html);
+                                                                                w.document.close();
                                                                             }}
                                                                             style={{ fontSize: '0.8rem', background: '#0f766e', color: '#fff', padding: '4px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 600 }}
                                                                         >

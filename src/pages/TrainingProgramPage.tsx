@@ -87,20 +87,27 @@ export default function TrainingProgramPage() {
 
     const training = useMemo(() => {
         if (matchedTrainingKey) {
-            const resolvedPath = `/${activeSlugs[matchedTrainingKey]}`;
+            // EN'de getTrainingPrograms('en') item.path'lerini `/en/trainings/...` döner.
+            // resolvedPath'i de aynı locale prefix'iyle kur ki strict eşleşme tutsun.
+            const resolvedPath = `${langPrefix}/${activeSlugs[matchedTrainingKey]}`.replace(/\/{2,}/g, '/');
             const bySlugKey = trainingPrograms.find((item) => item.path === resolvedPath);
             if (bySlugKey) return bySlugKey;
         }
 
-        const byPath = trainingPrograms.find((item) =>
-            normalizedCandidates.some((candidate) => {
-                const normalizedItem = item.path.replace(/^\/+/, '');
-                const normalizedItemNoPrefix = normalizedItem.replace(/^(egitimler|trainings)\//, '');
-                return candidate === normalizedItem || candidate === normalizedItemNoPrefix;
-            })
-        );
+        const byPath = trainingPrograms.find((item) => {
+            // item.path örneği EN: `/en/trainings/...`; TR: `/egitimler/...`
+            // candidate'ı zaten `/en/` ve baş slash'sız haliyle hazırladık;
+            // item.path'i de aynı şekle sok: `/en/`, baş `/`'ı kaldır, sonra `/en/` prefix'ini çıkar.
+            const normalizedItem = item.path
+                .replace(/^\/+/, '')
+                .replace(/^en\//, '');
+            const normalizedItemNoPrefix = normalizedItem.replace(/^(egitimler|trainings)\//, '');
+            return normalizedCandidates.some(
+                (candidate) => candidate === normalizedItem || candidate === normalizedItemNoPrefix
+            );
+        });
         return byPath ?? trainingPrograms[0];
-    }, [matchedTrainingKey, normalizedCandidates.join('|'), trSlugs, trainingPrograms]);
+    }, [matchedTrainingKey, normalizedCandidates.join('|'), activeSlugs, langPrefix, trainingPrograms]);
 
     const resolvedSlugKey =
         matchedTrainingKey ??
@@ -318,57 +325,68 @@ export default function TrainingProgramPage() {
             {
                 title: 'Growth Marketing Foundations: Blueprint to Revenue',
                 description: 'Build a practical strategic framework that links marketing actions directly to sales outcomes.',
-                icon: <HiRocketLaunch />
+                icon: <HiRocketLaunch />,
+                image: '/images/egitimler/en11lipic/1.webp'
             },
             {
                 title: 'Decision Unit Mapping and Stakeholder Prioritization',
                 description: 'Identify buyer, influencer, and approver roles to sharpen targeting and pipeline quality.',
-                icon: <HiUserGroup />
+                icon: <HiUserGroup />,
+                image: '/images/egitimler/en11lipic/2.webp'
             },
             {
                 title: 'Pain-Point Discovery Workshop',
                 description: 'Convert audience friction points into insight-backed messaging priorities.',
-                icon: <HiPencilSquare />
+                icon: <HiPencilSquare />,
+                image: '/images/egitimler/en11lipic/3.webp'
             },
             {
                 title: 'Value Proposition Engineering',
                 description: 'Design persuasive narratives with logical, emotional, and credibility triggers.',
-                icon: <HiPresentationChartLine />
+                icon: <HiPresentationChartLine />,
+                image: '/images/egitimler/en11lipic/4.webp'
             },
             {
                 title: 'Role-Based Messaging Systems',
                 description: 'Create role-specific copy structures for faster comprehension and stronger conversion intent.',
-                icon: <HiPuzzlePiece />
+                icon: <HiPuzzlePiece />,
+                image: '/images/egitimler/en11lipic/5.webp'
             },
             {
                 title: 'Funnel Messaging by Stage and Channel',
                 description: 'Align content, timing, and distribution with each funnel stage to reduce drop-off.',
-                icon: <HiFunnel />
+                icon: <HiFunnel />,
+                image: '/images/egitimler/en11lipic/6.webp'
             },
             {
                 title: 'Baseline Metrics and Growth Dashboarding',
                 description: 'Define measurement baselines and build decision-ready reporting workflows.',
-                icon: <HiChartBar />
+                icon: <HiChartBar />,
+                image: '/images/egitimler/en11lipic/7.webp'
             },
             {
                 title: 'Three Core Marketing Objectives',
                 description: 'Balance acquisition, expansion, and retention through a clear growth operating model.',
-                icon: <HiBolt />
+                icon: <HiBolt />,
+                image: '/images/egitimler/en11lipic/8.webp'
             },
             {
                 title: 'Website-Led Demand Architecture',
                 description: 'Assign conversion roles to each key page and optimize your digital journey structure.',
-                icon: <HiGlobeAlt />
+                icon: <HiGlobeAlt />,
+                image: '/images/egitimler/en11lipic/9.webp'
             },
             {
-                title: 'Post-Lead Sequence Design',
+                title: 'Lead Nurturing Sequence Design',
                 description: 'Run high-converting follow-up flows with timing psychology and multi-channel touchpoints.',
-                icon: <HiComputerDesktop />
+                icon: <HiComputerDesktop />,
+                image: '/images/egitimler/en11lipic/10.webp'
             },
             {
                 title: 'From First Contact to Closed Deal',
                 description: 'Improve sales conversations through objection handling, sequencing, and disciplined follow-up.',
-                icon: <HiChatBubbleLeftRight />
+                icon: <HiChatBubbleLeftRight />,
+                image: '/images/egitimler/en11lipic/11.webp'
             }
         ]
         : [
@@ -512,67 +530,67 @@ export default function TrainingProgramPage() {
             title: 'Introduction\nMapping the Road\nto Revenue',
             description: 'Marketing starts with people and scales with the right operating flow. In this lesson, we turn marketing into a measurable, repeatable six-step system so your team can start stronger.',
             icon: <HiRocketLaunch />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim00_satia_giden_yolun_haritasi.webp'
+            image: '/images/egitimler/en11lipic/1.webp'
         },
         {
             title: 'Audience\nReading Decision Makers\nand Approvers Correctly',
             description: 'Learn how CEOs, CFOs, CTOs, and e-commerce leaders evaluate payment solutions so you can adapt your message to every buying role.',
             icon: <HiUserGroup />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim01_hedef_kitle.webp'
+            image: '/images/egitimler/en11lipic/2.webp'
         },
         {
             title: 'Exercise\nDocumenting Audience\nPain Points',
             description: 'Turn raw market observations into structured insight by documenting the problems your audience is actively trying to solve.',
             icon: <HiPencilSquare />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim02_egzersiz.webp'
+            image: '/images/egitimler/en11lipic/3.webp'
         },
         {
             title: 'Value Proposition\nDifferentiate with\nEthos, Pathos, Logos',
             description: 'Learn how to bring trust, emotion, and logic into your positioning so your message stands out beyond features alone.',
             icon: <HiPresentationChartLine />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim03_deger_onerisi.webp'
+            image: '/images/egitimler/en11lipic/4.webp'
         },
         {
             title: 'Systematic Value Proposition\nPain Point and\nRole-Based Messaging',
             description: 'Build repeatable value messaging around pain points, role context, and buying priorities for each stakeholder in the deal.',
             icon: <HiPuzzlePiece />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim03_deger_onerisi.webp'
+            image: '/images/egitimler/en11lipic/5.webp'
         },
         {
             title: 'Sales Funnel\nAdapting the Message by\nTiming, Channel, and Stage',
             description: 'Align content and messaging with TOFU, MOFU, and BOFU stages so buyers receive the right message in the right environment.',
             icon: <HiFunnel />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim5-1.webp'
+            image: '/images/egitimler/en11lipic/6.webp'
         },
         {
-            title: 'Baseline Metrics\nThe Numerical Compass\nof Growth',
+            title: 'Baseline Metrics\nThe Compass\nof Growth',
             description: 'Use CAC, LTV, ROAS, and ROI to create a shared performance language and make better marketing investment decisions.',
             icon: <HiChartBar />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim6.webp'
+            image: '/images/egitimler/en11lipic/7.webp'
         },
         {
-            title: 'Three Clear Goals\nWin, Deepen,\nand Retain',
+            title: 'Three Core Goals\nAcquire, Expand,\nand Retain',
             description: 'Understand how acquisition, expansion, and retention shape the financial contribution of marketing decisions.',
             icon: <HiBolt />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim8.webp'
+            image: '/images/egitimler/en11lipic/8.webp'
         },
         {
-            title: 'Web Experience\nThe Role of Every Page\nin the Website',
+            title: 'Web Experience\nThe Role of Each Page\non the Website',
             description: 'See how homepage, product, category, blog, and landing pages support conversion and where each page belongs in the customer journey.',
             icon: <HiGlobeAlt />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim9.webp'
+            image: '/images/egitimler/en11lipic/9.webp'
         },
         {
-            title: 'Post-Lead Flow\nPsychology, Timing,\nand Multi-Channel Touchpoints',
+            title: 'Lead Nurturing Flow\nPsychology, Timing,\nand Multi-Channel Touchpoints',
             description: 'Discover how speed, sequence, and communication design shape conversion after a lead enters your pipeline.',
             icon: <HiComputerDesktop />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim10.webp'
+            image: '/images/egitimler/en11lipic/10.webp'
         },
         {
             title: 'From First Contact to Closed Deal\nCommunication, Objection\nHandling, and Follow-Up',
             description: 'Improve every sales conversation with better opening structure, stronger objection handling, and a disciplined follow-up process.',
             icon: <HiChatBubbleLeftRight />,
-            image: '/images/egitimler/odeme_sistemleri/01_odeme_egitim11.webp'
+            image: '/images/egitimler/en11lipic/11.webp'
         }
     ];
 
@@ -585,7 +603,9 @@ export default function TrainingProgramPage() {
         isEnergyTraining ||
         isInteriorDesignTraining ||
         isFleetRentalTraining ||
-        isIndustrialFoodTraining;
+        isIndustrialFoodTraining ||
+        isB2BTraining ||
+        isManufacturingTraining;
 
     const checkoutPath = `${langPrefix}/${activeSlugs.checkout ?? ''}`.replace(/\/{2,}/g, '/');
 
@@ -608,11 +628,11 @@ export default function TrainingProgramPage() {
                 'Throughout the training, you will learn:'
             ],
             bullets: [
-                'How to read target audiences by role, including CEOs, CFOs, CTOs, and e-commerce managers',
+                'How to analyze buying personas by role, including CEOs, CFOs, CTOs, and e-commerce managers',
                 'How to structure strong value propositions and sales narratives',
                 'How to adapt messages to funnel stages and channel context',
                 'How to evaluate core marketing metrics such as CAC, LTV, ROAS, and ROI',
-                'How to connect post-lead flow, sales conversations, and customer experience into one operating system'
+                'How to connect lead nurturing flow, sales conversations, and customer experience into one operating system'
             ],
             note: 'The program gives executives a strategic lens while providing managers and specialists with concrete frameworks they can apply immediately.',
             listTitle: 'Program Modules',
@@ -776,7 +796,7 @@ export default function TrainingProgramPage() {
                         : isFintechTraining
                             ? (isEn ? 'Win in Fintech with Integrated Digital Marketing Training' : 'Fintech Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile')
                         : isIndustrialFoodTraining
-                            ? (isEn ? 'Win in Industrial Food with Integrated Digital Marketing Training' : 'Endüstriyel Gıda Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile')
+                            ? (isEn ? 'Win in Industrial Food & Culinary with Integrated Digital Marketing Training' : 'Endüstriyel Gıda Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile')
                         : isFleetRentalTraining
                             ? (isEn ? 'Win in Fleet Rental with Integrated Digital Marketing Training' : 'Filo Kiralama Sektöründe Bütünleşik Dijital Pazarlama Eğitimi ile')
                         : isSoftwareTraining
@@ -811,7 +831,7 @@ export default function TrainingProgramPage() {
                 'training-filo-kiralama-sektorunde-buyume': 'https://www.youtube.com/watch?v=4nYmBbZZ-es'
             } as Record<string, string>)[training.productKey] || 'https://player.vimeo.com/video/1045939223'
         },
-        featuresSection: isEn && (isB2BTraining || isSoftwareTraining || isManufacturingTraining || isEnergyTraining || isInteriorDesignTraining || isFleetRentalTraining || isIndustrialFoodTraining) ? undefined : {
+        featuresSection: {
             tag: isEn ? 'Program Content' : 'Program İçeriği',
             title: isEn
                 ? (isPaymentSystemsTraining || isFintechTraining
@@ -824,11 +844,9 @@ export default function TrainingProgramPage() {
                     : 'A field-ready curriculum designed to move teams from strategy to execution.')
                 : 'Pazarlama yatırımınızın geri dönüşünü artırın!',
             features: isEn
-                ? (isPaymentSystemsTraining
-                    ? paymentTrainingFeaturesEn
-                    : (isFintechTraining ? fintechTrainingFeatures : (shouldUseAdvancedFeatures ? advancedFeatures : defaultFeatures)))
+                ? paymentTrainingFeaturesEn // EN: tüm eğitim sayfalarında 11 lesson + 11 görsel (en11lipic)
                 : trTrainingFeatures,
-            compact: isEn ? (isPaymentSystemsTraining || isFintechTraining) : true,
+            compact: true,
             introBlock: isEn
                 ? (isPaymentSystemsTraining ? paymentIntroBlock : undefined)
                 : trProgramIntroBlock
@@ -843,7 +861,7 @@ export default function TrainingProgramPage() {
                 {
                     id: training.productKey,
                     name: trainingTitle,
-                    price: '5.000 TL',
+                    price: isEn ? '$149' : '5.000 TL',
                     period: isEn ? 'one-time' : 'tek seferlik',
                     description: isEn
                         ? 'Includes video modules, practical frameworks, and an execution playbook.'
@@ -879,7 +897,7 @@ export default function TrainingProgramPage() {
                     description: isEn
                         ? 'Stand out in the market and leave the competition behind with smart strategies.'
                         : 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
-                    price: '5000TL',
+                    price: isEn ? '$149' : '5000TL',
                     period: '',
                     features: heroPriceFeatures
                 }
@@ -896,19 +914,19 @@ export default function TrainingProgramPage() {
         },
         faqs: [
             {
-                question: isEn ? 'When is program access activated?' : 'Eğitime erişim ne zaman açılır?',
+                question: isEn ? 'When will I get access to the program?' : 'Eğitime erişim ne zaman açılır?',
                 answer: isEn
                     ? 'Your access is activated shortly after enrollment so you can begin immediately.'
                     : 'Kayıt sonrası erişiminiz kısa sürede aktif edilir ve eğitim modüllerine hemen başlayabilirsiniz.'
             },
             {
-                question: isEn ? 'Which experience levels is this training suitable for?' : 'Eğitim içeriği hangi seviyeye uygundur?',
+                question: isEn ? 'Who is this program designed for?' : 'Eğitim içeriği hangi seviyeye uygundur?',
                 answer: isEn
                     ? 'The program is designed for both leadership and operational teams, combining strategy with real implementation.'
                     : 'Program hem yönetici seviyesine hem de operasyon ekiplerine uygundur; strateji ve uygulama birlikte ele alınır.'
             },
             {
-                question: isEn ? 'Is it suitable for corporate teams?' : 'Kurumsal ekipler için uygun mu?',
+                question: isEn ? 'Is this program suitable for corporate teams?' : 'Kurumsal ekipler için uygun mu?',
                 answer: isEn
                     ? 'Yes. The structure is optimized for team-based adoption and cross-functional execution.'
                     : 'Evet. İçerik ekip içi kullanım için yapılandırılmıştır ve ortak çalışma akışı sağlar.'
@@ -963,19 +981,9 @@ export default function TrainingProgramPage() {
                     {
                         title: isEn ? 'The Path\nto Revenue' : 'Satışa\nGiden Yol',
                         subtitle: '',
-                        description: isEn ? 'Learn the first steps of customer acquisition and the growth-minded go-to-market moves that create momentum.' : (
-                            <>
-                                <p>
-                                    Pazarlama ürünle ya da kanalla değil, insanla başlar. Bu giriş dersi, pazarlamayı 6 adımlı bir akışa dönüştürerek ölçülebilir ve tekrarlanabilir hale getirir: hedef kitle -&gt; değer &amp; satış önerisi -&gt; kreatif yön/brief -&gt; mecra &amp; huni uyumu -&gt; ölçüm &amp; yineleme -&gt; akışın sadeleştirilmesi.
-                                </p>
-                                <p><strong>Bu dersten sonra:</strong></p>
-                                <ul>
-                                    <li>Pazarlamayı hedef kitle içgörüsüyle başlatmanın neden kritik olduğunu kavrarsın.</li>
-                                    <li>6 adımı birbirine bağlayan "akış mantığını" görürsün.</li>
-                                    <li>Bir sonraki bölüm için hazırlık: Hedef kitleyi anlamak.</li>
-                                </ul>
-                            </>
-                        ),
+                        description: isEn
+                            ? "Marketing doesn't start with the product or the channel — it starts with people. You'll grasp why it's critical to start marketing with audience insight."
+                            : 'Pazarlama ürünle ya da kanalla değil, insanla başlar. Pazarlamayı hedef kitle içgörüsüyle başlatmanın neden kritik olduğunu kavrarsınız.',
                         image: isFleetRentalTraining ? '/fleet-rental-hero.png' : isB2BTraining ? '/b2b2.avif' : isIndustrialFoodTraining ? '/industrial-food-hero.png' : isFintechTraining ? '/fintech-hero.png' : isSoftwareTraining ? '/software-hero.png' : isEnergyTraining ? '/energy-hero.png' : isInteriorDesignTraining ? '/interior-design-hero.png' : '/growth_strategies_handshake.png',
                         buttonText: isEn ? 'Buy Now' : 'Satın Al',
                         buttonLink: '#pricing'
@@ -992,7 +1000,7 @@ export default function TrainingProgramPage() {
                         title: isEn ? 'Measurement\nand Goals' : 'Ölçüm Ve\nHedefler',
                         subtitle: '',
                         description: isEn ? 'Understand the metrics that define success and use them to shape more effective growth decisions.' : 'Başarıyı belirleyen metrikleri analiz ederek, büyüme odaklı pazarlama stratejilerini şekillendirmeyi öğrenirsiniz.',
-                        image: isFleetRentalTraining ? '/data_driven_marketing.png' : isB2BTraining ? '/data_driven_marketing.png' : isIndustrialFoodTraining ? '/why-khilon.png' : isFintechTraining ? '/data_driven_marketing.png' : isSoftwareTraining ? '/data_driven_marketing.png' : isEnergyTraining ? '/why-khilon.png' : isInteriorDesignTraining ? '/why-khilon.png' : '/potential-cta.png',
+                        image: isFleetRentalTraining ? '/data_driven_marketing.png' : isB2BTraining ? '/data_driven_marketing.png' : isIndustrialFoodTraining ? '/why-khilon.png' : isFintechTraining ? '/data_driven_marketing.png' : isSoftwareTraining ? '/data_driven_marketing.png' : isEnergyTraining ? '/why-khilon.png' : isInteriorDesignTraining ? '/why-khilon.png' : '/potential-cta.webp',
                         buttonText: isEn ? 'Buy Now' : 'Satın Al',
                         buttonLink: '#pricing'
                     },

@@ -182,6 +182,95 @@ if ($action === 'me' && $method === 'GET') {
     sendResponse(['user' => $user]);
 }
 
+// POST /api/auth/forgot-password — email'e şifre sıfırlama linki gönderir.
+// Email enumeration'ı önlemek için her durumda success döner; user yoksa sessizce skip.
+if ($action === 'forgot-password' && $method === 'POST') {
+    $data = getJsonBody();
+    $email = trim(strtolower((string)($data['email'] ?? '')));
+    $lang = strtolower((string)($data['lang'] ?? 'tr'));
+    $isEn = $lang === 'en';
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendResponse(['error' => $isEn ? 'Invalid email address' : 'Geçersiz e-posta adresi'], 400);
+    }
+
+    $stmt = $db->prepare("SELECT id, email, first_name FROM users WHERE LOWER(email) = ? LIMIT 1");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+        try {
+            // 1 saatlik JWT — set-password endpoint'i bu token ile auth eder
+            $resetToken = encodeJWT([
+                'id'      => (int)$user['id'],
+                'email'   => $user['email'],
+                'purpose' => 'password_reset',
+                'exp'     => time() + 3600
+            ]);
+
+            // Mail ayarları — Brevo API (öncelikli) veya SMTP fallback
+            $from = (string)getSetting($db, 'contact_email', '');
+            $brevoApiKey = (string)getSetting($db, 'brevo_api_key', '');
+
+            if ($from === '' || ($brevoApiKey === '' && (string)getSetting($db, 'smtp_host', '') === '')) {
+                error_log('[forgot-password] mail ayarları eksik');
+            } else {
+                $resetUrl = 'https://khilonfast.com'
+                    . ($isEn ? '/en/set-password' : '/sifre-belirle')
+                    . '?token=' . urlencode($resetToken) . '&mode=reset';
+                $safeFirst = htmlspecialchars((string)($user['first_name'] ?? 'Değerli Kullanıcı'), ENT_QUOTES, 'UTF-8');
+
+                if ($isEn) {
+                    $subject = 'Khilonfast — Reset Your Password';
+                    $heading = 'Reset Your Password';
+                    $intro = "Hi <strong>{$safeFirst}</strong>,";
+                    $body = "We received a request to reset the password on your Khilonfast account. Click the button below to set a new password. This link is valid for 1 hour.";
+                    $btn = 'Reset Password';
+                    $foot = "If you didn't request a password reset, you can safely ignore this email.";
+                } else {
+                    $subject = 'Khilonfast — Şifre Sıfırlama Talebi';
+                    $heading = 'Şifrenizi Sıfırlayın';
+                    $intro = "Merhaba <strong>{$safeFirst}</strong>,";
+                    $body = "Khilonfast hesabınız için şifre sıfırlama talebi aldık. Yeni şifrenizi belirlemek için aşağıdaki butona tıklayın. Bu link 1 saat geçerlidir.";
+                    $btn = 'Şifremi Sıfırla';
+                    $foot = "Eğer böyle bir talepte bulunmadıysanız bu e-postayı görmezden gelebilirsiniz; hesabınız güvende.";
+                }
+
+                $html = "<!doctype html><html><body style='font-family:Arial,sans-serif;background:#f6f8fb;padding:20px;margin:0;'>
+                    <div style='max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden;'>
+                    <div style='background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px;'>
+                        <h2 style='margin:0;font-size:1.3rem;'>{$heading}</h2>
+                    </div>
+                    <div style='padding:24px;color:#102a43;line-height:1.7;'>
+                        <p style='margin-top:0;'>{$intro}</p>
+                        <p>{$body}</p>
+                        <div style='text-align:center;margin:28px 0;'>
+                            <a href='{$resetUrl}'
+                               style='background-color:#1a3a52;color:#ffffff !important;text-decoration:none;
+                                      padding:14px 32px;border-radius:8px;font-weight:700;font-size:1rem;display:inline-block;'>
+                                {$btn} →
+                            </a>
+                        </div>
+                        <hr style='border:none;border-top:1px solid #e2e8f0;margin:20px 0;'/>
+                        <p style='font-size:0.82rem;color:#94a3b8;margin:0;'>{$foot}</p>
+                    </div></div></body></html>";
+
+                // Akıllı wrapper: brevo_api_key varsa HTTP API, yoksa SMTP
+                sendTransactionalEmail($db, $email, $subject, $html, $from);
+            }
+        } catch (Throwable $e) {
+            error_log('[forgot-password] mail error: ' . $e->getMessage());
+        }
+    }
+
+    // Email enumeration'ı önle — kullanıcı yoksa bile başarılı dön
+    sendResponse([
+        'message' => $isEn
+            ? 'If an account exists for this email, a reset link has been sent.'
+            : 'Bu e-postaya kayıtlı bir hesap varsa, sıfırlama bağlantısı gönderildi.'
+    ]);
+}
+
 // POST /api/auth/set-password — must_change_password=1 olan kullanıcı ilk şifresini belirler
 if ($action === 'set-password' && $method === 'POST') {
     $payload = requireAuth();

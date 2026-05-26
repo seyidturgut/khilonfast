@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { API_BASE_URL } from '../config/api'
 import { useCart } from '../context/CartContext'
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
+import ConsentCheckboxes from './ConsentCheckboxes'
 import './ConsultantBookingModal.css'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -129,6 +130,7 @@ export default function ConsultantBookingModal({
     const [policyPrivacy, setPolicyPrivacy] = useState(false)
     const [policyCookie, setPolicyCookie] = useState(false)
     const [policyRefund, setPolicyRefund] = useState(false)
+    const [, setPolicyEtk] = useState(false)
     const allPoliciesOk = policyTerms && policyPrivacy && policyCookie && policyRefund
 
     // Confirmation state
@@ -139,10 +141,6 @@ export default function ConsultantBookingModal({
     const { addToCart } = useCart()
     const currentLang = useRouteLocale()
     const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout')
-    const privacyPath = getLocalizedPathByKey(currentLang, 'privacyPolicy')
-    const termsPath = getLocalizedPathByKey(currentLang, 'termsOfService')
-    const cookiePath = getLocalizedPathByKey(currentLang, 'cookiePolicy')
-    const refundPath = getLocalizedPathByKey(currentLang, 'refundPolicy')
 
     // Reset when modal opens
     useEffect(() => {
@@ -161,6 +159,7 @@ export default function ConsultantBookingModal({
             setPolicyPrivacy(false)
             setPolicyCookie(false)
             setPolicyRefund(false)
+            setPolicyEtk(false)
         }
     }, [isOpen])
 
@@ -496,22 +495,18 @@ export default function ConsultantBookingModal({
                             )}
 
                             <div className="booking-policy-checkboxes">
-                                <label className="booking-policy-row">
-                                    <input type="checkbox" checked={policyTerms} onChange={e => setPolicyTerms(e.target.checked)} />
-                                    <span><Link to={termsPath} target="_blank" rel="noreferrer">Hizmet Şartları</Link>'nı okudum ve kabul ediyorum.</span>
-                                </label>
-                                <label className="booking-policy-row">
-                                    <input type="checkbox" checked={policyPrivacy} onChange={e => setPolicyPrivacy(e.target.checked)} />
-                                    <span><Link to={privacyPath} target="_blank" rel="noreferrer">Gizlilik Politikası</Link>'nı okudum ve kabul ediyorum.</span>
-                                </label>
-                                <label className="booking-policy-row">
-                                    <input type="checkbox" checked={policyCookie} onChange={e => setPolicyCookie(e.target.checked)} />
-                                    <span><Link to={cookiePath} target="_blank" rel="noreferrer">Çerez Politikası</Link>'nı okudum ve kabul ediyorum.</span>
-                                </label>
-                                <label className="booking-policy-row">
-                                    <input type="checkbox" checked={policyRefund} onChange={e => setPolicyRefund(e.target.checked)} />
-                                    <span><Link to={refundPath} target="_blank" rel="noreferrer">İptal ve İade Politikası</Link>'nı okudum ve kabul ediyorum.</span>
-                                </label>
+                                <ConsentCheckboxes
+                                    context="booking"
+                                    isEn={currentLang === 'en'}
+                                    onChange={s => {
+                                        // Tek main_legal onayı 4 eski policy alanını dolu sayar (sadece submit guard)
+                                        setPolicyTerms(s.main_legal);
+                                        setPolicyPrivacy(s.main_legal);
+                                        setPolicyCookie(s.main_legal);
+                                        setPolicyRefund(s.main_legal);
+                                        setPolicyEtk(s.etk);
+                                    }}
+                                />
                             </div>
 
                             <div className="booking-step-actions">
@@ -597,7 +592,7 @@ export default function ConsultantBookingModal({
                         <button className="booking-btn-primary" onClick={() => {
                             addToCart({
                                 id: `consultant-${service.id}-booking-${bookingId}`,
-                                product_id: service.id,
+                                product_id: 0, // danışmanlık hizmeti products tablosunda değil — backend product_key ile çözer
                                 product_key: `consultant-service-${service.id}`,
                                 name: `${consultant.name} — ${service.title}`,
                                 description: `Danışmanlık rezervasyonu #${bookingId}`,
@@ -615,7 +610,16 @@ export default function ConsultantBookingModal({
                         }}>
                             💳 Ödeme ile Tamamla
                         </button>
-                        <button className="booking-btn-secondary" style={{ marginTop: 8 }} onClick={onClose}>
+                        <button className="booking-btn-secondary" style={{ marginTop: 8 }} onClick={() => {
+                            // "Daha Sonra Öde" → ödeme son-adım maili tetiklenir
+                            if (bookingId) {
+                                fetch(`${API_BASE_URL}/consultants/bookings/${bookingId}/defer`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' }
+                                }).catch(() => { /* sessiz — mail başarısızsa booking yine de durur */ })
+                            }
+                            onClose()
+                        }}>
                             Daha Sonra Öde
                         </button>
                     </div>

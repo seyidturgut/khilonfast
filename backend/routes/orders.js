@@ -4,9 +4,11 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import db from '../config/database.js';
+import { createSubscriptionsForOrder } from '../services/subscriptionService.js';
 import authMiddleware, { optionalAuthMiddleware } from '../middleware/auth.js';
 import { sendWelcomeAccountEmail } from '../services/emailService.js';
 import { dispatchOrderEmails } from '../services/orderNotifications.js';
+import { getCurrentUsdTryRate } from '../services/currencyService.js';
 
 const router = express.Router();
 
@@ -53,6 +55,14 @@ router.post('/',
             await connection.beginTransaction();
 
             const { items, guest_email, guest_name, guest_phone, coupon_code } = req.body;
+
+            // Maestro AI henüz satın alınamaz — maestro-* ürün içeren sipariş reddedilir.
+            // (rollback yeterli; connection.release() finally bloğunda yapılıyor)
+            if (Array.isArray(items) && items.some(i => String(i.product_key || '').toLowerCase().startsWith('maestro-'))) {
+                await connection.rollback();
+                return res.status(403).json({ error: 'Maestro AI hizmeti şu anda satın alınamıyor. Detaylı bilgi için: info@khilonfast.com' });
+            }
+
             let userId = req.user?.id || null;
             let authToken = null;
             let accountCreated = false;
@@ -105,15 +115,51 @@ router.post('/',
                 }
             }
 
-            // Calculate subtotal
+            // Calculate subtotal — TÜM ürünler TRY'a normalize edilir.
+            // USD ürünler: o anki kurla TRY'a çevrilir, oran orders.usd_try_rate_used'a kilitlenir.
+            const usdTryInfo = await getCurrentUsdTryRate();
+            const usdTryRate = Number(usdTryInfo.rate);
+
             let subtotal = 0;
             let currency = 'TRY';
+            let usedUsdConversion = false;
             const orderItems = [];
             const productCategories = [];
             const productIds = [];
 
             for (const item of items) {
                 let product;
+
+                // Danışmanlık hizmeti — products tablosunda DEĞİL, consultant_services'te.
+                // product_key: consultant-service-{consultant_services.id}
+                if (String(item.product_key || '').startsWith('consultant-service-')) {
+                    const svcId = parseInt(String(item.product_key).replace('consultant-service-', ''), 10);
+                    const [svcRows] = await connection.query(
+                        'SELECT id, title, price, currency FROM consultant_services WHERE id = ?', [svcId]
+                    );
+                    const svc = svcRows[0];
+                    if (!svc) throw new Error('Danışmanlık hizmeti bulunamadı');
+                    const [anchorRows] = await connection.query(
+                        "SELECT id, category FROM products WHERE product_key = 'consultant-booking' LIMIT 1"
+                    );
+                    if (!anchorRows.length) throw new Error('Danışmanlık ödeme yapılandırması eksik');
+                    let svcUnitTry = parseFloat(svc.price);
+                    if (svc.currency === 'USD') {
+                        svcUnitTry = Math.round(svcUnitTry * usdTryRate * 100) / 100;
+                        usedUsdConversion = true;
+                    }
+                    const svcTotal = svcUnitTry * item.quantity;
+                    subtotal += svcTotal;
+                    productCategories.push('danismanlik');
+                    productIds.push(anchorRows[0].id);
+                    orderItems.push({
+                        product_id: anchorRows[0].id,
+                        quantity: item.quantity,
+                        unit_price: svcUnitTry,
+                        total_price: svcTotal,
+                    });
+                    continue;
+                }
 
                 // Support both product_id and product_key
                 if (item.product_id && item.product_id !== 0) {
@@ -134,19 +180,27 @@ router.post('/',
                     throw new Error(`Product with ID ${item.product_id} or key ${item.product_key} not found`);
                 }
 
-                const itemTotal = parseFloat(product.price) * item.quantity;
+                // USD ürün: TRY'a çevir
+                let unitPriceTry = parseFloat(product.price);
+                if (product.currency === 'USD') {
+                    unitPriceTry = Math.round(unitPriceTry * usdTryRate * 100) / 100;
+                    usedUsdConversion = true;
+                }
+
+                const itemTotal = unitPriceTry * item.quantity;
                 subtotal += itemTotal;
-                if (product.currency) currency = product.currency;
                 productCategories.push(product.category);
                 productIds.push(product.id);
 
                 orderItems.push({
-                    product_id: product.id, // Use the actual DB product ID
+                    product_id: product.id,
                     quantity: item.quantity,
-                    unit_price: product.price,
+                    unit_price: unitPriceTry,
                     total_price: itemTotal
                 });
             }
+            // Order para birimi her zaman TRY (Lidio sadece TRY ile çekim yapıyor)
+            currency = 'TRY';
 
             // Validate coupon (server-side) and compute discount
             let couponRow = null;
@@ -226,12 +280,13 @@ router.post('/',
             // Generate order number
             const orderNumber = `ORD-${Date.now()}-${userId}`;
 
-            // Create order (with coupon + breakdown)
+            // Create order (with coupon + breakdown + USD/TRY rate audit)
             const [orderResult] = await connection.query(
                 `INSERT INTO orders
                     (user_id, order_number, subtotal_amount, coupon_discount_amount, total_amount,
-                     coupon_id, coupon_code, coupon_name, applied_coupon_snapshot_json, currency, status)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                     coupon_id, coupon_code, coupon_name, applied_coupon_snapshot_json, currency, status,
+                     usd_try_rate_used)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     userId,
                     orderNumber,
@@ -243,7 +298,8 @@ router.post('/',
                     couponRow ? couponRow.name : null,
                     couponSnapshot ? JSON.stringify(couponSnapshot) : null,
                     currency,
-                    orderStatus
+                    orderStatus,
+                    usedUsdConversion ? usdTryRate : null
                 ]
             );
 
@@ -273,19 +329,13 @@ router.post('/',
 
                 // Ücretli siparişlerde subscription'ları payment.js callback'i oluşturuyor;
                 // ücretsiz siparişlerde gateway'e hiç gitmediğimiz için burada oluşturmalıyız.
-                // Aksi halde "Hesabım › İçeriklerim"de ürün görünmez ve eğitim erişimi açılmaz.
-                for (const item of orderItems) {
-                    const [exists] = await connection.query(
-                        'SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1',
-                        [userId, item.product_id, orderId]
-                    );
-                    if (exists.length === 0) {
-                        await connection.query(
-                            'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
-                            [userId, item.product_id, orderId, 'active']
-                        );
-                    }
-                }
+                // Ücretsiz siparişte ödeme yöntemi yok — manual_transfer "no recurring" işareti.
+                await createSubscriptionsForOrder(connection, {
+                    userId,
+                    orderId,
+                    paymentMethod: 'manual_transfer',
+                    renewalCardId: null
+                });
             }
 
             await connection.commit();
@@ -327,14 +377,21 @@ router.post('/',
 // Get order by ID
 router.get('/:id', authMiddleware, async (req, res) => {
     try {
+        // 9+ kalemli siparişlerde GROUP_CONCAT 1024 byte sınırını aşar → items kesik gelir
+        await db.query('SET SESSION group_concat_max_len = 1048576');
         const [orders] = await db.query(
             `SELECT o.*,
                     GROUP_CONCAT(
                         JSON_OBJECT(
                             'id', oi.id,
+                            'order_item_id', oi.id,
                             'product_id', oi.product_id,
                             'product_name', p.name,
+                            'product_key', p.product_key,
                             'product_category', p.category,
+                            'requires_onboarding', COALESCE(p.requires_onboarding, 0),
+                            'product_type', p.type,
+                            'duration_days', p.duration_days,
                             'quantity', oi.quantity,
                             'unit_price', oi.unit_price,
                             'total_price', oi.total_price
@@ -370,14 +427,21 @@ router.get('/user/:userId', authMiddleware, async (req, res) => {
             return res.status(403).json({ error: 'Forbidden' });
         }
 
+        // 9+ kalemli siparişlerde GROUP_CONCAT 1024 byte sınırını aşar → items kesik gelir
+        await db.query('SET SESSION group_concat_max_len = 1048576');
         const [orders] = await db.query(
             `SELECT o.*,
                     GROUP_CONCAT(
                         JSON_OBJECT(
                             'id', oi.id,
+                            'order_item_id', oi.id,
                             'product_id', oi.product_id,
                             'product_name', p.name,
+                            'product_key', p.product_key,
                             'product_category', p.category,
+                            'requires_onboarding', COALESCE(p.requires_onboarding, 0),
+                            'product_type', p.type,
+                            'duration_days', p.duration_days,
                             'quantity', oi.quantity,
                             'unit_price', oi.unit_price,
                             'total_price', oi.total_price

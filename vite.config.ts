@@ -19,13 +19,13 @@ export default defineConfig(({ mode, command }) => {
                 renderer: '@prerenderer/renderer-puppeteer',
                 rendererOptions: {
                     headless: true,
-                    timeout: 120000,
-                    maxConcurrentRoutes: 3,
+                    timeout: 180000,
+                    maxConcurrentRoutes: 2,
                     renderAfterTime: 2000,
                     skipThirdPartyRequests: true,
                     inject: { __PRERENDER__: true },
                     launchOptions: {
-                        protocolTimeout: 180000,
+                        protocolTimeout: 360000,
                         args: ['--no-sandbox', '--disable-setuid-sandbox']
                     }
                 },
@@ -41,11 +41,37 @@ export default defineConfig(({ mode, command }) => {
         optimizeDeps: {
             entries: ['index.html']
         },
+        build: {
+            chunkSizeWarningLimit: 1500,
+            cssCodeSplit: true,
+            rollupOptions: {
+                output: {
+                    manualChunks(id) {
+                        if (!id.includes('node_modules')) return
+                        // React + react-dom + scheduler + react-router stay together to avoid circular deps
+                        if (id.includes('react-icons') || id.includes('@heroicons')) return 'icons'
+                        if (id.includes('react-i18next') || id.includes('i18next')) return 'i18n'
+                        if (id.includes('framer-motion') || id.includes('gsap') || id.includes('lottie')) return 'animation'
+                        if (id.includes('chart') || id.includes('recharts') || id.includes('d3-')) return 'charts'
+                        if (id.includes('swiper') || id.includes('embla')) return 'carousel'
+                    }
+                }
+            }
+        },
         server: {
             host: '127.0.0.1',
             proxy: {
                 '/api': {
-                    target: env.VITE_API_TARGET || 'http://localhost:3002',
+                    target: env.VITE_API_TARGET || 'http://localhost:8099',
+                    changeOrigin: true
+                }
+            }
+        },
+        preview: {
+            host: '127.0.0.1',
+            proxy: {
+                '/api': {
+                    target: env.VITE_API_TARGET || 'http://localhost:8099',
                     changeOrigin: true
                 }
             }

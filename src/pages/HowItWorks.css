@@ -97,12 +97,9 @@
 .how-hero-video {
   border-radius: 26px;
   overflow: hidden;
-  border: 2px solid rgba(21, 50, 76, 0.2);
-  box-shadow: 0 16px 46px rgba(21, 50, 76, 0.2);
 }
 
-.how-hero-video iframe,
-.how-hero-video img {
+.how-hero-video iframe {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -110,7 +107,10 @@
 }
 
 .how-hero-video img {
-  object-fit: cover;
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
 }
 
 .how-steps,

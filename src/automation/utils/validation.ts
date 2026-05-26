@@ -98,31 +98,33 @@ function validateNodeConfig(
   config: NodeConfig
 ): ValidationError[] {
   const errors: ValidationError[] = [];
+  // config null/undefined olabilir (eski seed verileri) — boş objeyle çalış
+  const safe = (config ?? {}) as Record<string, unknown>;
 
   switch (type) {
     case 'trigger': {
-      const c = config as TriggerConfig;
+      const c = safe as unknown as TriggerConfig;
       if (!c.trigger_event) {
         errors.push({ node_id: nodeId, message: 'Tetikleyici olayı seçilmedi.', severity: 'error' });
       }
       break;
     }
     case 'wait': {
-      const c = config as WaitConfig;
+      const c = safe as unknown as WaitConfig;
       if (!c.delay_type || !c.delay_value || c.delay_value <= 0) {
         errors.push({ node_id: nodeId, message: 'Geçerli bir bekleme süresi girin.', severity: 'error' });
       }
       break;
     }
     case 'condition': {
-      const c = config as ConditionConfig;
+      const c = safe as unknown as ConditionConfig;
       if (!c.field || !c.operator) {
         errors.push({ node_id: nodeId, message: 'Koşul alanı ve operatör gereklidir.', severity: 'error' });
       }
       break;
     }
     case 'email': {
-      const c = config as EmailConfig;
+      const c = safe as unknown as EmailConfig;
       if (!c.subject || !c.sender_email) {
         errors.push({ node_id: nodeId, message: 'E-posta konusu ve gönderen adresi gereklidir.', severity: 'error' });
       }
@@ -132,21 +134,21 @@ function validateNodeConfig(
       break;
     }
     case 'update_status': {
-      const c = config as UpdateStatusConfig;
+      const c = safe as unknown as UpdateStatusConfig;
       if (!c.target_type || !c.field_name || !c.value) {
         errors.push({ node_id: nodeId, message: 'Hedef, alan adı ve değer gereklidir.', severity: 'error' });
       }
       break;
     }
     case 'add_tag': {
-      const c = config as AddTagConfig;
+      const c = safe as unknown as AddTagConfig;
       if (!c.target_type || !c.tag_name) {
         errors.push({ node_id: nodeId, message: 'Hedef ve etiket adı gereklidir.', severity: 'error' });
       }
       break;
     }
     case 'webhook': {
-      const c = config as WebhookConfig;
+      const c = safe as unknown as WebhookConfig;
       if (!c.url || !c.method) {
         errors.push({ node_id: nodeId, message: 'Webhook URL ve metodu gereklidir.', severity: 'error' });
       }

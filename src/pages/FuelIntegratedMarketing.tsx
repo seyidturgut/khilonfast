@@ -18,10 +18,10 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function FuelIntegratedMarketing() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
 
     useEffect(() => {
-        document.title = 'Kurumsal Akaryakıt Çözümü Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!'
+        document.title = 'Kurumsal Akaryakıt Çözümü için Bütünleşik Dijital Pazarlama'
 
         const upsertMeta = (name: string, content: string) => {
             let tag = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null
@@ -38,9 +38,9 @@ export default function FuelIntegratedMarketing() {
 
     const config = {
         hero: {
-            title: 'Kurumsal Akaryakıt Çözümü Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!',
-            subtitle: 'Bütünleşik pazarlama stratejileri ile markanızı büyütün!',
-            description: 'khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. SEO, reklam, içerik ve sosyal medyayı tek bir bütünleşik stratejide birleştirin.',
+            title: 'Kurumsal Akaryakıt Çözümü için Bütünleşik Dijital Pazarlama',
+            subtitle: 'Kurumsal Akaryakıt için bütünleşik pazarlama stratejileri ile markanızı büyütün!',
+            description: 'khilonfast ile bütçenizi doğru kanallara yönlendirin. SEO, reklam, içerik ve sosyal medyayı tek stratejide birleştirin.',
             buttonText: t('serviceIDM.hero.buttonText'),
             buttonLink: '#pricing',
             image: '/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif',
@@ -130,32 +130,42 @@ export default function FuelIntegratedMarketing() {
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: t('process.steps.buy.title'),
+                    description: t('process.steps.buy.description'),
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın.</a></>,
+                    title: t('process.steps.auth.title'),
+                    description: (() => {
+                        const raw = t('process.steps.auth.description') as string
+                        const tokens = ['tıklayın>>', 'tıklayın.', 'tıklayın', 'Click for authorization details >>', 'Click >>', 'Click']
+                        for (const tok of tokens) {
+                            const idx = raw.indexOf(tok)
+                            if (idx !== -1) {
+                                return <>{raw.slice(0, idx)}<a href="#authorization" style={{ textDecoration: 'underline' }}>{tok.replace('>>', '').trim()}</a>{raw.slice(idx + tok.length)}</>
+                            }
+                        }
+                        return raw
+                    })(),
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: t('process.steps.brief.title'),
+                    description: t('process.steps.brief.description'),
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief\'inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: t('process.steps.analysis.title'),
+                    description: t('process.steps.analysis.description'),
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: t('process.steps.approval.title'),
+                    description: t('process.steps.approval.description'),
                     icon: <HiCheckBadge />
                 }
             ]
@@ -176,7 +186,7 @@ export default function FuelIntegratedMarketing() {
                 { feature: t('serviceIDM.comparison.rows.backlink'), values: ['-', '-', true] },
                 { feature: t('serviceIDM.comparison.rows.competitor'), values: ['-', t('serviceIDM.comparison.values.competitor1'), t('serviceIDM.comparison.values.competitor2')] },
                 { feature: t('serviceIDM.comparison.rows.pageCount'), values: ['1-3', '10-15', '20-30'] },
-                { feature: t('serviceIDM.comparison.rows.audit'), values: ['-', '3 Ayda 1', 'Ayda 1'] },
+                { feature: t('serviceIDM.comparison.rows.audit'), values: ['-', i18n.language === 'en' ? 'Every Quarter' : '3 Ayda 1', i18n.language === 'en' ? 'Monthly' : 'Ayda 1'] },
                 { feature: t('serviceIDM.comparison.rows.aiOpt'), values: ['-', '-', true] },
                 { feature: t('serviceIDM.comparison.rows.blog'), values: [t('serviceIDM.comparison.values.blog2'), t('serviceIDM.comparison.values.blog4'), t('serviceIDM.comparison.values.blog6')] },
                 { feature: t('serviceIDM.comparison.rows.email'), values: ['-', '-', t('serviceIDM.comparison.values.email10k')] },

@@ -19,10 +19,19 @@ export type AutomationNodeType =
 export type TriggerEvent =
   | 'purchase_completed'
   | 'checkout_email_entered'
+  | 'checkout_abandoned'
+  | 'purchase_completed_no_onboarding'
   | 'onboarding_not_completed'
   | 'service_not_used'
   | 'payment_failed'
-  | 'subscription_cancelled';
+  | 'subscription_cancelled'
+  | 'course_purchased_not_started'
+  | 'course_started_incomplete'
+  | 'course_completed'
+  | 'course_yearly_reactivation'
+  | 'consulting_appointment'
+  | 'maestro_lifecycle'
+  | 'eyetracking_pending_upload';
 
 export interface TriggerConfig {
   trigger_event: TriggerEvent;
@@ -31,7 +40,7 @@ export interface TriggerConfig {
 
 // ─── Wait ───────────────────────────────────────────────────
 
-export type DelayType = 'minutes' | 'hours' | 'days';
+export type DelayType = 'minutes' | 'hours' | 'days' | 'weeks';
 
 export interface WaitConfig {
   delay_type: DelayType;

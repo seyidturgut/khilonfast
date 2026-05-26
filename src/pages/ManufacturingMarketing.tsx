@@ -34,7 +34,7 @@ export default function ManufacturingMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Üretim Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
+            title: 'Üretim için 360° Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -152,16 +152,16 @@ export default function ManufacturingMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Üretim Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Üretim Bütünleşik Dijital Pazarlama" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Üretim Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
-                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Üretim için Bütünleşik Dijital Pazarlama</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Üretim sektörü için bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
-                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirin. Tüm kanallarınızı tek strateji ile yönetin, performans artırın.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
                                         Üretim Sektöründe Bütünleşik Dijital Pazarlama ile Başarıya Ulaşın. Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.
@@ -190,7 +190,7 @@ export default function ManufacturingMarketing() {
                             <div className="tab-grid grid-cols-4">
                                 <div className="sectoral-card">
                                     <HiMagnifyingGlass style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>Google Ads (Global)</h3>
+                                    <h3>Arama Reklamları</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Küresel pazarlarda potansiyel alıcılara doğrudan ulaşın.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('googleAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -198,7 +198,7 @@ export default function ManufacturingMarketing() {
                                 </div>
                                 <div className="sectoral-card">
                                     <HiChartBar style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>Linkedin Reklamları</h3>
+                                    <h3>Sosyal Medya Reklamları</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Satın alma direktörlerine ve endüstri profesyonellerine erişim.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('socialAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -206,7 +206,7 @@ export default function ManufacturingMarketing() {
                                 </div>
                                 <div className="sectoral-card">
                                     <HiSparkles style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>Teknik SEO</h3>
+                                    <h3>SEO Hizmetleri</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Ürün kataloglarınızla global aramalarda üst sıralarda yer alın.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('seo')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -214,7 +214,7 @@ export default function ManufacturingMarketing() {
                                 </div>
                                 <div className="sectoral-card">
                                     <HiVideoCamera style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>Tesis Prodüksiyonu</h3>
+                                    <h3>İçerik Üretimi</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Üretim hattınızı ve tesis gücünüzü profesyonel videolarla sunun.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('contentProduction')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -401,7 +401,7 @@ export default function ManufacturingMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Manufacturing Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Manufacturing Integrated Digital Marketing" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>

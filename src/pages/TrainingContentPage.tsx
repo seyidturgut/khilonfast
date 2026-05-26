@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { API_BASE_URL } from '../config/api'
-import { HiLockClosed, HiPlay, HiDocumentText, HiCheckCircle, HiMenuAlt3, HiChevronLeft, HiChevronRight } from 'react-icons/hi'
+import { HiLockClosed, HiPlay, HiDocumentText, HiCheckCircle, HiChevronLeft, HiChevronRight } from 'react-icons/hi'
 import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
@@ -78,7 +78,8 @@ export default function TrainingContentPage() {
     const [hasAccess, setHasAccess] = useState<boolean | null>(null)
     const [activeLesson, setActiveLesson] = useState<Lesson | null>(null)
     const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [videoCompact, setVideoCompact] = useState(false)
+    const topSentinelRef = useRef<HTMLDivElement>(null)
     const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null)
     const [pdfNumPages, setPdfNumPages] = useState<number>(0)
     const [pdfPage, setPdfPage] = useState<number>(1)
@@ -163,6 +164,17 @@ export default function TrainingContentPage() {
         ro.observe(el)
         return () => ro.disconnect()
     }, [pdfBlobUrl])
+
+    // Sticky video compact mode: sentinel viewport dışına çıkınca video küçülür
+    useEffect(() => {
+        const el = topSentinelRef.current
+        if (!el) return
+        const io = new IntersectionObserver(([entry]) => {
+            setVideoCompact(!entry.isIntersecting)
+        }, { threshold: 0, rootMargin: '0px' })
+        io.observe(el)
+        return () => io.disconnect()
+    }, [hasAccess, config])
 
     const onPdfLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
         setPdfNumPages(numPages)
@@ -260,7 +272,6 @@ export default function TrainingContentPage() {
 
         const selectLesson = (lesson: Lesson) => {
             setActiveLesson(lesson)
-            setSidebarOpen(false)
             // slides panel removed
             // Ders seçilince tamamlandı sayılır
             if (!completedIds.has(lesson.id)) {
@@ -277,7 +288,7 @@ export default function TrainingContentPage() {
                 <div style={{ background: '#1a1f2e', borderBottom: '1px solid #2d3748', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '14px', position: 'sticky', top: 0, zIndex: 50 }}>
                     {/* Logo */}
                     <Link to="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
-                        <img src="/fast-logo-big.svg" alt="khilonfast" style={{ height: '28px', display: 'block', filter: 'brightness(0) invert(1)' }} />
+                        <img src="/fast-logo-big.svg" alt="khilonfast" width={140} height={28} style={{ height: '28px', display: 'block', filter: 'brightness(0) invert(1)' }} />
                     </Link>
                     <div style={{ width: '1px', height: '16px', background: '#374151' }} />
                     {/* Geri */}
@@ -293,21 +304,18 @@ export default function TrainingContentPage() {
                     <span style={{ background: '#16a34a22', color: '#4ade80', padding: '3px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 600, flexShrink: 0 }}>
                         ✓ {isEn ? 'Active' : 'Aktif'}
                     </span>
-                    {/* Mobile: dersler butonu */}
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)}
-                        style={{ display: 'none', alignItems: 'center', gap: '6px', background: '#374151', color: '#e5e7eb', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}
-                        className="lesson-sidebar-toggle">
-                        <HiMenuAlt3 /> {isEn ? 'Lessons' : 'Dersler'}
-                    </button>
                 </div>
 
                 {/* Main layout */}
-                <div style={{ display: 'flex', height: 'calc(100vh - 53px)', overflow: 'hidden' }}>
+                <div className="tcp-main">
 
                     {/* Video / content area */}
-                    <div style={{ flex: 1, overflow: 'auto', background: '#0f1117' }}>
+                    <div className="tcp-video-area">
+                        {/* Sentinel: scroll'da görünmez olunca videoyu compact mode'a alır */}
+                        <div ref={topSentinelRef} style={{ height: 1 }} />
                         {/* Video */}
-                        <div style={{ background: '#000', position: 'relative', paddingBottom: '56.25%' }}>
+                        <div className={'tcp-video-wrap' + (videoCompact ? ' compact' : '')}
+                             style={{ background: '#000', position: 'relative', paddingBottom: '56.25%' }}>
                             {activeVideoUrl ? (
                                 <iframe
                                     key={activeVideoUrl}
@@ -438,8 +446,8 @@ export default function TrainingContentPage() {
                     </div>
 
                     {/* Sidebar: ders listesi */}
-                    <div style={{
-                        width: '340px', flexShrink: 0, background: '#1a1f2e', borderLeft: '1px solid #2d3748',
+                    <div className="tcp-sidebar" style={{
+                        background: '#1a1f2e', borderLeft: '1px solid #2d3748',
                         overflow: 'auto', display: 'flex', flexDirection: 'column'
                     }}>
                         <div style={{ padding: '16px 20px', borderBottom: '1px solid #2d3748', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -501,10 +509,26 @@ export default function TrainingContentPage() {
                     </div>
                 </div>
 
-                {/* Mobile sidebar overlay */}
+                {/* Responsive layout: desktop yan yana, tablet/mobil stack */}
                 <style>{`
-                    @media (max-width: 768px) {
-                        .lesson-sidebar-toggle { display: flex !important; }
+                    .tcp-main { display: flex; height: calc(100vh - 53px); overflow: hidden; }
+                    .tcp-video-area { flex: 1; overflow: auto; background: #0f1117; }
+                    .tcp-sidebar { width: 340px; flex-shrink: 0; }
+                    .tcp-video-wrap { transition: padding-bottom 180ms ease; }
+                    @media (max-width: 1023px) {
+                        .tcp-main { flex-direction: column; height: auto; overflow: visible; }
+                        .tcp-video-area { overflow: visible; }
+                        .tcp-video-wrap {
+                            position: sticky;
+                            top: 53px;
+                            z-index: 30;
+                            background: #000;
+                        }
+                        .tcp-video-wrap.compact { padding-bottom: 30% !important; }
+                        .tcp-sidebar { width: 100%; border-left: none !important; border-top: 1px solid #2d3748; }
+                    }
+                    @media (prefers-reduced-motion: reduce) {
+                        .tcp-video-wrap { transition: none; }
                     }
                 `}</style>
             </div>

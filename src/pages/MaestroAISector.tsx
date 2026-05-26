@@ -18,17 +18,7 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale'
 import { productsAPI } from '../services/api'
-
-const formatProductPrice = (price: number, currency: string, isEn: boolean): string => {
-    try {
-        const fmt = new Intl.NumberFormat(isEn ? 'en-US' : 'tr-TR', {
-            style: 'currency', currency, maximumFractionDigits: 2, minimumFractionDigits: 0
-        });
-        return fmt.format(price);
-    } catch {
-        return `${price} ${currency}`;
-    }
-};
+import { pickLocalizedPriceAndCurrency, formatLocalizedPrice } from '../utils/price'
 
 /**
  * Frontend route'undaki sectorKey, DB'deki product_key ile birebir eşleşmiyor.
@@ -64,7 +54,8 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
     const dbSectorKey = sectorToDbKey[sectorKey] || sectorKey
     const kredliKey = `maestro-${dbSectorKey}-kredili`
     const sinirsizKey = `maestro-${dbSectorKey}-sinirsiz`
-    const [productPrices, setProductPrices] = useState<Record<string, { price: number; currency: string }>>({})
+    type RawProduct = { price?: number | string; currency?: string; display_price_try?: number; display_price_usd?: number }
+    const [productPrices, setProductPrices] = useState<Record<string, RawProduct>>({})
 
     useEffect(() => {
         let cancelled = false
@@ -73,22 +64,23 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
             productsAPI.getByKey(sinirsizKey).catch(() => null)
         ]).then(([kredliRes, sinirsizRes]) => {
             if (cancelled) return
-            const map: Record<string, { price: number; currency: string }> = {}
+            const map: Record<string, RawProduct> = {}
             const kredli = kredliRes?.data?.product || kredliRes?.data
             const sinirsiz = sinirsizRes?.data?.product || sinirsizRes?.data
-            if (kredli?.price !== undefined) map[kredliKey] = { price: Number(kredli.price), currency: kredli.currency || 'TRY' }
-            if (sinirsiz?.price !== undefined) map[sinirsizKey] = { price: Number(sinirsiz.price), currency: sinirsiz.currency || 'TRY' }
+            if (kredli?.price !== undefined) map[kredliKey] = kredli
+            if (sinirsiz?.price !== undefined) map[sinirsizKey] = sinirsiz
             setProductPrices(map)
         })
         return () => { cancelled = true }
     }, [kredliKey, sinirsizKey])
 
-    const kredliPriceLabel = productPrices[kredliKey]
-        ? formatProductPrice(productPrices[kredliKey].price, productPrices[kredliKey].currency, isEn)
-        : '—'
-    const sinirsizPriceLabel = productPrices[sinirsizKey]
-        ? formatProductPrice(productPrices[sinirsizKey].price, productPrices[sinirsizKey].currency, isEn)
-        : '—'
+    const localePicker = (raw?: RawProduct): string => {
+        if (!raw) return '—'
+        const { price, currency } = pickLocalizedPriceAndCurrency(raw, isEn ? 'en' : 'tr')
+        return formatLocalizedPrice(price, currency, isEn ? 'en' : 'tr')
+    }
+    const kredliPriceLabel = localePicker(productPrices[kredliKey])
+    const sinirsizPriceLabel = localePicker(productPrices[sinirsizKey])
 
     const sk = `maestroAISectors.${sectorKey}`
     const sectorLabel = t(`${sk}.sectorLabel`)
@@ -117,29 +109,7 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
             buttonText: t('pricing.buyNow'),
             buttonLink: '#pricing',
             image: '/img/maestro-ai-hero.png',
-            videoUrl: sectorKey === 'b2b'
-                ? (currentLang === 'en' ? 'https://vimeo.com/1150546193' : 'https://vimeo.com/1133020329')
-                : sectorKey === 'odeme-sistemleri'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1133021779' : 'https://vimeo.com/1131184399')
-                    : sectorKey === 'endustriyel-gida'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546239' : 'https://vimeo.com/1138078299')
-                    : sectorKey === 'fintech'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546357' : 'https://vimeo.com/1138057683')
-                : sectorKey === 'enerji'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546292' : 'https://vimeo.com/1138062770')
-                : sectorKey === 'ofis-tasarim'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546456' : 'https://vimeo.com/1138056027')
-                : sectorKey === 'filo-kiralama'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546383' : 'https://vimeo.com/1138053210')
-                : sectorKey === 'teknoloji-yazilim'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546481' : 'https://vimeo.com/1138054522')
-                : sectorKey === 'uretim'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1150546422' : 'https://vimeo.com/1138050853')
-                : sectorKey === 'hediye-karti'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1138057683' : 'https://vimeo.com/1138057683')
-                : sectorKey === 'akaryakit'
-                    ? (currentLang === 'en' ? 'https://vimeo.com/1138057683' : 'https://vimeo.com/1138057683')
-                        : 'https://www.youtube.com/embed/fiHpDDF440M',
+            videoUrl: '',
             hideBadge: true,
             badgeText: t('maestroAI.hero.badge'),
             badgeIcon: <HiBolt />,
@@ -161,7 +131,7 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
                 </>
             ),
             description: sectorText('videoShowcase.description', t('maestroAI.videoShowcase.description')),
-            videoUrl: sectorKey === 'b2b' || sectorKey === 'endustriyel-gida' || sectorKey === 'enerji' || sectorKey === 'filo-kiralama' || sectorKey === 'fintech' || sectorKey === 'odeme-sistemleri' || sectorKey === 'ofis-tasarim' || sectorKey === 'teknoloji-yazilim' || sectorKey === 'uretim' ? '' : 'https://www.youtube.com/embed/fiHpDDF440M'
+            videoUrl: ''
         },
         featuresSection: {
             tag: t('maestroAI.features.tag'),
@@ -247,8 +217,8 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
             description: t('maestroAI.pricing.description'),
             packages: [
                 {
-                    id: `kredili-maestro-${sectorKey}`,
-                    productKey: `maestro-${sectorKey}-kredili`,
+                    id: `kredili-maestro-${dbSectorKey}`,
+                    productKey: `maestro-${dbSectorKey}-kredili`,
                     name: t('maestroAI.pricing.plans.kredili.name'),
                     price: kredliPriceLabel,
                     period: t('pricing.monthly'),
@@ -272,8 +242,8 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
                     buttonLink: contactPath
                 },
                 {
-                    id: `sinirsiz-maestro-${sectorKey}`,
-                    productKey: `maestro-${sectorKey}-sinirsiz`,
+                    id: `sinirsiz-maestro-${dbSectorKey}`,
+                    productKey: `maestro-${dbSectorKey}-sinirsiz`,
                     name: t('maestroAI.pricing.plans.growth.name'),
                     price: sinirsizPriceLabel,
                     period: t('pricing.monthly'),

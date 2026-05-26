@@ -14,6 +14,10 @@ import trainingAnalyticsRoutes from './routes/training-analytics.js';
 import onboardingRoutes from './routes/onboarding.js';
 import couponRoutes from './routes/coupons.js';
 import emailAutomationRoutes from './routes/email-automation.js';
+import crmRoutes from './routes/crm.js';
+import crmPublicRoutes from './routes/crm-public.js';
+import eyeTrackingRoutes, { adminEyeTrackingRouter } from './routes/eyeTracking.js';
+import { getCurrentUsdTryRate as _getRate } from './services/currencyService.js';
 
 dotenv.config();
 
@@ -41,7 +45,25 @@ app.use('/api/consultants', consultantsRoutes);
 app.use('/api/training-analytics', trainingAnalyticsRoutes);
 app.use('/api/onboarding-form', onboardingRoutes);
 app.use('/api/coupons', couponRoutes);
+
+// Public USD/TRY oranı
+app.get('/api/exchange-rate', async (req, res) => {
+    try {
+        const info = await _getRate();
+        res.json({
+            rate: info.rate,
+            source: info.source,
+            updated_at: info.updatedAt
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'rate fetch failed' });
+    }
+});
 app.use('/api/email-automation', emailAutomationRoutes);
+app.use('/api/crm', crmRoutes);
+app.use('/api/crm-public', crmPublicRoutes);
+app.use('/api/eye-tracking', eyeTrackingRoutes);
+app.use('/api/admin/eye-tracking', adminEyeTrackingRouter);
 
 // Health check
 app.get('/health', (req, res) => {

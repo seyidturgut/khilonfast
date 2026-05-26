@@ -73,20 +73,26 @@ export default function ConsultingProgramPage() {
 
     const consulting = useMemo(() => {
         if (matchedConsultingKey) {
-            const resolvedPath = `/${activeSlugs[matchedConsultingKey]}`;
+            // EN'de getConsultingPrograms('en') item.path'lerini `/en/consulting/...` döner.
+            // resolvedPath'i de aynı locale prefix'iyle kur ki strict eşleşme tutsun.
+            const resolvedPath = `${langPrefix}/${activeSlugs[matchedConsultingKey]}`.replace(/\/{2,}/g, '/');
             const bySlugKey = consultingPrograms.find((item) => item.path === resolvedPath);
             if (bySlugKey) return bySlugKey;
         }
 
-        const byPath = consultingPrograms.find((item) =>
-            normalizedCandidates.some((candidate) => {
-                const normalizedItem = item.path.replace(/^\/+/, '');
-                const normalizedItemNoPrefix = normalizedItem.replace(/^(danismanlik|consulting)\//, '');
-                return candidate === normalizedItem || candidate === normalizedItemNoPrefix;
-            })
-        );
+        const byPath = consultingPrograms.find((item) => {
+            // item.path EN: `/en/consulting/...`; TR: `/danismanlik/...`
+            // candidate zaten `/en/` ve baş slash'sız; item.path'i de aynı şekle sok.
+            const normalizedItem = item.path
+                .replace(/^\/+/, '')
+                .replace(/^en\//, '');
+            const normalizedItemNoPrefix = normalizedItem.replace(/^(danismanlik|consulting)\//, '');
+            return normalizedCandidates.some(
+                (candidate) => candidate === normalizedItem || candidate === normalizedItemNoPrefix
+            );
+        });
         return byPath ?? consultingPrograms[0];
-    }, [matchedConsultingKey, normalizedCandidates.join('|'), trSlugs, consultingPrograms]);
+    }, [matchedConsultingKey, normalizedCandidates.join('|'), activeSlugs, langPrefix, consultingPrograms]);
 
     const resolvedSlugKey =
         matchedConsultingKey ??
@@ -247,7 +253,7 @@ export default function ConsultingProgramPage() {
             { title: 'Baseline Metrics and Growth Dashboarding', description: 'Define measurement baselines and build decision-ready reporting workflows.', icon: <HiChartBar /> },
             { title: 'Three Core Marketing Objectives', description: 'Balance acquisition, expansion, and retention through a clear growth operating model.', icon: <HiBolt /> },
             { title: 'Website-Led Demand Architecture', description: 'Assign conversion roles to each key page and optimize your digital journey structure.', icon: <HiGlobeAlt /> },
-            { title: 'Post-Lead Sequence Design', description: 'Run high-converting follow-up flows with timing psychology and multi-channel touchpoints.', icon: <HiComputerDesktop /> },
+            { title: 'Lead Nurturing Sequence Design', description: 'Run high-converting follow-up flows with timing psychology and multi-channel touchpoints.', icon: <HiComputerDesktop /> },
             { title: 'From First Contact to Closed Deal', description: 'Improve sales conversations through objection handling, sequencing, and disciplined follow-up.', icon: <HiChatBubbleLeftRight /> }
         ]
         : [
@@ -285,7 +291,7 @@ export default function ConsultingProgramPage() {
         if (isEnergy) return isEn ? 'Energy' : 'Enerji';
         if (isInteriorDesign) return isEn ? 'Corporate Interior Design' : 'Ofis & Kurumsal İç Tasarım';
         if (isFleetRental) return isEn ? 'Fleet Rental' : 'Filo Kiralama';
-        if (isIndustrialFood) return isEn ? 'Industrial Food' : 'Endüstriyel Gıda';
+        if (isIndustrialFood) return isEn ? 'Industrial Food & Culinary' : 'Endüstriyel Gıda';
         return '';
     })();
 
@@ -298,11 +304,11 @@ export default function ConsultingProgramPage() {
                 'Throughout the consulting program, your team will learn:'
             ],
             bullets: [
-                `How to read target audiences by role (CEO, CFO, CTO, and relevant ${sectorName.toLowerCase()} decision-makers)`,
+                `How to analyze buying personas by role (CEO, CFO, CTO, and relevant ${sectorName.toLowerCase()} decision-makers)`,
                 'How to structure strong value propositions and sales narratives',
                 'How to adapt messages to funnel stages and channel context',
                 'How to evaluate core marketing metrics such as CAC, LTV, ROAS, and ROI',
-                'How to connect post-lead flow, sales conversations, and customer experience into one operating system'
+                'How to connect lead nurturing flow, sales conversations, and customer experience into one operating system'
             ],
             note: 'This program gives executives a strategic lens while providing managers and specialists with concrete frameworks they can apply immediately — all delivered face-to-face at your premises.',
             listTitle: 'Program Modules',
@@ -314,9 +320,9 @@ export default function ConsultingProgramPage() {
                 'Systematic Value Proposition: Pain-Point and Role-Based Messaging',
                 'Sales Funnel: Adapting Messages by Time, Channel, and Stage',
                 'Baseline Metrics: The Compass of Growth',
-                'Three Core Marketing Objectives: Win, Deepen, Retain',
+                'Three Core Marketing Objectives: Acquire, Expand, Retain',
                 'Growing with Your Website: The Role of Each Page',
-                'Post-Lead Flow: Psychology, Timing, and Multi-Channel Touchpoints',
+                'Lead Nurturing Flow: Psychology, Timing, and Multi-Channel Touchpoints',
                 'From First Contact to Closed Deal: Communication, Objection Handling, and Follow-Up'
             ]
         }
@@ -378,7 +384,7 @@ export default function ConsultingProgramPage() {
                         ? 'Growth-Focused Marketing Consulting'
                         : 'Büyüme Odaklı Pazarlama Danışmanlığı ile'}
                     <br />
-                    {isEn ? 'to Reach Better Outcomes' : 'Başarıya Ulaşın'}
+                    {isEn ? 'to Drive Better Business Outcomes' : 'Başarıya Ulaşın'}
                 </>
             ),
             description: isEn
@@ -453,7 +459,7 @@ export default function ConsultingProgramPage() {
                     : 'Seanslar, uzman danışmanlarımız tarafından şirketinizde yüz yüze gerçekleştirilir.'
             },
             {
-                question: isEn ? 'Which experience levels is this program suitable for?' : 'Program hangi seviyeye uygundur?',
+                question: isEn ? 'Who is this program designed for?' : 'Program hangi seviyeye uygundur?',
                 answer: isEn
                     ? 'The program is designed for both leadership and operational teams, combining strategy with real implementation.'
                     : 'Program hem yönetici seviyesine hem de operasyon ekiplerine uygundur; strateji ve uygulama birlikte ele alınır.'
@@ -573,7 +579,12 @@ export default function ConsultingProgramPage() {
                 tag: useOrFallback(cmsContent?.videoShowcase?.tag, baseConfig.videoShowcase.tag),
                 title: <>{useOrFallback(cmsContent?.videoShowcase?.title, baseConfig.videoShowcase.title)}</>,
                 description: useOrFallback(cmsContent?.videoShowcase?.description, baseConfig.videoShowcase.description),
-                videoUrl: useOrFallback(cmsContent?.videoShowcase?.videoUrl, baseConfig.videoShowcase.videoUrl)
+                videoUrl: useOrFallback(
+                    isEn
+                        ? (cmsContent?.videoShowcase?.videoUrl_en || cmsContent?.videoShowcase?.videoUrl)
+                        : (cmsContent?.videoShowcase?.videoUrl_tr || cmsContent?.videoShowcase?.videoUrl),
+                    baseConfig.videoShowcase.videoUrl
+                )
             },
             featuresSection: {
                 ...baseConfig.featuresSection,

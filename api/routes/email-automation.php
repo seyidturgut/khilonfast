@@ -7,9 +7,10 @@ require_once __DIR__ . '/../services/EmailAutomationService.php';
 $db = Database::getInstance();
 
 // ensureEmailAutomationSchema, seedEmailSequences, emailTemplate fonksiyonları
-// artık EmailAutomationService.php'de tanımlı — bu satırlar o dosyadan geliyor.
-// Aşağıdaki tanım kaldırıldı:
-if (false) { function ensureEmailAutomationSchema(PDO $db)
+// artık EmailAutomationService.php'de tanımlı — aşağıdaki tanımlar tarihsel kopya.
+// `if (false)` ile dead-code haline getirilmiş; bloku kapatma satır sayısını yormaması için
+// fonksiyonları olduğu gibi tanımlıyoruz (zaten asla çağırılmıyorlar — service dosyası override eder).
+function ensureEmailAutomationSchema_unused_dead(PDO $db)
 {
     static $checked = false;
     if ($checked) return;
@@ -84,88 +85,8 @@ if (false) { function ensureEmailAutomationSchema(PDO $db)
     $checked = true;
 }
 
-function seedEmailSequences(PDO $db)
-{
-    $baseUrl = 'https://khilonfast.com';
-
-    // Sekans 1: Terk edilen sepet
-    $db->prepare("INSERT INTO email_sequences (name, trigger_event, is_active, restart_after_days) VALUES (?, 'checkout_abandoned', 1, 30)")
-        ->execute(['Terk Edilen Sepet - Hizmetler']);
-    $seqId = (int)$db->lastInsertId();
-
-    $steps = [
-        [1, 60,     'İşleminizi sadece 2 dakikada tamamlayabilirsiniz!',
-            emailTemplate('Merhaba {{first_name}},', 'Kaldığınız yerden satın alma işleminize devam ederek süreci kolay ve hızlı bir şekilde sonuçlandırabilirsiniz.', '{{cart_link}}', 'Devam Et', $baseUrl)],
-        [2, 1440,   'Aradığınız Çözümlere Ulaşmak İçin Son 1 Adım!',
-            emailTemplate('Merhaba {{first_name}},', 'Başvurunuzu henüz tamamlamadınız. Khilonfast hizmetlerinden yararlanan pek çok kullanıcımız gibi siz de ihtiyaçlarınıza uygun çözümlerimizle avantajlardan yararlanmaya hemen başlayabilirsiniz!', '{{cart_link}}', 'Devam Et', $baseUrl)],
-        [3, 4320,   'Biz başlamaya hazırız! Ya siz?',
-            emailTemplate('Merhaba {{first_name}},', 'Başvurunuzu henüz tamamlamadığınızı fark ettik. Size en uygun çözümlerimizle iş süreçlerinizde fark yaratmaya başlamak için sabırsızlanıyoruz.', '{{cart_link}}', 'Devam Et', $baseUrl)],
-        [4, 10080,  'İşleminizi birlikte tamamlamak ister misiniz?',
-            emailTemplate('Merhaba {{first_name}},', 'Henüz tamamlamadığınızı gördüğümüz işlemleriniz için dilerseniz size süreçle ilgili yardımcı olabilir ve sorularınızı yanıtlayabiliriz.', '{{cart_link}}', 'Devam Et', $baseUrl)],
-        [5, 43200,  'khilonfast Çözümleri Hala Gündeminizde Mi?',
-            emailTemplate('Merhaba {{first_name}},', 'Hala tamamlanmayı bekleyen bir işleminiz olduğunu size hatırlatmak istedik. 😊 Eğer şu an doğru zaman değilse sizi anlıyoruz. Dilerseniz işleminize istediğiniz zaman devam edebilirsiniz.', '{{cart_link}}', 'Devam Et', $baseUrl)],
-        [6, 129600, 'khilonfast Çözümlerine Göz Atmak İster Misiniz?',
-            emailTemplate('Merhaba {{first_name}},', 'Daha evvel ilgilendiğiniz hizmetlerimizi ve diğer khilonfast çözümlerini tekrar incelemek ister misiniz? Eğer ihtiyaçlarınız farklılaştıysa, sizin için yeni bir plan oluşturabiliriz.', $baseUrl . '/hizmetlerimiz', 'Yeni Plan Oluştur', $baseUrl)],
-    ];
-
-    $insertStep = $db->prepare("INSERT INTO email_sequence_steps (sequence_id, step_order, delay_minutes, subject, body_html) VALUES (?, ?, ?, ?, ?)");
-    foreach ($steps as $step) {
-        $insertStep->execute([$seqId, $step[0], $step[1], $step[2], $step[3]]);
-    }
-
-    // Sekans 2: Satın alma sonrası
-    $db->prepare("INSERT INTO email_sequences (name, trigger_event, is_active, restart_after_days) VALUES (?, 'purchase_completed', 1, NULL)")
-        ->execute(['Satın Alma Sonrası - İçerik Erişim Hatırlatması']);
-    $seqId2 = (int)$db->lastInsertId();
-
-    $db->prepare("INSERT INTO email_sequence_steps (sequence_id, step_order, delay_minutes, subject, body_html) VALUES (?, 1, 4320, ?, ?)")
-        ->execute([
-            $seqId2,
-            'Satın aldığınız içeriklere erişmeyi unutmayın!',
-            emailTemplate(
-                'Merhaba {{first_name}},',
-                'Satın aldığınız içeriklere hâlâ erişmediğinizi fark ettik. Dashboard\'unuza giriş yaparak içeriklerinize kolayca ulaşabilirsiniz.',
-                $baseUrl . '/dashboard',
-                'Dashboard\'a Git',
-                $baseUrl
-            )
-        ]);
-}
-
-function emailTemplate($greeting, $body, $ctaUrl, $ctaText, $baseUrl)
-{
-    $safeBody = nl2br(htmlspecialchars($body, ENT_QUOTES, 'UTF-8'));
-    $safeCtaText = htmlspecialchars($ctaText, ENT_QUOTES, 'UTF-8');
-
-    return "<!doctype html><html lang='tr'><head><meta charset='UTF-8'></head>
-<body style='margin:0;padding:0;font-family:Arial,sans-serif;background:#f6f8fb;'>
-<div style='max-width:600px;margin:0 auto;padding:20px;'>
-  <div style='background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden;'>
-    <div style='background:linear-gradient(90deg,#1a3a52,#89b004);padding:20px 24px;'>
-      <a href='{$baseUrl}' style='text-decoration:none;'>
-        <span style='color:#fff;font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;'>khilon<span style='color:#d4f06b;'>fast</span></span>
-      </a>
-    </div>
-    <div style='padding:28px 24px;color:#102a43;line-height:1.7;'>
-      <p style='margin-top:0;font-size:1rem;'>{$greeting}</p>
-      <p style='font-size:0.97rem;color:#334155;'>{$safeBody}</p>
-      <div style='text-align:center;margin:28px 0;'>
-        <a href='{$ctaUrl}'
-           style='background:linear-gradient(90deg,#1a3a52,#2d5570);color:#fff;text-decoration:none;
-                  padding:14px 36px;border-radius:8px;font-weight:700;font-size:1rem;display:inline-block;'>
-          {$safeCtaText} →
-        </a>
-      </div>
-      <p style='font-size:0.88rem;color:#64748b;'>Saygılarımızla,<br><strong>Khilonfast Ekibi</strong></p>
-      <hr style='border:none;border-top:1px solid #e2e8f0;margin:20px 0;'/>
-      <p style='font-size:0.78rem;color:#94a3b8;margin:0;text-align:center;'>
-        Bu e-postayı almak istemiyorsanız <a href='{{unsubscribe_link}}' style='color:#64748b;'>listeden çıkabilirsiniz</a>.
-      </p>
-    </div>
-  </div>
-</div>
-</body></html>";
-}
+// seedEmailSequences ve emailTemplate fonksiyonları artık api/services/EmailAutomationService.php'de.
+// Buradaki tarihsel kopyaları PHP "Cannot redeclare function" fatal'ına yol açtığı için silindi.
 
 function makeUnsubscribeToken($email)
 {
@@ -344,16 +265,13 @@ if ($action === 'process' && $method === 'POST') {
         sendResponse(['error' => 'Unauthorized'], 401);
     }
 
+    $brevoApiKey = (string)getSetting($db, 'brevo_api_key', '');
     $smtpHost = (string)getSetting($db, 'smtp_host', '');
-    $smtpPort = (int)getSetting($db, 'smtp_port', '465');
-    $smtpUser = (string)getSetting($db, 'smtp_user', '');
-    $smtpPass = (string)getSetting($db, 'smtp_pass', '');
-    $smtpSecure = parseBool(getSetting($db, 'smtp_secure', $smtpPort === 465 ? 'true' : 'false'), $smtpPort === 465);
-    $from = (string)getSetting($db, 'contact_email', $smtpUser);
+    $from = (string)getSetting($db, 'contact_email', '');
     $baseUrl = 'https://khilonfast.com';
 
-    if ($smtpHost === '' || $smtpUser === '' || $smtpPass === '' || $from === '') {
-        sendResponse(['error' => 'SMTP ayarları eksik'], 500);
+    if ($from === '' || ($brevoApiKey === '' && $smtpHost === '')) {
+        sendResponse(['error' => 'Mail ayarları eksik (Brevo API key veya SMTP)'], 500);
     }
 
     // Gönderilecek e-postalar (max 50 per run)
@@ -410,7 +328,7 @@ if ($action === 'process' && $method === 'POST') {
         $html = injectTemplateVars($row['body_html'], $firstName, $cartLink, $email, $baseUrl);
 
         try {
-            sendSmtpEmail($smtpHost, $smtpPort, $smtpUser, $smtpPass, $from, $email, $row['subject'], $html, $smtpSecure);
+            sendTransactionalEmail($db, $email, $row['subject'], $html);
             $db->prepare("UPDATE email_queue SET status = 'sent', sent_at = NOW() WHERE id = ?")->execute([$row['id']]);
             $sent++;
         } catch (Throwable $e) {

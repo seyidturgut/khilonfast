@@ -12,7 +12,7 @@ interface CartProps {
 
 export default function Cart({ isOpen, onClose }: CartProps) {
     useTranslation('common');
-    const { items, removeFromCart, getTotalPrice, clearCart } = useCart();
+    const { items, removeFromCart, getTotalPrice, clearCart, hasUsdProducts, exchangeRateInfo } = useCart();
     const navigate = useNavigate();
     const currentLang = useRouteLocale();
     const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout');
@@ -62,6 +62,11 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                         <h3>{item.name}</h3>
                                         <p className="cart-item-price">
                                             {formatPrice(item.price, item.currency)}
+                                            {item.original_currency === 'USD' && item.original_price !== undefined && (
+                                                <span style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 500, marginTop: 2 }}>
+                                                    {currentLang === 'en' ? 'Original:' : 'Orijinal:'} ${item.original_price.toLocaleString('en-US')}
+                                                </span>
+                                            )}
                                         </p>
                                     </div>
                                     <div className="cart-item-actions">
@@ -79,14 +84,43 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                     )}
                 </div>
 
-                {items.length > 0 && (
+                {items.length > 0 && (() => {
+                    const subtotal = getTotalPrice();
+                    const vatRate = 0.20;
+                    const vatAmount = subtotal * vatRate;
+                    const grandTotal = subtotal + vatAmount;
+                    const cur = items.every(i => i.currency === items[0].currency) ? items[0].currency : 'TL';
+                    return (
                     <div className="cart-footer">
-                        <div className="cart-total">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#64748b', padding: '4px 0' }}>
+                            <span>{currentLang === 'en' ? 'Subtotal (excl. VAT)' : 'Ara toplam (KDV hariç)'}</span>
+                            <span>{formatPrice(subtotal, cur)}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#64748b', padding: '4px 0' }}>
+                            <span>{currentLang === 'en' ? 'VAT (20%)' : 'KDV (%20)'}</span>
+                            <span>{formatPrice(vatAmount, cur)}</span>
+                        </div>
+                        <div className="cart-total" style={{ borderTop: '1px solid #e2e8f0', paddingTop: 8, marginTop: 4 }}>
                             <span>{currentLang === 'en' ? 'Total:' : 'Toplam:'}</span>
                             <strong>
-                                {formatPrice(getTotalPrice(), items.length > 0 && items.every(i => i.currency === items[0].currency) ? items[0].currency : 'TL')}
+                                {formatPrice(grandTotal, cur)}
                             </strong>
                         </div>
+                        {hasUsdProducts && (
+                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center', marginBottom: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {currentLang === 'en' ? 'Rate:' : 'Kur:'}
+                                {exchangeRateInfo?.rate ? ` 1 USD = ${Number(exchangeRateInfo.rate).toFixed(4)} TL · ` : ' '}
+                                <a
+                                    href="https://www.tcmb.gov.tr/kurlar/today.xml"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={currentLang === 'en' ? 'Central Bank of Turkey — daily official rate' : 'Türkiye Cumhuriyet Merkez Bankası — resmi günlük kur'}
+                                    style={{ color: '#64748b', textDecoration: 'underline' }}
+                                >
+                                    TCMB
+                                </a>
+                            </div>
+                        )}
                         <button className="btn-checkout" onClick={handleCheckout}>
                             {currentLang === 'en' ? 'Proceed to Checkout' : 'Ödemeye Geç'}
                         </button>
@@ -94,7 +128,8 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                             {currentLang === 'en' ? 'Clear Cart' : 'Sepeti Temizle'}
                         </button>
                     </div>
-                )}
+                    );
+                })()}
             </div>
         </>
     );

@@ -17,6 +17,7 @@ export default function Login() {
     const currentLang = useRouteLocale();
     const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
     const registerPath = getLocalizedPathByKey(currentLang, 'register');
+    const forgotPath = getLocalizedPathByKey(currentLang, 'forgotPassword');
 
     // Redirect if already logged in
     useEffect(() => {
@@ -88,6 +89,9 @@ export default function Login() {
                                 required
                                 placeholder="••••••••"
                             />
+                            <div className="auth-forgot">
+                                <Link to={forgotPath}>{t('authPages.login.forgotPassword')}</Link>
+                            </div>
                         </div>
 
                         <button type="submit" className="btn-auth-primary" disabled={loading}>

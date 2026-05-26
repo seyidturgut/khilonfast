@@ -20,10 +20,10 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
 export default function SocialMediaAds() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
-    const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
+    const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
         document.title = isEn ? 'Social Media Advertising | khilonfast' : 'Sosyal Medya Reklamcılığı | khilonfast'
@@ -98,39 +98,49 @@ export default function SocialMediaAds() {
             ]
         },
         processSection: {
-            tag: 'Nasıl Çalışır?',
-            title: 'Hizmet Süreci',
+            tag: t('process.tag', { defaultValue: 'Nasıl Çalışır?' }),
+            title: t('process.title', { defaultValue: 'Hizmet Süreci' }),
             description: 'Sosyal medya varlığınızı güçlendirmek için izlediğimiz 5 adımlı yol haritası.',
             videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: t('process.steps.buy.title'),
+                    description: t('process.steps.buy.description'),
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
+                    title: t('process.steps.auth.title'),
+                    description: (() => {
+                        const raw = t('process.steps.auth.description') as string
+                        const tokens = ['tıklayın>>', 'tıklayın.', 'tıklayın', 'Click for authorization details >>', 'Click >>', 'Click']
+                        for (const tok of tokens) {
+                            const idx = raw.indexOf(tok)
+                            if (idx !== -1) {
+                                return <>{raw.slice(0, idx)}<a href="#authorization" style={{ textDecoration: 'underline' }}>{tok.replace('>>', '').trim()}</a>{raw.slice(idx + tok.length)}</>
+                            }
+                        }
+                        return raw
+                    })(),
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: t('process.steps.brief.title'),
+                    description: t('process.steps.brief.description'),
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: t('process.steps.analysis.title'),
+                    description: t('process.steps.analysis.description'),
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: t('process.steps.approval.title'),
+                    description: t('process.steps.approval.description'),
                     icon: <HiCheckBadge />
                 }
             ]
@@ -245,7 +255,48 @@ export default function SocialMediaAds() {
                 { title: 'Growth', icon: <HiChartBar /> },
                 { title: 'Ultimate', icon: <HiTrophy /> }
             ],
-            rows: [
+            rows: i18n.language === 'en' ? [
+                {
+                    feature: 'Social Media Ads',
+                    values: [
+                        '1 Meta Account',
+                        '2 Accounts (Meta + LinkedIn or TikTok)',
+                        '3 Accounts (Meta and/or LinkedIn and/or TikTok)'
+                    ]
+                },
+                {
+                    feature: 'Additional Setup Fee',
+                    values: [
+                        'A one-time setup fee equal to the first-month package fee applies on monthly plans.',
+                        'A one-time setup fee equal to the first-month package fee applies on monthly plans.',
+                        'A one-time setup fee equal to the first-month package fee applies on monthly plans.'
+                    ]
+                },
+                {
+                    feature: 'Campaign Management',
+                    values: ['2 Campaigns', '4 Campaigns', '6 Campaigns']
+                },
+                {
+                    feature: 'Campaign Optimization',
+                    values: ['Basic', true, 'Continuous']
+                },
+                {
+                    feature: 'Performance Reporting',
+                    values: [
+                        'Email report, once a month',
+                        'Email report, every two weeks',
+                        'Email report, weekly'
+                    ]
+                },
+                {
+                    feature: 'Ad Budget Policy',
+                    values: [
+                        'If 10% of the ad budget does not exceed the Core package fee, pricing remains at Core; otherwise it moves up one tier.',
+                        'If 10% of the ad budget does not exceed the Growth package fee, pricing remains at Growth; otherwise it moves up one tier.',
+                        'If 10% of the ad budget does not exceed the Ultimate package fee, pricing remains at Ultimate; otherwise the surplus is added as a percentage and subsequent months continue at the higher tier.'
+                    ]
+                }
+            ] : [
                 {
                     feature: 'Sosyal Medya Reklamları',
                     values: [
@@ -286,7 +337,8 @@ export default function SocialMediaAds() {
                         'Reklam bütçesinin %10’u ultimate paket ücretini aşmıyorsa ultimate paket üzerinden fiyatlandırılır; aşması durumunda ek tutar yüzdesel olarak eklenir ve sonraki aylarda bulunduğu üst paketten fiyatlandırma devam eder.'
                     ]
                 }
-            ]
+            ],
+            note: i18n.language === 'en' ? '(*) Prices exclude VAT.' : '(*) KDV hariç.'
         },
         testimonial: {
             quote: "Sosyal medya reklam bütçemizi khilonfast'a emanet ettikten sonra maliyetlerimizi sabit tutarak erişimimizi 3 katına çıkardık.",
@@ -294,9 +346,20 @@ export default function SocialMediaAds() {
             role: 'Pazarlama Müdürü'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+            { question: t('serviceSocialAds.faqs.q1.q'), answer: t('serviceSocialAds.faqs.q1.a') },
+            { question: t('serviceSocialAds.faqs.q2.q'), answer: t('serviceSocialAds.faqs.q2.a') },
+            { question: t('serviceSocialAds.faqs.q3.q'), answer: t('serviceSocialAds.faqs.q3.a') },
+            { question: t('serviceSocialAds.faqs.q4.q'), answer: t('serviceSocialAds.faqs.q4.a') },
+            { question: t('serviceSocialAds.faqs.q5.q'), answer: t('serviceSocialAds.faqs.q5.a') },
+            { question: t('serviceSocialAds.faqs.q6.q'), answer: t('serviceSocialAds.faqs.q6.a') },
+            { question: t('serviceSocialAds.faqs.q7.q'), answer: t('serviceSocialAds.faqs.q7.a') },
+            { question: t('serviceSocialAds.faqs.q8.q'), answer: t('serviceSocialAds.faqs.q8.a') },
+            { question: t('serviceSocialAds.faqs.q9.q'), answer: t('serviceSocialAds.faqs.q9.a') },
+            { question: t('serviceSocialAds.faqs.q10.q'), answer: t('serviceSocialAds.faqs.q10.a') },
+            { question: t('serviceSocialAds.faqs.q11.q'), answer: t('serviceSocialAds.faqs.q11.a') },
+            { question: t('serviceSocialAds.faqs.q12.q'), answer: t('serviceSocialAds.faqs.q12.a') },
+            { question: t('serviceSocialAds.faqs.q13.q'), answer: t('serviceSocialAds.faqs.q13.a') },
+            { question: t('serviceSocialAds.faqs.q14.q'), answer: t('serviceSocialAds.faqs.q14.a') }
         ]
     }
 
@@ -474,9 +537,20 @@ export default function SocialMediaAds() {
             role: 'Marketing Manager'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+            { question: t('serviceSocialAds.faqs.q1.q'), answer: t('serviceSocialAds.faqs.q1.a') },
+            { question: t('serviceSocialAds.faqs.q2.q'), answer: t('serviceSocialAds.faqs.q2.a') },
+            { question: t('serviceSocialAds.faqs.q3.q'), answer: t('serviceSocialAds.faqs.q3.a') },
+            { question: t('serviceSocialAds.faqs.q4.q'), answer: t('serviceSocialAds.faqs.q4.a') },
+            { question: t('serviceSocialAds.faqs.q5.q'), answer: t('serviceSocialAds.faqs.q5.a') },
+            { question: t('serviceSocialAds.faqs.q6.q'), answer: t('serviceSocialAds.faqs.q6.a') },
+            { question: t('serviceSocialAds.faqs.q7.q'), answer: t('serviceSocialAds.faqs.q7.a') },
+            { question: t('serviceSocialAds.faqs.q8.q'), answer: t('serviceSocialAds.faqs.q8.a') },
+            { question: t('serviceSocialAds.faqs.q9.q'), answer: t('serviceSocialAds.faqs.q9.a') },
+            { question: t('serviceSocialAds.faqs.q10.q'), answer: t('serviceSocialAds.faqs.q10.a') },
+            { question: t('serviceSocialAds.faqs.q11.q'), answer: t('serviceSocialAds.faqs.q11.a') },
+            { question: t('serviceSocialAds.faqs.q12.q'), answer: t('serviceSocialAds.faqs.q12.a') },
+            { question: t('serviceSocialAds.faqs.q13.q'), answer: t('serviceSocialAds.faqs.q13.a') },
+            { question: t('serviceSocialAds.faqs.q14.q'), answer: t('serviceSocialAds.faqs.q14.a') }
         ]
     }
 

@@ -1,7 +1,20 @@
 <?php
 // api/routes/products.php
 
+require_once __DIR__ . '/../services/CurrencyService.php';
+
 $db = Database::getInstance();
+
+// Bir liste/ürünü TRY normalize eder (USD currency'li olanları güncel kurla TRY'a çevirir)
+function normalizeProductsToTry(PDO $db, array &$products): void
+{
+    foreach ($products as &$p) {
+        if (is_array($p)) {
+            $p = normalizeProductBothCurrencies($db, $p);
+        }
+    }
+    unset($p);
+}
 
 if ($method === 'GET') {
     $lang = $_GET['lang'] ?? 'tr';
@@ -48,11 +61,17 @@ if ($method === 'GET') {
                 $pkg['description'] = !empty($pkg['description_en']) ? $pkg['description_en'] : $pkg['description'];
                 $pkg['features'] = !empty($pkg['features_en']) ? $pkg['features_en'] : $pkg['features'];
             }
+            unset($pkg);
 
             if ($usedFallback) {
                 error_log(sprintf('Localization fallback used for product "%s" (id=%d)', (string) ($product['product_key'] ?? $id), (int) $product['id']));
             }
         }
+
+        // Hem TRY hem USD display alanları (frontend locale'a göre seçer)
+        $product = normalizeProductBothCurrencies($db, $product);
+        normalizeProductsToTry($db, $packages);
+
         $product['packages'] = $packages;
 
         sendResponse(['product' => $product]);
@@ -72,6 +91,8 @@ if ($method === 'GET') {
             $product['features'] = !empty($product['features_en']) ? $product['features_en'] : $product['features'];
         }
 
+        $product = normalizeProductBothCurrencies($db, $product);
+
         sendResponse(['product' => $product]);
     } else {
         // Get all
@@ -83,7 +104,11 @@ if ($method === 'GET') {
                 $p['name'] = !empty($p['name_en']) ? $p['name_en'] : $p['name'];
                 $p['description'] = !empty($p['description_en']) ? $p['description_en'] : $p['description'];
             }
+            unset($p);
         }
+
+        // Tüm ürünleri TRY'a çevir
+        normalizeProductsToTry($db, $products);
 
         sendResponse(['products' => $products]);
     }

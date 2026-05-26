@@ -64,6 +64,17 @@ function ensureEmailAutomationSchema(PDO $db)
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
+    // Idempotent kolon ekleme — eski tablo CREATE'den önce oluşturulmuş ise eksik kolonları ekle
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM email_events")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('cart_data', $cols, true)) {
+            $db->exec("ALTER TABLE email_events ADD COLUMN cart_data JSON NULL AFTER user_id");
+        }
+        if (!in_array('metadata', $cols, true)) {
+            $db->exec("ALTER TABLE email_events ADD COLUMN metadata JSON NULL AFTER cart_data");
+        }
+    } catch (Throwable $e) { error_log('[email-automation] ALTER email_events: ' . $e->getMessage()); }
+
     // Cron key settings yoksa ekle
     try {
         $db->exec("INSERT IGNORE INTO settings (setting_key, setting_value, setting_group, description)

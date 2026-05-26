@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { resolveLocalizedText } from '../utils/localizedContent'
 import { API_BASE_URL } from '../config/api'
+import EditableMedia from '../components/cms/EditableMedia'
+import { usePageSlug } from '../hooks/usePageSlug'
 import './About.css'
 
 const ABOUT_TEXT_KEYS = [
@@ -46,6 +48,7 @@ export default function About() {
     const { t, i18n } = useTranslation('common');
     const location = useLocation();
     const currentLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    const cmsSlug = usePageSlug();
     const langPrefix = currentLang === 'en' ? '/en' : '';
     const toLocalized = (key: string) => `${langPrefix}/${t(`slugs.${key}`)}`.replace(/\/{2,}/g, '/');
     const { user } = useAuth();
@@ -445,8 +448,16 @@ export default function About() {
                             </div>
                         </div>
                         <div className="about-visual">
-                            <div className="image-frame">
-                                <img src="/images/about/1-1.avif" alt={staticCopy.teamAlt} />
+                            <div className="image-frame" style={{ position: 'relative' }}>
+                                <EditableMedia
+                                    pageSlug={cmsSlug}
+                                    fieldKey="team_image"
+                                    type="image"
+                                    src="/images/about/1-1.avif"
+                                    currentLang={currentLang}
+                                >
+                                    {(src) => <img src={src} alt={staticCopy.teamAlt} width={800} height={600} loading="lazy" />}
+                                </EditableMedia>
                             </div>
                         </div>
                     </div>
@@ -460,11 +471,16 @@ export default function About() {
                     <div className="birth-grid">
                         {staticCopy.birthCards.map((card, index) => (
                             <div className="birth-card" key={index}>
-                                <div className="birth-image">
-                                    <img
+                                <div className="birth-image" style={{ position: 'relative' }}>
+                                    <EditableMedia
+                                        pageSlug={cmsSlug}
+                                        fieldKey={`birth_card_${index}`}
+                                        type="image"
                                         src={index === 0 ? '/images/about/Gelenekselden-Dijitale.avif' : index === 1 ? '/images/about/Yenilik-ve-Hiz.avif' : '/images/about/ilham-veri.avif'}
-                                        alt={card.imageAlt}
-                                    />
+                                        currentLang={currentLang}
+                                    >
+                                        {(src) => <img src={src} alt={card.imageAlt} width={800} height={600} loading="lazy" />}
+                                    </EditableMedia>
                                 </div>
                                 <h3>{card.title}</h3>
                                 <p>
@@ -509,8 +525,16 @@ export default function About() {
                                 </div>
                             </div>
                         </div>
-                        <div className="about-visual model-hero-visual">
-                            <img src="/service-model.png" alt={staticCopy.modelImageAlt} className="rounded-img" />
+                        <div className="about-visual model-hero-visual" style={{ position: 'relative' }}>
+                            <EditableMedia
+                                pageSlug={cmsSlug}
+                                fieldKey="service_model_image"
+                                type="image"
+                                src="/service-model.png"
+                                currentLang={currentLang}
+                            >
+                                {(src) => <img src={src} alt={staticCopy.modelImageAlt} width={800} height={600} loading="lazy" className="rounded-img" />}
+                            </EditableMedia>
                         </div>
                     </div>
                     <div className="model-detail-panel">
@@ -574,8 +598,16 @@ export default function About() {
                                 ))}
                             </div>
                         </div>
-                        <div className="about-visual">
-                            <img src="/images/about/3-2.webp" alt={staticCopy.whyImageAlt} className="floating-img" />
+                        <div className="about-visual" style={{ position: 'relative' }}>
+                            <EditableMedia
+                                pageSlug={cmsSlug}
+                                fieldKey="why_image"
+                                type="image"
+                                src="/images/about/3-2.webp"
+                                currentLang={currentLang}
+                            >
+                                {(src) => <img src={src} alt={staticCopy.whyImageAlt} width={800} height={600} loading="lazy" className="floating-img" />}
+                            </EditableMedia>
                         </div>
                     </div>
                 </div>
@@ -614,8 +646,16 @@ export default function About() {
                                 ))}
                             </div>
                         </div>
-                        <div className="about-visual">
-                            <img src="/not-suitable.png" alt={staticCopy.notSuitableAlt} className="rounded-img shadow-lg" />
+                        <div className="about-visual" style={{ position: 'relative' }}>
+                            <EditableMedia
+                                pageSlug={cmsSlug}
+                                fieldKey="not_suitable_image"
+                                type="image"
+                                src="/not-suitable.png"
+                                currentLang={currentLang}
+                            >
+                                {(src) => <img src={src} alt={staticCopy.notSuitableAlt} width={800} height={600} loading="lazy" className="rounded-img shadow-lg" />}
+                            </EditableMedia>
                         </div>
                     </div>
                 </div>
@@ -625,7 +665,7 @@ export default function About() {
             <section className="brand-statement">
                 <div className="container">
                     <div className="statement-box">
-                        <img src="/fast-logo-big.svg" alt="Khilon" className="statement-logo" />
+                        <img src="/fast-logo-big.svg" alt="Khilon" width={200} height={50} className="statement-logo" />
                         <h3>{tx('aboutPage.brandStatement.title')}</h3>
                     </div>
                 </div>

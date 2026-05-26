@@ -20,14 +20,16 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
 export default function SeoService() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
-    const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
+    const homeServicesPath = isEn ? '/en/#services' : '/#services'
     const langPrefix = isEn ? '/en' : ''
 
     useEffect(() => {
-        document.title = isEn ? 'SEO Management Services | khilonfast' : 'SEO Yönetimi | khilonfast'
+        document.title = isEn
+            ? 'SEO Management and Organic Growth Services | khilonfast'
+            : 'SEO Yönetimi ve Organik Büyüme Hizmetleri | khilonfast'
     }, [isEn])
 
     const trConfig = {
@@ -100,39 +102,49 @@ export default function SeoService() {
             ]
         },
         processSection: {
-            tag: 'Nasıl Çalışır?',
-            title: 'Hizmet Süreci',
+            tag: t('process.tag', { defaultValue: 'Nasıl Çalışır?' }),
+            title: t('process.title', { defaultValue: 'Hizmet Süreci' }),
             description: 'Organik trafiğinizi artırmak için izlediğimiz 5 adımlı yol haritası.',
             videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: t('process.steps.buy.title'),
+                    description: t('process.steps.buy.description'),
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
+                    title: t('process.steps.auth.title'),
+                    description: (() => {
+                        const raw = t('process.steps.auth.description') as string
+                        const tokens = ['tıklayın>>', 'tıklayın.', 'tıklayın', 'Click for authorization details >>', 'Click >>', 'Click']
+                        for (const tok of tokens) {
+                            const idx = raw.indexOf(tok)
+                            if (idx !== -1) {
+                                return <>{raw.slice(0, idx)}<a href="#authorization" style={{ textDecoration: 'underline' }}>{tok.replace('>>', '').trim()}</a>{raw.slice(idx + tok.length)}</>
+                            }
+                        }
+                        return raw
+                    })(),
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: t('process.steps.brief.title'),
+                    description: t('process.steps.brief.description'),
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: t('process.steps.analysis.title'),
+                    description: t('process.steps.analysis.description'),
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: t('process.steps.approval.title'),
+                    description: t('process.steps.approval.description'),
                     icon: <HiCheckBadge />
                 }
             ]
@@ -143,7 +155,19 @@ export default function SeoService() {
                 { title: 'Growth', icon: <HiChartBar /> },
                 { title: 'Ultimate', icon: <HiTrophy /> }
             ],
-            rows: [
+            rows: i18n.language === 'en' ? [
+                { feature: 'SEO', values: ['Basic SEO optimization', 'Advanced SEO strategy & execution', 'Pro SEO strategy, content production, advanced technical SEO'] },
+                { feature: 'Keyword research', values: [true, true, true] },
+                { feature: 'On-page optimization playbook', values: [true, true, true] },
+                { feature: 'Looker Studio setup', values: [true, true, true] },
+                { feature: 'GSC & GA setup', values: ['-', true, true] },
+                { feature: 'Content strategy document', values: ['-', '-', true] },
+                { feature: 'Off-page SEO (Backlink building)', values: ['-', '-', true] },
+                { feature: 'Competitor analysis', values: ['-', '1 Competitor', '2 Competitors'] },
+                { feature: 'Number of pages', values: ['1-9', '10-19', '20-30'] },
+                { feature: 'SEO Audit', values: ['-', 'Every Quarter', 'Monthly'] },
+                { feature: 'AI Optimization', values: ['-', '-', true] }
+            ] : [
                 { feature: 'SEO', values: ['Temel SEO optimizasyonu', 'Gelişmiş SEO stratejisi ve uygulama', 'Pro SEO stratejisi, içerik üretimi ve gelişmiş teknik SEO'] },
                 { feature: 'Anahtar kelime araştırması', values: [true, true, true] },
                 { feature: 'Sayfa içi optimizasyon reçetesi', values: [true, true, true] },
@@ -156,7 +180,7 @@ export default function SeoService() {
                 { feature: 'SEO Audit', values: ['-', '3 Ayda 1', 'Ayda 1'] },
                 { feature: 'Yapay Zeka (AI) Optimizasyonu', values: ['-', '-', true] }
             ],
-            note: '(*) KDV hariçtir.'
+            note: i18n.language === 'en' ? '(*) Prices exclude VAT.' : '(*) KDV hariçtir.'
         },
         pricingSection: {
             tag: 'Hizmet Paketleri',
@@ -238,69 +262,17 @@ export default function SeoService() {
             role: "E-ticaret Direktörü"
         },
         faqs: [
-            {
-                question: 'Neden khilonfast ile çalışmayı seçmeliyim?',
-                answer: 'khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz.'
-            },
-            {
-                question: 'Neden yüz yüze veya online toplantı yapmıyoruz?',
-                answer: 'khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır.'
-            },
-            {
-                question: 'khilonfast ile kimler çalışmamalı?',
-                answer: 'khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast’ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir.'
-            },
-            {
-                question: 'khilonfast kimler için ideal bir iş ortağıdır?',
-                answer: 'khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir.'
-            },
-            {
-                question: 'khilonfast ile iletişimi nasıl sağlayabilirim?',
-                answer: 'khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır.'
-            },
-            {
-                question: 'Hizmet satın alımdan sonra süreç nasıl ilerleyecek?',
-                answer: 'khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır.'
-            },
-            {
-                question: 'Go to market stratejisi işletmem için nasıl faydalıdır?',
-                answer: 'Go to market stratejisi, yeni bir ürün veya hizmetin pazara hızlı ve etkili bir şekilde giriş yapmasını sağlar. khilonfast, hedef kitlenizi analiz eder, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda başarılı bir konum almanızı sağlar.'
-            },
-            {
-                question: 'Go to market stratejimin performansını nasıl takip edebilirim?',
-                answer: 'khilonfast, go to market stratejinizin performansını izlemek için haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, satışlar, pazar penetrasyonu ve müşteri geri bildirimleri gibi önemli metrikleri içerir. Canlı dashboard’lar aracılığıyla sonuçlarınızı anlık olarak takip edebilirsiniz.'
-            },
-            {
-                question: 'Neden khilonfast go to market stratejisi hizmetini tercih etmeliyim?',
-                answer: 'khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için ideal bir seçimdir.'
-            },
-            {
-                question: 'Go to market stratejisi nasıl oluşturulur?',
-                answer: 'khilonfast, öncelikle hedef kitlenizi ve pazarınızı analiz eder. Ardından, pazara giriş sürecinizi destekleyecek stratejileri geliştirir. Pazara giriş sonrası performans izlenir ve strateji gerektiğinde güncellenir.'
-            }
-        ],
-        authorizationSection: {
-            title: "SEO Yetkilendirme Adımları",
-            description: "SEO süreçlerinin sağlıklı yürütülmesi için aşağıdaki araçların yetkilendirilmesi gerekmektedir.",
-            cards: [
-                {
-                    title: "Google Search Console Yetkilendirme",
-                    description: "Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.",
-                    highlightText: "Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.",
-                    buttonText: "KEŞFET",
-                    buttonLink: "/hizmetlerimiz/google-search-console-kurulum-akisi",
-                    theme: "light" as const
-                },
-                {
-                    title: "Google Analytics Yetkilendirme",
-                    description: "Detaylı analiz için Google Analytics erişimlerini tanımlayın.",
-                    highlightText: "Analiz süreçlerinizin ölçüm doğruluğunu artırın.",
-                    buttonText: "KEŞFET",
-                    buttonLink: "/google-analytics-kurulum-akisi",
-                    theme: "dark" as const
-                }
-            ]
-        }
+            { question: t('serviceSeo.faqs.q1.q'), answer: t('serviceSeo.faqs.q1.a') },
+            { question: t('serviceSeo.faqs.q2.q'), answer: t('serviceSeo.faqs.q2.a') },
+            { question: t('serviceSeo.faqs.q3.q'), answer: t('serviceSeo.faqs.q3.a') },
+            { question: t('serviceSeo.faqs.q4.q'), answer: t('serviceSeo.faqs.q4.a') },
+            { question: t('serviceSeo.faqs.q5.q'), answer: t('serviceSeo.faqs.q5.a') },
+            { question: t('serviceSeo.faqs.q6.q'), answer: t('serviceSeo.faqs.q6.a') },
+            { question: t('serviceSeo.faqs.q7.q'), answer: t('serviceSeo.faqs.q7.a') },
+            { question: t('serviceSeo.faqs.q8.q'), answer: t('serviceSeo.faqs.q8.a') },
+            { question: t('serviceSeo.faqs.q9.q'), answer: t('serviceSeo.faqs.q9.a') },
+            { question: t('serviceSeo.faqs.q10.q'), answer: t('serviceSeo.faqs.q10.a') }
+        ]
     }
 
     const enConfig = {
@@ -368,39 +340,39 @@ export default function SeoService() {
             ]
         },
         processSection: {
-            tag: 'Nasıl Çalışır?',
-            title: 'Hizmet Süreci',
-            description: 'Organik trafiğinizi artırmak için izlediğimiz 5 adımlı yol haritası.',
+            tag: 'How It Works',
+            title: 'Service Process',
+            description: 'A 5-step roadmap we follow to grow your organic traffic.',
             videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: 'Purchase',
+                    description: 'Choose the package that fits your needs. The process starts automatically once your purchase is complete.',
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
+                    title: 'Authorize',
+                    description: <>Grant the khilonfast team the necessary access permissions. For authorization details <a href="#authorization" style={{ textDecoration: 'underline' }}>click here</a></>,
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: 'Brief Us',
+                    description: 'Answer the questions in the form we send you to share your goals, target audience and brand voice. This form forms the foundation of the strategy.',
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: 'Analysis',
+                    description: 'The khilonfast team analyzes your brief and prepares a de-brief report showing how we have understood you. This report helps us align on direction together.',
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: 'Approval',
+                    description: 'Once the de-brief report is approved, service setup begins and measurements are activated within one week.',
                     icon: <HiCheckBadge />
                 }
             ]
@@ -421,32 +393,17 @@ export default function SeoService() {
             role: 'E-commerce Director'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ],
-        authorizationSection: {
-            title: isEn ? 'SEO Authorization Steps' : 'SEO Yetkilendirme Adımları',
-            description: isEn ? 'Access to the following tools is required for healthy SEO execution.' : 'SEO süreçlerinin sağlıklı yürütülmesi için aşağıdaki araçların yetkilendirilmesi gerekmektedir.',
-            cards: [
-                {
-                    title: isEn ? 'Google Search Console Authorization' : 'Google Search Console Yetkilendirme',
-                    description: isEn ? 'Grant Search Console access to strengthen organic analysis.' : 'Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.',
-                    highlightText: isEn ? 'Improve visibility through search performance diagnostics.' : 'Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.',
-                    buttonText: t('common.discover'),
-                    buttonLink: `${langPrefix}/hizmetlerimiz/google-search-console-kurulum-akisi`,
-                    theme: 'light' as const
-                },
-                {
-                    title: isEn ? 'Google Analytics Authorization' : 'Google Analytics Yetkilendirme',
-                    description: isEn ? 'Grant Analytics access for deeper behavioral insight.' : 'Detaylı analiz için Google Analytics erişimlerini tanımlayın.',
-                    highlightText: isEn ? 'Increase measurement reliability across SEO workflows.' : 'Analiz süreçlerinizin ölçüm doğruluğunu artırın.',
-                    buttonText: t('common.discover'),
-                    buttonLink: `${langPrefix}/google-analytics-kurulum-akisi`,
-                    theme: 'dark' as const
-                }
-            ]
-        }
+            { question: t('serviceSeo.faqs.q1.q'), answer: t('serviceSeo.faqs.q1.a') },
+            { question: t('serviceSeo.faqs.q2.q'), answer: t('serviceSeo.faqs.q2.a') },
+            { question: t('serviceSeo.faqs.q3.q'), answer: t('serviceSeo.faqs.q3.a') },
+            { question: t('serviceSeo.faqs.q4.q'), answer: t('serviceSeo.faqs.q4.a') },
+            { question: t('serviceSeo.faqs.q5.q'), answer: t('serviceSeo.faqs.q5.a') },
+            { question: t('serviceSeo.faqs.q6.q'), answer: t('serviceSeo.faqs.q6.a') },
+            { question: t('serviceSeo.faqs.q7.q'), answer: t('serviceSeo.faqs.q7.a') },
+            { question: t('serviceSeo.faqs.q8.q'), answer: t('serviceSeo.faqs.q8.a') },
+            { question: t('serviceSeo.faqs.q9.q'), answer: t('serviceSeo.faqs.q9.a') },
+            { question: t('serviceSeo.faqs.q10.q'), answer: t('serviceSeo.faqs.q10.a') }
+        ]
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-seo" disableApiHeroTextOverride={true} />

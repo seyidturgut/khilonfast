@@ -249,7 +249,7 @@ export default function Header() {
             <div className="container header-container">
                 <div className="logo">
                     <Link to={currentLang === 'en' ? '/en' : '/'}>
-                        <img src="/fast-logo-big.svg" alt="khilonfast" />
+                        <img src="/fast-logo-big.svg" alt="khilonfast" width={140} height={36} />
                     </Link>
                 </div>
 
@@ -338,7 +338,7 @@ export default function Header() {
                 <div className="mobile-menu-overlay active">
                     <div className="mobile-menu-header">
                         <div className="logo">
-                            <img src="/fast-logo-big.svg" alt="khilonfast" style={{ filter: 'brightness(0) invert(1)' }} />
+                            <img src="/fast-logo-big.svg" alt="khilonfast" width={140} height={36} style={{ filter: 'brightness(0) invert(1)' }} />
                         </div>
                         <button className="menu-close" onClick={closeMobileMenu}>
                             <HiX />

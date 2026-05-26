@@ -14,21 +14,21 @@ export default function Solutions({ tx }: { tx?: (key: string) => string }) {
         {
             title: text('solutions.item1.title'),
             description: text('solutions.item1.description'),
-            image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop',
+            image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=480&h=288&fit=crop&auto=format',
             gradient: 'from-blue-500 to-cyan-500',
             link: toLocalized('gtm')
         },
         {
             title: text('solutions.item2.title'),
             description: text('solutions.item2.description'),
-            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop',
+            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=480&h=288&fit=crop&auto=format',
             gradient: 'from-purple-500 to-pink-500',
             link: toLocalized('idm')
         },
         {
             title: text('solutions.item3.title'),
             description: text('solutions.item3.description'),
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop',
+            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=480&h=288&fit=crop&auto=format',
             gradient: 'from-orange-500 to-red-500',
             link: toLocalized('sectoralB2B')
         }
@@ -56,6 +56,10 @@ export default function Solutions({ tx }: { tx?: (key: string) => string }) {
                                     src={solution.image}
                                     alt={solution.title}
                                     className="solution-image"
+                                    width={400}
+                                    height={240}
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
 

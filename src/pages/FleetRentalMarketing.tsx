@@ -34,7 +34,7 @@ export default function FleetRentalMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Filo Kiralama Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
+            title: 'Filo Kiralama için 360° Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Filo Kiralama pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -152,16 +152,16 @@ export default function FleetRentalMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Filo Kiralama Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Filo Kiralama Bütünleşik Dijital Pazarlama" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Filo Kiralama Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
-                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Filo Kiralama için Bütünleşik Dijital Pazarlama</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Filo Kiralama için bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
-                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirin. Tüm kanallarınızı tek strateji ile yönetin, performans artırın.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
                                         Filo Kiralama Sektöründe Bütünleşik Dijital Pazarlama ile Başarıya Ulaşın. Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.
@@ -198,7 +198,7 @@ export default function FleetRentalMarketing() {
                                 </div>
                                 <div className="sectoral-card">
                                     <HiChartBar style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>Linkedin Reklamları</h3>
+                                    <h3>Sosyal Medya Reklamları</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Şirketlerin satın alma ve İK yöneticilerine doğrudan ulaşın.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('socialAds')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -206,7 +206,7 @@ export default function FleetRentalMarketing() {
                                 </div>
                                 <div className="sectoral-card">
                                     <HiSparkles style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>Sektörel SEO</h3>
+                                    <h3>SEO Hizmetleri</h3>
                                     <p style={{ fontSize: '0.85rem' }}>Filo çözümlerinizle organik aramalarda otorite kurun.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('seo')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -214,7 +214,7 @@ export default function FleetRentalMarketing() {
                                 </div>
                                 <div className="sectoral-card">
                                     <HiVideoCamera style={{ fontSize: '1.8rem', marginBottom: '12px', color: '#1a3a52' }} />
-                                    <h3>İçerik Stratejisi</h3>
+                                    <h3>İçerik Üretimi</h3>
                                     <p style={{ fontSize: '0.85rem' }}>TCO (Toplam Sahip Olma Maliyeti) gibi teknik konularda rehber içerikler.</p>
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link to={path('contentProduction')} className="sectoral-btn" style={{ width: '100%', padding: '10px' }}>{isEn ? 'Buy Now' : 'Satın Al'}</Link>
@@ -401,7 +401,7 @@ export default function FleetRentalMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Fleet Rental Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Fleet Rental Integrated Digital Marketing" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>

@@ -34,7 +34,7 @@ export default function PaymentSystemsMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Ödeme Sistemleri Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
+            title: 'Ödeme Sistemleri için 360° Pazarlama Çözümleri',
             subtitle: '',
             description: 'Ödeme sistemlerinde büyümenin sırrını keşfedin. khilonfast ile pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Çözümleri Keşfedin',
@@ -150,16 +150,16 @@ export default function PaymentSystemsMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Ödeme Sistemleri Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Ödeme Sistemleri Bütünleşik Dijital Pazarlama" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Ödeme Sistemleri Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
-                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Ödeme Sistemleri için Bütünleşik Dijital Pazarlama</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Ödeme Sistemleri için bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
-                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirin. Tüm kanallarınızı tek strateji ile yönetin, performans artırın.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
                                         Ödeme Sistemleri Sektöründe Bütünleşik Dijital Pazarlama ile Başarıya Ulaşın. Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.
@@ -393,7 +393,7 @@ export default function PaymentSystemsMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Payment Systems Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Payment Systems Integrated Digital Marketing" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>

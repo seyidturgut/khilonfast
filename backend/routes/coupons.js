@@ -1,5 +1,6 @@
 import express from 'express';
 import db from '../config/database.js';
+import { getCurrentUsdTryRate } from '../services/currencyService.js';
 
 const router = express.Router();
 
@@ -40,8 +41,10 @@ router.post('/validate', async (req, res) => {
         }
 
         // Fetch product prices for submitted items
+        // USD ürünler güncel kurla TRY'a çevrilir; coupon validation hep TRY üzerinden yapılır.
         let subtotal = 0;
         let currency = 'TRY';
+        const usdTryRate = (await getCurrentUsdTryRate()).rate;
 
         if (items.length > 0) {
             const productIds = items.map(i => i.product_id).filter(Boolean);
@@ -54,11 +57,14 @@ router.post('/validate', async (req, res) => {
                 const priceMap = {};
                 for (const p of products) {
                     priceMap[p.id] = p;
-                    currency = p.currency || 'TRY';
                 }
                 for (const item of items) {
                     const p = priceMap[item.product_id];
-                    if (p) subtotal += Number(p.price) * (item.quantity || 1);
+                    if (!p) continue;
+                    const unitPriceTry = (p.currency === 'USD')
+                        ? Number(p.price) * usdTryRate
+                        : Number(p.price);
+                    subtotal += unitPriceTry * (item.quantity || 1);
                 }
 
                 // Check restricted categories

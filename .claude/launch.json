@@ -1,24 +1,8 @@
 {
   "version": "0.0.1",
   "configurations": [
-    {
-      "name": "Frontend (Vite)",
-      "runtimeExecutable": "/opt/homebrew/bin/node",
-      "runtimeArgs": ["node_modules/.bin/vite"],
-      "port": 5173
-    },
-    {
-      "name": "Backend (Express API)",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "cwd": "backend",
-      "port": 3002
-    },
-    {
-      "name": "PHP API",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev:php-api"],
-      "port": 8099
-    }
+    { "name": "khilonfast-vite", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "5174", "--strictPort"], "port": 5174 },
+    { "name": "khilonfast-php-api", "runtimeExecutable": "php", "runtimeArgs": ["-S", "127.0.0.1:8099", "-t", "."], "port": 8099 },
+    { "name": "khilonfast-node-backend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "cwd": "backend", "port": 3002 }
   ]
 }

@@ -138,6 +138,21 @@ export const sendOnboardingFormConfirmationEmail = async ({ to, firstName, produ
     });
 };
 
+// Satın alma sonrası: ürün başına onboarding formu daveti
+export const sendOnboardingInvitationEmail = async ({ to, firstName, productName, orderNumber, orderId, orderItemId }) => {
+    const settings = await getMailSettings();
+    if (!settings.host || !settings.user || !settings.pass) return;
+    const base = (process.env.FRONTEND_URL || 'https://khilonfast.com').replace(/\/$/, '');
+    const formUrl = `${base}/onboarding-formu?order_id=${orderId}&order_item_id=${orderItemId}`;
+    const transporter = nodemailer.createTransport({ host: settings.host, port: settings.port, secure: settings.secure, auth: { user: settings.user, pass: settings.pass } });
+    const productLabel = productName ? `<strong>${productName}</strong>` : 'hizmetiniz';
+    await transporter.sendMail({
+        from: settings.from, to,
+        subject: `Khilonfast — ${productName || 'Hizmetiniz'} için Onboarding Formu (${orderNumber})`,
+        html: `<!doctype html><html lang="tr"><head><meta charset="utf-8"/></head><body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,sans-serif;color:#102a43"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f7fb;padding:24px 12px"><tr><td align="center"><table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #d9e2ec"><tr><td style="background:linear-gradient(135deg,#1a3a52,#89b004);padding:20px 24px;color:#fff"><h1 style="margin:0;font-size:20px">Son Adım — Onboarding Formu</h1></td></tr><tr><td style="padding:24px;line-height:1.7"><p style="margin:0 0 12px;font-size:15px">Merhaba ${firstName || 'Değerli Müşterimiz'},</p><p style="margin:0 0 14px;font-size:14px;color:#334e68">${productLabel} hizmetine başlayabilmemiz için lütfen aşağıdaki onboarding formunu doldurun. Çalışmayı işinize göre özelleştireceğiz.</p><div style="text-align:center;margin:22px 0"><a href="${formUrl}" style="display:inline-block;background:#1a3a52;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;text-decoration:none">Formu Doldur</a></div><p style="margin:0;font-size:13px;color:#64748b">Form yaklaşık 5–7 dakika sürer. Sipariş no: <strong>${orderNumber}</strong></p></td></tr></table></td></tr></table></body></html>`
+    });
+};
+
 // ────────────────────────────────────────────────
 // Sipariş Onayı (Müşteri) ve Admin Satış Bildirimi
 // ────────────────────────────────────────────────
@@ -297,11 +312,32 @@ export const sendOrderAdminNotificationEmail = async ({ order, items, customer }
     });
 };
 
+// Genel amaçlı mail (attachment destekli) — Eye Tracking raporu vb.
+export const sendCustomMail = async ({ to, subject, html, attachments }) => {
+    const settings = await getMailSettings();
+    if (!settings.host || !settings.user || !settings.pass || !settings.from) {
+        throw new Error('SMTP ayarlari eksik');
+    }
+    const transporter = nodemailer.createTransport({
+        host: settings.host, port: settings.port, secure: settings.secure,
+        auth: { user: settings.user, pass: settings.pass }
+    });
+    return transporter.sendMail({
+        from: settings.from,
+        to,
+        subject,
+        html,
+        ...(Array.isArray(attachments) && attachments.length ? { attachments } : {})
+    });
+};
+
 export default {
     sendWelcomeAccountEmail,
     sendOnboardingFormAdminEmail,
     sendOnboardingFormConfirmationEmail,
+    sendOnboardingInvitationEmail,
     sendOrderConfirmationEmail,
-    sendOrderAdminNotificationEmail
+    sendOrderAdminNotificationEmail,
+    sendCustomMail
 };
 

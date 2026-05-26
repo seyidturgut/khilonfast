@@ -5,9 +5,13 @@ const AboutVisual: React.FC = () => {
         <div className="about-visual-image-container" style={{ width: '100%', maxWidth: '100%', position: 'relative' }}>
             <div className="about-image-glow" />
             <img
-                src="/images/about/visual.png"
+                src="/images/about/visual.webp"
                 alt="khilonfast dijital strateji ve pazarlama planlamasını temsil eden görsel"
                 className="about-image"
+                width={1200}
+                height={800}
+                loading="lazy"
+                decoding="async"
                 style={{
                     width: '100%',
                     height: 'auto',

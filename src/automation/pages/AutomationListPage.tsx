@@ -171,6 +171,13 @@ export default function AutomationListPage() {
                     Düzenle
                   </button>
                   <button
+                    onClick={() => navigate(`/admin/automations/${auto.id}/executions`)}
+                    style={actionBtn('#7c3aed', '#fff')}
+                    title="Çalıştırma logları"
+                  >
+                    Loglar
+                  </button>
+                  <button
                     onClick={() => handleToggleActive(auto)}
                     style={actionBtn(auto.status === 'active' ? '#94a3b8' : '#22c55e', '#fff')}
                   >

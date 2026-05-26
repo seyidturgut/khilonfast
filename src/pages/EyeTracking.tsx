@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
     HiBolt,
@@ -16,10 +17,43 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate, { ServicePageProps } from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
+import { productsAPI } from '../services/api'
+import { pickLocalizedPriceAndCurrency, formatLocalizedPrice } from '../utils/price'
+
+type RawProduct = { price?: number | string; currency?: string; display_price_try?: number; display_price_usd?: number }
 
 export default function EyeTracking() {
     const { t } = useTranslation('common')
     const isEn = useRouteLocale() === 'en'
+
+    // Backend ürünlerinden fiyatları çek — admin panelden değiştirilebilsin ve EN'de USD görünsün
+    const [eyePrices, setEyePrices] = useState<Record<string, RawProduct>>({})
+    useEffect(() => {
+        let cancelled = false
+        Promise.all([
+            productsAPI.getByKey('eye-starter').catch(() => null),
+            productsAPI.getByKey('eye-growth').catch(() => null),
+            productsAPI.getByKey('eye-pro').catch(() => null)
+        ]).then(([starter, growth, pro]) => {
+            if (cancelled) return
+            const map: Record<string, RawProduct> = {}
+            const s = starter?.data?.product || starter?.data
+            const g = growth?.data?.product || growth?.data
+            const p = pro?.data?.product || pro?.data
+            if (s?.price !== undefined) map['eye-starter'] = s
+            if (g?.price !== undefined) map['eye-growth'] = g
+            if (p?.price !== undefined) map['eye-pro'] = p
+            setEyePrices(map)
+        })
+        return () => { cancelled = true }
+    }, [])
+
+    const formatEyePrice = (key: string, fallback: string): string => {
+        const raw = eyePrices[key]
+        if (!raw) return fallback
+        const { price, currency } = pickLocalizedPriceAndCurrency(raw, isEn ? 'en' : 'tr')
+        return formatLocalizedPrice(price, currency, isEn ? 'en' : 'tr')
+    }
     const showcaseHighlight = isEn ? 'AI and Eye Tracking' : 'AI ve Eye Tracking'
     const showcaseTitle = t('eyeTracking.videoShowcase.title')
     const [showcaseBefore, showcaseAfter = ''] = showcaseTitle.split(showcaseHighlight)
@@ -72,7 +106,7 @@ export default function EyeTracking() {
                 </>
             ),
             description: t('eyeTracking.videoShowcase.description'),
-            videoUrl: 'https://player.vimeo.com/video/1131181115'
+            videoUrl: '' // Sağdaki tanıtım videosu kaldırıldı; başlık + açıklama tek sütun olarak gösterilir
         },
         approachSection: {
             tag: t('eyeTracking.approach.tag'),
@@ -208,7 +242,7 @@ export default function EyeTracking() {
                     id: 'starter',
                     productKey: 'eye-starter',
                     name: 'Starter',
-                    price: '1.000TL',
+                    price: formatEyePrice('eye-starter', '1.000TL'),
                     period: t('pricing.monthly'),
                     description: isEn
                         ? 'An ideal starting point for single-creative analysis.'
@@ -220,14 +254,14 @@ export default function EyeTracking() {
                         isEn ? 'Heatmap View' : 'Heatmap Gorunumu',
                         isEn ? 'Baseline Optimization Recommendations' : 'Temel Iyilestirme Onerileri'
                     ],
-                    buttonText: t('pricing.buyNow'),
-                    buttonLink: isEn ? '/en/contact' : '/iletisim'
+                    buttonText: isEn ? 'Add to Cart' : 'Sepete Ekle',
+                    buttonLink: ''
                 },
                 {
                     id: 'growth',
                     productKey: 'eye-growth',
                     name: 'Growth',
-                    price: '2.700TL',
+                    price: formatEyePrice('eye-growth', '2.700TL'),
                     period: t('pricing.monthly'),
                     description: t('eyeTracking.pricing.plans.growth.desc'),
                     icon: <HiArrowTrendingUp />,
@@ -238,14 +272,14 @@ export default function EyeTracking() {
                         isEn ? 'Pre A/B Test Measurement' : 'A/B Test Oncesi Olcum',
                         isEn ? 'Sector Benchmarking' : 'Sektorel Karsilastirma'
                     ],
-                    buttonText: t('pricing.buyNow'),
-                    buttonLink: isEn ? '/en/contact' : '/iletisim'
+                    buttonText: isEn ? 'Add to Cart' : 'Sepete Ekle',
+                    buttonLink: ''
                 },
                 {
                     id: 'pro',
                     productKey: 'eye-pro',
                     name: 'Pro',
-                    price: '4.000TL',
+                    price: formatEyePrice('eye-pro', '4.000TL'),
                     period: t('pricing.monthly'),
                     description: t('eyeTracking.pricing.plans.pro.desc'),
                     icon: <HiSparkles />,
@@ -255,8 +289,8 @@ export default function EyeTracking() {
                         isEn ? 'Strategic Advisory Support' : 'Stratejik Danismanlik Destegi',
                         isEn ? 'Fast Approval Workflow' : 'Hizli Onay Sureci'
                     ],
-                    buttonText: t('pricing.buyNow'),
-                    buttonLink: isEn ? '/en/contact' : '/iletisim'
+                    buttonText: isEn ? 'Add to Cart' : 'Sepete Ekle',
+                    buttonLink: ''
                 }
             ]
         },

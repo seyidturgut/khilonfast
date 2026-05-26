@@ -33,26 +33,43 @@ async function ensureTable() {
     if (cols.length === 0) {
         await db.query("ALTER TABLE onboarding_forms ADD COLUMN status ENUM('new','reviewed') DEFAULT 'new' AFTER form_data");
     }
+    // order_item_id kolonu (ürün-bazlı form)
+    const [oiCols] = await db.query("SHOW COLUMNS FROM onboarding_forms LIKE 'order_item_id'");
+    if (oiCols.length === 0) {
+        await db.query("ALTER TABLE onboarding_forms ADD COLUMN order_item_id INT NULL AFTER order_id");
+        await db.query("ALTER TABLE onboarding_forms ADD INDEX idx_order_item_id (order_item_id)");
+    }
 }
 ensureTable().catch(console.error);
 
 // POST /api/onboarding-form — form kaydet + email gönder
 router.post('/', authenticateToken, async (req, res) => {
     try {
-        const { order_id, form_data, product_names } = req.body;
+        const { order_id, order_item_id, form_data, product_names } = req.body;
         const user_id = req.user.id;
 
-        if (!order_id || !form_data) {
-            return res.status(400).json({ error: 'order_id ve form_data zorunlu' });
+        if (!order_id || !order_item_id || !form_data) {
+            return res.status(400).json({ error: 'order_id, order_item_id ve form_data zorunlu' });
         }
 
-        // Zaten doldurulmuş mu?
+        // order_item siparişe ve kullanıcıya ait mi?
+        const [[itemRow]] = await db.query(
+            `SELECT oi.id, oi.product_id, o.user_id
+             FROM order_items oi JOIN orders o ON o.id = oi.order_id
+             WHERE oi.id = ? AND oi.order_id = ?`,
+            [order_item_id, order_id]
+        );
+        if (!itemRow || itemRow.user_id !== user_id) {
+            return res.status(403).json({ error: 'Sipariş kalemi yetkisiz' });
+        }
+
+        // Zaten doldurulmuş mu? (kalem bazlı)
         const [existing] = await db.query(
-            'SELECT id FROM onboarding_forms WHERE order_id = ? AND user_id = ?',
-            [order_id, user_id]
+            'SELECT id FROM onboarding_forms WHERE order_item_id = ? AND user_id = ?',
+            [order_item_id, user_id]
         );
         if (existing.length) {
-            return res.status(409).json({ error: 'Bu sipariş için form zaten dolduruldu' });
+            return res.status(409).json({ error: 'Bu ürün için form zaten dolduruldu' });
         }
 
         // Kullanıcı bilgisi
@@ -63,8 +80,8 @@ router.post('/', authenticateToken, async (req, res) => {
 
         // Kaydet
         const [result] = await db.query(
-            'INSERT INTO onboarding_forms (user_id, order_id, product_names, form_data) VALUES (?, ?, ?, ?)',
-            [user_id, order_id, product_names || '', JSON.stringify(form_data)]
+            'INSERT INTO onboarding_forms (user_id, order_id, order_item_id, product_names, form_data) VALUES (?, ?, ?, ?, ?)',
+            [user_id, order_id, order_item_id, product_names || '', JSON.stringify(form_data)]
         );
 
         // Admin email
@@ -97,15 +114,58 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 });
 
-// GET /api/onboarding-form/order/:orderId — sipariş için form var mı?
+// GET /api/onboarding-form/order/:orderId — geri uyum: ilk form-required kalem
 router.get('/order/:orderId', authenticateToken, async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT id, submitted_at FROM onboarding_forms WHERE order_id = ? AND user_id = ?',
+            'SELECT id, submitted_at, status, order_item_id FROM onboarding_forms WHERE order_id = ? AND user_id = ? ORDER BY id ASC LIMIT 1',
             [req.params.orderId, req.user.id]
         );
         res.json({ exists: rows.length > 0, form: rows[0] || null });
     } catch (err) {
+        res.status(500).json({ error: 'Sorgu hatası' });
+    }
+});
+
+// GET /api/onboarding-form/order/:orderId/items — siparişteki her form-required kalem için durum
+router.get('/order/:orderId/items', authenticateToken, async (req, res) => {
+    try {
+        const orderId = parseInt(req.params.orderId, 10);
+        // Siparişin kullanıcıya ait olduğunu doğrula
+        const [[order]] = await db.query(
+            'SELECT id, user_id FROM orders WHERE id = ?',
+            [orderId]
+        );
+        if (!order || order.user_id !== req.user.id) {
+            return res.status(404).json({ error: 'Sipariş bulunamadı' });
+        }
+        const [items] = await db.query(
+            `SELECT oi.id AS order_item_id, oi.product_id, p.name AS product_name,
+                    p.product_key, COALESCE(p.requires_onboarding,0) AS requires_onboarding,
+                    ofm.id AS form_id, ofm.status, ofm.submitted_at
+             FROM order_items oi
+             JOIN products p ON p.id = oi.product_id
+             LEFT JOIN onboarding_forms ofm
+                    ON ofm.order_item_id = oi.id AND ofm.user_id = ?
+             WHERE oi.order_id = ?
+             ORDER BY oi.id ASC`,
+            [req.user.id, orderId]
+        );
+        res.json({
+            items: items.map(r => ({
+                order_item_id: r.order_item_id,
+                product_id: r.product_id,
+                product_name: r.product_name,
+                product_key: r.product_key,
+                requires_onboarding: !!r.requires_onboarding,
+                exists: !!r.form_id,
+                form_id: r.form_id || null,
+                status: r.status || null,
+                submitted_at: r.submitted_at || null
+            }))
+        });
+    } catch (err) {
+        console.error('onboarding items error:', err);
         res.status(500).json({ error: 'Sorgu hatası' });
     }
 });

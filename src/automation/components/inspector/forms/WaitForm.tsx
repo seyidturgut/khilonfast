@@ -24,6 +24,7 @@ export default function WaitForm({ config, onChange }: Props) {
           <option value="minutes">Dakika</option>
           <option value="hours">Saat</option>
           <option value="days">Gün</option>
+          <option value="weeks">Hafta</option>
         </select>
       </Field>
     </>

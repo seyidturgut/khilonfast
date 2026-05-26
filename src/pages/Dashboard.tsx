@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay, HiClipboardList } from 'react-icons/hi';
+import { HiShoppingBag, HiUser, HiLockClosed, HiBriefcase, HiPlay, HiClipboardList, HiCreditCard, HiPhotograph } from 'react-icons/hi';
+import EyeTrackingPanel from '../components/dashboard/EyeTrackingPanel';
 import { useRouteLocale, getLocalizedPathByKey } from '../utils/locale';
 import { API_BASE_URL } from '../config/api';
 import './Dashboard.css';
 
 interface OrderItem {
     id: number;
+    order_item_id?: number;
     product_id: number;
     product_name: string;
     product_category?: string;
+    product_key?: string;
+    product_type?: 'service' | 'subscription' | 'video_course' | 'digital_download';
+    duration_days?: number | null;
+    requires_onboarding?: boolean | number;
     quantity: number;
     unit_price: number;
     total_price: number;
@@ -67,6 +73,17 @@ interface PurchasedContent {
     access_content_url?: string | null;
     training_slug?: string | null;
     order_status?: string | null;
+    has_started?: boolean;
+    // Abonelik alanları
+    next_renewal_at?: string | null;
+    auto_renew?: number;
+    payment_method?: 'credit_card' | 'manual_transfer' | null;
+    cancellation_requested_at?: string | null;
+    cancelled_at?: string | null;
+    card_masked?: string | null;
+    card_brand?: string | null;
+    duration_days?: number | null;
+    is_subscription?: boolean;
 }
 
 export default function Dashboard() {
@@ -84,7 +101,31 @@ export default function Dashboard() {
     const [, setProfile] = useState<Profile | null>(null);
     const [, setCompany] = useState<Company | null>(null);
     const [loading, setLoading] = useState(true);
-    const [onboardingStatus, setOnboardingStatus] = useState<Record<number, boolean>>({});
+    // Onboarding status: "${orderId}-${orderItemId}" → {exists, status}
+    // Ürün-bazlı: her sipariş kalemi için ayrı durum tutulur.
+    type OnboardingStatusEntry = { exists: boolean; status?: 'new' | 'reviewed' | 'awaiting_user_response' | 'approved' | null };
+    const [onboardingStatus, setOnboardingStatus] = useState<Record<string, OnboardingStatusEntry>>({});
+    const obKey = (orderId: number, orderItemId: number) => `${orderId}-${orderItemId}`;
+    // Sipariş seviyesinde özet: ilk eksik form, en kötü durum vs.
+    const getOrderObSummary = (order: Order) => {
+        const items = (order.items || []).filter(i => i.requires_onboarding === true || i.requires_onboarding === 1);
+        if (items.length === 0) return null;
+        const entries = items.map(i => {
+            const oiId = i.order_item_id || i.id;
+            return { item: i, oiId, entry: onboardingStatus[obKey(order.id, oiId)] };
+        });
+        const firstPending = entries.find(e => !e.entry || e.entry.exists === false);
+        if (firstPending) {
+            return { state: 'pending' as const, order_id: order.id, order_item_id: firstPending.oiId };
+        }
+        if (entries.some(e => e.entry?.status === 'awaiting_user_response')) {
+            return { state: 'awaiting' as const, order_id: order.id };
+        }
+        if (entries.every(e => e.entry?.status === 'approved')) {
+            return { state: 'approved' as const, order_id: order.id };
+        }
+        return { state: 'preparing' as const, order_id: order.id };
+    };
 
     // Form states
     const [profileForm, setProfileForm] = useState({
@@ -114,6 +155,8 @@ export default function Dashboard() {
         tabs: {
             orders: isEn ? 'My Orders' : 'Siparişlerim',
             contents: isEn ? 'My Content' : 'İçeriklerim',
+            subscriptions: isEn ? 'My Subscriptions' : 'Aboneliklerim',
+            eyeTracking: isEn ? 'Ad Analyses' : 'Reklam Analizleri',
             profile: isEn ? 'Profile Details' : 'Profil Bilgileri',
             password: isEn ? 'Change Password' : 'Şifre Değiştir',
             company: isEn ? 'Company Details' : 'Firma Bilgileri'
@@ -212,6 +255,9 @@ export default function Dashboard() {
                 setError(copy.messages.forcePasswordChange);
             }
         }
+        if (tab === 'eye_tracking' || tab === 'eyeTracking') {
+            setActiveTab('eye_tracking');
+        }
     }, [copy.messages.forcePasswordChange, copy.messages.paymentSuccess, currentLang]);
 
     // Fetch data on mount
@@ -266,6 +312,57 @@ export default function Dashboard() {
         }
     };
 
+    const [subBusyId, setSubBusyId] = useState<number | null>(null);
+
+    const cancelSubscription = async (subscriptionId: number) => {
+        const ok = window.confirm(isEn
+            ? 'Auto-renewal will be turned off. Your access continues until the end of the current period. Continue?'
+            : 'Otomatik yenileme kapatılacak. Erişiminiz mevcut dönem sonuna kadar devam eder. Onaylıyor musunuz?');
+        if (!ok) return;
+        setSubBusyId(subscriptionId);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_BASE}/profile/subscriptions/${subscriptionId}/cancel`, {
+                method: 'POST', headers: { Authorization: `Bearer ${token}` }
+            });
+            const d = await res.json().catch(() => ({}));
+            if (res.ok) {
+                setMessage(isEn ? 'Subscription will end at period close.' : 'Aboneliğiniz dönem sonunda sonlandırılacak.');
+                await fetchContents();
+            } else {
+                setError(d.error || (isEn ? 'Could not cancel.' : 'İptal edilemedi.'));
+            }
+        } catch {
+            setError(isEn ? 'Network error.' : 'Bağlantı hatası.');
+        } finally {
+            setSubBusyId(null);
+        }
+    };
+
+    const resumeSubscription = async (subscriptionId: number) => {
+        setSubBusyId(subscriptionId);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_BASE}/profile/subscriptions/${subscriptionId}/resume`, {
+                method: 'POST', headers: { Authorization: `Bearer ${token}` }
+            });
+            const d = await res.json().catch(() => ({}));
+            if (res.ok) {
+                setMessage(isEn ? 'Auto-renewal re-enabled.' : 'Otomatik yenileme yeniden aktif edildi.');
+                await fetchContents();
+            } else {
+                setError(d.error || (isEn ? 'Could not resume.' : 'İşlem başarısız.'));
+            }
+        } catch {
+            setError(isEn ? 'Network error.' : 'Bağlantı hatası.');
+        } finally {
+            setSubBusyId(null);
+        }
+    };
+
+    const fmtDate = (s?: string | null) =>
+        s ? new Date(s).toLocaleDateString(isEn ? 'en-US' : 'tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '—';
+
     const getFeatureList = (features?: string | null) => {
         if (!features) return [];
         return features
@@ -309,20 +406,27 @@ export default function Dashboard() {
                 const fetchedOrders: Order[] = Array.isArray(data.orders) ? data.orders : [];
                 setOrders(fetchedOrders);
 
-                const serviceOrders = fetchedOrders.filter(o =>
-                    o.items?.some(i => i.product_category === 'hizmetler' || i.product_category === 'sektorler')
-                );
+                // Onboarding gerektiren item: backend'den gelen requires_onboarding flag'i
+                const requiresOnboarding = (i: OrderItem) => i.requires_onboarding === true || i.requires_onboarding === 1;
+                const serviceOrders = fetchedOrders.filter(o => o.items?.some(requiresOnboarding));
                 if (serviceOrders.length > 0) {
-                    const statusMap: Record<number, boolean> = {};
+                    const statusMap: Record<string, OnboardingStatusEntry> = {};
                     await Promise.all(serviceOrders.map(async (order) => {
                         try {
-                            const res = await fetch(`${API_BASE}/onboarding-form/order/${order.id}`, {
+                            const res = await fetch(`${API_BASE}/onboarding-form/order/${order.id}/items`, {
                                 headers: { Authorization: `Bearer ${token}` }
                             });
                             const d = await res.json();
-                            statusMap[order.id] = d.exists === true;
+                            const items = Array.isArray(d.items) ? d.items : [];
+                            for (const it of items) {
+                                if (!it.requires_onboarding) continue;
+                                statusMap[obKey(order.id, it.order_item_id)] = {
+                                    exists: it.exists === true,
+                                    status: it.status ?? null,
+                                };
+                            }
                         } catch {
-                            statusMap[order.id] = false;
+                            // Bu siparişin formu yoklanamadı; pending olarak bırak
                         }
                     }));
                     setOnboardingStatus(statusMap);
@@ -504,6 +608,18 @@ export default function Dashboard() {
                         <HiPlay /> <span className="tab-label">{copy.tabs.contents}</span>
                     </button>
                     <button
+                        className={`tab-button ${activeTab === 'subscriptions' ? 'active' : ''}`}
+                        onClick={() => { setActiveTab('subscriptions'); setMessage(''); setError(''); }}
+                    >
+                        <HiCreditCard /> <span className="tab-label">{copy.tabs.subscriptions}</span>
+                    </button>
+                    <button
+                        className={`tab-button ${activeTab === 'eye_tracking' ? 'active' : ''}`}
+                        onClick={() => { setActiveTab('eye_tracking'); setMessage(''); setError(''); }}
+                    >
+                        <HiPhotograph /> <span className="tab-label">{copy.tabs.eyeTracking}</span>
+                    </button>
+                    <button
                         className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
                         onClick={() => { setActiveTab('profile'); setMessage(''); setError(''); }}
                     >
@@ -591,14 +707,43 @@ export default function Dashboard() {
                                                                         order.status === 'cancelled' ? copy.orders.cancelled :
                                                                             copy.orders.processing}
                                                         </span>
-                                                        {onboardingStatus[order.id] === false && (
-                                                            <Link
-                                                                to={`${onboardingFormPath}?order_id=${order.id}`}
-                                                                className="btn-fill-form"
-                                                            >
-                                                                {isEn ? 'Fill Form' : 'Formu Doldur'}
-                                                            </Link>
+                                                        {/* Ödeme henüz onaylanmamışsa form butonu yerine "ödeme bekleniyor" göster */}
+                                                        {order.status === 'processing' && (
+                                                            <span className="status-badge status-pending" style={{ marginLeft: 6 }}>
+                                                                {isEn ? 'Awaiting Payment' : 'Ödeme Bekleniyor'}
+                                                            </span>
                                                         )}
+                                                        {order.status === 'completed' && (() => {
+                                                            const sum = getOrderObSummary(order);
+                                                            if (!sum) return null;
+                                                            const presPath = `${isEn ? '/en/onboarding-presentation' : '/onboarding-sunumu'}/${order.id}`;
+                                                            if (sum.state === 'pending') {
+                                                                return (
+                                                                    <Link to={`${onboardingFormPath}?order_id=${sum.order_id}&order_item_id=${sum.order_item_id}`} className="btn-fill-form">
+                                                                        {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                                    </Link>
+                                                                );
+                                                            }
+                                                            if (sum.state === 'awaiting') {
+                                                                return (
+                                                                    <Link to={presPath} className="btn-fill-form" style={{ background: '#fbbf24' }}>
+                                                                        {isEn ? 'New Questions' : 'Yeni Sorular Var'}
+                                                                    </Link>
+                                                                );
+                                                            }
+                                                            if (sum.state === 'approved') {
+                                                                return (
+                                                                    <Link to={presPath} className="btn-fill-form" style={{ background: '#22c55e' }}>
+                                                                        {isEn ? 'Strategic Brief' : 'Stratejik Brifim'}
+                                                                    </Link>
+                                                                );
+                                                            }
+                                                            return (
+                                                                <span className="status-badge" style={{ background: '#e2e8f0', color: '#64748b' }}>
+                                                                    {isEn ? 'Preparing strategy...' : 'Strateji hazırlanıyor...'}
+                                                                </span>
+                                                            );
+                                                        })()}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -634,14 +779,42 @@ export default function Dashboard() {
                                                     <span className="order-card-amount">
                                                         {order.total_amount?.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {order.currency}
                                                     </span>
-                                                    {onboardingStatus[order.id] === false && (
-                                                        <Link
-                                                            to={`${onboardingFormPath}?order_id=${order.id}`}
-                                                            className="btn-fill-form"
-                                                        >
-                                                            {isEn ? 'Fill Form' : 'Formu Doldur'}
-                                                        </Link>
+                                                    {order.status === 'processing' && (
+                                                        <span className="status-badge status-pending">
+                                                            {isEn ? 'Awaiting Payment' : 'Ödeme Bekleniyor'}
+                                                        </span>
                                                     )}
+                                                    {order.status === 'completed' && (() => {
+                                                        const sum = getOrderObSummary(order);
+                                                        const presPath = `${isEn ? '/en/onboarding-presentation' : '/onboarding-sunumu'}/${order.id}`;
+                                                        if (!sum) return null;
+                                                        if (sum.state === 'pending') {
+                                                            return (
+                                                                <Link to={`${onboardingFormPath}?order_id=${sum.order_id}&order_item_id=${sum.order_item_id}`} className="btn-fill-form">
+                                                                    {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                                </Link>
+                                                            );
+                                                        }
+                                                        if (sum.state === 'awaiting') {
+                                                            return (
+                                                                <Link to={presPath} className="btn-fill-form" style={{ background: '#fbbf24' }}>
+                                                                    {isEn ? 'New Questions' : 'Yeni Sorular'}
+                                                                </Link>
+                                                            );
+                                                        }
+                                                        if (sum.state === 'approved') {
+                                                            return (
+                                                                <Link to={presPath} className="btn-fill-form" style={{ background: '#22c55e' }}>
+                                                                    {isEn ? 'Strategic Brief' : 'Stratejik Brifim'}
+                                                                </Link>
+                                                            );
+                                                        }
+                                                        return (
+                                                            <span className="status-badge" style={{ background: '#e2e8f0', color: '#64748b' }}>
+                                                                {isEn ? 'Preparing...' : 'Hazırlanıyor...'}
+                                                            </span>
+                                                        );
+                                                    })()}
                                                 </div>
                                             </div>
                                         ))}
@@ -656,8 +829,48 @@ export default function Dashboard() {
                         <div className="tab-content">
                             <h2>{copy.contents.title}</h2>
                             {(() => {
-                                const pendingOrders = orders.filter(o => onboardingStatus[o.id] === false);
-                                const hasContent = contents.length > 0 || pendingOrders.length > 0;
+                                // Pending: sadece COMPLETED siparişlerin form-required kalemlerinden
+                                // henüz formu doldurulmamış olanlar. Aynı kullanıcı aynı ürünü 2 ayrı siparişle
+                                // aldıysa 2 ayrı kart çıkar — her sipariş kalemi ayrı form ister.
+                                const completedOrders = orders.filter(o => o.status === 'completed');
+
+                                type PendingCard = {
+                                    product_id: number;
+                                    product_name: string;
+                                    order_id: number;
+                                    order_item_id: number;
+                                };
+                                // Subscription'ı OLAN ürünler için form CTA'sı içeride gösterilir,
+                                // ayrıca sarı pending kart açılmaz (duplicate UX).
+                                // PHP PDO bazen integer'ları string döndürür → Number() ile cast et
+                                const productsWithSubscription = new Set<number>(contents.map(c => Number(c.product_id)));
+                                const pendingCards: PendingCard[] = [];
+                                // pendingFormByProduct: subscription kartına item link basabilmek için
+                                // ürün → {order_id, order_item_id} eşlemesi (en güncel pending item)
+                                const pendingFormByProduct: Record<number, { order_id: number; order_item_id: number }> = {};
+
+                                for (const order of completedOrders) {
+                                    const serviceItems = (order.items || []).filter(i =>
+                                        i.requires_onboarding === true || i.requires_onboarding === 1
+                                    );
+                                    for (const item of serviceItems) {
+                                        const oiId = item.order_item_id || item.id;
+                                        const entry = onboardingStatus[obKey(order.id, oiId)];
+                                        if (entry?.exists) continue; // form doldurulmuş — pending değil
+                                        // En güncel pending item'ı subscription kartı için tut (sonuncu yazılan kalır)
+                                        pendingFormByProduct[item.product_id] = { order_id: order.id, order_item_id: oiId };
+                                        if (!productsWithSubscription.has(item.product_id)) {
+                                            pendingCards.push({
+                                                product_id: item.product_id,
+                                                product_name: item.product_name || '-',
+                                                order_id: order.id,
+                                                order_item_id: oiId
+                                            });
+                                        }
+                                    }
+                                }
+
+                                const hasContent = contents.length > 0 || pendingCards.length > 0;
                                 if (!hasContent) return (
                                     <div className="empty-state">
                                         <p>{copy.contents.empty}</p>
@@ -665,36 +878,30 @@ export default function Dashboard() {
                                 );
                                 return (
                                 <div className="content-library-grid">
-                                    {pendingOrders.map(order => {
-                                        const serviceItems = order.items?.filter(i =>
-                                            i.product_category === 'hizmetler' || i.product_category === 'sektorler'
-                                        ) || order.items || [];
-                                        const productLabel = serviceItems.map(i => i.product_name).filter(Boolean).join(', ') || '-';
-                                        return (
-                                            <article key={`pending-${order.id}`} className="onboarding-pending-card">
-                                                <div className="content-library-header">
-                                                    <h3>{productLabel}</h3>
-                                                    <span className="onboarding-pending-badge">
-                                                        {isEn ? 'Form Required' : 'Form Bekliyor'}
-                                                    </span>
-                                                </div>
-                                                <p className="content-library-description">
-                                                    {isEn
-                                                        ? 'Please fill the onboarding form to get started with your service.'
-                                                        : 'Hizmete başlamak için onboarding formunu doldurmanız gerekiyor.'}
-                                                </p>
-                                                <div style={{ marginTop: 'auto' }}>
-                                                    <Link
-                                                        to={`${onboardingFormPath}?order_id=${order.id}`}
-                                                        className="onboarding-pending-btn"
-                                                    >
-                                                        <HiClipboardList />
-                                                        {isEn ? 'Fill Form' : 'Formu Doldur'}
-                                                    </Link>
-                                                </div>
-                                            </article>
-                                        );
-                                    })}
+                                    {pendingCards.map(card => (
+                                        <article key={`pending-${card.order_id}-${card.order_item_id}`} className="onboarding-pending-card">
+                                            <div className="content-library-header">
+                                                <h3>{card.product_name}</h3>
+                                                <span className="onboarding-pending-badge">
+                                                    {isEn ? 'Form Required' : 'Form Bekliyor'}
+                                                </span>
+                                            </div>
+                                            <p className="content-library-description">
+                                                {isEn
+                                                    ? 'Please fill the onboarding form to get started with your service.'
+                                                    : 'Hizmete başlamak için onboarding formunu doldurmanız gerekiyor.'}
+                                            </p>
+                                            <div style={{ marginTop: 'auto' }}>
+                                                <Link
+                                                    to={`${onboardingFormPath}?order_id=${card.order_id}&order_item_id=${card.order_item_id}`}
+                                                    className="onboarding-pending-btn"
+                                                >
+                                                    <HiClipboardList />
+                                                    {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                </Link>
+                                            </div>
+                                        </article>
+                                    ))}
                                     {contents.map((content) => {
                                         const trainingBase = isEn ? '/en/egitimllerim' : '/egitimllerim';
                                         const trainingRoute = content.training_slug
@@ -727,9 +934,63 @@ export default function Dashboard() {
                                                             }}
                                                         >
                                                             <HiPlay />
-                                                            {isEn ? 'Continue Training' : 'Eğitime Devam Et'}
+                                                            {content.has_started
+                                                                ? (isEn ? 'Continue Training' : 'Eğitime Devam Et')
+                                                                : (isEn ? 'Start Training' : 'Eğitime Başla')}
                                                         </Link>
                                                     </div>
+                                                    {(() => {
+                                                        const ref = pendingFormByProduct[Number(content.product_id)];
+                                                        if (!ref) return null;
+                                                        const entry = onboardingStatus[obKey(ref.order_id, ref.order_item_id)];
+                                                        const presPath = `${isEn ? '/en/onboarding-presentation' : '/onboarding-sunumu'}/${ref.order_id}`;
+
+                                                        if (!entry || entry.exists === false) {
+                                                            return (
+                                                                <div style={{ marginTop: 8, padding: 10, background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                                                                    <span style={{ fontSize: '0.85rem', color: '#92400e' }}>
+                                                                        {isEn ? 'Onboarding form pending' : 'Onboarding formu bekliyor'}
+                                                                    </span>
+                                                                    <Link to={`${onboardingFormPath}?order_id=${ref.order_id}&order_item_id=${ref.order_item_id}`} className="onboarding-pending-btn" style={{ fontSize: '0.85rem', padding: '6px 14px' }}>
+                                                                        <HiClipboardList />
+                                                                        {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                                    </Link>
+                                                                </div>
+                                                            );
+                                                        }
+                                                        if (entry.status === 'awaiting_user_response') {
+                                                            return (
+                                                                <div style={{ marginTop: 8, padding: 10, background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                                                                    <span style={{ fontSize: '0.85rem', color: '#92400e' }}>
+                                                                        {isEn ? 'New questions from our team' : 'Ekibimizden yeni sorular var'}
+                                                                    </span>
+                                                                    <Link to={presPath} className="onboarding-pending-btn" style={{ fontSize: '0.85rem', padding: '6px 14px', background: '#fbbf24' }}>
+                                                                        {isEn ? 'Answer' : 'Cevapla'}
+                                                                    </Link>
+                                                                </div>
+                                                            );
+                                                        }
+                                                        if (entry.status === 'approved') {
+                                                            return (
+                                                                <div style={{ marginTop: 8, padding: 10, background: '#dcfce7', border: '1px solid #86efac', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                                                                    <span style={{ fontSize: '0.85rem', color: '#166534', fontWeight: 600 }}>
+                                                                        ✨ {isEn ? 'Your strategic brief is ready' : 'Stratejik brifiniz hazır'}
+                                                                    </span>
+                                                                    <Link to={presPath} className="onboarding-pending-btn" style={{ fontSize: '0.85rem', padding: '6px 14px', background: '#22c55e' }}>
+                                                                        {isEn ? 'View' : 'Görüntüle'}
+                                                                    </Link>
+                                                                </div>
+                                                            );
+                                                        }
+                                                        // new / reviewed → hazırlanıyor
+                                                        return (
+                                                            <div style={{ marginTop: 8, padding: 10, background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: 8 }}>
+                                                                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                                                                    {isEn ? '⏳ Strategy preparing — we\'ll email you when ready' : '⏳ Stratejimiz hazırlanıyor — hazır olduğunda mail göndereceğiz'}
+                                                                </span>
+                                                            </div>
+                                                        );
+                                                    })()}
                                                 </article>
                                             );
                                         }
@@ -751,7 +1012,26 @@ export default function Dashboard() {
                                                         ))}
                                                     </ul>
                                                 )}
-                                                {embedUrl ? (
+                                                {String(content.product_key || '').toLowerCase().startsWith('eye-') ? (
+                                                    <div style={{
+                                                        marginTop: 12, padding: 14, background: '#f0f9ff', border: '1px solid #bae6fd',
+                                                        borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap'
+                                                    }}>
+                                                        <span style={{ fontSize: '0.9rem', color: '#075985' }}>
+                                                            {isEn
+                                                                ? 'Upload your ad image for analysis from the Ad Analyses tab.'
+                                                                : 'Analiz için reklam görselinizi Reklam Analizleri sekmesinden yükleyin.'}
+                                                        </span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => { setActiveTab('eye_tracking'); }}
+                                                            className="onboarding-pending-btn"
+                                                            style={{ fontSize: '0.85rem', padding: '6px 14px' }}
+                                                        >
+                                                            {isEn ? 'Upload Image' : 'Görsel Yükle'}
+                                                        </button>
+                                                    </div>
+                                                ) : embedUrl ? (
                                                     <div className="content-video-frame">
                                                         <iframe
                                                             src={embedUrl}
@@ -765,6 +1045,22 @@ export default function Dashboard() {
                                                         {copy.contents.missingVideo}
                                                     </div>
                                                 )}
+                                                {/* Form gerekiyorsa content kartı içinde küçük CTA */}
+                                                {pendingFormByProduct[Number(content.product_id)] && (
+                                                    <div style={{ marginTop: 12, padding: 10, background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                                                        <span style={{ fontSize: '0.85rem', color: '#92400e' }}>
+                                                            {isEn ? 'Onboarding form pending' : 'Onboarding formu bekliyor'}
+                                                        </span>
+                                                        <Link
+                                                            to={`${onboardingFormPath}?order_id=${pendingFormByProduct[Number(content.product_id)].order_id}&order_item_id=${pendingFormByProduct[Number(content.product_id)].order_item_id}`}
+                                                            className="onboarding-pending-btn"
+                                                            style={{ fontSize: '0.85rem', padding: '6px 14px' }}
+                                                        >
+                                                            <HiClipboardList />
+                                                            {isEn ? 'Fill Form' : 'Formu Doldur'}
+                                                        </Link>
+                                                    </div>
+                                                )}
                                             </article>
                                         );
                                     })}
@@ -772,6 +1068,110 @@ export default function Dashboard() {
                                 );
                             })()}
                         </div>
+                    )}
+
+                    {/* Subscriptions Tab */}
+                    {activeTab === 'subscriptions' && (
+                        <div className="tab-content">
+                            <h2>{copy.tabs.subscriptions}</h2>
+                            {(() => {
+                                const subs = contents.filter(c => c.is_subscription === true || c.type === 'subscription');
+                                if (subs.length === 0) {
+                                    return (
+                                        <div className="empty-state">
+                                            <p>{isEn ? 'You have no active subscriptions yet.' : 'Henüz aktif aboneliğiniz bulunmuyor.'}</p>
+                                        </div>
+                                    );
+                                }
+                                return (
+                                    <div className="content-library-grid">
+                                        {subs.map((s) => {
+                                            const pname = isEn ? (s.name_en || s.name) : s.name;
+                                            const cancelPending = !!s.cancellation_requested_at;
+                                            const autoOn = Number(s.auto_renew) === 1 && !cancelPending;
+                                            const payLabel = s.payment_method === 'credit_card'
+                                                ? (s.card_masked
+                                                    ? `${s.card_brand ? s.card_brand + ' ' : ''}**** ${String(s.card_masked).slice(-4)}`
+                                                    : (isEn ? 'Credit card' : 'Kredi kartı'))
+                                                : (isEn ? 'Bank transfer' : 'Havale / EFT');
+                                            return (
+                                                <article key={s.subscription_id} className="content-library-card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                                                    <div className="content-library-header">
+                                                        <h3>{pname}</h3>
+                                                        <span className="content-badge" style={{
+                                                            background: cancelPending ? '#fef3c7' : '#dcfce7',
+                                                            color: cancelPending ? '#92400e' : '#166534'
+                                                        }}>
+                                                            {cancelPending
+                                                                ? (isEn ? 'Ending' : 'Dönem sonu bitiyor')
+                                                                : (isEn ? 'Active' : 'Aktif')}
+                                                        </span>
+                                                    </div>
+
+                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px', fontSize: '0.88rem' }}>
+                                                        <div>
+                                                            <div style={{ color: '#6b7280', fontSize: '0.78rem' }}>{isEn ? 'Next renewal' : 'Sonraki yenileme'}</div>
+                                                            <div style={{ color: '#1a3a52', fontWeight: 600 }}>{fmtDate(s.next_renewal_at)}</div>
+                                                        </div>
+                                                        <div>
+                                                            <div style={{ color: '#6b7280', fontSize: '0.78rem' }}>{isEn ? 'Current period ends' : 'Mevcut dönem bitişi'}</div>
+                                                            <div style={{ color: '#1a3a52', fontWeight: 600 }}>{fmtDate(s.expires_at)}</div>
+                                                        </div>
+                                                        <div>
+                                                            <div style={{ color: '#6b7280', fontSize: '0.78rem' }}>{isEn ? 'Payment method' : 'Ödeme yöntemi'}</div>
+                                                            <div style={{ color: '#1a3a52', fontWeight: 600 }}>{payLabel}</div>
+                                                        </div>
+                                                        <div>
+                                                            <div style={{ color: '#6b7280', fontSize: '0.78rem' }}>{isEn ? 'Auto-renewal' : 'Otomatik yenileme'}</div>
+                                                            <div style={{ color: autoOn ? '#166534' : '#b91c1c', fontWeight: 600 }}>
+                                                                {autoOn ? (isEn ? 'On' : 'Açık') : (isEn ? 'Off' : 'Kapalı')}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {cancelPending && (
+                                                        <div style={{ background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 8, padding: '8px 12px', fontSize: '0.82rem', color: '#92400e' }}>
+                                                            {isEn
+                                                                ? `Auto-renewal is off. Your access continues until ${fmtDate(s.expires_at)}.`
+                                                                : `Otomatik yenileme kapalı. Erişiminiz ${fmtDate(s.expires_at)} tarihine kadar devam eder.`}
+                                                        </div>
+                                                    )}
+
+                                                    <div style={{ marginTop: 'auto', display: 'flex', gap: 10 }}>
+                                                        {autoOn ? (
+                                                            <button
+                                                                onClick={() => cancelSubscription(s.subscription_id)}
+                                                                disabled={subBusyId === s.subscription_id}
+                                                                style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: '#fff', color: '#b91c1c', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                                                            >
+                                                                {subBusyId === s.subscription_id
+                                                                    ? (isEn ? 'Processing…' : 'İşleniyor…')
+                                                                    : (isEn ? 'Cancel renewal' : 'Yenilemeyi iptal et')}
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => resumeSubscription(s.subscription_id)}
+                                                                disabled={subBusyId === s.subscription_id}
+                                                                style={{ padding: '9px 16px', borderRadius: 8, border: 'none', background: '#1a3a52', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                                                            >
+                                                                {subBusyId === s.subscription_id
+                                                                    ? (isEn ? 'Processing…' : 'İşleniyor…')
+                                                                    : (isEn ? 'Resume auto-renewal' : 'Yenilemeyi sürdür')}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </article>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })()}
+                        </div>
+                    )}
+
+                    {/* Eye Tracking Tab */}
+                    {activeTab === 'eye_tracking' && (
+                        <EyeTrackingPanel isEn={isEn} />
                     )}
 
                     {/* Profile Tab */}

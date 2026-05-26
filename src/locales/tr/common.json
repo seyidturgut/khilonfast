@@ -26,7 +26,10 @@
                 "title": "Onay",
                 "description": "De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir."
             }
-        }
+        },
+        "tag": "Nasıl Çalışır?",
+        "title": "Hizmet Süreci",
+        "description": "5 adımda başarıya ulaşın."
     },
     "header": {
         "services": "Hizmetler",
@@ -184,10 +187,14 @@
     "footer": {
         "description": "Khilon olarak, hem veri analitiği bilimini hem de yaratıcılık sanatını kullanarak işletmeler için pazarlama faaliyetlerini entegre etmeye çalışıyoruz. Misyonumuz, pazarlamanızı dönüştürmek, onları yalnızca daha verimli değil, aynı zamanda iş hedeflerinize ulaşmada etkili hale getirmektir.",
         "rights": "Tüm hakları saklıdır.",
-        "privacy": "Gizlilik Politikası",
+        "privacy": "Gizlilik Politikası ve KVKK",
         "cookies": "Çerez Politikası",
         "terms": "Hizmet Şartları",
-        "refund": "İade ve İptal Politikası",
+        "refund": "İptal ve İade Politikası",
+        "distanceSale": "Mesafeli Satış Sözleşmesi",
+        "preInformation": "Ön Bilgilendirme Formu",
+        "corporateB2B": "Kurumsal / B2B Ek Şartlar",
+        "acceptableUse": "Kullanım Koşulları",
         "manageCookies": "Çerez Tercihlerini Yönet",
         "career": "Kariyer Fırsatları",
         "columns": {
@@ -516,7 +523,7 @@
             "email": "E-posta",
             "phone": "Telefon",
             "address": "Adres",
-            "location": "İstanbul, Türkiye",
+            "location": "Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe/İstanbul",
             "hours": "Çalışma saatleri: 09:00 - 18:30 (Hafta içi)"
         },
         "form": {
@@ -966,43 +973,43 @@
         "faqs": {
             "q1": {
                 "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
-                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
             },
             "q2": {
                 "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
-                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür; bu sayede dünyanın her yerinden hızlı ve etkili şekilde hizmet alabilirsiniz."
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
             },
             "q3": {
                 "q": "khilonfast ile kimler çalışmamalı?",
-                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Metrik temelli çalışma disiplinine uzak, düzenli dijital iletişim kuramayan ve süreç formalarını tamamlamayan ekipler için uygun olmayabilir."
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
             },
             "q4": {
                 "q": "khilonfast kimler için ideal bir iş ortağıdır?",
-                "a": "Dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan; veriye dayalı kararlar alan ve yeni nesil araçları kullanmaya istekli firmalar için khilonfast güçlü bir iş ortağıdır."
+                "a": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir."
             },
             "q5": {
                 "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
-                "a": "Tüm iletişim kullanıcı dostu sitemiz ve e-posta üzerinden yürütülür. Hizmeti satın aldıktan sonra gerekli formlar size iletilir; formlar tamamlandığında ekip kurulumları yapar ve operasyonu başlatır."
+                "a": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
             },
             "q6": {
                 "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
-                "a": "Satın alma sonrası size iletilen formlar doldurulur. Ardından khilonfast ekibi tanımlamaları yapar, hizmetinizi aktif eder ve raporlama periyotlarına göre düzenli performans çıktılarını paylaşır."
+                "a": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır."
             },
             "q7": {
                 "q": "Go to market stratejisi işletmem için nasıl faydalıdır?",
-                "a": "Go to market stratejisi, yeni ürün veya hizmetinizin pazara hızlı ve etkili şekilde giriş yapmasını sağlar. khilonfast hedef kitlenizi analiz eder, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda güçlü konumlanma sunar."
+                "a": "Go to market stratejisi, yeni bir ürün veya hizmetin pazara hızlı ve etkili bir şekilde giriş yapmasını sağlar. khilonfast, hedef kitlenizi analiz eder, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda başarılı bir konum almanızı sağlar."
             },
             "q8": {
                 "q": "Go to market stratejimin performansını nasıl takip edebilirim?",
-                "a": "khilonfast, satışlar, pazar penetrasyonu ve müşteri geri bildirimleri gibi kritik metrikleri içeren haftalık, aylık veya üç aylık raporlar sunar. Sonuçları dashboard üzerinden anlık izleyebilirsiniz."
+                "a": "khilonfast, go to market stratejinizin performansını izlemek için haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, satışlar, pazar penetrasyonu ve müşteri geri bildirimleri gibi önemli metrikleri içerir. Canlı dashboard'lar aracılığıyla sonuçlarınızı anlık olarak takip edebilirsiniz."
             },
             "q9": {
                 "q": "Neden khilonfast go to market stratejisi hizmetini tercih etmeliyim?",
-                "a": "khilonfast veri odaklı yaklaşımıyla pazara giriş stratejinizi güçlendirir. Uzman ekip, rekabet avantajı sağlayan aksiyon planları geliştirir ve pazarda daha hızlı sonuç almanızı sağlar."
+                "a": "khilonfast, veri odaklı yaklaşımlarla pazara giriş stratejinizi güçlendirir. Uzman ekibimiz, rekabet avantajı sağlayan stratejiler geliştirir ve pazarda hızlı bir şekilde yer almanızı sağlar. Yeni pazarlara girişte güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için ideal bir seçimdir."
             },
             "q10": {
                 "q": "Go to market stratejisi nasıl oluşturulur?",
-                "a": "khilonfast önce hedef kitlenizi ve pazarı analiz eder. Sonrasında pazara giriş sürecinizi destekleyecek stratejileri kurgular, uygulama sonrası performansı izler ve gerektiğinde stratejiyi optimize eder."
+                "a": "khilonfast, öncelikle hedef kitlenizi ve pazarınızı analiz eder. Ardından, pazara giriş sürecinizi destekleyecek stratejileri geliştirir. Pazara giriş sonrası performans izlenir ve strateji gerektiğinde güncellenir."
             }
         },
         "seo": {
@@ -1016,9 +1023,9 @@
     },
     "serviceIDM": {
         "hero": {
-            "title": "Dijital Kanalları Tek Bir Stratejide Birleştirin!",
-            "subtitle": "Bütünleşik pazarlama stratejileri ile markanızı büyütün!",
-            "description": "khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.",
+            "title": "Dijital Kanalları Tek Stratejide Birleştirin",
+            "subtitle": "B2B markalar için bütünleşik pazarlama stratejileri",
+            "description": "khilonfast ile bütçenizi doğru kanallara yönlendirin, dijital pazarlamanızı güçlendirin. Tek strateji, tüm kanallar.",
             "buttonText": "Hemen Başlayın",
             "badgeText": "360° Pazarlama Gücü! Rekabet Üstünlüğü!"
         },
@@ -1121,6 +1128,48 @@
             "quote": "Tüm dijital süreçlerimizi tek bir stratejide birleştirdikten sonra pazarlama bütçemizin geri dönüşü %45 oranında arttı.",
             "author": "Caner Özkan",
             "role": "E-Ticaret Direktörü"
+        },
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
+            },
+            "q4": {
+                "q": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "a": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir."
+            },
+            "q5": {
+                "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "a": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
+            },
+            "q6": {
+                "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "a": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır."
+            },
+            "q7": {
+                "q": "Bütünleşik dijital pazarlama stratejileri işletmem için nasıl faydalıdır?",
+                "a": "Bütünleşik dijital pazarlama, farklı dijital kanalları tek bir strateji altında birleştirerek pazarlama etkinliğinizi artırır. khilonfast, tüm dijital pazarlama çabalarınızı entegre eder ve bütçenizi en verimli şekilde kullanarak maksimum etkileşim ve dönüşüm sağlar."
+            },
+            "q8": {
+                "q": "Bütünleşik dijital pazarlama kampanyalarının performansını nasıl takip edebilirim?",
+                "a": "khilonfast, tüm dijital kanallarınızı kapsayan haftalık, aylık veya üç aylık raporlar sunar. Bu raporlar, etkileşim oranları, dönüşümler ve diğer kritik performans göstergeleri hakkında bilgi içerir. Ayrıca, canlı dashboard'lar üzerinden kampanyalarınızı anlık olarak izleyebilirsiniz."
+            },
+            "q9": {
+                "q": "Neden khilonfast bütünleşik dijital pazarlama hizmetini tercih etmeliyim?",
+                "a": "khilonfast, tüm dijital pazarlama çabalarınızı entegre ederek maksimum verimlilik sağlar. Uzman ekibimiz, dijital stratejinizi bir bütün olarak ele alır ve tüm kanallarda tutarlı bir mesaj ve marka deneyimi sunmanızı sağlar."
+            },
+            "q10": {
+                "q": "Bütünleşik dijital pazarlama stratejisi nasıl oluşturulur?",
+                "a": "khilonfast, öncelikle işletmenizin hedeflerini ve mevcut dijital varlıklarını analiz eder. Ardından, tüm dijital kanallarınızı entegre eden bir strateji geliştirir. Kampanyalar başlatıldıktan sonra, performans düzenli olarak izlenir ve optimize edilir."
+            }
         }
     },
     "authPages": {
@@ -1147,9 +1196,23 @@
             "submit": "Giriş Yap",
             "loading": "Giriş yapılıyor...",
             "switchPrompt": "Hesabınız yok mu?",
+            "forgotPassword": "Şifremi unuttum",
             "errors": {
                 "default": "Giriş başarısız",
                 "google": "Google ile giriş başarısız"
+            }
+        },
+        "forgotPassword": {
+            "title": "Şifremi Unuttum",
+            "subtitle": "E-postanızı girin, şifre sıfırlama bağlantısı gönderelim.",
+            "submit": "Sıfırlama Bağlantısı Gönder",
+            "loading": "Gönderiliyor...",
+            "successTitle": "E-postanızı kontrol edin",
+            "successMessage": "Bu e-postaya kayıtlı bir hesap varsa, şifre sıfırlama bağlantısı gönderildi. Bağlantı 1 saat geçerli.",
+            "backToLogin": "Girişe Dön",
+            "errors": {
+                "default": "Bir hata oluştu, lütfen tekrar deneyin.",
+                "invalidEmail": "Geçerli bir e-posta adresi girin."
             }
         },
         "register": {
@@ -1202,14 +1265,20 @@
             "success": "Ödeme başarılı. Yönlendiriliyorsunuz...",
             "failed": "Ödeme tamamlanamadı ({{status}}).",
             "unverified": "Ödeme dönüşü doğrulanamadı.",
-            "backToCheckout": "Ödeme Adımına Dön"
+            "backToCheckout": "Ödeme Adımına Dön",
+            "errors": {
+                "orderNotFound": "Siparişiniz bulunamadı. Lütfen ödeme adımına dönüp tekrar deneyin.",
+                "paymentFailed": "Ödeme tamamlanamadı. Lütfen kart bilgilerinizi kontrol edip tekrar deneyin.",
+                "fraudDetected": "Ödeme güvenlik kontrolünde reddedildi. Lütfen farklı bir kart deneyin veya bankanızla iletişime geçin.",
+                "generic": "Ödeme sırasında bir hata oluştu. Lütfen tekrar deneyin."
+            }
         }
     },
     "pages": {
         "home": {
             "seo": {
                 "title": "khilonfast | B2B Pazarlamada Hızlı ve Ölçülebilir Büyüme",
-                "description": "Khilonfast ile strateji, içerik ve performans pazarlamasını tek noktadan yönetin. B2B markanız için ölçülebilir büyüme, yüksek görünürlük ve sürdürülebilir gelir artışı sağlayın."
+                "description": "Khilonfast ile strateji, içerik ve performans pazarlamasını tek noktadan yönetin. B2B markanız için ölçülebilir büyüme ve görünürlük."
             },
             "pricing": {
                 "titleLine1": "Hizmetlerimizde Net ve Şeffaf",
@@ -1274,8 +1343,13 @@
         "cookiePolicy": "cerez-politikasi",
         "termsOfService": "hizmet-sartlari",
         "refundPolicy": "iade-ve-iptal-politikasi",
+        "distanceSale": "mesafeli-satis-sozlesmesi",
+        "preInformation": "on-bilgilendirme-formu",
+        "corporateB2B": "kurumsal-b2b-ek-sartlar",
+        "acceptableUse": "kullanim-kosullari",
         "login": "giris",
         "register": "kayit-ol",
+        "forgotPassword": "sifremi-unuttum",
         "dashboard": "dashboard",
         "checkout": "odeme",
         "paymentSuccess": "payment-success",
@@ -2205,23 +2279,55 @@
             "features": {
                 "description": "Kurumsal hediye kartı pazarlamasının yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
                 "items": {
-                    "disciplines": { "title": "Farklı Disiplinler Bir Arada", "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar." },
-                    "speed": { "title": "Hız Kazandırır", "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır." },
-                    "strategist": { "title": "Bilge Stratejist", "desc": "Kurumsal hediye kartı sektörü ve pazarlama konularında eğitimli." },
-                    "results": { "title": "Sonuç Odaklı", "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar." },
-                    "memory": { "title": "Sektör Hafızası", "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Turnover nedeniyle bilginin kaybolmasını engeller." },
-                    "guidance": { "title": "Sektöre Özel Yönlendirme", "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar." },
-                    "analysis": { "title": "Tarafsız Analiz", "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar." },
-                    "learning": { "title": "Sürekli Öğrenme", "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar." }
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Kurumsal hediye kartı sektörü ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
                 }
             },
             "process": {
                 "description": "Kurumsal hediye kartı sektörü için geliştirilen Maestro AI; pazar verilerini, müşteri anlatısını ve büyüme hedeflerini bir araya getirir.",
                 "steps": {
-                    "question": { "desc": "Müşteri kazanımı, kampanya performansı, yeni müşteri segmenti ve benzeri stratejik sorularınızı yükleyin." },
-                    "analysis": { "desc": "CRM, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir." },
-                    "suggestion": { "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir." },
-                    "experience": { "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur." }
+                    "question": {
+                        "desc": "Müşteri kazanımı, kampanya performansı, yeni müşteri segmenti ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
                 }
             },
             "testimonial": {
@@ -2230,8 +2336,14 @@
                 "role": "Kurumsal Hediye Kartı Pazarlama Lideri"
             },
             "faqs": [
-                { "question": "Neden khilonfast ile çalışmayı seçmeliyim?", "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır." },
-                { "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?", "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir." }
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
             ]
         },
         "akaryakit": {
@@ -2251,23 +2363,55 @@
             "features": {
                 "description": "Kurumsal akaryakıt pazarlamasının yapısını anlayan, disiplinler arası düşünebilen ve doğrudan uygulanabilir öneriler üreten stratejik bir AI asistandır.",
                 "items": {
-                    "disciplines": { "title": "Farklı Disiplinler Bir Arada", "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar." },
-                    "speed": { "title": "Hız Kazandırır", "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır." },
-                    "strategist": { "title": "Bilge Stratejist", "desc": "Kurumsal akaryakıt sektörü ve pazarlama konularında eğitimli." },
-                    "results": { "title": "Sonuç Odaklı", "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar." },
-                    "memory": { "title": "Sektör Hafızası", "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Turnover nedeniyle bilginin kaybolmasını engeller." },
-                    "guidance": { "title": "Sektöre Özel Yönlendirme", "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar." },
-                    "analysis": { "title": "Tarafsız Analiz", "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar." },
-                    "learning": { "title": "Sürekli Öğrenme", "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar." }
+                    "disciplines": {
+                        "title": "Farklı Disiplinler Bir Arada",
+                        "desc": "Maestro AI, farklı pazarlama disiplinlerini birleştirerek bütüncül bir çözüm sağlar."
+                    },
+                    "speed": {
+                        "title": "Hız Kazandırır",
+                        "desc": "Toplantılar, araştırmalar ve yıllar içinde oluşacak sektörel tecrübe kazanımını hızlandırır."
+                    },
+                    "strategist": {
+                        "title": "Bilge Stratejist",
+                        "desc": "Kurumsal akaryakıt sektörü ve pazarlama konularında eğitimli."
+                    },
+                    "results": {
+                        "title": "Sonuç Odaklı",
+                        "desc": "Veriler -> öneriler -> uygulanabilir sonuçlar."
+                    },
+                    "memory": {
+                        "title": "Sektör Hafızası",
+                        "desc": "Maestro AI şirketiniz ile ilgili konuları unutmaz, sektörü tanır. Turnover nedeniyle bilginin kaybolmasını engeller."
+                    },
+                    "guidance": {
+                        "title": "Sektöre Özel Yönlendirme",
+                        "desc": "Sektöre özgü verilerle yetiştiği için sizi doğru yönlendirir. Genel çözümler değil, doğrudan işinize uygun stratejiler sunar."
+                    },
+                    "analysis": {
+                        "title": "Tarafsız Analiz",
+                        "desc": "Önyargısız çalışır. Veriler ve gerçekler üzerinden karar almayı destekleyerek, insanların eksik kaldığı noktaları tamamlar."
+                    },
+                    "learning": {
+                        "title": "Sürekli Öğrenme",
+                        "desc": "Yeni kampanyalar, müşteri verileri ve pazar değişimlerinden sürekli öğrenir. Her gün daha doğru ve güncel öneriler sunar."
+                    }
                 }
             },
             "process": {
                 "description": "Kurumsal akaryakıt sektörü için geliştirilen Maestro AI; pazar verilerini, müşteri anlatısını ve büyüme hedeflerini bir araya getirir.",
                 "steps": {
-                    "question": { "desc": "Müşteri kazanımı, kanal performansı, yeni segment ve benzeri stratejik sorularınızı yükleyin." },
-                    "analysis": { "desc": "CRM, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir." },
-                    "suggestion": { "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir." },
-                    "experience": { "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur." }
+                    "question": {
+                        "desc": "Müşteri kazanımı, kanal performansı, yeni segment ve benzeri stratejik sorularınızı yükleyin."
+                    },
+                    "analysis": {
+                        "desc": "CRM, kampanya, sosyal medya ve pazar verilerini birlikte sentezleyerek tabloyu netleştirir."
+                    },
+                    "suggestion": {
+                        "desc": "Kampanya mesajı, kanal seçimi, kreatif öneri ve raporlama aksiyonları üretir."
+                    },
+                    "experience": {
+                        "desc": "Haftalar sürecek kararları ve işleri saatler içinde netleştirmenize yardımcı olur."
+                    }
                 }
             },
             "testimonial": {
@@ -2276,9 +2420,307 @@
                 "role": "Kurumsal Akaryakıt Pazarlama Lideri"
             },
             "faqs": [
-                { "question": "Neden khilonfast ile çalışmayı seçmeliyim?", "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır." },
-                { "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?", "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir." }
+                {
+                    "question": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                    "answer": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımı ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır."
+                },
+                {
+                    "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                    "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
+                }
             ]
+        }
+    },
+    "serviceContentStrategy": {
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
+            },
+            "q4": {
+                "q": "Search Ads için bütçemi nasıl belirlemeliyim?",
+                "a": "Bütçeniz, reklam hedeflerinize, sektörünüze ve rekabet düzeyine göre değişir. khilonfast, günlük veya toplam bütçenizi optimize eder, böylece harcamalarınızdan maksimum verim alırsınız."
+            },
+            "q5": {
+                "q": "Kampanyalar ne kadar sürede sonuç verir?",
+                "a": "Search Ads kampanyaları genellikle hemen sonuç vermeye başlar. Ancak gerçek performans sonuçlarını görmek için birkaç hafta gerekebilir. Bu süreçte kampanyalar düzenli olarak optimize edilir."
+            },
+            "q6": {
+                "q": "Anahtar kelime araştırması nasıl yapılır?",
+                "a": "khilonfast, sizin için kapsamlı bir anahtar kelime araştırması yapar. Hedeflerinize en uygun anahtar kelimeleri seçer, rakip analizleriyle desteklenen stratejiler geliştirir ve anahtar kelimeleri sürekli olarak optimize ederiz."
+            },
+            "q7": {
+                "q": "Hedefleme nasıl yapılır?",
+                "a": "khilonfast, Search Ads kampanyalarında doğru anahtar kelimeleri seçerek hedef kitlenize ulaşmanızı sağlar. Demografik hedefleme, coğrafi hedefleme ve cihaz hedeflemesi gibi seçeneklerle reklamlarınızı optimize ederiz."
+            },
+            "q8": {
+                "q": "khilonfast Search Ads hizmetini neden seçmeliyim?",
+                "a": "khilonfast, veriye dayalı kararlarla stratejilerinizi geliştirir, tahmine dayalı modellerle fırsatları öngörür ve sektöre özel çözümlerle performansınızı en üst düzeye çıkarır."
+            },
+            "q9": {
+                "q": "khilonfast ile iletişimi nasıl sağlayacağım?",
+                "a": "khilonfast ile tüm iletişimler e-posta ve size iletilen formlar aracılığıyla yapılmaktadır. Bu süreç, zaman kaybını önler ve işlerinizin her aşamasını düzenli bir şekilde takip etmenize olanak tanır."
+            },
+            "q10": {
+                "q": "Hizmet satın alımından sonra süreç nasıl ilerler?",
+                "a": "İlk kez Search Ads kullananlar için: Gerekli bilgiler toplanır, Google Ads pixel ve izleme kodları eklenir, reklam hesabınız kurulur ve optimize edilir. Mevcut Google Ads hesabı olanlar için: Hesabınız analiz edilip iyileştirme önerileri yapılır, pixel kodları eklenir ve kampanya optimize edilir."
+            },
+            "q11": {
+                "q": "Reklam performansını nasıl ölçebilirim?",
+                "a": "khilonfast, gösterim, tıklama, dönüşüm oranı, CPC ve ROI gibi önemli metriklerle kampanyalarınızın başarısını detaylı raporlarla takip etmenizi sağlar. khilonfast'ın sizden istediği metrikleri sağlamazsanız, yalnızca sistemin verdiği metrikleri izleyebilirsiniz."
+            }
+        }
+    },
+    "serviceGoogleAds": {
+        "faqs": {
+            "q1": {
+                "q": "Search Ads ile hangi hedeflere ulaşabilirim?",
+                "a": "khilonfast'in Search Ads hizmeti, hedef kitlenizin sizi daha hızlı bulmasını sağlar. Başlıca hedefler şunlardır: web sitesi trafiğini artırmak, ürün veya hizmet satışlarını artırmak, marka bilinirliğini artırmak, potansiyel müşteri kazanmak (lead generation) ve fiziksel mağaza trafiğini yönlendirmek."
+            },
+            "q2": {
+                "q": "Search Ads'in avantajları nelerdir?",
+                "a": "Search Ads birçok avantaj sunar: Hedeflenmiş Reklamlar — doğru anahtar kelimelerle hedef kitlenize doğrudan ulaşırsınız. Hızlı Sonuçlar — reklamlar hemen aktif olur ve hızlıca dönüşüm sağlayabilir. Esneklik — bütçenizi kontrol edebilir, kampanyalarınızı istediğiniz zaman durdurabilir veya güncelleyebilirsiniz. Yüksek ROI — doğru yönetilen kampanyalar yatırım getirisini (ROI) maksimize eder."
+            },
+            "q3": {
+                "q": "Search Ads kampanyası nasıl çalışır?",
+                "a": "Search Ads kampanyaları, belirlediğiniz anahtar kelimelere göre Google Ads veya diğer arama motorlarında yapılır. Reklamlar, arama sonuçlarında üst sıralarda yer alır ve yalnızca reklamınıza tıklanırsa ödeme yaparsınız. Bu sistem Tıklama Başına Ödeme (PPC) modeliyle çalışır."
+            },
+            "q4": {
+                "q": "Search Ads için bütçemi nasıl belirlemeliyim?",
+                "a": "Bütçeniz, reklam hedeflerinize, sektörünüze ve rekabet düzeyine göre değişir. khilonfast, günlük veya toplam bütçenizi optimize eder, böylece harcamalarınızdan maksimum verim alırsınız."
+            },
+            "q5": {
+                "q": "Kampanyalar ne kadar sürede sonuç verir?",
+                "a": "Search Ads kampanyaları genellikle hemen sonuç vermeye başlar. Ancak gerçek performans sonuçlarını görmek için birkaç hafta gerekebilir. Bu süreçte kampanyalar düzenli olarak optimize edilir."
+            },
+            "q6": {
+                "q": "Anahtar kelime araştırması nasıl yapılır?",
+                "a": "khilonfast, sizin için kapsamlı bir anahtar kelime araştırması yapar. Hedeflerinize en uygun anahtar kelimeleri seçer, rakip analizleriyle desteklenen stratejiler geliştirir ve anahtar kelimeleri sürekli olarak optimize ederiz."
+            },
+            "q7": {
+                "q": "Hedefleme nasıl yapılır?",
+                "a": "khilonfast, Search Ads kampanyalarında doğru anahtar kelimeleri seçerek hedef kitlenize ulaşmanızı sağlar. Demografik hedefleme, coğrafi hedefleme ve cihaz hedeflemesi gibi seçeneklerle reklamlarınızı optimize ederiz."
+            },
+            "q8": {
+                "q": "khilonfast Search Ads hizmetini neden seçmeliyim?",
+                "a": "khilonfast ile veriye dayalı kararlarla stratejiler geliştirir, tahmine dayalı modellerle gelecekteki fırsatları öngörür ve sektöre özel danışmanlık hizmeti ile optimize edilmiş çözümler sunarız."
+            },
+            "q9": {
+                "q": "khilonfast ile iletişimi nasıl sağlayacağım?",
+                "a": "khilonfast ile tüm iletişimler e-posta ve size iletilen formlar aracılığıyla yapılmaktadır. Bu süreç, zaman kaybını önler ve işlerinizin her aşamasını düzenli bir şekilde takip etmenize olanak tanır."
+            },
+            "q10": {
+                "q": "Hizmet satın alımından sonra süreç nasıl ilerler?",
+                "a": "İlk kez Search Ads kullananlar için: Gerekli bilgiler toplanır, Google Ads pixel ve izleme kodları eklenir, reklam hesabınız kurulur ve optimize edilir. Mevcut Google Ads hesabı olanlar için: Hesabınız analiz edilip iyileştirme önerileri yapılır, pixel kodları eklenir ve kampanya optimize edilir."
+            },
+            "q11": {
+                "q": "Reklam performansını nasıl ölçebilirim?",
+                "a": "khilonfast, gösterim, tıklama, dönüşüm oranı, CPC ve ROI gibi önemli metriklerle kampanyalarınızın başarısını detaylı raporlarla takip etmenizi sağlar. khilonfast'ın sizden istediği metrikleri sağlamazsanız, yalnızca sistemin verdiği metrikleri izleyebilirsiniz."
+            },
+            "q12": {
+                "q": "Google Ads erişiminin yanında GTM ve Google Analytics erişimlerini neden talep ediyoruz?",
+                "a": "khilonfast olarak Google Ads kampanyalarınızı en iyi şekilde yönetebilmek ve etkili sonuçlar elde edebilmek için Google Tag Manager (GTM) ve Google Analytics erişimlerini de talep ediyoruz.\\n\\nGoogle Tag Manager (GTM) erişimi — Kapsamlı izleme ve etiket yönetimi sağlar: web sitenizdeki etiketleri (tags) ve izleme kodlarını merkezi bir noktadan yöneterek kampanya performansını daha etkili izler, gerektiğinde hızlıca değişiklik yaparız. Veri toplama ve analiz açısından da dönüşüm izleme kodları ve diğer etiketleri kolayca yerleştirir, kullanıcı davranışlarını daha iyi anlarız.\\n\\nGoogle Analytics erişimi — Derinlemesine performans analizi için web sitenizin trafik verilerini detaylı analiz ederiz; kullanıcıların sitenizde nasıl davrandığını, hangi sayfalara baktığını ve hangi kaynaklardan geldiğini görürüz. Etkili karar verme için Analytics verileri kampanya performansını değerlendirmemize ve stratejileri buna göre ayarlamamıza yardımcı olur.\\n\\nEntegre bir yaklaşım — GTM ve Google Analytics erişimleri, Google Ads kampanyalarınızın genel dijital stratejiye entegre edilmesini sağlar. Bu sayede tüm pazarlama faaliyetlerinizi koordine bir şekilde yönetir, kampanyalarınızı ve genel web performansınızı daha kapsamlı ölçer, reklam stratejilerinizi ve bütçenizi en iyi şekilde optimize ederiz."
+            }
+        }
+    },
+    "serviceSocialAds": {
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
+            },
+            "q4": {
+                "q": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "a": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir."
+            },
+            "q5": {
+                "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "a": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
+            },
+            "q6": {
+                "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "a": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır."
+            },
+            "q7": {
+                "q": "Sosyal medya reklamlarının benim işletmem için faydaları nelerdir?",
+                "a": "Sosyal medya reklamları, işletmenizin hedef kitlesine doğrudan ulaşmanızı sağlar. Bu reklamlar, marka bilinirliğini artırabilir, hedef kitle ile etkileşimi güçlendirebilir ve doğrudan satışları artırabilir. khilonfast, reklamlarınızı demografik bilgiler, ilgi alanları ve davranışlar gibi kriterlere göre özelleştirerek, performansını en üst düzeye çıkarır."
+            },
+            "q8": {
+                "q": "Sosyal medya reklamları hangi platformlarda yapılabilir?",
+                "a": "Sosyal medya reklamları, Facebook, Instagram, Twitter, LinkedIn gibi çeşitli platformlarda yapılabilir. Her platformun kendine özgü hedefleme seçenekleri ve reklam formatları vardır. khilonfast, işletmenizin hedeflerine ve hedef kitlenize en uygun platformları belirleyerek stratejinizi optimize eder."
+            },
+            "q9": {
+                "q": "Reklam bütçemi nasıl belirlemeliyim?",
+                "a": "Reklam bütçesi, işletmenizin hedeflerine, sektörüne ve hedef kitlesine göre belirlenir. khilonfast, kampanya hedeflerinize uygun olarak bütçenizi optimize eder ve performansı artırmak için en verimli şekilde kullanmanızı sağlar."
+            },
+            "q10": {
+                "q": "Sosyal medya reklamlarında hangi reklam formatlarını kullanabilirim?",
+                "a": "Sosyal medya platformlarında fotoğraf ve video reklamları, slayt gösterileri, hikayeler, karuseller (slider reklamları), koleksiyonlar ve dinamik reklamlar gibi çeşitli formatlar kullanılabilir. khilonfast, kampanya hedeflerinize uygun en etkili reklam formatını seçmenize yardımcı olur."
+            },
+            "q11": {
+                "q": "Sosyal medya reklamlarımın performansını nasıl ölçüyorsunuz?",
+                "a": "Sosyal medya reklamlarınızın performansını tıklama oranı (CTR), dönüşüm oranı, etkileşim oranları (beğeniler, yorumlar, paylaşımlar), erişim ve gösterim sayıları gibi metriklerle ölçüyoruz. khilonfast, size düzenli olarak detaylı raporlar sunar ve kampanya performansını şeffaf bir şekilde takip etmenizi sağlar."
+            },
+            "q12": {
+                "q": "Ne tür hedefleme seçenekleri mevcut?",
+                "a": "Sosyal medya reklamlarında yaş, cinsiyet, coğrafi konum, ilgi alanları, davranışlar ve demografik özellikler gibi çeşitli hedefleme seçenekleri bulunur. khilonfast, mevcut müşteri listenizi kullanarak benzer kitlelere ulaşmanızı sağlar ve kampanya hedeflerinize uygun olarak hedeflemeyi optimize eder."
+            },
+            "q13": {
+                "q": "Sosyal medya reklamları için ne tür içerikler kullanılmalı?",
+                "a": "İçerik türü, hedef kitlenize ve kampanya hedeflerinize göre değişir. Etkili sosyal medya reklamları, dikkat çekici görseller, ilgi çekici metinler ve güçlü çağrı aksiyonları içerir. khilonfast, markanızın sesine ve hedef kitlenizin ilgi alanlarına uygun içerikler oluşturarak reklamlarınızın etkisini artırır."
+            },
+            "q14": {
+                "q": "Sosyal medya reklamları ne kadar sürede sonuç verir?",
+                "a": "Sosyal medya reklamlarının sonuç vermesi, kampanyanın doğasına, hedef kitleye ve reklam stratejisine bağlı olarak değişir. Genellikle ilk haftalarda etkileşim oranlarında bir artış gözlemlenebilir, ancak somut sonuçlar görmek birkaç hafta sürebilir. khilonfast, sonuçları hızlandırmak için kampanyaları düzenli olarak optimize eder."
+            }
+        }
+    },
+    "serviceSeo": {
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
+            },
+            "q4": {
+                "q": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "a": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir."
+            },
+            "q5": {
+                "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "a": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
+            },
+            "q6": {
+                "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "a": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır."
+            },
+            "q7": {
+                "q": "İçerik stratejisi işletmem için nasıl faydalıdır?",
+                "a": "Doğru bir içerik stratejisi, markanızın dijital varlığını güçlendirir, hedef kitlenizle etkileşimi artırır ve uzun vadede sadık bir müşteri tabanı oluşturur. khilonfast, hedeflerinize uygun içerik stratejileri geliştirir ve içerikleri sürekli olarak optimize eder."
+            },
+            "q8": {
+                "q": "İçerik stratejisi oluşturma süreci nasıl işler?",
+                "a": "khilonfast, işletmenizin hedeflerini ve hedef kitlesini analiz eder, ardından markanıza uygun bir içerik stratejisi geliştirir. İçerikler, SEO uyumlu ve hedef odaklı olacak şekilde planlanır ve üretilir. Süreç boyunca düzenli olarak performans izlenir ve gerektiğinde strateji güncellenir."
+            },
+            "q9": {
+                "q": "Neden khilonfast içerik stratejisi hizmetini tercih etmeliyim?",
+                "a": "khilonfast, veriye dayalı ve sonuç odaklı içerik stratejileri geliştirir. Hedef kitlenizin ilgisini çeken ve dönüşüm sağlayan içerikler üreterek markanızın dijital varlığını güçlendirir. Uzman ekibimiz, stratejinizi sürekli olarak optimize eder ve günceller."
+            },
+            "q10": {
+                "q": "İçerik stratejimde hangi tür içerikler yer almalı?",
+                "a": "khilonfast, markanızın ihtiyaçlarına göre blog yazıları, makaleler, infografikler, sosyal medya içerikleri, videolar gibi çeşitli içerikler önerir. İçeriklerinizi hedef kitlenizin ilgi alanlarına ve SEO gereksinimlerine göre optimize ederiz."
+            }
+        }
+    },
+    "serviceContentProduction": {
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
+            },
+            "q4": {
+                "q": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "a": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir."
+            },
+            "q5": {
+                "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "a": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
+            },
+            "q6": {
+                "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "a": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır."
+            },
+            "q7": {
+                "q": "İçerik üretimi işletmem için nasıl faydalıdır?",
+                "a": "Yüksek kaliteli içerik, marka bilinirliğinizi artırır, hedef kitlenizle etkileşimi güçlendirir ve SEO performansınızı iyileştirir. khilonfast, hedef kitlenize uygun içerikler oluşturarak marka görünürlüğünüzü artırır."
+            },
+            "q8": {
+                "q": "İçerik üretim süreci nasıl işler?",
+                "a": "khilonfast, işletmenizin hedeflerine uygun bir içerik stratejisi oluşturur. Hedef kitlenizi analiz eder, içerik türlerini belirler ve bu içerikleri üretir. Tüm süreç boyunca içeriklerin SEO uyumlu olması sağlanır ve sürekli olarak optimizasyon yapılır."
+            },
+            "q9": {
+                "q": "Hangi tür içerikler üretilir?",
+                "a": "khilonfast, blog yazıları, makaleler, sosyal medya içerikleri, infografikler gibi çeşitli içerikler üretir. İçerikler, hedef kitlenizin ilgisini çekmek ve dönüşümleri artırmak için özelleştirilir."
+            },
+            "q10": {
+                "q": "İçerik üretiminde hangi raporları alacağım?",
+                "a": "khilonfast, içerik performansınızı izlemek için düzenli raporlar sunar. Bu raporlar, içerik etkileşim oranları, SEO performansı ve kullanıcı davranışları gibi verileri içerir. Canlı dashboard'lar aracılığıyla içerik sonuçlarınızı anlık olarak takip edebilirsiniz."
+            },
+            "q11": {
+                "q": "Neden khilonfast içerik üretim hizmetini tercih etmeliyim?",
+                "a": "khilonfast, yüksek kaliteli, SEO uyumlu ve hedef odaklı içerikler üretir. Markanızın sesine uygun içeriklerle, hem dijital görünürlüğünüzü artırır hem de hedef kitlenizle güçlü bir bağ kurmanızı sağlar."
+            }
+        }
+    },
+    "serviceB2BEmail": {
+        "faqs": {
+            "q1": {
+                "q": "Neden khilonfast ile çalışmayı seçmeliyim?",
+                "a": "khilonfast, kapsamlı dijital pazarlama deneyimi ve veriye dayalı yaklaşımları ile öne çıkar. İşletmenizin ihtiyaçlarına özel çözümler sunar, kampanyalarınızı sürekli optimize eder ve sonuç odaklı çalışır. khilonfast ile çalışarak, markanızın dijital alanda güçlü bir yer edinmesini sağlayabilirsiniz."
+            },
+            "q2": {
+                "q": "Neden yüz yüze veya online toplantı yapmıyoruz?",
+                "a": "khilonfast, süreçleri hızlandırmak ve verimliliği artırmak amacıyla dijital iletişim araçlarını tercih eder. Tüm işlemler sitemiz ve e-posta üzerinden yürütülür, bu sayede dünyanın her yerinden hızlı ve etkili bir şekilde hizmet alabilirsiniz. khilonfast, zaman kaybına yol açan senkron toplantıları ortadan kaldırarak pazarlama hizmetini ölçeklendirebiliyor ve tecrübesini tamamen uzmanlığına odaklayarak daha iyi iş yapmayı tercih ediyor. Bu şekilde, üst düzey bir ajansla makul fiyatlarla çalışabilir, zaman kaybına uğramadan işinizin görülmesini sağlayabilirsiniz. Tüm hizmet süreci boyunca ihtiyacınız olan bilgi ve destek, e-posta aracılığıyla sağlanacaktır."
+            },
+            "q3": {
+                "q": "khilonfast ile kimler çalışmamalı?",
+                "a": "khilonfast, dijital süreçleri etkin bir şekilde yönetebilen ve modern pazarlama araçlarını benimseyen firmalar için idealdir. Ancak, ortaya çıkacak işin kalitesinden çok karşısında bir insan bulmayı isteyen, sadece bir yüz yüze görüşmeyle kendini güvende hisseden, metrikler ve analizlerle arası iyi olmayan, gelişmeleri anlamlı bir şekilde takip edemeyen, yeni nesil pazarlama araçlarına mesafeli olan, WhatsApp veya e-posta gibi iletişim araçlarını düzenli olarak kontrol etmeyen, khilonfast'ın göndereceği formları doldurmayacak kadar meşgul olan ya da “Ben ajanslardan daha iyi biliyorum, kendi yöntemimle ilerleyelim” diyen firmalar, khilonfast için uygun müşteriler değildir. Bu tür firmalar için, khilonfast hizmeti uygun olmayabilir."
+            },
+            "q4": {
+                "q": "khilonfast kimler için ideal bir iş ortağıdır?",
+                "a": "khilonfast, dijital dünyada hızlı, verimli ve sonuç odaklı çözümler arayan firmalar için mükemmel bir iş ortağıdır. Veriye dayalı kararlar almayı seven, metriklerle çalışabilen, dijital pazarlamanın gücüne inanan ve yeni nesil araçları kullanmaya istekli olan firmalar için khilonfast ideal bir çözüm sunar. Ayrıca, e-posta ve diğer dijital iletişim araçlarını düzenli olarak kullanan, khilonfast tarafından sağlanan formları dolduracak zaman ve disipline sahip olan, ve uzman ekibin önerilerine güvenerek stratejik rehberlik arayan firmalar, khilonfast ile çalışırken en yüksek verimi elde ederler. Eğer dijital pazarlama süreçlerinde güvenilir bir iş ortağı arıyorsanız, khilonfast sizin için mükemmel bir seçimdir."
+            },
+            "q5": {
+                "q": "khilonfast ile iletişimi nasıl sağlayabilirim?",
+                "a": "khilonfast ile tüm iletişim, kullanıcı dostu sitemiz ve e-posta üzerinden gerçekleştirilir. Hizmeti satın aldıktan sonra, size gerekli formlar sistem üzerinden iletilir. Bu formları doldurduktan sonra, khilonfast ekibi titizlikle inceleyerek gerekli kurulumları yapar ve operasyonu başlatır. Sürecin her aşamasında, e-posta yoluyla size bilgilendirme yapılır ve gerekli tüm destek sağlanır."
+            },
+            "q6": {
+                "q": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
+                "a": "khilonfast üzerinden hizmet satın alımını tamamladığınızda, size sitemiz üzerinden doldurmanız gereken formlar iletilir. Bu formlar, hizmetin doğru yapılandırılması için gereken bilgileri toplar. Formlar doldurulduktan sonra, khilonfast ekibi gerekli tanımlamaları yapar ve hizmetinizi aktif hale getirir. Tüm süreç boyunca, gerekli bilgiler ve talimatlar e-posta ile size iletilecektir. Ayrıca, raporlama periyotlarına göre haftalık, aylık veya üç aylık raporlar e-posta yoluyla gönderilir ve hizmetinizin performansını takip etmeniz sağlanır."
+            },
+            "q7": {
+                "q": "B2B email marketing hizmetleri işletmem için nasıl faydalıdır?",
+                "a": "B2B email marketing, işletmenizin hedef kitleyle doğrudan ve etkili bir şekilde iletişim kurmasını sağlar. khilonfast, kişiselleştirilmiş e-posta kampanyaları ile açılma ve tıklama oranlarınızı artırır, müşteri bağlılığını güçlendirir."
+            },
+            "q8": {
+                "q": "Neden khilonfast B2B email marketing hizmetini tercih etmeliyim?",
+                "a": "khilonfast, veriye dayalı kişiselleştirme ve hedefleme stratejileri ile e-posta kampanyalarınızın etkinliğini artırır. E-posta pazarlamasında uzman olan khilonfast, doğru mesajın doğru kişiye ulaşmasını sağlayarak dönüşümlerinizi maksimize eder."
+            },
+            "q9": {
+                "q": "B2B email marketing kampanyaları nasıl yapılır?",
+                "a": "khilonfast, hedef kitlenizi analiz ederek kişiselleştirilmiş e-posta kampanyaları oluşturur. İçerikler üretilir, uygun zamanlama belirlenir ve kampanyalar başlatılır. Süreç boyunca performans izlenir ve gerektiğinde optimizasyon yapılır."
+            }
         }
     }
 }

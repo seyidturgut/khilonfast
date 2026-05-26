@@ -23,24 +23,46 @@ export default function PaymentCallback() {
             try {
                 const search = location.search || '';
                 const response = await api.get(`/payment/callback${search}`);
-                const status = String(response?.data?.status || '').toLowerCase();
-                // Backend "finalSuccess" döner: ilk callback başarılı + FinishPaymentProcess da başarılı
+                // SADECE backend'in nihai kararına (`finalSuccess`) güven — Lidio'nun ham `status`
+                // değeri sadece 3DS aşamasını yansıtır; FinishPaymentProcess ve fraud kontrolü
+                // sonrasında order yine 'failed' olabilir, bu durumda kullanıcıya başarılı deme.
                 const finalSuccess = response?.data?.finalSuccess === true;
-                const success = finalSuccess || ['success', '3dsuccess', 'approved', 'completed'].includes(status);
+                const resolvedStatus = String(response?.data?.resolvedStatus || '').toLowerCase();
+                const fraud = String(response?.data?.fraudControlResult || '').toLowerCase();
+                // Defansif: idempotent response'da bile sipariş zaten completed kabul edilir
+                const alreadyProcessed = response?.data?.alreadyProcessed === true;
+                const success = finalSuccess || alreadyProcessed || resolvedStatus === 'completed';
 
                 if (!active) return;
                 if (success) {
                     clearCart();
                     setMessage(t('paymentStatus.callback.success'));
                     setTimeout(() => navigate(`${dashboardPath}?tab=orders&success=true`, { replace: true }), 1200);
+                } else if (resolvedStatus === 'processing') {
+                    // Fraud kontrolü InProcess — sipariş Dashboard'da bekliyor
+                    clearCart();
+                    setMessage(t('paymentStatus.callback.success'));
+                    setTimeout(() => navigate(`${dashboardPath}?tab=orders`, { replace: true }), 1500);
                 } else {
                     setIsError(true);
-                    setMessage(t('paymentStatus.callback.failed', { status: response?.data?.status || 'failed' }));
+                    if (fraud === 'riskdetected') {
+                        setMessage(t('paymentStatus.callback.errors.fraudDetected'));
+                    } else {
+                        setMessage(t('paymentStatus.callback.failed', { status: response?.data?.status || 'failed' }));
+                    }
                 }
             } catch (error: any) {
                 if (!active) return;
                 setIsError(true);
-                setMessage(error?.response?.data?.error || t('paymentStatus.callback.unverified'));
+                // Backend İngilizce error string dönüyor — kullanıcıya göstermek yerine
+                // bilinen mesajları yerelleştir, bilinmeyenler için generic fallback kullan
+                const rawError = String(error?.response?.data?.error || '').toLowerCase();
+                let key = 'paymentStatus.callback.errors.generic';
+                if (rawError.includes('order not found')) key = 'paymentStatus.callback.errors.orderNotFound';
+                else if (rawError.includes('fraud') || rawError.includes('risk')) key = 'paymentStatus.callback.errors.fraudDetected';
+                else if (rawError.includes('payment') && rawError.includes('fail')) key = 'paymentStatus.callback.errors.paymentFailed';
+                else if (!rawError) key = 'paymentStatus.callback.unverified';
+                setMessage(t(key));
             }
         };
 

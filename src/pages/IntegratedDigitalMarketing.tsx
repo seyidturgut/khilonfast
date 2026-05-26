@@ -18,7 +18,7 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function IntegratedDigitalMarketing() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
 
     useEffect(() => {
         document.title = t('serviceIDM.hero.title')
@@ -38,7 +38,7 @@ export default function IntegratedDigitalMarketing() {
 
     const idmConfig = {
         hero: {
-            title: 'Dijital Kanalları Tek Bir Stratejide Birleştirin!',
+            title: t('serviceIDM.hero.title'),
             subtitle: t('serviceIDM.hero.subtitle'),
             description: t('serviceIDM.hero.description'),
             buttonText: t('serviceIDM.hero.buttonText'),
@@ -130,32 +130,43 @@ export default function IntegratedDigitalMarketing() {
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: t('process.steps.buy.title'),
+                    description: t('process.steps.buy.description'),
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın.</a></>,
+                    title: t('process.steps.auth.title'),
+                    description: (() => {
+                        // "tıklayın>>" / "Click >>" ifadesini linke çevir
+                        const raw = t('process.steps.auth.description') as string
+                        const tokens = ['tıklayın>>', 'tıklayın.', 'tıklayın', 'Click for authorization details >>', 'Click >>', 'Click']
+                        for (const tok of tokens) {
+                            const idx = raw.indexOf(tok)
+                            if (idx !== -1) {
+                                return <>{raw.slice(0, idx)}<a href="#authorization" style={{ textDecoration: 'underline' }}>{tok.replace('>>', '').trim()}</a>{raw.slice(idx + tok.length)}</>
+                            }
+                        }
+                        return raw
+                    })(),
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: t('process.steps.brief.title'),
+                    description: t('process.steps.brief.description'),
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: t('process.steps.analysis.title'),
+                    description: t('process.steps.analysis.description'),
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: t('process.steps.approval.title'),
+                    description: t('process.steps.approval.description'),
                     icon: <HiCheckBadge />
                 }
             ]
@@ -176,7 +187,7 @@ export default function IntegratedDigitalMarketing() {
                 { feature: t('serviceIDM.comparison.rows.backlink'), values: ['-', '-', true] },
                 { feature: t('serviceIDM.comparison.rows.competitor'), values: ['-', t('serviceIDM.comparison.values.competitor1'), t('serviceIDM.comparison.values.competitor2')] },
                 { feature: t('serviceIDM.comparison.rows.pageCount'), values: ['1-3', '10-15', '20-30'] },
-                { feature: t('serviceIDM.comparison.rows.audit'), values: ['-', '3 Ayda 1', 'Ayda 1'] },
+                { feature: t('serviceIDM.comparison.rows.audit'), values: ['-', i18n.language === 'en' ? 'Every Quarter' : '3 Ayda 1', i18n.language === 'en' ? 'Monthly' : 'Ayda 1'] },
                 { feature: t('serviceIDM.comparison.rows.aiOpt'), values: ['-', '-', true] },
                 { feature: t('serviceIDM.comparison.rows.blog'), values: [t('serviceIDM.comparison.values.blog2'), t('serviceIDM.comparison.values.blog4'), t('serviceIDM.comparison.values.blog6')] },
                 { feature: t('serviceIDM.comparison.rows.email'), values: ['-', '-', t('serviceIDM.comparison.values.email10k')] },
@@ -275,10 +286,16 @@ export default function IntegratedDigitalMarketing() {
             role: t('serviceIDM.testimonial.role')
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') },
-            { question: t('faq.item4.question'), answer: t('faq.item4.answer') }
+            { question: t('serviceIDM.faqs.q1.q'), answer: t('serviceIDM.faqs.q1.a') },
+            { question: t('serviceIDM.faqs.q2.q'), answer: t('serviceIDM.faqs.q2.a') },
+            { question: t('serviceIDM.faqs.q3.q'), answer: t('serviceIDM.faqs.q3.a') },
+            { question: t('serviceIDM.faqs.q4.q'), answer: t('serviceIDM.faqs.q4.a') },
+            { question: t('serviceIDM.faqs.q5.q'), answer: t('serviceIDM.faqs.q5.a') },
+            { question: t('serviceIDM.faqs.q6.q'), answer: t('serviceIDM.faqs.q6.a') },
+            { question: t('serviceIDM.faqs.q7.q'), answer: t('serviceIDM.faqs.q7.a') },
+            { question: t('serviceIDM.faqs.q8.q'), answer: t('serviceIDM.faqs.q8.a') },
+            { question: t('serviceIDM.faqs.q9.q'), answer: t('serviceIDM.faqs.q9.a') },
+            { question: t('serviceIDM.faqs.q10.q'), answer: t('serviceIDM.faqs.q10.a') }
         ]
     }
 

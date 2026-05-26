@@ -26,31 +26,34 @@
                 "title": "Approval",
                 "description": "Service installations begin upon approval of the de-brief report, and measurements become active within 1 week."
             }
-        }
+        },
+        "tag": "How It Works",
+        "title": "Service Process",
+        "description": "Reach success in 5 steps."
     },
     "header": {
         "services": "Services",
-        "sectoral": "Sectoral",
-        "trainings": "Trainings",
+        "sectoral": "Industries",
+        "trainings": "Programs",
         "products": "Products",
         "about": "About",
-        "howItWorks": "How It Works?",
+        "howItWorks": "How It Works",
         "contact": "Contact",
         "login": "Login",
         "register": "Register",
         "dashboard": "My Account",
         "home": "Home",
-        "allTrainings": "All Trainings",
+        "allTrainings": "All Programs",
         "backMenu": "Back: Menu",
         "menuItems": {
             "services": {
                 "gtm": {
-                    "title": "Go To Market Strategy",
-                    "desc": "Market entry and growth plans"
+                    "title": "Go-to-Market (GTM) Strategy",
+                    "desc": "Market Entry & Growth Frameworks"
                 },
                 "content": {
                     "title": "Content Strategy",
-                    "desc": "Contents that strengthen your brand story"
+                    "desc": "Content that Amplifies Your Brand Narrative"
                 },
                 "integrated": {
                     "title": "Integrated Digital Marketing",
@@ -66,11 +69,11 @@
                 },
                 "seo": {
                     "title": "SEO",
-                    "desc": "Rise to the top in search engines"
+                    "desc": "Drive High-Intent Organic Traffic"
                 },
                 "production": {
                     "title": "Content Production",
-                    "desc": "Impressive and original content production"
+                    "desc": "High-Impact Creative Content Production"
                 },
                 "email": {
                     "title": "B2B Email Marketing",
@@ -79,7 +82,7 @@
             },
             "sectoral": {
                 "b2b": {
-                    "title": "360° Marketing Management for B2B Companies",
+                    "title": "360° B2B Marketing Management",
                     "desc": "Integrated B2B marketing solutions"
                 },
                 "fintech": {
@@ -87,20 +90,20 @@
                     "desc": "Financial technology-oriented solutions"
                 },
                 "food": {
-                    "title": "360° Marketing Management for Industrial Food & Chef Solutions Companies",
+                    "title": "360° Marketing Management for Industrial Food & Culinary Companies",
                     "desc": "360 marketing specific to the food sector"
                 },
                 "payment": {
                     "title": "360° Marketing Management for Payment Systems Companies",
-                    "desc": "Fintech-oriented strategic solutions"
+                    "desc": "Tailored Growth Strategies for FinTech Brands"
                 },
                 "tech": {
                     "title": "360° Marketing Management for Technology & Software Companies",
-                    "desc": "SaaS and software-oriented solutions"
+                    "desc": "Built for SaaS and Software Ecosystems"
                 },
                 "energy": {
                     "title": "360° Marketing Management for Energy Companies",
-                    "desc": "Energy and technology-oriented solutions"
+                    "desc": "Strategic Marketing for the Energy & Tech Sector"
                 },
                 "design": {
                     "title": "360° Marketing Management for Office & Corporate Interior Design Companies",
@@ -108,7 +111,7 @@
                 },
                 "fleet": {
                     "title": "360° Marketing Management for Fleet Rental Companies",
-                    "desc": "Corporate mobility and fleet solutions"
+                    "desc": "B2B Corporate Mobility & Fleet Solutions"
                 },
                 "manufacturing": {
                     "title": "360° Marketing Management for Manufacturing Companies",
@@ -125,47 +128,47 @@
             },
             "trainings": {
                 "all": {
-                    "title": "All Trainings",
+                    "title": "All Programs",
                     "desc": "View the program list on a single screen"
                 },
                 "growth": {
-                    "title": "Growth-Oriented Marketing Training",
+                    "title": "Growth Marketing Training",
                     "desc": "khilonfast core growth-oriented marketing training program."
                 },
                 "payment": {
-                    "title": "Growth-Oriented Marketing Training in Payment Systems",
+                    "title": "Growth Marketing Training for Payment Systems",
                     "desc": "Applied content focused on sales funnel, value proposition, and measurement."
                 },
                 "b2b": {
-                    "title": "Growth-Oriented Marketing Training in the B2B Sector",
+                    "title": "Growth Marketing Training for B2B",
                     "desc": "Marketing and sales integration training set for B2B companies."
                 },
                 "fintech": {
-                    "title": "Growth-Oriented Marketing Training in the Fintech Sector",
+                    "title": "Growth Marketing Training for Fintech",
                     "desc": "Fintech-oriented growth strategies and channel optimization."
                 },
                 "tech": {
-                    "title": "Growth-Oriented Marketing Training in Tech & Software Sector",
+                    "title": "Growth Marketing Training for Tech & Software Sector",
                     "desc": "Performance-oriented training content for SaaS and technology brands."
                 },
                 "manufacturing": {
-                    "title": "Growth-Oriented Marketing Training in the Manufacturing Sector",
+                    "title": "Growth Marketing Training for Manufacturing",
                     "desc": "Sustainable demand and conversion management for manufacturing companies."
                 },
                 "energy": {
-                    "title": "Growth-Oriented Marketing Training in the Energy Sector",
+                    "title": "Growth Marketing Training for Energy",
                     "desc": "Marketing planning approach focused on decision-makers in the energy sector."
                 },
                 "design": {
-                    "title": "Growth-Oriented Marketing Training in Office & Interior Design",
+                    "title": "Growth Marketing Training for Office & Interior Design",
                     "desc": "Marketing model from proposal to sale for corporate interior design firms."
                 },
                 "fleet": {
-                    "title": "Growth-Oriented Marketing Training in the Fleet Rental Sector",
+                    "title": "Growth Marketing Training for Fleet Rental",
                     "desc": "Lead quality and conversion management training in fleet rental companies."
                 },
                 "food": {
-                    "title": "Growth-Oriented Marketing Training in the Industrial Food Sector",
+                    "title": "Growth Marketing Training for Industrial Food & Culinary",
                     "desc": "Growth-oriented marketing training flow specific to the industrial food sector."
                 }
             },
@@ -182,12 +185,16 @@
         }
     },
     "footer": {
-        "description": "At Khilon, we integrate marketing activities for businesses by combining the science of data analytics with the art of creativity. Our mission is to transform your marketing — making it not only more efficient, but also truly effective in achieving your business goals.",
+        "description": "At Khilon, we orchestrate marketing activities for businesses by bridging the gap between data-driven analytics and creative execution. Our mission is to elevate your marketing infrastructure — making it not only more efficient, but also truly effective in achieving your business goals.",
         "rights": "All rights reserved.",
-        "privacy": "Privacy Policy",
+        "privacy": "Privacy Policy & KVKK",
         "cookies": "Cookie Policy",
         "terms": "Terms of Service",
         "refund": "Cancellation & Refund Policy",
+        "distanceSale": "Distance Sales Agreement",
+        "preInformation": "Preliminary Information Form",
+        "corporateB2B": "Corporate / B2B Additional Terms",
+        "acceptableUse": "Terms of Use",
         "manageCookies": "Manage Cookie Preferences",
         "career": "Career Opportunities",
         "columns": {
@@ -196,9 +203,9 @@
             "info": "Information"
         },
         "links": {
-            "home": "home page",
-            "about": "about us",
-            "contact": "contact us"
+            "home": "Home",
+            "about": "About Us",
+            "contact": "Contact Us"
         }
     },
     "common": {
@@ -217,9 +224,9 @@
     },
     "hero": {
         "subtitle": "khilonfast MARKETING SOLUTIONS",
-        "title": "Less Time,",
-        "titleHighlight": "More Results!",
-        "description": "khilonfast, your fast way in marketing solutions. We add value to your business with marketing strategies that support growth and offer measurable results."
+        "title": "Maximum Efficiency,",
+        "titleHighlight": "Maximum Results!",
+        "description": "khilonfast: Fast-Track Marketing Solutions for B2B Growth. We seamlessly blend strategy, creativity, and technology to deliver measurable results."
     },
     "about": {
         "title": "Marketing Solutions Combining Strategy, Creativity, and Technology",
@@ -233,7 +240,7 @@
             "title": "Comprehensive Audit Services for Detailed Business Analysis"
         },
         "item1": {
-            "title": "Growth-Oriented Strategic Marketing",
+            "title": "Strategic Growth Marketing",
             "description": "Our audit services comprehensively analyze your business operations to identify areas for improvement and growth opportunities."
         },
         "item2": {
@@ -263,7 +270,7 @@
             "description": "Explore our comprehensive solutions in brand strategy and corporate communications."
         },
         "item3": {
-            "title": "Marketing Expertise for a Strong Digital Presence",
+            "title": "Advanced Digital Presence & Positioning",
             "description": "Examine our special digital marketing solutions to achieve effective results."
         }
     },
@@ -323,7 +330,7 @@
             }
         },
         "birth": {
-            "title": "How Was khilonfast Born?",
+            "title": "The story behind khilonfast",
             "card1": {
                 "title": "Beyond Traditional",
                 "desc": "We set out with an agency model suitable for the speed of the modern world, breaking clichés and sluggish structures in the sector."
@@ -377,7 +384,7 @@
             "title": "khilonfast is With You for Fast and Effective Marketing"
         },
         "notFor": {
-            "title": "Who is khilonfast Not Suitable For?",
+            "title": "Who we're not a good fit for...",
             "description": "Some approaches that do not align with our vision may not be suitable for working with us.",
             "item1": {
                 "title": "Not for Those Who Dislike Innovation",
@@ -393,7 +400,7 @@
             }
         },
         "brandStatement": {
-            "title": "With our expert staff, we are with you in your brand's growth adventure."
+            "title": "Our expert team is here to guide your brand's growth."
         },
         "discover": {
             "title": "Explore Our Solutions!",
@@ -402,7 +409,7 @@
     },
     "howItWorksPage": {
         "hero": {
-            "kicker": "How It Works?",
+            "kicker": "How It Works",
             "title": "How Does khilonfast Work?",
             "description": "Designed to offer fast, professional, and reliable marketing processes. It reduces unnecessary meeting load, clarifies the process with the right brief, and focuses on measurable results.",
             "tag1": "Gain Speed",
@@ -411,7 +418,7 @@
         },
         "steps": {
             "kicker": "khilonfast in 5 steps",
-            "title": "How It Works?",
+            "title": "How It Works",
             "description": "Start your digital marketing process in just a few steps. All steps are designed to be transparent, fast, and measurable.",
             "item1": {
                 "title": "Buy Now",
@@ -516,7 +523,7 @@
             "email": "Email",
             "phone": "Phone",
             "address": "Address",
-            "location": "Istanbul, Turkiye",
+            "location": "Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe/İstanbul, Türkiye",
             "hours": "Working hours: 09:00 - 18:30 (Weekdays)"
         },
         "form": {
@@ -773,7 +780,7 @@
             }
         },
         "process": {
-            "tag": "How It Works?",
+            "tag": "How It Works",
             "title": "Analysis Process is Very Simple",
             "description": "Upload your visual, run AI-assisted Eye Tracking analysis, and receive your report within minutes.",
             "steps": {
@@ -868,9 +875,23 @@
             "submit": "Login",
             "loading": "Signing in...",
             "switchPrompt": "Don't have an account?",
+            "forgotPassword": "Forgot password?",
             "errors": {
                 "default": "Login failed",
                 "google": "Google sign-in failed"
+            }
+        },
+        "forgotPassword": {
+            "title": "Forgot Password",
+            "subtitle": "Enter your email and we'll send you a reset link.",
+            "submit": "Send Reset Link",
+            "loading": "Sending...",
+            "successTitle": "Check your email",
+            "successMessage": "If an account exists for this email, a password reset link has been sent. The link is valid for 1 hour.",
+            "backToLogin": "Back to Login",
+            "errors": {
+                "default": "An error occurred, please try again.",
+                "invalidEmail": "Please enter a valid email address."
             }
         },
         "register": {
@@ -902,7 +923,7 @@
     },
     "consultingPage": {
         "hero": {
-            "title": "On-Site Growth-Focused Marketing Consulting",
+            "title": "On-Site Growth Marketing Consulting",
             "description": "Our experts come to your company and provide face-to-face consulting. Strengthen your team with hands-on, results-driven consulting programs tailored to your sector."
         },
         "list": {
@@ -923,14 +944,20 @@
             "success": "Payment successful. Redirecting...",
             "failed": "Payment could not be completed ({{status}}).",
             "unverified": "Payment callback could not be verified.",
-            "backToCheckout": "Return to Checkout"
+            "backToCheckout": "Return to Checkout",
+            "errors": {
+                "orderNotFound": "Order not found. Please return to the checkout step and try again.",
+                "paymentFailed": "Payment could not be completed. Please verify your card details and try again.",
+                "fraudDetected": "Payment was declined by security check. Please try a different card or contact your bank.",
+                "generic": "An error occurred during payment. Please try again."
+            }
         }
     },
     "pages": {
         "home": {
             "seo": {
                 "title": "khilonfast | Fast, Measurable B2B Marketing Growth",
-                "description": "Scale your B2B brand with Khilonfast through integrated strategy, content, and performance marketing. Drive measurable growth, stronger visibility, and sustainable revenue momentum."
+                "description": "Scale your B2B brand with Khilonfast — integrated strategy, content, and performance marketing for measurable growth and visibility."
             },
             "pricing": {
                 "titleLine1": "Clear and Transparent",
@@ -1012,7 +1039,7 @@
         },
         "process": {
             "tag": "GTM in 4 steps",
-            "title": "How It Works?",
+            "title": "How It Works",
             "description": "Build your market entry strategy in just a few steps. Every stage is designed for transparency, speed, and measurable execution.",
             "steps": {
                 "buy": {
@@ -1069,44 +1096,44 @@
         },
         "faqs": {
             "q1": {
-                "q": "Why should I choose khilonfast?",
-                "a": "khilonfast stands out with deep digital marketing expertise and a data-led operating model. We deliver tailored strategies, continuously optimize execution, and focus on measurable outcomes."
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
             },
             "q2": {
-                "q": "Why do we not run face-to-face or live online meetings?",
-                "a": "To increase speed and efficiency, khilonfast runs communication through structured digital channels. This removes meeting overhead and enables high-quality delivery with faster turnaround."
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
             },
             "q3": {
-                "q": "Who may not be a fit for khilonfast?",
-                "a": "Teams that are not comfortable with metric-driven workflows, asynchronous communication, and disciplined process inputs may find this model less suitable."
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
             },
             "q4": {
-                "q": "Who is an ideal business partner for khilonfast?",
-                "a": "Companies seeking fast, efficient, and results-focused growth; teams that value data-informed decisions and are open to modern marketing systems."
+                "q": "Who is khilonfast an ideal partner for?",
+                "a": "khilonfast is an excellent partner for companies seeking fast, efficient and result-oriented solutions in the digital world. It is ideal for teams that enjoy data-driven decisions, are comfortable working with metrics, believe in the power of digital marketing and are willing to use new-generation tools. Companies that use email and other digital channels regularly, have the time and discipline to complete the forms we provide, and trust an expert team for strategic guidance get the most value from khilonfast. If you're looking for a reliable partner for your digital marketing operations, khilonfast is an excellent choice."
             },
             "q5": {
-                "q": "How can I communicate with khilonfast?",
-                "a": "All communication is managed through our website and email. After purchase, required forms are shared, reviewed, and converted into operational setup and delivery."
+                "q": "How can I get in touch with khilonfast?",
+                "a": "All communication with khilonfast happens through our user-friendly platform and email. Once you purchase a service, the required forms are delivered to you through the system. After you complete them, the khilonfast team reviews everything carefully, configures the setup and kicks off the operation. You'll be kept informed by email at every stage of the process and receive all the support you need."
             },
             "q6": {
-                "q": "How does the process move forward after purchase?",
-                "a": "You complete onboarding forms, then the khilonfast team configures and activates your service. Performance reporting follows your selected cadence."
+                "q": "How will the process work after I purchase a service?",
+                "a": "Once you complete the purchase on khilonfast, the forms you need to fill in are delivered through our site. These forms collect the information required to configure the service properly. After they're completed, the khilonfast team applies the necessary setup and activates your service. Throughout the engagement, every instruction and update is sent to you by email. In addition, depending on your reporting cadence, weekly, monthly or quarterly reports are emailed so you can track how your service is performing."
             },
             "q7": {
                 "q": "How does a go-to-market strategy benefit my business?",
-                "a": "A go-to-market strategy enables faster, more effective launch performance for new offerings. khilonfast helps you define audience, positioning, and strategic actions that drive market traction."
+                "a": "A go-to-market strategy lets a new product or service enter the market quickly and effectively. khilonfast analyzes your target audience, develops strategies that create a competitive edge, and helps you secure a strong position in the market."
             },
             "q8": {
-                "q": "How can I track go-to-market performance?",
-                "a": "khilonfast provides weekly, monthly, or quarterly reporting across key metrics such as revenue impact, market penetration, and customer response, supported by dashboard visibility."
+                "q": "How can I track the performance of my go-to-market strategy?",
+                "a": "khilonfast tracks the performance of your go-to-market strategy through weekly, monthly or quarterly reports. These reports cover key metrics such as sales, market penetration and customer feedback. You can also monitor outcomes in real time through live dashboards."
             },
             "q9": {
-                "q": "Why should I choose khilonfast for go-to-market services?",
-                "a": "Our team builds data-driven launch strategies that deliver competitive clarity and faster execution. We prioritize measurable growth from day one."
+                "q": "Why should I choose khilonfast's go-to-market service?",
+                "a": "khilonfast strengthens your market-entry strategy with data-driven approaches. Our expert team designs strategies that create a competitive edge and helps you take your place in the market quickly. If you're looking for a reliable partner when entering new markets, khilonfast is an ideal choice."
             },
             "q10": {
-                "q": "How is a go-to-market strategy created?",
-                "a": "We begin with audience and market analysis, design the strategic launch framework, execute with clear milestones, and optimize continuously based on performance signals."
+                "q": "How is a go-to-market strategy built?",
+                "a": "khilonfast first analyzes your target audience and market. We then build the strategies that will support your market entry. After launch, performance is monitored and the strategy is updated whenever needed."
             }
         }
     },
@@ -1174,8 +1201,13 @@
         "cookiePolicy": "cookie-policy",
         "termsOfService": "terms-of-service",
         "refundPolicy": "cancellation-and-refund-policy",
+        "distanceSale": "distance-sales-agreement",
+        "preInformation": "preliminary-information-form",
+        "corporateB2B": "corporate-b2b-additional-terms",
+        "acceptableUse": "terms-of-use",
         "login": "login",
         "register": "register",
+        "forgotPassword": "forgot-password",
         "dashboard": "dashboard",
         "checkout": "checkout",
         "paymentSuccess": "payment-success",
@@ -1203,7 +1235,7 @@
                 "highlight": "Create a consistent and integrated brand experience across all channels."
             },
             "card2": {
-                "title": "How It Works?",
+                "title": "How It Works",
                 "desc": "See the full process step by step from kickoff to delivery.",
                 "highlight": "Right brief -> clear workflow -> measurable outcomes."
             }
@@ -1289,6 +1321,48 @@
             "quote": "After consolidating all digital processes under one strategy, the return on our marketing budget increased by 45%.",
             "author": "Caner Ozkan",
             "role": "E-commerce Director"
+        },
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
+            },
+            "q2": {
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
+            },
+            "q3": {
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
+            },
+            "q4": {
+                "q": "Who is khilonfast an ideal partner for?",
+                "a": "khilonfast is an excellent partner for companies seeking fast, efficient and result-oriented solutions in the digital world. It is ideal for teams that enjoy data-driven decisions, are comfortable working with metrics, believe in the power of digital marketing and are willing to use new-generation tools. Companies that use email and other digital channels regularly, have the time and discipline to complete the forms we provide, and trust an expert team for strategic guidance get the most value from khilonfast."
+            },
+            "q5": {
+                "q": "How can I get in touch with khilonfast?",
+                "a": "All communication with khilonfast happens through our user-friendly platform and email. Once you purchase a service, the required forms are delivered to you through the system. After you complete them, the khilonfast team reviews everything carefully, configures the setup and kicks off the operation. You'll be kept informed by email at every stage of the process and receive all the support you need."
+            },
+            "q6": {
+                "q": "How will the process work after I purchase a service?",
+                "a": "Once you complete the purchase on khilonfast, the forms you need to fill in are delivered through our site. These forms collect the information required to configure the service properly. After they're completed, the khilonfast team applies the necessary setup and activates your service. Throughout the engagement, every instruction and update is sent to you by email. In addition, depending on your reporting cadence, weekly, monthly or quarterly reports are emailed so you can track how your service is performing."
+            },
+            "q7": {
+                "q": "How does integrated digital marketing benefit my business?",
+                "a": "Integrated digital marketing unifies different digital channels under a single strategy and increases the impact of your marketing. khilonfast brings every digital effort together and spends your budget where it works hardest — driving maximum engagement and conversion."
+            },
+            "q8": {
+                "q": "How can I track the performance of integrated digital marketing campaigns?",
+                "a": "khilonfast delivers weekly, monthly or quarterly reports that cover every channel in scope. These reports include engagement rates, conversions and the other critical KPIs you care about. You can also follow campaigns in real time through live dashboards."
+            },
+            "q9": {
+                "q": "Why should I choose khilonfast's integrated digital marketing service?",
+                "a": "khilonfast brings every part of your digital marketing together to deliver maximum efficiency. Our expert team treats your digital strategy as a single whole, so the message and brand experience stay consistent across every channel."
+            },
+            "q10": {
+                "q": "How is an integrated digital marketing strategy built?",
+                "a": "khilonfast first analyzes your business goals and current digital assets. We then build a strategy that integrates every channel in scope. After launch, performance is monitored on a steady cadence and the strategy is refined as the data comes in."
+            }
         }
     },
     "maestroAISectors": {
@@ -1494,17 +1568,17 @@
             ]
         },
         "endustriyel-gida": {
-            "sectorLabel": "Industrial Food & Chef Solutions",
-            "videoTag": "AI Assistant for Industrial Food Sector",
+            "sectorLabel": "Industrial Food & Culinary",
+            "videoTag": "AI Assistant for Industrial Food & Culinary & Culinary Sector",
             "featuresDescription": "A strategist who understands industrial food sector marketing processes and produces suitable solutions.",
-            "strategistDesc": "Trained in Industrial Food & Chef Solutions Sector Marketing",
-            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Industrial Food & Chef Solutions sector.",
+            "strategistDesc": "Trained in Industrial Food & Culinary Sector Marketing",
+            "processDescription": "Strengthen your marketing strategies with our AI assistant specialized for the Industrial Food & Culinary sector.",
             "hero": {
-                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help industrial food and chef solutions brands make better decisions, move faster, and turn marketing into measurable outcomes."
+                "description": "From CRM and PR to market research, digital marketing, one-to-one outreach, and growth strategy, Maestro AI is shaped by expert team knowledge to help industrial food and culinarys brands make better decisions, move faster, and turn marketing into measurable outcomes."
             },
             "videoShowcase": {
-                "tag": "Built for the industrial food and chef solutions sector.",
-                "title": "Accelerate Industrial Food Marketing Decisions with Maestro AI",
+                "tag": "Built for the industrial food and culinarys sector.",
+                "title": "Accelerate Industrial Food & Culinary Marketing Decisions with Maestro AI",
                 "description": "Maestro AI understands the sales cycle, channel structure, and layered decision-making model of industrial food marketing. It sharpens your strategic direction, increases team speed, and makes marketing more measurable."
             },
             "features": {
@@ -1520,7 +1594,7 @@
                     },
                     "strategist": {
                         "title": "Trained Strategist",
-                        "desc": "Trained in industrial food and chef solutions marketing."
+                        "desc": "Trained in industrial food and culinarys marketing."
                     },
                     "results": {
                         "title": "Outcome-Oriented",
@@ -1545,10 +1619,10 @@
                 }
             },
             "process": {
-                "description": "Strengthen your industrial food and chef solutions marketing strategy with an AI assistant designed specifically for your sector.",
+                "description": "Strengthen your industrial food and culinarys marketing strategy with an AI assistant designed specifically for your sector.",
                 "steps": {
                     "question": {
-                        "title": "Industrial Food Sector",
+                        "title": "Industrial Food & Culinary Sector",
                         "desc": "Bring in strategic questions such as declining sales, campaign performance, product launches, and similar growth challenges."
                     },
                     "analysis": {
@@ -2214,23 +2288,55 @@
             "features": {
                 "description": "A strategic AI assistant that understands corporate gift card marketing, thinks across disciplines, and delivers directly actionable recommendations.",
                 "items": {
-                    "disciplines": { "title": "Multiple Disciplines in One", "desc": "Maestro AI combines different marketing disciplines to provide a holistic solution." },
-                    "speed": { "title": "Accelerates Speed", "desc": "Fast-tracks decisions, research, and sector expertise that would otherwise take years to build." },
-                    "strategist": { "title": "Wise Strategist", "desc": "Trained in corporate gift card sector marketing." },
-                    "results": { "title": "Results-Oriented", "desc": "Data → recommendations → actionable outcomes." },
-                    "memory": { "title": "Sector Memory", "desc": "Maestro AI doesn't forget your company's context and sector knowledge — preventing knowledge loss from turnover." },
-                    "guidance": { "title": "Sector-Specific Guidance", "desc": "Trained on sector-specific data, it guides you correctly — offering strategies tailored to your business, not generic solutions." },
-                    "analysis": { "title": "Unbiased Analysis", "desc": "Works without bias, supporting data-driven decision-making and filling the gaps humans leave." },
-                    "learning": { "title": "Continuous Learning", "desc": "Continuously learns from new campaigns, customer data, and market changes to provide more accurate and up-to-date recommendations." }
+                    "disciplines": {
+                        "title": "Multiple Disciplines in One",
+                        "desc": "Maestro AI combines different marketing disciplines to provide a holistic solution."
+                    },
+                    "speed": {
+                        "title": "Accelerates Speed",
+                        "desc": "Fast-tracks decisions, research, and sector expertise that would otherwise take years to build."
+                    },
+                    "strategist": {
+                        "title": "Wise Strategist",
+                        "desc": "Trained in corporate gift card sector marketing."
+                    },
+                    "results": {
+                        "title": "Results-Oriented",
+                        "desc": "Data → recommendations → actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI doesn't forget your company's context and sector knowledge — preventing knowledge loss from turnover."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Trained on sector-specific data, it guides you correctly — offering strategies tailored to your business, not generic solutions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "Works without bias, supporting data-driven decision-making and filling the gaps humans leave."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "Continuously learns from new campaigns, customer data, and market changes to provide more accurate and up-to-date recommendations."
+                    }
                 }
             },
             "process": {
                 "description": "Maestro AI, developed for the corporate gift card sector, brings together market data, customer narratives, and growth objectives.",
                 "steps": {
-                    "question": { "desc": "Upload strategic questions around customer acquisition, campaign performance, new segments, and more." },
-                    "analysis": { "desc": "Synthesizes CRM, campaign, social media, and market data together to clarify the picture." },
-                    "suggestion": { "desc": "Generates campaign messaging, channel selection, creative suggestions, and reporting actions." },
-                    "experience": { "desc": "Helps you clarify decisions and tasks that would take weeks — in just hours." }
+                    "question": {
+                        "desc": "Upload strategic questions around customer acquisition, campaign performance, new segments, and more."
+                    },
+                    "analysis": {
+                        "desc": "Synthesizes CRM, campaign, social media, and market data together to clarify the picture."
+                    },
+                    "suggestion": {
+                        "desc": "Generates campaign messaging, channel selection, creative suggestions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "Helps you clarify decisions and tasks that would take weeks — in just hours."
+                    }
                 }
             },
             "testimonial": {
@@ -2239,8 +2345,14 @@
                 "role": "Corporate Gift Card Marketing Lead"
             },
             "faqs": [
-                { "question": "Why should I choose khilonfast?", "answer": "khilonfast stands out with extensive digital marketing experience and a data-driven approach. It provides solutions tailored to your business needs, continuously optimizes your campaigns, and delivers results." },
-                { "question": "What happens after I purchase the service?", "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email." }
+                {
+                    "question": "Why should I choose khilonfast?",
+                    "answer": "khilonfast stands out with extensive digital marketing experience and a data-driven approach. It provides solutions tailored to your business needs, continuously optimizes your campaigns, and delivers results."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email."
+                }
             ]
         },
         "akaryakit": {
@@ -2260,23 +2372,55 @@
             "features": {
                 "description": "A strategic AI assistant that understands corporate fuel solutions marketing, thinks across disciplines, and delivers directly actionable recommendations.",
                 "items": {
-                    "disciplines": { "title": "Multiple Disciplines in One", "desc": "Maestro AI combines different marketing disciplines to provide a holistic solution." },
-                    "speed": { "title": "Accelerates Speed", "desc": "Fast-tracks decisions, research, and sector expertise that would otherwise take years to build." },
-                    "strategist": { "title": "Wise Strategist", "desc": "Trained in corporate fuel solutions sector marketing." },
-                    "results": { "title": "Results-Oriented", "desc": "Data → recommendations → actionable outcomes." },
-                    "memory": { "title": "Sector Memory", "desc": "Maestro AI doesn't forget your company's context and sector knowledge — preventing knowledge loss from turnover." },
-                    "guidance": { "title": "Sector-Specific Guidance", "desc": "Trained on sector-specific data, it guides you correctly — offering strategies tailored to your business, not generic solutions." },
-                    "analysis": { "title": "Unbiased Analysis", "desc": "Works without bias, supporting data-driven decision-making and filling the gaps humans leave." },
-                    "learning": { "title": "Continuous Learning", "desc": "Continuously learns from new campaigns, customer data, and market changes to provide more accurate and up-to-date recommendations." }
+                    "disciplines": {
+                        "title": "Multiple Disciplines in One",
+                        "desc": "Maestro AI combines different marketing disciplines to provide a holistic solution."
+                    },
+                    "speed": {
+                        "title": "Accelerates Speed",
+                        "desc": "Fast-tracks decisions, research, and sector expertise that would otherwise take years to build."
+                    },
+                    "strategist": {
+                        "title": "Wise Strategist",
+                        "desc": "Trained in corporate fuel solutions sector marketing."
+                    },
+                    "results": {
+                        "title": "Results-Oriented",
+                        "desc": "Data → recommendations → actionable outcomes."
+                    },
+                    "memory": {
+                        "title": "Sector Memory",
+                        "desc": "Maestro AI doesn't forget your company's context and sector knowledge — preventing knowledge loss from turnover."
+                    },
+                    "guidance": {
+                        "title": "Sector-Specific Guidance",
+                        "desc": "Trained on sector-specific data, it guides you correctly — offering strategies tailored to your business, not generic solutions."
+                    },
+                    "analysis": {
+                        "title": "Unbiased Analysis",
+                        "desc": "Works without bias, supporting data-driven decision-making and filling the gaps humans leave."
+                    },
+                    "learning": {
+                        "title": "Continuous Learning",
+                        "desc": "Continuously learns from new campaigns, customer data, and market changes to provide more accurate and up-to-date recommendations."
+                    }
                 }
             },
             "process": {
                 "description": "Maestro AI, developed for the corporate fuel solutions sector, brings together market data, customer narratives, and growth objectives.",
                 "steps": {
-                    "question": { "desc": "Upload strategic questions around customer acquisition, channel performance, new segments, and more." },
-                    "analysis": { "desc": "Synthesizes CRM, campaign, social media, and market data together to clarify the picture." },
-                    "suggestion": { "desc": "Generates campaign messaging, channel selection, creative suggestions, and reporting actions." },
-                    "experience": { "desc": "Helps you clarify decisions and tasks that would take weeks — in just hours." }
+                    "question": {
+                        "desc": "Upload strategic questions around customer acquisition, channel performance, new segments, and more."
+                    },
+                    "analysis": {
+                        "desc": "Synthesizes CRM, campaign, social media, and market data together to clarify the picture."
+                    },
+                    "suggestion": {
+                        "desc": "Generates campaign messaging, channel selection, creative suggestions, and reporting actions."
+                    },
+                    "experience": {
+                        "desc": "Helps you clarify decisions and tasks that would take weeks — in just hours."
+                    }
                 }
             },
             "testimonial": {
@@ -2285,9 +2429,307 @@
                 "role": "Corporate Fuel Solutions Marketing Lead"
             },
             "faqs": [
-                { "question": "Why should I choose khilonfast?", "answer": "khilonfast stands out with extensive digital marketing experience and a data-driven approach. It provides solutions tailored to your business needs, continuously optimizes your campaigns, and delivers results." },
-                { "question": "What happens after I purchase the service?", "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email." }
+                {
+                    "question": "Why should I choose khilonfast?",
+                    "answer": "khilonfast stands out with extensive digital marketing experience and a data-driven approach. It provides solutions tailored to your business needs, continuously optimizes your campaigns, and delivers results."
+                },
+                {
+                    "question": "What happens after I purchase the service?",
+                    "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email."
+                }
             ]
+        }
+    },
+    "serviceContentStrategy": {
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
+            },
+            "q2": {
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
+            },
+            "q3": {
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
+            },
+            "q4": {
+                "q": "How should I set my Search Ads budget?",
+                "a": "The right budget depends on your campaign goals, your industry and competitive intensity. khilonfast optimizes your daily and overall spend so you get the maximum return from every euro or dollar invested."
+            },
+            "q5": {
+                "q": "How quickly do campaigns produce results?",
+                "a": "Search Ads campaigns typically start generating activity right away. Seeing real performance trends, however, usually takes a few weeks. During that ramp-up period we continuously optimize the campaign."
+            },
+            "q6": {
+                "q": "How is keyword research performed?",
+                "a": "khilonfast runs a thorough keyword research process for you. We pick the keywords most aligned with your goals, build strategies backed by competitor analysis, and refine the keyword set continuously as data comes in."
+            },
+            "q7": {
+                "q": "How is targeting handled?",
+                "a": "In Search Ads campaigns, khilonfast reaches the right audience by selecting precise keywords. We further optimize your ads with demographic, geographic and device targeting layers."
+            },
+            "q8": {
+                "q": "Why should I choose khilonfast's Search Ads service?",
+                "a": "khilonfast develops your strategy through data-driven decisions, anticipates opportunities with predictive models, and pushes performance to its peak with industry-specific solutions."
+            },
+            "q9": {
+                "q": "How will I communicate with khilonfast?",
+                "a": "All communication with khilonfast goes through email and the forms delivered to you. This keeps time loss to a minimum and lets you follow every stage of the work in a clean, organized way."
+            },
+            "q10": {
+                "q": "How does the process work after I purchase the service?",
+                "a": "For first-time Search Ads users: we gather the required information, install the Google Ads pixel and tracking tags, set up your ad account and optimize it from scratch. For accounts that already exist: we audit your account, deliver improvement recommendations, deploy pixel codes and optimize the live campaigns."
+            },
+            "q11": {
+                "q": "How can I measure ad performance?",
+                "a": "khilonfast lets you track campaign success with detailed reports across the key metrics — impressions, clicks, conversion rate, CPC and ROI. If you don't supply the metrics khilonfast asks you for, you'll only be able to observe the data the platform exposes by default."
+            }
+        }
+    },
+    "serviceGoogleAds": {
+        "faqs": {
+            "q1": {
+                "q": "What goals can I reach with Search Ads?",
+                "a": "khilonfast's Search Ads service helps your target audience find you faster. Typical goals include: driving more traffic to your website, increasing product or service sales, boosting brand awareness, generating leads, and directing traffic to physical stores."
+            },
+            "q2": {
+                "q": "What are the advantages of Search Ads?",
+                "a": "Search Ads offers several advantages: Targeted reach — the right keywords put your ads directly in front of the audience that matters. Fast results — campaigns go live immediately and can convert quickly. Flexibility — you control budgets and can pause or update campaigns whenever you need to. Strong ROI — well-managed campaigns maximize the return on every euro or dollar invested."
+            },
+            "q3": {
+                "q": "How does a Search Ads campaign work?",
+                "a": "Search Ads campaigns run on Google Ads and other search engines based on the keywords you target. Your ads appear at the top of the search results, and you pay only when someone clicks. This is the pay-per-click (PPC) model."
+            },
+            "q4": {
+                "q": "How should I set my Search Ads budget?",
+                "a": "The right budget depends on your campaign goals, your industry and competitive intensity. khilonfast optimizes your daily and overall spend so you get the maximum return from every euro or dollar invested."
+            },
+            "q5": {
+                "q": "How quickly do campaigns produce results?",
+                "a": "Search Ads campaigns typically start generating activity right away. Seeing real performance trends, however, usually takes a few weeks. During that ramp-up period we continuously optimize the campaign."
+            },
+            "q6": {
+                "q": "How is keyword research performed?",
+                "a": "khilonfast runs a thorough keyword research process for you. We pick the keywords most aligned with your goals, build strategies backed by competitor analysis, and refine the keyword set continuously as data comes in."
+            },
+            "q7": {
+                "q": "How is targeting handled?",
+                "a": "In Search Ads campaigns, khilonfast reaches the right audience by selecting precise keywords. We further optimize your ads with demographic, geographic and device targeting layers."
+            },
+            "q8": {
+                "q": "Why should I choose khilonfast's Search Ads service?",
+                "a": "With khilonfast you build strategies through data-driven decisions, anticipate future opportunities with predictive models, and benefit from industry-specific advisory that delivers optimized solutions."
+            },
+            "q9": {
+                "q": "How will I communicate with khilonfast?",
+                "a": "All communication with khilonfast goes through email and the forms delivered to you. This keeps time loss to a minimum and lets you follow every stage of the work in a clean, organized way."
+            },
+            "q10": {
+                "q": "How does the process work after I purchase the service?",
+                "a": "For first-time Search Ads users: we gather the required information, install the Google Ads pixel and tracking tags, set up your ad account and optimize it from scratch. For accounts that already exist: we audit your account, deliver improvement recommendations, deploy pixel codes and optimize the live campaigns."
+            },
+            "q11": {
+                "q": "How can I measure ad performance?",
+                "a": "khilonfast lets you track campaign success with detailed reports across the key metrics — impressions, clicks, conversion rate, CPC and ROI. If you don't supply the metrics khilonfast asks you for, you'll only be able to observe the data the platform exposes by default."
+            },
+            "q12": {
+                "q": "Why do we request access to GTM and Google Analytics in addition to Google Ads?",
+                "a": "To manage your Google Ads campaigns properly and deliver effective results, khilonfast also asks for access to Google Tag Manager (GTM) and Google Analytics.\\n\\nGoogle Tag Manager (GTM) access — Enables comprehensive tracking and tag management: we control every tag and tracking script on your site from a single point, monitor campaign performance more effectively, and update things quickly when needed. For data collection and analysis it lets us deploy conversion tracking and other tags easily, so we understand user behavior better.\\n\\nGoogle Analytics access — Powers in-depth performance analysis of your site's traffic data; we see how users behave, which pages they visit, and where they come from. With this data, we evaluate campaign performance and shape strategy accordingly.\\n\\nAn integrated approach — GTM and Google Analytics access let us tie Google Ads campaigns into your broader digital strategy. We coordinate all marketing activity, measure campaign and overall site performance more thoroughly, and optimize your ad strategy and budget to the fullest."
+            }
+        }
+    },
+    "serviceSocialAds": {
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
+            },
+            "q2": {
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
+            },
+            "q3": {
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
+            },
+            "q4": {
+                "q": "Who is khilonfast an ideal partner for?",
+                "a": "khilonfast is an excellent partner for companies seeking fast, efficient and result-oriented solutions in the digital world. It is ideal for teams that enjoy data-driven decisions, are comfortable working with metrics, believe in the power of digital marketing and are willing to use new-generation tools. Companies that use email and other digital channels regularly, have the time and discipline to complete the forms we provide, and trust an expert team for strategic guidance get the most value from khilonfast."
+            },
+            "q5": {
+                "q": "How can I get in touch with khilonfast?",
+                "a": "All communication with khilonfast happens through our user-friendly platform and email. Once you purchase a service, the required forms are delivered to you through the system. After you complete them, the khilonfast team reviews everything carefully, configures the setup and kicks off the operation. You'll be kept informed by email at every stage of the process and receive all the support you need."
+            },
+            "q6": {
+                "q": "How will the process work after I purchase a service?",
+                "a": "Once you complete the purchase on khilonfast, the forms you need to fill in are delivered through our site. These forms collect the information required to configure the service properly. After they're completed, the khilonfast team applies the necessary setup and activates your service. Throughout the engagement, every instruction and update is sent to you by email. In addition, depending on your reporting cadence, weekly, monthly or quarterly reports are emailed so you can track how your service is performing."
+            },
+            "q7": {
+                "q": "How do social media ads benefit my business?",
+                "a": "Social media ads put you in front of your target audience directly. They raise brand awareness, strengthen audience engagement and drive sales. khilonfast tailors your ads by demographics, interests and behaviors so the campaign performs at its peak."
+            },
+            "q8": {
+                "q": "On which platforms can social media ads run?",
+                "a": "Social media ads can run on Facebook, Instagram, Twitter, LinkedIn and other major platforms. Each platform has its own targeting capabilities and creative formats. khilonfast identifies the platforms most suitable for your goals and audience, and optimizes the strategy accordingly."
+            },
+            "q9": {
+                "q": "How should I set my ad budget?",
+                "a": "Your ad budget depends on your business goals, your industry and your target audience. khilonfast optimizes the budget against your campaign objectives and makes sure it is spent in the most efficient way to lift performance."
+            },
+            "q10": {
+                "q": "Which ad formats can I use for social media campaigns?",
+                "a": "Social platforms support several formats — photo and video ads, slideshows, stories, carousels, collections, and dynamic ads. khilonfast helps you pick the format that best matches your campaign goals."
+            },
+            "q11": {
+                "q": "How do you measure the performance of my social media ads?",
+                "a": "We track performance through click-through rate (CTR), conversion rate, engagement rates (likes, comments, shares), reach and impressions. khilonfast delivers regular detailed reports so you can follow campaign performance transparently."
+            },
+            "q12": {
+                "q": "What targeting options are available?",
+                "a": "Social media ads come with multiple targeting layers — age, gender, location, interests, behaviors and demographic attributes. khilonfast also uses your existing customer list to reach lookalike audiences, and optimizes targeting against the campaign's goals."
+            },
+            "q13": {
+                "q": "What kind of content should I use for social media ads?",
+                "a": "The right content depends on your audience and campaign goals. High-performing social ads combine eye-catching visuals, engaging copy and a strong call to action. khilonfast crafts creative aligned with your brand voice and your audience's interests, so your ads have more impact."
+            },
+            "q14": {
+                "q": "How quickly do social media ads produce results?",
+                "a": "How fast results land depends on the nature of the campaign, the audience and the ad strategy. Engagement rates often improve in the first few weeks, but seeing concrete outcomes can take longer. khilonfast continuously optimizes campaigns to accelerate the timeline."
+            }
+        }
+    },
+    "serviceSeo": {
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
+            },
+            "q2": {
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
+            },
+            "q3": {
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
+            },
+            "q4": {
+                "q": "Who is khilonfast an ideal partner for?",
+                "a": "khilonfast is an excellent partner for companies seeking fast, efficient and result-oriented solutions in the digital world. It is ideal for teams that enjoy data-driven decisions, are comfortable working with metrics, believe in the power of digital marketing and are willing to use new-generation tools. Companies that use email and other digital channels regularly, have the time and discipline to complete the forms we provide, and trust an expert team for strategic guidance get the most value from khilonfast."
+            },
+            "q5": {
+                "q": "How can I get in touch with khilonfast?",
+                "a": "All communication with khilonfast happens through our user-friendly platform and email. Once you purchase a service, the required forms are delivered to you through the system. After you complete them, the khilonfast team reviews everything carefully, configures the setup and kicks off the operation. You'll be kept informed by email at every stage of the process and receive all the support you need."
+            },
+            "q6": {
+                "q": "How will the process work after I purchase a service?",
+                "a": "Once you complete the purchase on khilonfast, the forms you need to fill in are delivered through our site. These forms collect the information required to configure the service properly. After they're completed, the khilonfast team applies the necessary setup and activates your service. Throughout the engagement, every instruction and update is sent to you by email. In addition, depending on your reporting cadence, weekly, monthly or quarterly reports are emailed so you can track how your service is performing."
+            },
+            "q7": {
+                "q": "How does a content strategy benefit my business?",
+                "a": "The right content strategy strengthens your brand's digital footprint, deepens audience engagement and builds a loyal customer base over time. khilonfast designs content strategies aligned with your goals and continuously optimizes the content."
+            },
+            "q8": {
+                "q": "How does the content strategy creation process work?",
+                "a": "khilonfast analyzes your business goals and target audience, then builds a content strategy tailored to your brand. Content is planned and produced to be SEO-friendly and goal-oriented. Performance is monitored steadily throughout, and the strategy is refined when needed."
+            },
+            "q9": {
+                "q": "Why should I choose khilonfast's content strategy service?",
+                "a": "khilonfast develops data-driven, result-focused content strategies. We produce content that captures your audience's attention and drives conversion, strengthening your brand's digital presence. Our expert team keeps your strategy continuously optimized and up to date."
+            },
+            "q10": {
+                "q": "What types of content should my content strategy include?",
+                "a": "khilonfast recommends a mix tailored to your brand — blog posts, articles, infographics, social media content, videos and more. We optimize every piece against your audience's interests and SEO requirements."
+            }
+        }
+    },
+    "serviceContentProduction": {
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
+            },
+            "q2": {
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
+            },
+            "q3": {
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
+            },
+            "q4": {
+                "q": "Who is khilonfast an ideal partner for?",
+                "a": "khilonfast is an excellent partner for companies seeking fast, efficient and result-oriented solutions in the digital world. It is ideal for teams that enjoy data-driven decisions, are comfortable working with metrics, believe in the power of digital marketing and are willing to use new-generation tools. Companies that use email and other digital channels regularly, have the time and discipline to complete the forms we provide, and trust an expert team for strategic guidance get the most value from khilonfast."
+            },
+            "q5": {
+                "q": "How can I get in touch with khilonfast?",
+                "a": "All communication with khilonfast happens through our user-friendly platform and email. Once you purchase a service, the required forms are delivered to you through the system. After you complete them, the khilonfast team reviews everything carefully, configures the setup and kicks off the operation. You'll be kept informed by email at every stage of the process and receive all the support you need."
+            },
+            "q6": {
+                "q": "How will the process work after I purchase a service?",
+                "a": "Once you complete the purchase on khilonfast, the forms you need to fill in are delivered through our site. These forms collect the information required to configure the service properly. After they're completed, the khilonfast team applies the necessary setup and activates your service. Throughout the engagement, every instruction and update is sent to you by email. In addition, depending on your reporting cadence, weekly, monthly or quarterly reports are emailed so you can track how your service is performing."
+            },
+            "q7": {
+                "q": "How does content production benefit my business?",
+                "a": "High-quality content lifts brand awareness, strengthens audience engagement and improves your SEO performance. khilonfast creates content tuned to your target audience to grow your brand's visibility."
+            },
+            "q8": {
+                "q": "How does the content production process work?",
+                "a": "khilonfast builds a content strategy aligned with your business goals. We analyze your audience, define the right content types and produce the pieces. Every piece is kept SEO-friendly and continuously optimized through the engagement."
+            },
+            "q9": {
+                "q": "What types of content do you produce?",
+                "a": "khilonfast produces a mix tailored to your needs — blog posts, articles, social media content, infographics and more. Each piece is shaped to capture your audience's attention and lift conversions."
+            },
+            "q10": {
+                "q": "What kind of reports will I receive for content production?",
+                "a": "khilonfast delivers regular reports to track content performance. Reports cover engagement rates, SEO performance and user behavior. You can also monitor outcomes in real time through live dashboards."
+            },
+            "q11": {
+                "q": "Why should I choose khilonfast's content production service?",
+                "a": "khilonfast produces high-quality, SEO-friendly, goal-oriented content. With content true to your brand voice we lift your digital visibility and help you build a stronger connection with your audience."
+            }
+        }
+    },
+    "serviceB2BEmail": {
+        "faqs": {
+            "q1": {
+                "q": "Why should I choose to work with khilonfast?",
+                "a": "khilonfast stands out with deep digital marketing experience and a data-driven approach. We design solutions tailored to your business, continuously optimize your campaigns, and stay focused on measurable outcomes. Working with khilonfast helps your brand build a strong, lasting presence in the digital space."
+            },
+            "q2": {
+                "q": "Why don't we hold in-person or online meetings?",
+                "a": "khilonfast deliberately favors digital communication to keep processes fast and efficient. The entire engagement runs through our platform and email, so clients anywhere in the world can be onboarded and supported quickly. By removing time-consuming synchronous meetings, we scale our service capacity and channel our experience straight into the work itself — letting you partner with a senior-level agency at sensible rates without losing time. Throughout the service period, every update, instruction and answer you need will reach you by email."
+            },
+            "q3": {
+                "q": "Who should not work with khilonfast?",
+                "a": "khilonfast is built for companies that can run digital processes effectively and embrace modern marketing tools. It is not the right fit for those who value a familiar face over the quality of the output, who feel safe only after a face-to-face meeting, who struggle with metrics and analytics, who can't meaningfully follow performance reporting, who are skeptical of next-generation marketing tools, who don't regularly check WhatsApp or email, who are too busy to fill out the forms we send, or who insist “I know better than any agency, let's do it my way.” For those companies, khilonfast is likely the wrong service."
+            },
+            "q4": {
+                "q": "Who is khilonfast an ideal partner for?",
+                "a": "khilonfast is an excellent partner for companies seeking fast, efficient and result-oriented solutions in the digital world. It is ideal for teams that enjoy data-driven decisions, are comfortable working with metrics, believe in the power of digital marketing and are willing to use new-generation tools. Companies that use email and other digital channels regularly, have the time and discipline to complete the forms we provide, and trust an expert team for strategic guidance get the most value from khilonfast."
+            },
+            "q5": {
+                "q": "How can I get in touch with khilonfast?",
+                "a": "All communication with khilonfast happens through our user-friendly platform and email. Once you purchase a service, the required forms are delivered to you through the system. After you complete them, the khilonfast team reviews everything carefully, configures the setup and kicks off the operation. You'll be kept informed by email at every stage of the process and receive all the support you need."
+            },
+            "q6": {
+                "q": "How will the process work after I purchase a service?",
+                "a": "Once you complete the purchase on khilonfast, the forms you need to fill in are delivered through our site. These forms collect the information required to configure the service properly. After they're completed, the khilonfast team applies the necessary setup and activates your service. Throughout the engagement, every instruction and update is sent to you by email. In addition, depending on your reporting cadence, weekly, monthly or quarterly reports are emailed so you can track how your service is performing."
+            },
+            "q7": {
+                "q": "How does B2B email marketing benefit my business?",
+                "a": "B2B email marketing lets you communicate with your target audience directly and effectively. khilonfast lifts your open and click-through rates with personalized email campaigns and strengthens customer loyalty over time."
+            },
+            "q8": {
+                "q": "Why should I choose khilonfast's B2B email marketing service?",
+                "a": "khilonfast boosts the effectiveness of your email campaigns with data-driven personalization and targeting strategies. As email marketing specialists, we make sure the right message reaches the right person — maximizing your conversions."
+            },
+            "q9": {
+                "q": "How are B2B email marketing campaigns built?",
+                "a": "khilonfast analyzes your audience and creates personalized email campaigns from there. We produce the content, set the right send timing and launch the campaigns. Performance is monitored throughout, with optimization applied whenever it adds value."
+            }
         }
     }
 }

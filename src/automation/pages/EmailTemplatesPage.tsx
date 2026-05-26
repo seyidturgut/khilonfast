@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import EmailEditor, { type EditorRef } from 'react-email-editor';
+import { useEffect, useRef, useState } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
 import type { EmailTemplate } from '../types';
 import {
@@ -8,51 +7,8 @@ import {
   updateEmailTemplate,
   deleteEmailTemplate,
 } from '../services/automationService';
-
-// ─── Merge tags for Unlayer ───────────────────────────────────
-// Array format is required for the merge tag picker to appear in the toolbar
-
-const MERGE_TAGS = [
-  { name: 'Ad',                value: '{{first_name}}',       sample: 'Ayşe' },
-  { name: 'Soyad',             value: '{{last_name}}',        sample: 'Yılmaz' },
-  { name: 'E-posta',           value: '{{email}}',            sample: 'ayse@example.com' },
-  { name: 'Şirket',            value: '{{company_name}}',     sample: 'Acme A.Ş.' },
-  { name: 'Hizmet Adı',        value: '{{service_name}}',     sample: 'Go-to-Market Paketi' },
-  { name: 'Form Linki',        value: '{{form_link}}',        sample: 'https://khilonfast.com/onboarding?token=...' },
-  { name: 'Sepet Linki',       value: '{{cart_link}}',        sample: 'https://khilonfast.com/odeme?cart=...' },
-  { name: 'İletişim Linki',    value: '{{contact_link}}',     sample: 'https://khilonfast.com/iletisim' },
-  { name: 'Giriş Linki',       value: '{{login_url}}',        sample: 'https://khilonfast.com/giris' },
-  { name: 'Sipariş No',        value: '{{order_id}}',         sample: 'ORD-20240409' },
-  { name: 'Listeden Çık',      value: '{{unsubscribe_link}}', sample: 'https://khilonfast.com/api/unsubscribe?...' },
-];
-
-// Unlayer editor options
-const EDITOR_OPTIONS = {
-  displayMode: 'email' as const,
-  locale: 'tr-TR',
-  appearance: {
-    theme: 'light' as const,
-  },
-  features: {
-    textEditor: { spellChecker: false, tables: true },
-    mergeTags: true,  // enables the { } merge tag button in the text toolbar
-  },
-  mergeTags: MERGE_TAGS,
-  fonts: {
-    showDefaultFonts: true,
-    customFonts: [
-      { label: 'Inter Tight', value: "'Inter Tight', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap' },
-    ],
-  },
-  tools: {
-    button: { enabled: true },
-    divider: { enabled: true },
-    image: { enabled: true },
-    social: { enabled: true },
-    text: { enabled: true },
-    video: { enabled: false },
-  },
-};
+import UnlayerEmailEditor, { type UnlayerEditorHandle, KHILON_MERGE_TAGS } from '../../components/admin/UnlayerEmailEditor';
+const MERGE_TAGS = KHILON_MERGE_TAGS;
 
 // ─── Form state ───────────────────────────────────────────────
 
@@ -88,9 +44,10 @@ export default function EmailTemplatesPage() {
   const [saving, setSaving] = useState(false);
   const [editorReady, setEditorReady] = useState(false);
 
-  // Pending design to load once editor is ready
-  const pendingDesign = useRef<object | null>(null);
-  const emailEditorRef = useRef<EditorRef>(null);
+  // Editor reference (Unlayer wrapper)
+  const editorHandle = useRef<UnlayerEditorHandle>(null);
+  const [initialDesign, setInitialDesign] = useState<object | null>(null);
+  const [fallbackHtml, setFallbackHtml] = useState<string | null>(null);
 
   useEffect(() => { load(); }, []);
 
@@ -106,7 +63,8 @@ export default function EmailTemplatesPage() {
   function openNew() {
     setForm(EMPTY_FORM);
     setEditingId(null);
-    pendingDesign.current = null;
+    setInitialDesign(null);
+    setFallbackHtml(null);
     setEditorReady(false);
     setEditorOpen(true);
   }
@@ -123,66 +81,56 @@ export default function EmailTemplatesPage() {
     setEditingId(tpl.id);
     setEditorReady(false);
 
-    // Store design to load once editor mounts
     if (tpl.design_json) {
-      try { pendingDesign.current = JSON.parse(tpl.design_json); }
-      catch { pendingDesign.current = null; }
+      try { setInitialDesign(JSON.parse(tpl.design_json)); }
+      catch { setInitialDesign(null); }
+      setFallbackHtml(null);
+    } else if (tpl.body_html) {
+      setInitialDesign(null);
+      setFallbackHtml(tpl.body_html);
     } else {
-      pendingDesign.current = null;
+      setInitialDesign(null);
+      setFallbackHtml(null);
     }
 
     setEditorOpen(true);
   }
 
-  // ── Editor ready callback ────────────────────────────────────
-  const onReady = useCallback(() => {
-    setEditorReady(true);
-    if (pendingDesign.current && emailEditorRef.current?.editor) {
-      emailEditorRef.current.editor.loadDesign(pendingDesign.current as never);
-      pendingDesign.current = null;
-    }
-  }, []);
-
   // ── Save ─────────────────────────────────────────────────────
-  function handleSave() {
+  async function handleSave() {
     if (!form.name.trim() || !form.subject.trim()) {
       alert('Şablon adı ve konu satırı zorunludur.');
       return;
     }
-    if (!emailEditorRef.current?.editor) return;
+    if (!editorHandle.current?.isReady()) return;
 
     setSaving(true);
-    emailEditorRef.current.editor.exportHtml(async ({ design, html }) => {
-      try {
-        // Extract {{variable}} tags from exported HTML
-        const matches = html.match(/\{\{(\w+)\}\}/g) ?? [];
-        const variables = [...new Set(matches.map((m: string) => m.slice(2, -2)))];
+    try {
+      const { html, design, variables } = await editorHandle.current.export();
+      const payload = {
+        name:         form.name.trim(),
+        subject:      form.subject.trim(),
+        preview_text: form.preview_text.trim() || undefined,
+        sender_name:  form.sender_name || 'Khilonfast',
+        sender_email: form.sender_email || 'merhaba@khilonfast.com',
+        body_html:    html,
+        design_json:  JSON.stringify(design),
+        variables,
+      };
 
-        const payload = {
-          name:         form.name.trim(),
-          subject:      form.subject.trim(),
-          preview_text: form.preview_text.trim() || undefined,
-          sender_name:  form.sender_name || 'Khilonfast',
-          sender_email: form.sender_email || 'merhaba@khilonfast.com',
-          body_html:    html,
-          design_json:  JSON.stringify(design),
-          variables,
-        };
-
-        if (editingId) {
-          const updated = await updateEmailTemplate(editingId, payload);
-          setTemplates(prev => prev.map(t => t.id === editingId ? updated : t));
-        } else {
-          const created = await createEmailTemplate(payload);
-          setTemplates(prev => [created, ...prev]);
-        }
-        setEditorOpen(false);
-      } catch (e) {
-        alert((e as Error).message);
-      } finally {
-        setSaving(false);
+      if (editingId) {
+        const updated = await updateEmailTemplate(editingId, payload);
+        setTemplates(prev => prev.map(t => t.id === editingId ? updated : t));
+      } else {
+        const created = await createEmailTemplate(payload);
+        setTemplates(prev => [created, ...prev]);
       }
-    });
+      setEditorOpen(false);
+    } catch (e) {
+      alert((e as Error).message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleDelete(id: string) {
@@ -291,12 +239,12 @@ export default function EmailTemplatesPage() {
 
         {/* Unlayer canvas */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-          <EmailEditor
-            ref={emailEditorRef}
-            onReady={onReady}
-            options={EDITOR_OPTIONS as any}
-            style={{ flex: 1 }}
-            minHeight="100%"
+          <UnlayerEmailEditor
+            ref={editorHandle}
+            initialDesign={initialDesign}
+            fallbackHtml={fallbackHtml}
+            preheaderText={form.preview_text}
+            onReady={() => setEditorReady(true)}
           />
         </div>
       </div>

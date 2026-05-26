@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
+import ConsentCheckboxes, { type ConsentState } from '../components/ConsentCheckboxes';
 
 export default function Register() {
     const { t } = useTranslation('common');
@@ -19,9 +20,15 @@ export default function Register() {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    // 4-katmanlı standart onay komponenti — tek main_legal yeterli
+    const [consentState, setConsentState] = useState<ConsentState>({
+        main_legal: false, etk: false, b2b: false, auto_renewal: false,
+    });
+    const termsAccepted = consentState.main_legal;
     const { register, googleLogin, user } = useAuth();
     const navigate = useNavigate();
     const currentLang = useRouteLocale();
+    const isEn = currentLang === 'en';
     const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
     const loginPath = getLocalizedPathByKey(currentLang, 'login');
 
@@ -45,6 +52,11 @@ export default function Register() {
 
         if (formData.password !== formData.confirm_password) {
             setError(t('authPages.register.errors.passwordMismatch'));
+            return;
+        }
+
+        if (!termsAccepted) {
+            setError(isEn ? 'Please accept the Terms and Privacy Policy.' : 'Hizmet Şartları ve Gizlilik Politikası\'nı kabul etmelisiniz.');
             return;
         }
 
@@ -182,7 +194,16 @@ export default function Register() {
                             />
                         </div>
 
-                        <button type="submit" className="btn-auth-primary" disabled={loading}>
+                        <div style={{ marginTop: 12 }}>
+                            <ConsentCheckboxes
+                                context="register"
+                                isEn={isEn}
+                                onChange={setConsentState}
+                                initial={consentState}
+                            />
+                        </div>
+
+                        <button type="submit" className="btn-auth-primary" disabled={loading || !termsAccepted}>
                             {loading ? t('authPages.register.loading') : t('authPages.register.submit')}
                         </button>
                     </form>

@@ -104,11 +104,14 @@ export default function MaestroAI() {
 
             <section className="maestro-hub-list">
                 <div className="container">
+                    <h2 style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                        {currentLang === 'en' ? 'Sector-Specific Maestro AI Packages' : 'Sektörel Maestro AI Paketleri'}
+                    </h2>
                     <div className="maestro-hub-grid">
                         {cards.map((card) => (
                             <article key={card.sectorKey} className="maestro-hub-card">
                                 <div className="maestro-hub-card-image">
-                                    <img src={card.image} alt={card.sectorLabel} />
+                                    <img src={card.image} alt={card.sectorLabel} width={600} height={400} loading="lazy" />
                                     <div className="maestro-hub-card-icon">
                                         <HiBolt />
                                     </div>

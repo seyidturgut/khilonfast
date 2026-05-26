@@ -168,6 +168,23 @@
     color: #6b7280;
 }
 
+.auth-forgot {
+    text-align: right;
+    margin-top: 0.4rem;
+}
+
+.auth-forgot a {
+    font-size: 0.85rem;
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.auth-forgot a:hover {
+    color: #1a3a52;
+    text-decoration: underline;
+}
+
 .auth-divider {
     display: flex;
     align-items: center;

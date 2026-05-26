@@ -56,9 +56,10 @@ export default function Consultants() {
     useEffect(() => {
         setLoading(true)
         setError(null)
+        const langParam = `lang=${isEn ? 'en' : 'tr'}`
         const url = sektor
-            ? `${API_BASE_URL}/consultants?sektor=${encodeURIComponent(sektor)}`
-            : `${API_BASE_URL}/consultants`
+            ? `${API_BASE_URL}/consultants?sektor=${encodeURIComponent(sektor)}&${langParam}`
+            : `${API_BASE_URL}/consultants?${langParam}`
         fetch(url)
             .then((res) => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -107,6 +108,9 @@ export default function Consultants() {
 
             <section className="consultants-list">
                 <div className="container">
+                    <h2 style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                        {isEn ? 'Our Expert Consultants' : 'Uzman Danışmanlarımız'}
+                    </h2>
                     {loading && (
                         <div className="consultants-loading">
                             <span>{isEn ? 'Loading...' : 'Yükleniyor...'}</span>

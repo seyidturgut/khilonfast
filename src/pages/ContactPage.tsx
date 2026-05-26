@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { API_BASE_URL } from '../config/api'
+import ConsentCheckboxes, { type ConsentState } from '../components/ConsentCheckboxes'
 import './ContactPage.css'
 
 const CONTACT_TEXT_KEYS = [
@@ -22,6 +23,41 @@ export default function ContactPage() {
   const { user } = useAuth()
   const canShowCms = user?.role === 'admin'
   const API_BASE = API_BASE_URL
+
+  // İletişim formu state
+  const [formState, setFormState] = useState({ firstName: '', lastName: '', email: '', phone: '', brand: '', detail: '' })
+  const [formSubmitting, setFormSubmitting] = useState(false)
+  const [formSuccess, setFormSuccess] = useState<string>('')
+  const [formError, setFormError] = useState<string>('')
+
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormError('')
+    setFormSuccess('')
+    if (!formState.email.trim() || !formState.firstName.trim() || !formState.detail.trim()) {
+      setFormError(currentLang === 'en' ? 'Please fill in all required fields.' : 'Lütfen zorunlu alanları doldurun.')
+      return
+    }
+    setFormSubmitting(true)
+    try {
+      const res = await fetch(`${API_BASE}/contact-submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formState, lang: currentLang }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) {
+        setFormError(data.error || (currentLang === 'en' ? 'Submission failed.' : 'Gönderim başarısız.'))
+      } else {
+        setFormSuccess(data.message)
+        setFormState({ firstName: '', lastName: '', email: '', phone: '', brand: '', detail: '' })
+      }
+    } catch {
+      setFormError(currentLang === 'en' ? 'Network error. Please try again.' : 'Bağlantı hatası. Lütfen tekrar deneyin.')
+    } finally {
+      setFormSubmitting(false)
+    }
+  }
 
   const [cmsOpen, setCmsOpen] = useState(false)
   const [cmsPageId, setCmsPageId] = useState<number | null>(null)
@@ -120,8 +156,8 @@ export default function ContactPage() {
           </div>
           <div className="contact-hero-card">
             <div className="contact-card-title">{tx('contact.card.title')}</div>
-            <div className="contact-card-item"><span className="label">{tx('contact.card.email')}</span><span className="value">info@khilonfast.com</span></div>
-            <div className="contact-card-item"><span className="label">{tx('contact.card.phone')}</span><span className="value">+90 (5XX) XXX XX XX</span></div>
+            <div className="contact-card-item"><span className="label">{tx('contact.card.email')}</span><span className="value">info@khilon.com</span></div>
+            <div className="contact-card-item"><span className="label">{tx('contact.card.phone')}</span><span className="value">+90 533 494 58 69</span></div>
             <div className="contact-card-item"><span className="label">{tx('contact.card.address')}</span><span className="value">{tx('contact.card.location')}</span></div>
             <div className="contact-card-foot">{tx('contact.card.hours')}</div>
           </div>
@@ -163,19 +199,33 @@ export default function ContactPage() {
           <div className="contact-form-card">
             <h2>{tx('contact.form.title')}</h2>
             <p>{tx('contact.form.description')}</p>
-            <form className="contact-form">
+            {formSuccess ? (
+              <div style={{ background: '#ecfdf5', color: '#065f46', padding: '20px', borderRadius: 12, border: '1px solid #6ee7b7', textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', marginBottom: 8 }}>✅</div>
+                <h3 style={{ margin: '0 0 8px', color: '#065f46' }}>
+                  {currentLang === 'en' ? 'Message Received!' : 'Mesajınız Alındı!'}
+                </h3>
+                <p style={{ margin: 0, fontSize: '0.95rem' }}>{formSuccess}</p>
+              </div>
+            ) : (
+            <form className="contact-form" onSubmit={handleContactSubmit}>
               <div className="form-row">
-                <div className="form-group"><label>{tx('contact.form.firstName')}</label><input type="text" placeholder={tx('contact.form.firstNamePlaceholder')} /></div>
-                <div className="form-group"><label>{tx('contact.form.lastName')}</label><input type="text" placeholder={tx('contact.form.lastNamePlaceholder')} /></div>
+                <div className="form-group"><label>{tx('contact.form.firstName')}</label><input type="text" value={formState.firstName} onChange={e => setFormState(s => ({ ...s, firstName: e.target.value }))} placeholder={tx('contact.form.firstNamePlaceholder')} required /></div>
+                <div className="form-group"><label>{tx('contact.form.lastName')}</label><input type="text" value={formState.lastName} onChange={e => setFormState(s => ({ ...s, lastName: e.target.value }))} placeholder={tx('contact.form.lastNamePlaceholder')} /></div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>{tx('contact.form.email')}</label><input type="email" placeholder={tx('contact.form.emailPlaceholder')} /></div>
-                <div className="form-group"><label>{tx('contact.form.phone')}</label><input type="tel" placeholder={tx('contact.form.phonePlaceholder')} /></div>
+                <div className="form-group"><label>{tx('contact.form.email')}</label><input type="email" value={formState.email} onChange={e => setFormState(s => ({ ...s, email: e.target.value }))} placeholder={tx('contact.form.emailPlaceholder')} required /></div>
+                <div className="form-group"><label>{tx('contact.form.phone')}</label><input type="tel" value={formState.phone} onChange={e => setFormState(s => ({ ...s, phone: e.target.value }))} placeholder={tx('contact.form.phonePlaceholder')} /></div>
               </div>
-              <div className="form-group"><label>{tx('contact.form.brand')}</label><input type="text" placeholder={tx('contact.form.brandPlaceholder')} /></div>
-              <div className="form-group"><label>{tx('contact.form.detail')}</label><textarea rows={6} placeholder={tx('contact.form.detailPlaceholder')} /></div>
-              <button type="submit" className="btn btn-primary btn-full">{tx('contact.form.submit')}</button>
+              <div className="form-group"><label>{tx('contact.form.brand')}</label><input type="text" value={formState.brand} onChange={e => setFormState(s => ({ ...s, brand: e.target.value }))} placeholder={tx('contact.form.brandPlaceholder')} /></div>
+              <div className="form-group"><label>{tx('contact.form.detail')}</label><textarea rows={6} value={formState.detail} onChange={e => setFormState(s => ({ ...s, detail: e.target.value }))} placeholder={tx('contact.form.detailPlaceholder')} required /></div>
+              <ContactConsentCheckboxes currentLang={currentLang} />
+              {formError && <div style={{ background: '#fef2f2', color: '#b91c1c', padding: 10, borderRadius: 8, marginBottom: 10, fontSize: '0.9rem' }}>{formError}</div>}
+              <button type="submit" disabled={formSubmitting} className="btn btn-primary btn-full">
+                {formSubmitting ? (currentLang === 'en' ? 'Sending…' : 'Gönderiliyor…') : tx('contact.form.submit')}
+              </button>
             </form>
+            )}
           </div>
 
           <div className="contact-side">
@@ -192,11 +242,28 @@ export default function ContactPage() {
             <div className="contact-side-card highlight">
               <h3>{tx('contact.side.meeting.title')}</h3>
               <p>{tx('contact.side.meeting.description')}</p>
-              <a className="btn btn-secondary" href="mailto:info@khilonfast.com">{tx('contact.side.meeting.button')}</a>
+              <a className="btn btn-secondary" href="mailto:info@khilon.com">{tx('contact.side.meeting.button')}</a>
             </div>
           </div>
         </div>
       </section>
     </div>
+  )
+}
+
+// Onay checkbox'ları — Gizlilik Politikası (zorunlu) + ETK izni (opsiyonel)
+function ContactConsentCheckboxes({ currentLang }: { currentLang: 'tr' | 'en' }) {
+  const isEn = currentLang === 'en'
+  const [consentState, setConsentState] = useState<ConsentState>({
+      main_legal: false, etk: false, b2b: false, auto_renewal: false,
+  })
+  return (
+    <ConsentCheckboxes
+        context="contact"
+        isEn={isEn}
+        contactMode
+        onChange={setConsentState}
+        initial={consentState}
+    />
   )
 }

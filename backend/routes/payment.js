@@ -5,6 +5,7 @@ import db from '../config/database.js';
 import authMiddleware from '../middleware/auth.js';
 import lidioService from '../services/lidioService.js';
 import { dispatchOrderEmails } from '../services/orderNotifications.js';
+import { createSubscriptionsForOrder } from '../services/subscriptionService.js';
 
 const router = express.Router();
 const paymentAttemptStore = new Map();
@@ -245,7 +246,19 @@ const resolveCallbackOrder = async (connection, orderNumber, merchantProcessId) 
     if (orders.length > 0) return orders;
 
     orders = await findOrderByGatewayOrderId(connection, orderNumber);
-    return orders;
+    if (orders.length > 0) return orders;
+
+    // Son fallback: bizim ürettiğimiz `KHL{10-digit-timestamp}{order_id}` (veya KHLBT/KHLH) pattern'i
+    // — trailing digit'leri parse edip orders.id ile eşle. Eski kayıtlar için.
+    const m = String(orderNumber || '').match(/^KHL(?:BT|H)?(\d{10,})$/i);
+    if (m && m[1].length > 10) {
+        const parsedOrderId = Number(m[1].slice(10));
+        if (parsedOrderId > 0) {
+            const [rows] = await connection.query('SELECT * FROM orders WHERE id = ?', [parsedOrderId]);
+            if (rows.length > 0) return rows;
+        }
+    }
+    return [];
 };
 
 // Initiate payment
@@ -474,7 +487,14 @@ router.post('/initiate',
                 keys: Object.keys(paymentResult || {})
             });
 
-            // Create payment record
+            // Create payment record — bizim ürettiğimiz orderId/merchantProcessId'yi sar ki
+            // callback geldiğinde resolveOrderByCallback JSON_EXTRACT ile bulabilsin
+            const storedLidioResponse = {
+                orderId: paymentData.orderId,
+                merchantProcessId: paymentData.merchantProcessId,
+                hostedOrderId: paymentData.hostedOrderId || null,
+                raw: paymentResult
+            };
             await connection.query(
                 'INSERT INTO payments (order_id, payment_method, lidio_transaction_id, amount, currency, status, lidio_response) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 [
@@ -484,7 +504,7 @@ router.post('/initiate',
                     paymentData.amount,
                     paymentData.currency,
                     paymentResult.success && !paymentResult.requires3DS ? 'success' : 'pending',
-                    JSON.stringify(paymentResult)
+                    JSON.stringify(storedLidioResponse)
                 ]
             );
 
@@ -500,28 +520,10 @@ router.post('/initiate',
                     ['success', order_id]
                 );
 
-                // Create subscriptions for each product (idempotent)
-                const [orderItems] = await connection.query(
-                    'SELECT * FROM order_items WHERE order_id = ?',
-                    [order_id]
-                );
-
-                for (const item of orderItems) {
-                    const [exists] = await connection.query(
-                        'SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1',
-                        [req.user.id, item.product_id, order_id]
-                    );
-                    if (exists.length === 0) {
-                        await connection.query(
-                            'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
-                            [req.user.id, item.product_id, order_id, 'active']
-                        );
-                    }
-                }
-
-                // Yeni kart + "kartımı sakla" işaretliyse Lidio cevabındaki token'ı user_cards'a yaz
+                // Önce karta token kaydet (varsa) — sonra subscription'a renewal_card_id geçebiliriz
+                let savedCardId = storedCardRow?.id || null;
                 if (paymentData.saveCardAfterSuccess && paymentResult.cardToken) {
-                    await persistSavedCard(connection, {
+                    savedCardId = await persistSavedCard(connection, {
                         userId: req.user.id,
                         token: paymentResult.cardToken,
                         maskedNumber: paymentResult.maskedCardNumber || maskCardNumber(card_number),
@@ -531,6 +533,13 @@ router.post('/initiate',
                         expireYear: Number(card_expire_year)
                     });
                 }
+
+                await createSubscriptionsForOrder(connection, {
+                    userId: req.user.id,
+                    orderId: order_id,
+                    paymentMethod: 'credit_card',
+                    renewalCardId: savedCardId
+                });
             }
 
             await connection.commit();
@@ -662,32 +671,14 @@ const handleCallback = async (req, res) => {
                 ['completed', order.id]
             );
 
-            // Create subscriptions
-            const [orderItems] = await connection.query(
-                'SELECT * FROM order_items WHERE order_id = ?',
-                [order.id]
-            );
-
-            // Idempotent INSERT: aynı (user_id, product_id, order_id) zaten varsa atlama
-            for (const item of orderItems) {
-                const [existing] = await connection.query(
-                    'SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1',
-                    [order.user_id, item.product_id, order.id]
-                );
-                if (existing.length === 0) {
-                    await connection.query(
-                        'INSERT INTO subscriptions (user_id, product_id, order_id, status) VALUES (?, ?, ?, ?)',
-                        [order.user_id, item.product_id, order.id, 'active']
-                    );
-                }
-            }
-
             // 3DS sonrası "kartımı sakla" işaretliyse Lidio finishResponse içinde token döner
+            // Önce kartı kaydedip, subscription INSERT'inde renewal_card_id olarak kullanırız.
             const savedToken = finishResponse?.cardToken
                 || valueFromPayload(payload, 'cardToken')
                 || payload.savedCardToken;
+            let savedCardId = null;
             if (savedToken) {
-                await persistSavedCard(connection, {
+                savedCardId = await persistSavedCard(connection, {
                     userId: order.user_id,
                     token: savedToken,
                     maskedNumber: finishResponse?.maskedCardNumber || valueFromPayload(payload, 'maskedCardNumber') || '',
@@ -697,6 +688,13 @@ const handleCallback = async (req, res) => {
                     expireYear: Number(valueFromPayload(payload, 'cardYear') || valueFromPayload(payload, 'expireYear') || 0)
                 });
             }
+
+            await createSubscriptionsForOrder(connection, {
+                userId: order.user_id,
+                orderId: order.id,
+                paymentMethod: 'credit_card',
+                renewalCardId: savedCardId
+            });
         } else {
             await connection.query(
                 'UPDATE orders SET status = ? WHERE id = ?',
@@ -930,6 +928,11 @@ router.post('/bank-transfer',
 
             const result = await lidioService.processDirectWireTransfer(paymentData, lidioRuntimeConfig);
 
+            const wireTransferStored = {
+                orderId: paymentData.orderId,
+                merchantProcessId: paymentData.merchantProcessId,
+                raw: result
+            };
             await connection.query(
                 'INSERT INTO payments (order_id, payment_method, lidio_transaction_id, amount, currency, status, lidio_response) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 [
@@ -939,7 +942,7 @@ router.post('/bank-transfer',
                     orderAmount,
                     order.currency,
                     'pending',
-                    JSON.stringify(result)
+                    JSON.stringify(wireTransferStored)
                 ]
             );
 

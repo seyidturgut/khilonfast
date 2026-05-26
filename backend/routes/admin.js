@@ -7,6 +7,11 @@ import db from '../config/database.js';
 import { clearCache } from '../middleware/cache.js';
 import authMiddleware from '../middleware/auth.js';
 import adminMiddleware from '../middleware/admin.js';
+import {
+    getCurrentUsdTryRate as currencyGetRate,
+    setManualRate as currencySetManual,
+    setAutoUpdate as currencySetAuto
+} from '../services/currencyService.js';
 
 import { fileURLToPath } from 'url';
 const router = express.Router();
@@ -1230,12 +1235,32 @@ router.post('/consultants/:id/availability', authMiddleware, adminMiddleware, as
     const consultantId = req.params.id;
     if (!slots || !slots.length) return res.status(400).json({ error: 'slots array required' });
     try {
-        const values = slots.map(s => [consultantId, s.service_id || null, s.available_date, s.start_time, s.end_time]);
+        // 60 dakikadan uzun aralıkları 1'er saatlik dilimlere böl
+        // → kullanıcı geniş aralık yerine exact saat seçer (docx beklentisi).
+        const toSec = (t) => {
+            const [h, m, s] = String(t || '').split(':').map(Number);
+            return (h || 0) * 3600 + (m || 0) * 60 + (s || 0);
+        };
+        const fmt = (sec) => {
+            const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+            return [h, m, s].map(n => String(n).padStart(2, '0')).join(':');
+        };
+        const values = [];
+        for (const s of slots) {
+            const start = toSec(s.start_time), end = toSec(s.end_time);
+            if (!end || end <= start) {
+                values.push([consultantId, s.service_id || null, s.available_date, s.start_time, s.end_time]);
+                continue;
+            }
+            for (let cur = start; cur < end; cur += 3600) {
+                values.push([consultantId, s.service_id || null, s.available_date, fmt(cur), fmt(Math.min(cur + 3600, end))]);
+            }
+        }
         await db.query(
             'INSERT INTO consultant_availability (consultant_id, service_id, available_date, start_time, end_time) VALUES ?',
             [values]
         );
-        res.json({ success: true, count: slots.length });
+        res.json({ success: true, count: values.length });
     } catch (err) {
         console.error('Admin create availability error:', err);
         res.status(500).json({ error: 'Server error' });
@@ -1739,6 +1764,54 @@ router.delete('/bank-accounts/:id', authMiddleware, adminMiddleware, async (req,
     } catch (err) {
         console.error('Admin bank-accounts delete error:', err);
         res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ──────────────────────────────────────────────────
+// USD/TRY oranı yönetimi (currencyService import'u dosyanın başında olmalı — bkz. yukarıda)
+// ──────────────────────────────────────────────────
+router.get('/exchange-rate', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const info = await currencyGetRate();
+        const [rows] = await db.query(
+            `SELECT setting_value FROM settings WHERE setting_key = 'usd_try_rate_auto_update' LIMIT 1`
+        );
+        const autoUpdate = String(rows[0]?.setting_value || 'true').toLowerCase() === 'true';
+        res.json({ rate: info.rate, source: info.source, updated_at: info.updatedAt, auto_update: autoUpdate });
+    } catch (err) {
+        console.error('exchange-rate get error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+router.put('/exchange-rate', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const { rate, auto_update } = req.body || {};
+        if (rate !== undefined && rate !== null) {
+            const numericRate = Number(rate);
+            if (!Number.isFinite(numericRate) || numericRate <= 0) {
+                return res.status(400).json({ error: 'Geçersiz oran' });
+            }
+            await currencySetManual(numericRate);
+        }
+        if (auto_update !== undefined) {
+            await currencySetAuto(Boolean(auto_update));
+        }
+        const info = await currencyGetRate();
+        res.json({ rate: info.rate, source: info.source, updated_at: info.updatedAt });
+    } catch (err) {
+        console.error('exchange-rate set error:', err);
+        res.status(500).json({ error: err.message || 'Server error' });
+    }
+});
+
+router.post('/exchange-rate/refresh', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const info = await currencyGetRate({ forceRefresh: true });
+        res.json({ rate: info.rate, source: info.source, updated_at: info.updatedAt });
+    } catch (err) {
+        console.error('exchange-rate refresh error:', err);
+        res.status(500).json({ error: err.message || 'Server error' });
     }
 });
 

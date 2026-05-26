@@ -1,12 +1,21 @@
 import type { TriggerConfig, TriggerEvent } from '../../../types';
 
 const TRIGGER_EVENTS: { value: TriggerEvent; label: string }[] = [
-  { value: 'purchase_completed',      label: 'Satın alma tamamlandı' },
-  { value: 'checkout_email_entered',  label: 'Ödeme e-postası girildi' },
-  { value: 'onboarding_not_completed',label: 'Onboarding tamamlanmadı' },
-  { value: 'service_not_used',        label: 'Servis kullanılmadı' },
-  { value: 'payment_failed',          label: 'Ödeme başarısız' },
-  { value: 'subscription_cancelled',  label: 'Abonelik iptal edildi' },
+  { value: 'purchase_completed',                label: 'Satın alma tamamlandı' },
+  { value: 'checkout_email_entered',            label: 'Ödeme e-postası girildi' },
+  { value: 'checkout_abandoned',                label: 'Sepet terk edildi' },
+  { value: 'purchase_completed_no_onboarding',  label: 'Aldı / Onboarding formu doldurmadı' },
+  { value: 'onboarding_not_completed',          label: 'Onboarding tamamlanmadı' },
+  { value: 'service_not_used',                  label: 'Servis kullanılmadı' },
+  { value: 'payment_failed',                    label: 'Ödeme başarısız' },
+  { value: 'subscription_cancelled',            label: 'Abonelik iptal edildi' },
+  { value: 'course_purchased_not_started',      label: 'Eğitim — Aldı, başlamadı' },
+  { value: 'course_started_incomplete',         label: 'Eğitim — Başladı, tamamlamadı' },
+  { value: 'course_completed',                  label: 'Eğitim — Tamamlandı' },
+  { value: 'course_yearly_reactivation',        label: 'Eğitim — Yıllık reactivation' },
+  { value: 'consulting_appointment',            label: 'Danışmanlık — Randevu olayı' },
+  { value: 'maestro_lifecycle',                 label: 'Maestro AI — Lifecycle' },
+  { value: 'eyetracking_pending_upload',        label: 'Eye Tracking — Görsel yükleme bekleniyor' },
 ];
 
 interface Props { config: TriggerConfig; onChange: (c: TriggerConfig) => void; }

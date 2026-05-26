@@ -22,10 +22,10 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
 export default function B2BEmailMarketing() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
-    const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
+    const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
         document.title = isEn ? 'B2B Email Marketing | khilonfast' : 'B2B Email Pazarlama | khilonfast'
@@ -102,39 +102,49 @@ export default function B2BEmailMarketing() {
             ]
         },
         processSection: {
-            tag: 'Nasıl Çalışır?',
-            title: 'Hizmet Süreci',
+            tag: t('process.tag', { defaultValue: 'Nasıl Çalışır?' }),
+            title: t('process.title', { defaultValue: 'Hizmet Süreci' }),
             description: 'Operasyonunuzu başarıya ulaştırmak için izlediğimiz 5 adımlı yol haritası.',
             videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: t('process.steps.buy.title'),
+                    description: t('process.steps.buy.description'),
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
+                    title: t('process.steps.auth.title'),
+                    description: (() => {
+                        const raw = t('process.steps.auth.description') as string
+                        const tokens = ['tıklayın>>', 'tıklayın.', 'tıklayın', 'Click for authorization details >>', 'Click >>', 'Click']
+                        for (const tok of tokens) {
+                            const idx = raw.indexOf(tok)
+                            if (idx !== -1) {
+                                return <>{raw.slice(0, idx)}<a href="#authorization" style={{ textDecoration: 'underline' }}>{tok.replace('>>', '').trim()}</a>{raw.slice(idx + tok.length)}</>
+                            }
+                        }
+                        return raw
+                    })(),
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: t('process.steps.brief.title'),
+                    description: t('process.steps.brief.description'),
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: t('process.steps.analysis.title'),
+                    description: t('process.steps.analysis.description'),
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: t('process.steps.approval.title'),
+                    description: t('process.steps.approval.description'),
                     icon: <HiCheckBadge />
                 }
             ]
@@ -229,7 +239,36 @@ export default function B2BEmailMarketing() {
                 { title: 'Growth', icon: <HiChartBar /> },
                 { title: 'Ultimate', icon: <HiTrophy /> }
             ],
-            rows: [
+            rows: i18n.language === 'en' ? [
+                {
+                    feature: 'Database Size',
+                    values: ['1,000 contacts', '5,000 contacts', '10,000 contacts']
+                },
+                {
+                    feature: 'Email Content Production',
+                    values: [
+                        'Basic HTML email design',
+                        'Advanced HTML email design with personalization',
+                        'Advanced HTML email design with personalization'
+                    ]
+                },
+                {
+                    feature: 'Conversion Optimization',
+                    values: [
+                        'Basic conversion tracking tools',
+                        'Advanced conversion tracking & analytics',
+                        'Professional conversion analytics & reporting'
+                    ]
+                },
+                {
+                    feature: 'Revision Rounds',
+                    values: ['1 revision', '2 revisions', '3 revisions']
+                },
+                {
+                    feature: 'Delivery Reporting',
+                    values: ['Monthly report', 'Monthly report', 'Monthly report']
+                }
+            ] : [
                 {
                     feature: 'Veritabanı Miktarı',
                     values: ['1,000 kişilik data', '5,000 kişilik data', '10,000 kişilik data']
@@ -259,7 +298,7 @@ export default function B2BEmailMarketing() {
                     values: ['Aylık rapor', 'Aylık rapor', 'Aylık rapor']
                 }
             ],
-            note: '(*) KDV hariç.'
+            note: i18n.language === 'en' ? '(*) Prices exclude VAT.' : '(*) KDV hariç.'
         },
         testimonial: {
             quote: "E-posta pazarlamasında doğru hedefleme ile satış döngümüz %30 kısaldı. khilonfast'in B2B tecrübesi gerçekten fark yaratıyor.",
@@ -267,9 +306,15 @@ export default function B2BEmailMarketing() {
             role: 'Pazarlama Müdürü'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+            { question: t('serviceB2BEmail.faqs.q1.q'), answer: t('serviceB2BEmail.faqs.q1.a') },
+            { question: t('serviceB2BEmail.faqs.q2.q'), answer: t('serviceB2BEmail.faqs.q2.a') },
+            { question: t('serviceB2BEmail.faqs.q3.q'), answer: t('serviceB2BEmail.faqs.q3.a') },
+            { question: t('serviceB2BEmail.faqs.q4.q'), answer: t('serviceB2BEmail.faqs.q4.a') },
+            { question: t('serviceB2BEmail.faqs.q5.q'), answer: t('serviceB2BEmail.faqs.q5.a') },
+            { question: t('serviceB2BEmail.faqs.q6.q'), answer: t('serviceB2BEmail.faqs.q6.a') },
+            { question: t('serviceB2BEmail.faqs.q7.q'), answer: t('serviceB2BEmail.faqs.q7.a') },
+            { question: t('serviceB2BEmail.faqs.q8.q'), answer: t('serviceB2BEmail.faqs.q8.a') },
+            { question: t('serviceB2BEmail.faqs.q9.q'), answer: t('serviceB2BEmail.faqs.q9.a') }
         ]
     }
 
@@ -381,9 +426,15 @@ export default function B2BEmailMarketing() {
             role: 'Marketing Manager'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+            { question: t('serviceB2BEmail.faqs.q1.q'), answer: t('serviceB2BEmail.faqs.q1.a') },
+            { question: t('serviceB2BEmail.faqs.q2.q'), answer: t('serviceB2BEmail.faqs.q2.a') },
+            { question: t('serviceB2BEmail.faqs.q3.q'), answer: t('serviceB2BEmail.faqs.q3.a') },
+            { question: t('serviceB2BEmail.faqs.q4.q'), answer: t('serviceB2BEmail.faqs.q4.a') },
+            { question: t('serviceB2BEmail.faqs.q5.q'), answer: t('serviceB2BEmail.faqs.q5.a') },
+            { question: t('serviceB2BEmail.faqs.q6.q'), answer: t('serviceB2BEmail.faqs.q6.a') },
+            { question: t('serviceB2BEmail.faqs.q7.q'), answer: t('serviceB2BEmail.faqs.q7.a') },
+            { question: t('serviceB2BEmail.faqs.q8.q'), answer: t('serviceB2BEmail.faqs.q8.a') },
+            { question: t('serviceB2BEmail.faqs.q9.q'), answer: t('serviceB2BEmail.faqs.q9.a') }
         ]
     }
 

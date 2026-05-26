@@ -50,7 +50,7 @@ export default function Consulting() {
                         {consultingCards.map((program) => (
                             <article key={program.path} className="training-card">
                                 <div className="training-card-image">
-                                    <img src={program.image} alt={program.title} />
+                                    <img src={program.image} alt={program.title} width={400} height={225} loading="lazy" />
                                     <div className="training-card-badge">
                                         <HiBriefcase />
                                     </div>

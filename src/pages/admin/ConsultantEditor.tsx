@@ -218,7 +218,7 @@ export default function ConsultantEditor() {
 
     // ── Info ──
     const [form, setForm] = useState({
-        slug: '', name: '', title: '', bio: '', photo_url: '',
+        slug: '', name: '', title: '', title_en: '', bio: '', bio_en: '', photo_url: '',
         stars: 5.0, review_count: 0, sectors: [] as string[], is_active: 1,
         ical_url: '', ical_sync_enabled: 0
     });
@@ -252,7 +252,9 @@ export default function ConsultantEditor() {
                 const c = (data.consultants || []).find((x: any) => String(x.id) === id);
                 if (!c) return;
                 setForm({
-                    slug: c.slug, name: c.name, title: c.title || '', bio: c.bio || '',
+                    slug: c.slug, name: c.name,
+                    title: c.title || '', title_en: c.title_en || '',
+                    bio: c.bio || '', bio_en: c.bio_en || '',
                     photo_url: c.photo_url || '', stars: parseFloat(c.stars) || 5.0,
                     review_count: c.review_count || 0, is_active: c.is_active,
                     sectors: Array.isArray(c.sectors) ? c.sectors
@@ -538,16 +540,28 @@ export default function ConsultantEditor() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label style={S.label}>Unvan / Uzmanlık</label>
+                                    <label style={S.label}>Unvan / Uzmanlık (TR)</label>
                                     <input style={S.input} value={form.title}
                                         onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                                         placeholder="Growth Marketing & Fractional CMO Uzmanı" />
                                 </div>
                                 <div>
-                                    <label style={S.label}>Biyografi</label>
+                                    <label style={S.label}>Title / Expertise (EN)</label>
+                                    <input style={S.input} value={form.title_en}
+                                        onChange={e => setForm(f => ({ ...f, title_en: e.target.value }))}
+                                        placeholder="Growth Marketing & Fractional CMO Expert" />
+                                </div>
+                                <div>
+                                    <label style={S.label}>Biyografi (TR)</label>
                                     <textarea rows={4} style={S.textarea} value={form.bio}
                                         onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
                                         placeholder="Danışmanın deneyim ve uzmanlık alanlarını anlatan kısa biyografi..." />
+                                </div>
+                                <div>
+                                    <label style={S.label}>Biography (EN)</label>
+                                    <textarea rows={4} style={S.textarea} value={form.bio_en}
+                                        onChange={e => setForm(f => ({ ...f, bio_en: e.target.value }))}
+                                        placeholder="Short bio describing the consultant's experience and expertise (English)..." />
                                 </div>
                             </div>
                         </div>
@@ -815,6 +829,34 @@ export default function ConsultantEditor() {
                                     <button onClick={addSlotTime} style={{ ...S.btnGhost, marginTop: 8, width: 'fit-content' }}>
                                         <HiPlus /> Saat Dilimi Ekle
                                     </button>
+                                    {/* Hızlı Preset Butonları */}
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSlotTimes([{ start: '09:00', end: '17:00' }])}
+                                            style={{ ...S.btnGhost, padding: '6px 10px', fontSize: '0.85rem' }}
+                                            title="09:00 - 17:00 tam gün"
+                                        >
+                                            🗓️ Tüm Gün (09-17)
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSlotTimes([{ start: '09:00', end: '12:00' }])}
+                                            style={{ ...S.btnGhost, padding: '6px 10px', fontSize: '0.85rem' }}
+                                        >
+                                            🌅 Sabah (09-12)
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSlotTimes([{ start: '13:00', end: '17:00' }])}
+                                            style={{ ...S.btnGhost, padding: '6px 10px', fontSize: '0.85rem' }}
+                                        >
+                                            🌇 Öğleden Sonra (13-17)
+                                        </button>
+                                    </div>
+                                    <div style={{ fontSize: '0.78rem', color: '#6b7280', marginTop: 6 }}>
+                                        💡 Geniş aralık girince sistem otomatik olarak 1 saatlik dilimlere böler.
+                                    </div>
                                 </div>
                                 <button onClick={addSlots} disabled={!slotDate || addingSlots}
                                     style={{ ...S.btnPrimary, width: 'fit-content', opacity: !slotDate ? 0.5 : 1 }}>

@@ -33,7 +33,7 @@ export default function B2BThreeSixtyMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'B2B Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
+            title: 'B2B için 360° Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Business to Business pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
@@ -142,16 +142,16 @@ export default function B2BThreeSixtyMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="B2B Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="B2B Bütünleşik Dijital Pazarlama" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>B2B Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
-                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>B2B için Bütünleşik Dijital Pazarlama</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>B2B sektörü için bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
-                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. SEO, reklam, içerik ve sosyal medyayı tek bir bütünleşik stratejide birleştirin.
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirin. SEO, reklam, içerik ve sosyal medyayı tek stratejide birleştirin.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
                                         B2B Sektöründe Bütünleşik Dijital Pazarlama ile hedef kitlenize doğru mesajı, doğru kanaldan, doğru zamanda ulaştırın.
@@ -415,7 +415,7 @@ export default function B2BThreeSixtyMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="B2B Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="B2B Integrated Digital Marketing" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>

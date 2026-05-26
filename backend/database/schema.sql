@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS products (
     duration_days INT DEFAULT NULL,
     access_content_url VARCHAR(255) DEFAULT NULL,
     is_active BOOLEAN DEFAULT TRUE,
+    requires_onboarding TINYINT(1) NOT NULL DEFAULT 0,
     parent_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -54,6 +55,7 @@ CREATE TABLE IF NOT EXISTS orders (
     applied_coupon_snapshot_json JSON DEFAULT NULL,
     currency VARCHAR(3) DEFAULT 'TRY',
     status ENUM('pending', 'processing', 'completed', 'failed', 'cancelled') DEFAULT 'pending',
+    usd_try_rate_used DECIMAL(10,4) DEFAULT NULL COMMENT 'USD/TRY oranı sipariş anında — USD ürünler için TRY çevirimi audit',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -162,14 +164,38 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     starts_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NULL,
     auto_renew TINYINT(1) NOT NULL DEFAULT 0,
+    renewal_card_id INT NULL,
+    payment_method ENUM('credit_card','manual_transfer') NULL,
     next_renewal_at TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    cancellation_requested_at TIMESTAMP NULL DEFAULT NULL,
+    cancelled_at TIMESTAMP NULL DEFAULT NULL,
+    last_renewal_at TIMESTAMP NULL DEFAULT NULL,
+    renewal_attempts INT NOT NULL DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL,
     INDEX idx_user_id (user_id),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_next_renewal (next_renewal_at, status, auto_renew)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- User cards table (Lidio tokenization for subscription auto-renew)
+CREATE TABLE IF NOT EXISTS user_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    lidio_token VARCHAR(255) NOT NULL,
+    masked_number VARCHAR(20),
+    card_brand VARCHAR(30),
+    expire_month INT,
+    expire_year INT,
+    card_holder_name VARCHAR(255),
+    is_default TINYINT(1) DEFAULT 0,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert sample products

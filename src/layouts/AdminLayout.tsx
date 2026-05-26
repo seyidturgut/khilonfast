@@ -13,7 +13,10 @@ import {
     HiPlay,
     HiTicket,
     HiMail,
-    HiLibrary
+    HiLibrary,
+    HiChartBar,
+    HiCreditCard,
+    HiPhotograph
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 import '../styles/admin-light.css';
@@ -32,22 +35,90 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         navigate('/giris', { replace: true });
     };
 
-    const menuItems = [
-        { icon: HiHome, label: 'Dashboard', path: '/admin' },
-        { icon: HiShoppingBag, label: 'Ürünler', path: '/admin/products' },
-        { icon: HiDocumentText, label: 'Sayfalar', path: '/admin/pages' },
-        { icon: HiUserGroup, label: 'Danışmanlar', path: '/admin/consultants' },
-        { icon: HiCalendar, label: 'Rezervasyonlar', path: '/admin/bookings' },
-        { icon: HiPlay, label: 'Eğitim İçerikleri', path: '/admin/training-content' },
-        { icon: HiPlay, label: 'Eğitim Analitikleri', path: '/admin/training-analytics' },
-        { icon: HiTicket, label: 'Kuponlar', path: '/admin/coupons' },
-        { icon: HiLibrary, label: 'Banka Hesapları', path: '/admin/bank-accounts' },
-        { icon: HiDocumentText, label: 'Onboarding Formları', path: '/admin/onboarding-forms' },
-        { icon: HiPlay, label: 'Otomasyon Akışları', path: '/admin/automations' },
-        { icon: HiMail, label: 'E-posta Şablonları', path: '/admin/email-templates' },
-        { icon: HiDocumentText, label: 'Otomasyon Logları', path: '/admin/automation-logs' },
-        { icon: HiUsers, label: 'Kullanıcılar', path: '/admin/users' },
-        { icon: HiCog, label: 'Ayarlar', path: '/admin/settings' },
+    const menuGroups: Array<{ label: string | null; items: Array<{ icon: any; label: string; path: string }> }> = [
+        {
+            label: null,
+            items: [
+                { icon: HiHome, label: 'Dashboard', path: '/admin' },
+            ],
+        },
+        {
+            label: 'İçerik Yönetimi',
+            items: [
+                { icon: HiDocumentText, label: 'Sayfalar', path: '/admin/pages' },
+                { icon: HiShoppingBag, label: 'Ürünler', path: '/admin/products' },
+                { icon: HiTicket, label: 'Kuponlar', path: '/admin/coupons' },
+            ],
+        },
+        {
+            label: 'Eğitimler',
+            items: [
+                { icon: HiPlay, label: 'Eğitim İçerikleri', path: '/admin/training-content' },
+                { icon: HiChartBar, label: 'Eğitim Analitikleri', path: '/admin/training-analytics' },
+            ],
+        },
+        {
+            label: 'Danışmanlık',
+            items: [
+                { icon: HiUserGroup, label: 'Danışmanlar', path: '/admin/consultants' },
+                { icon: HiCalendar, label: 'Rezervasyonlar', path: '/admin/bookings' },
+            ],
+        },
+        {
+            label: 'Ödeme',
+            items: [
+                { icon: HiLibrary, label: 'Banka Hesapları (Lidio)', path: '/admin/bank-accounts' },
+                { icon: HiLibrary, label: 'Manuel Havale Hesapları', path: '/admin/manual-bank-accounts' },
+                { icon: HiTicket, label: 'Manuel Havale Siparişleri', path: '/admin/manual-orders' },
+            ],
+        },
+        {
+            label: 'Müşteri',
+            items: [
+                { icon: HiUsers, label: 'Kullanıcılar', path: '/admin/users' },
+                { icon: HiDocumentText, label: 'Onboarding Formları', path: '/admin/onboarding-forms' },
+                { icon: HiPhotograph, label: 'Reklam Analizleri', path: '/admin/eye-tracking-uploads' },
+                { icon: HiCreditCard, label: 'Abonelikler', path: '/admin/subscriptions' },
+            ],
+        },
+        {
+            label: 'CRM',
+            items: [
+                { icon: HiChartBar, label: 'CRM Dashboard', path: '/admin/crm/dashboard' },
+                { icon: HiUserGroup, label: 'Kişiler', path: '/admin/crm/contacts' },
+                { icon: HiTicket, label: 'Etiketler', path: '/admin/crm/tags' },
+                { icon: HiLibrary, label: 'Listeler', path: '/admin/crm/lists' },
+                { icon: HiCog, label: 'Özel Alanlar', path: '/admin/crm/custom-fields' },
+                { icon: HiChartBar, label: 'Skor Kuralları', path: '/admin/crm/scoring-rules' },
+                { icon: HiPlay, label: 'Smart Linkler', path: '/admin/crm/smart-links' },
+                { icon: HiMail, label: 'Kampanyalar', path: '/admin/crm/campaigns' },
+                { icon: HiDocumentText, label: 'Formlar', path: '/admin/crm/forms' },
+                { icon: HiUsers, label: 'CSV Import / Export', path: '/admin/crm/import' },
+                { icon: HiChartBar, label: 'Funnels', path: '/admin/crm/funnels' },
+            ],
+        },
+        {
+            label: 'Muhasebe',
+            items: [
+                { icon: HiDocumentText, label: 'Faturalar', path: '/admin/invoices' },
+                { icon: HiCog, label: 'Paraşüt Ayarları', path: '/admin/settings' },
+            ],
+        },
+        {
+            label: 'Otomasyon',
+            items: [
+                { icon: HiPlay, label: 'Otomasyon Akışları', path: '/admin/automations' },
+                { icon: HiMail, label: 'E-posta Şablonları', path: '/admin/email-templates' },
+                { icon: HiChartBar, label: 'Otomasyon Analizi', path: '/admin/automation-logs' },
+                { icon: HiSparkles, label: 'Otomasyon Test 🧪', path: '/admin/automation-test' },
+            ],
+        },
+        {
+            label: 'Sistem',
+            items: [
+                { icon: HiCog, label: 'Ayarlar', path: '/admin/settings' },
+            ],
+        },
     ];
 
     return (
@@ -78,25 +149,31 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
                 {/* Navigation */}
                 <nav className="sidebar-nav">
-                    <div className="nav-section-label">MENÜ</div>
-                    <ul className="nav-list">
-                        {menuItems.map((item) => {
-                            const isActive = location.pathname === item.path ||
-                                (item.path !== '/admin' && location.pathname.startsWith(item.path));
-                            return (
-                                <li key={item.path}>
-                                    <Link
-                                        to={item.path}
-                                        className={`nav-link ${isActive ? 'active' : ''}`}
-                                    >
-                                        <item.icon className="nav-icon" />
-                                        <span className="nav-label">{item.label}</span>
-                                        {isActive && <div className="nav-indicator" />}
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                    {menuGroups.map((group, groupIdx) => (
+                        <div key={groupIdx} className="nav-group">
+                            {group.label && (
+                                <div className="nav-section-label">{group.label}</div>
+                            )}
+                            <ul className="nav-list">
+                                {group.items.map((item) => {
+                                    const isActive = location.pathname === item.path ||
+                                        (item.path !== '/admin' && location.pathname.startsWith(item.path));
+                                    return (
+                                        <li key={item.path}>
+                                            <Link
+                                                to={item.path}
+                                                className={`nav-link ${isActive ? 'active' : ''}`}
+                                            >
+                                                <item.icon className="nav-icon" />
+                                                <span className="nav-label">{item.label}</span>
+                                                {isActive && <div className="nav-indicator" />}
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    ))}
                 </nav>
 
                 {/* Footer */}
@@ -232,13 +309,22 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     overflow-y: auto;
                 }
 
+                .nav-group {
+                    margin-bottom: 1.1rem;
+                }
+
+                .nav-group:last-child {
+                    margin-bottom: 0;
+                }
+
                 .nav-section-label {
-                    font-size: 0.7rem;
+                    font-size: 0.65rem;
                     font-weight: 700;
                     color: #94a3b8;
-                    letter-spacing: 1.2px;
-                    margin-bottom: 0.75rem;
-                    padding: 0 0.5rem;
+                    letter-spacing: 1.4px;
+                    text-transform: uppercase;
+                    margin-bottom: 0.5rem;
+                    padding: 0 0.75rem;
                 }
 
                 .nav-list {

@@ -27,6 +27,11 @@ interface CacheEntry { contentJson: any }
 const cmsCache = new Map<string, CacheEntry | null>();
 const cmsPending = new Map<string, Promise<CacheEntry | null>>();
 
+// Public anon cache — sadece tek dilin medya/içerik bloğu
+interface PublicEntry { content: any }
+const publicCache = new Map<string, PublicEntry | null>();
+const publicPending = new Map<string, Promise<PublicEntry | null>>();
+
 async function loadPageContent(slug: string, token: string, apiBase: string): Promise<CacheEntry | null> {
     if (cmsCache.has(slug)) return cmsCache.get(slug) ?? null;
     if (cmsPending.has(slug)) return cmsPending.get(slug)!;
@@ -51,8 +56,35 @@ async function loadPageContent(slug: string, token: string, apiBase: string): Pr
     return result;
 }
 
+/**
+ * Anon kullanıcılar için public CMS endpoint — `/api/pages/slug/:slug?lang=tr|en`
+ * Backend dile göre filtreliyor (sadece o dilin bloğunu döndürür).
+ */
+async function loadPublicPageContent(slug: string, lang: 'tr' | 'en', apiBase: string): Promise<PublicEntry | null> {
+    const cacheKey = `${slug}::${lang}`;
+    if (publicCache.has(cacheKey)) return publicCache.get(cacheKey) ?? null;
+    if (publicPending.has(cacheKey)) return publicPending.get(cacheKey)!;
+    const p = (async (): Promise<PublicEntry | null> => {
+        try {
+            const res = await fetch(`${apiBase}/pages/slug/${encodeURIComponent(slug)}?lang=${lang}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            if (!data?.content) return null;
+            const entry: PublicEntry = { content: data.content };
+            publicCache.set(cacheKey, entry);
+            return entry;
+        } catch { return null; }
+    })();
+    publicPending.set(cacheKey, p);
+    const result = await p;
+    publicPending.delete(cacheKey);
+    return result;
+}
+
 export function invalidateCmsCache(slug: string) {
     cmsCache.delete(slug);
+    publicCache.delete(`${slug}::tr`);
+    publicCache.delete(`${slug}::en`);
 }
 
 export default function EditableMedia({ pageSlug, fieldKey, type, src, currentLang, children }: EditableMediaProps) {
@@ -72,16 +104,26 @@ export default function EditableMedia({ pageSlug, fieldKey, type, src, currentLa
     const fileRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (!isAdmin) return;
-        const token = localStorage.getItem('token');
-        if (!token) return;
-        loadPageContent(pageSlug, token, apiBase).then(entry => {
-            if (!entry) return;
-            setContentJson(entry.contentJson);
-            setTrOverride(entry.contentJson?.tr?.media?.[fieldKey] ?? null);
-            setEnOverride(entry.contentJson?.en?.media?.[fieldKey] ?? null);
-        });
-    }, [isAdmin, pageSlug, fieldKey, apiBase]);
+        if (isAdmin) {
+            // Admin: tüm contentJson (tr+en) gerekli — modal düzenleme için
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            loadPageContent(pageSlug, token, apiBase).then(entry => {
+                if (!entry) return;
+                setContentJson(entry.contentJson);
+                setTrOverride(entry.contentJson?.tr?.media?.[fieldKey] ?? null);
+                setEnOverride(entry.contentJson?.en?.media?.[fieldKey] ?? null);
+            });
+        } else {
+            // Anon: public endpoint, sadece mevcut dile ait override'ı yükle
+            loadPublicPageContent(pageSlug, currentLang, apiBase).then(entry => {
+                if (!entry) return;
+                const override = entry.content?.media?.[fieldKey] ?? null;
+                if (currentLang === 'tr') setTrOverride(override);
+                else setEnOverride(override);
+            });
+        }
+    }, [isAdmin, pageSlug, fieldKey, apiBase, currentLang]);
 
     const rawSrc = currentLang === 'tr' ? (trOverride || src) : (enOverride || src);
     const resolvedSrc = type === 'video' ? normalizeVideoUrl(rawSrc) : rawSrc;

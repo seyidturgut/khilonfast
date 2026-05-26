@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { couponAPI, emailAutomationAPI, ordersAPI, paymentAPI } from '../services/api';
 import { HiCheckCircle, HiCreditCard, HiShieldCheck, HiShoppingBag, HiLibrary } from 'react-icons/hi';
@@ -18,7 +18,7 @@ interface SavedCard {
 import './Checkout.css';
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
 import { API_BASE_URL } from '../config/api';
-import { checkoutLegalContent } from '../content/legalContent';
+import ConsentCheckboxes, { type ConsentState } from '../components/ConsentCheckboxes';
 
 interface CheckoutPricingSummary {
     subtotal: number;
@@ -44,7 +44,9 @@ export default function Checkout() {
     const useHostedPayment = false;
     const API_BASE = API_BASE_URL;
     const { user, isAuthenticated, activateToken } = useAuth();
-    const { items, clearCart, refreshPrices } = useCart();
+    const { items, clearCart, refreshPrices, isEnLocale } = useCart();
+    // EN locale + bank-only mode: kart tab'ını gizle, default'u wire_transfer yap
+    const enBankOnly = isEnLocale;
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as { email?: string; name?: string; country?: string } | null;
@@ -52,42 +54,58 @@ export default function Checkout() {
     const isEn = currentLang === 'en';
     const homePath = getLocalizedPathByKey(currentLang, 'home');
     const dashboardPath = getLocalizedPathByKey(currentLang, 'dashboard');
-    const privacyPolicyPath = getLocalizedPathByKey(currentLang, 'privacyPolicy');
-    const cookiePolicyPath = getLocalizedPathByKey(currentLang, 'cookiePolicy');
-    const termsPath = getLocalizedPathByKey(currentLang, 'termsOfService');
-    const refundPath = getLocalizedPathByKey(currentLang, 'refundPolicy');
     const onboardingFormPath = getLocalizedPathByKey(currentLang, 'onboardingForm');
-    const termsContentRef = useRef<HTMLDivElement | null>(null);
-    const legalCopy = checkoutLegalContent[currentLang];
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     
+    // Danışmanlık ürünü sepetteyse sözleşme adımları ATLANMAZ — kullanıcı
+    // mesafeli satış / ön bilgilendirme dahil sözleşmeleri açıkça onaylamalı (docx beklentisi).
+    const hasConsultantItem = items.some(
+        i => (i.product_key || '').toLowerCase().startsWith('consultant-service-')
+    );
     // Auto-advance logic: if coming with guest info, start at Step 3 (Payment)
-    const [step, setStep] = useState<1 | 2 | 3>(state?.email ? 3 : 1);
-    const autoAccepted = !!state?.email;
-    const [termsAccepted, setTermsAccepted] = useState(autoAccepted);
-    const [privacyAccepted, setPrivacyAccepted] = useState(autoAccepted);
-    const [cookieAccepted, setCookieAccepted] = useState(autoAccepted);
-    const [refundAccepted, setRefundAccepted] = useState(autoAccepted);
-    const allPoliciesAccepted = termsAccepted && privacyAccepted && cookieAccepted && refundAccepted;
+    const [step, setStep] = useState<1 | 2 | 3>(state?.email && !hasConsultantItem ? 3 : 1);
+    const autoAccepted = !!state?.email && !hasConsultantItem;
+    // Eski 4 ayrı zorunlu checkbox + ETK → tek ConsentCheckboxes
+    const [consentState, setConsentState] = useState<ConsentState>({
+        main_legal: autoAccepted,
+        etk: false,
+        b2b: false,
+        auto_renewal: false,
+    });
+    const allPoliciesAccepted = consentState.main_legal;
+    // Step 2: her sözleşme için ayrı checkbox state
+    const [policyChecks, setPolicyChecks] = useState<Record<string, boolean>>({});
     const [country, setCountry] = useState(state?.country || 'Türkiye');
     const [email, setEmail] = useState(state?.email || user?.email || '');
     const [buyingAsBusiness, setBuyingAsBusiness] = useState(false);
     const [companyName, setCompanyName] = useState('');
     const [taxNumber, setTaxNumber] = useState('');
+    // Fatura için (Türk vergi mevzuatı — zorunlu)
+    const [nationalId, setNationalId] = useState(''); // TC kimlik (bireysel, 11 hane)
+    const [taxOffice, setTaxOffice] = useState('');   // Vergi dairesi (kurumsal)
     const [cardHolderName, setCardHolderName] = useState(state?.name || '');
     const [cardNumber, setCardNumber] = useState('');
     const [cardExpireMonth, setCardExpireMonth] = useState('');
     const [cardExpireYear, setCardExpireYear] = useState('');
     const [cardCvv, setCardCvv] = useState('');
     const hasSubscription = useMemo(() => items.some(i => (i.duration_days ?? 0) > 0), [items]);
+    const hasMaestroItem = useMemo(
+        () => items.some(i => (i.product_key || '').toLowerCase().startsWith('maestro-')),
+        [items]
+    );
     const [savedCards, setSavedCards] = useState<SavedCard[]>([]);
     const [selectedCardId, setSelectedCardId] = useState<number>(0); // 0 = yeni kart
-    const [paymentMethod, setPaymentMethod] = useState<'card' | 'wire_transfer'>('card');
+    const [paymentMethod, setPaymentMethod] = useState<'card' | 'wire_transfer'>(
+        (typeof window !== 'undefined' && (window.location.pathname === '/en' || window.location.pathname.startsWith('/en/')))
+            ? 'wire_transfer'
+            : 'card'
+    );
     const [wireTransferResult, setWireTransferResult] = useState<any>(null);
-    const [bankAccounts, setBankAccounts] = useState<Array<{ id: number; bank_name: string; bank_code: string | null; logo_url: string | null }>>([]);
+    type ManualBankAccount = { id: number; bank_name: string; account_holder?: string; iban?: string; swift?: string | null; currency?: 'TRY' | 'USD'; notes?: string | null; bank_code?: string | null; logo_url?: string | null };
+    const [bankAccounts, setBankAccounts] = useState<ManualBankAccount[]>([]);
     const [selectedBankId, setSelectedBankId] = useState<number>(0);
     const [couponCode, setCouponCode] = useState('');
     const [couponLoading, setCouponLoading] = useState(false);
@@ -172,10 +190,10 @@ export default function Checkout() {
         },
         summary: {
             title: isEn ? 'Order Summary' : 'Sipariş Özeti',
-            subtotal: isEn ? 'Subtotal' : 'Ara toplam',
+            subtotal: isEn ? 'Subtotal (excl. VAT)' : 'Ara toplam (KDV hariç)',
             discount: isEn ? 'Coupon Discount' : 'Kupon indirimi',
             shipping: isEn ? 'Shipping' : 'Kargo',
-            tax: isEn ? 'Tax' : 'Vergi',
+            tax: isEn ? 'VAT (20%)' : 'KDV (%20)',
             total: isEn ? 'Total:' : 'Genel toplam',
             couponLabel: isEn ? 'Coupon code' : 'Kupon kodu',
             couponApplied: isEn ? 'Applied coupon' : 'Kullanılan kupon',
@@ -190,12 +208,12 @@ export default function Checkout() {
             hostedTitle: isEn ? 'Card details will be entered on the Lidio screen' : 'Kart bilgisi Lidio ekranında girilecek',
             hostedDescription: isEn ? 'After clicking the buy button, you will be redirected to the secure Lidio payment page.' : 'Satın al butonundan sonra güvenli Lidio ödeme sayfasına yönlendirileceksiniz.',
             tabCard: isEn ? 'Credit / Debit Card' : 'Kredi / Banka Kartı',
-            tabWire: isEn ? 'Instant Wire Transfer' : 'Anında Havale',
+            tabWire: isEn ? 'Pay by Wire Transfer' : 'Havale ile Ödeme',
             wireDesc: isEn ? 'You will be redirected to your bank\'s portal to complete the transfer instantly.' : 'Anında ödeme için bankanızın internet bankacılığı portalına yönlendirileceksiniz.',
             saveCard: isEn ? 'Your card will be securely saved for recurring payments.' : 'Aylık ödemeler için kartınız güvenli şekilde kaydedilecektir.',
             savedCards: isEn ? 'Your saved cards' : 'Kayıtlı kartlarım',
             newCard: isEn ? 'Pay with a new card' : 'Yeni kart ile öde',
-            wireSuccess: isEn ? 'Wire transfer initiated! You are being redirected to your bank.' : 'Anında Havale başlatıldı! Bankanıza yönlendiriliyorsunuz.'
+            wireSuccess: isEn ? 'Wire transfer initiated! You are being redirected to your bank.' : 'Havale ödemesi başlatıldı! Bankanıza yönlendiriliyorsunuz.'
         },
         placeholders: {
             email: isEn ? 'example@email.com' : 'ornek@email.com',
@@ -288,16 +306,18 @@ export default function Checkout() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Anında Havale için banka listesi (auth gerektirmez, public endpoint)
+    // Manuel Havale için aktif hesap listesi (Lidio'dan bağımsız, IBAN bazlı)
+    // Locale'a göre currency filtresi: TR → TRY hesapları, EN → USD hesapları
     useEffect(() => {
-        paymentAPI.getBankAccounts()
+        const desiredCurrency: 'TRY' | 'USD' = isEn ? 'USD' : 'TRY';
+        paymentAPI.getManualBankAccounts(desiredCurrency)
             .then(res => {
-                const list = Array.isArray(res.data?.banks) ? res.data.banks : [];
-                setBankAccounts(list);
+                const list = Array.isArray(res.data?.accounts) ? res.data.accounts : [];
+                setBankAccounts(list as any);
                 if (list.length === 1) setSelectedBankId(list[0].id);
             })
             .catch(() => setBankAccounts([]));
-    }, []);
+    }, [isEn]);
 
     // Exit intent: 45 saniye hareketsizlikte popup göster (session başına 1 kez)
     useEffect(() => {
@@ -344,25 +364,30 @@ export default function Checkout() {
             setError(copy.errors.email);
             return false;
         }
-        if (!privacyAccepted) {
+        if (!consentState.main_legal) {
             setError(copy.errors.privacy);
             return false;
+        }
+        // Fatura bilgileri — Türk vergi mevzuatı gereği zorunlu (sadece TR site)
+        // EN site'den gelen yabancı müşteriler için TC/vergi no şart değil
+        if (!isEn) {
+            if (buyingAsBusiness) {
+                if (!companyName.trim()) { setError('Şirket ünvanı zorunludur.'); return false; }
+                if (!taxOffice.trim()) { setError('Vergi dairesi zorunludur.'); return false; }
+                if (!/^\d{10,11}$/.test(taxNumber.trim())) { setError('Vergi numarası 10 veya 11 hane olmalıdır.'); return false; }
+            } else {
+                const tc = nationalId.replace(/\D/g, '');
+                if (tc.length !== 11) { setError('Fatura için 11 haneli TC kimlik numarası zorunludur.'); return false; }
+            }
         }
         return true;
     };
 
     const validateBusinessInfo = () => {
         if (!buyingAsBusiness) return true;
-
         const vkn = taxNumber.trim();
-        if (!companyName.trim()) {
-            setError(copy.errors.companyName);
-            return false;
-        }
-        if (!/^\d{10,11}$/.test(vkn)) {
-            setError(copy.errors.taxNumber);
-            return false;
-        }
+        if (!companyName.trim()) { setError(copy.errors.companyName); return false; }
+        if (!/^\d{10,11}$/.test(vkn)) { setError(copy.errors.taxNumber); return false; }
         return true;
     };
 
@@ -471,6 +496,12 @@ export default function Checkout() {
             const orderData = {
                 items: buildOrderItems(),
                 coupon_code: pricingSummary?.applied_coupon?.code || null,
+                customer_type: buyingAsBusiness ? 'company' : 'individual',
+                national_id: !buyingAsBusiness ? nationalId : '',
+                company_name: buyingAsBusiness ? companyName.trim() : '',
+                tax_office: buyingAsBusiness ? taxOffice.trim() : '',
+                tax_number: buyingAsBusiness ? taxNumber.trim() : '',
+                lang: isEn ? 'en' : 'tr',
                 ...(isAuthenticated ? {} : {
                     guest_email: email.trim(),
                     guest_name: email.trim(),
@@ -482,40 +513,21 @@ export default function Checkout() {
             const guestAuthToken = orderResponse.data.auth_token;
             if (guestAuthToken) await activateToken(guestAuthToken);
 
-            const result = await paymentAPI.bankTransfer({
+            // MANUEL HAVALE — Lidio'dan bağımsız, IBAN gösterip pending durumda bırakır.
+            // Admin para gelince admin paneldeki "Confirm Payment" ile completed yapar.
+            const result = await paymentAPI.manualTransfer({
                 order_id: order.id,
-                bank_account_id: selectedBankId || undefined
+                manual_bank_account_id: selectedBankId || undefined
             });
-            const data = result.data;
+            setWireTransferResult(result.data);
+            clearCart();
 
-            // Lidio iki aşamalı flow: önce redirect_url veya redirect_form_params dönerse
-            // kullanıcı bankaya yönlendirilir; bankadan dönüşte /payment/callback finalize eder.
-            if (data.redirect_url) {
-                setWireTransferResult(data);
-                setTimeout(() => { window.location.href = data.redirect_url; }, 1500);
-            } else if (data.redirect_form_params?.action) {
-                // POST form-based redirect (Lidio bazı bankalar için form gönderiyor)
-                const fp = data.redirect_form_params;
-                const form = document.createElement('form');
-                form.method = String(fp.method || 'POST').toUpperCase() === 'GET' ? 'GET' : 'POST';
-                form.action = String(fp.action);
-                form.style.display = 'none';
-                Object.entries(fp.params || fp.fields || fp.data || {}).forEach(([k, v]) => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = k;
-                    input.value = String(v ?? '');
-                    form.appendChild(input);
-                });
-                document.body.appendChild(form);
-                form.submit();
-                return;
+            // Yönlendirme: önce şifre belirle (gerekiyorsa), sonra hesabım sayfasına
+            if (user?.must_change_password) {
+                setTimeout(() => navigate(isEn ? '/en/set-password' : '/sifre-belirle'), 2500);
             } else {
-                setWireTransferResult(data);
-                clearCart();
-                if (user?.must_change_password) {
-                    setTimeout(() => navigate(isEn ? '/en/set-password' : '/sifre-belirle'), 2000);
-                }
+                // 6 saniye sonra hesabım sayfasına geç — kullanıcı IBAN'ı not alabilsin diye yeterli süre
+                setTimeout(() => navigate(`${dashboardPath}?tab=orders`, { replace: true }), 6000);
             }
         } catch (err: any) {
             setError(err.response?.data?.error || err.message || copy.errors.payment);
@@ -539,6 +551,11 @@ export default function Checkout() {
             const orderData = {
                 items: buildOrderItems(),
                 coupon_code: pricingSummary?.applied_coupon?.code || null,
+                customer_type: buyingAsBusiness ? 'company' : 'individual',
+                national_id: !buyingAsBusiness ? nationalId : '',
+                company_name: buyingAsBusiness ? companyName.trim() : '',
+                tax_office: buyingAsBusiness ? taxOffice.trim() : '',
+                tax_number: buyingAsBusiness ? taxNumber.trim() : '',
                 ...(isAuthenticated ? {} : {
                     guest_email: email.trim(),
                     guest_name: guestNameFromCard,
@@ -767,20 +784,97 @@ export default function Checkout() {
                             </div>
                         </div>
 
-                        <label className="checkbox-row">
-                            <input
-                                type="checkbox"
-                                checked={privacyAccepted}
-                                onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                        {/* Fatura bilgileri — sadece TR site'de zorunlu (yabancı müşteri EN'de istenmez) */}
+                        {!isEn && (
+                        <div style={{ marginTop: '1.25rem', padding: '1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10 }}>
+                            <h3 style={{ margin: '0 0 0.75rem', fontSize: '1rem', color: '#1a3a52' }}>
+                                {isEn ? 'Billing Information' : 'Fatura Bilgileri'}
+                            </h3>
+                            <div style={{ display: 'flex', gap: 16, marginBottom: 12, flexWrap: 'wrap' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                                    <input
+                                        type="radio"
+                                        name="customer_type"
+                                        checked={!buyingAsBusiness}
+                                        onChange={() => setBuyingAsBusiness(false)}
+                                    />
+                                    {isEn ? 'Individual' : 'Bireysel'}
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                                    <input
+                                        type="radio"
+                                        name="customer_type"
+                                        checked={buyingAsBusiness}
+                                        onChange={() => setBuyingAsBusiness(true)}
+                                    />
+                                    {isEn ? 'Company' : 'Kurumsal'}
+                                </label>
+                            </div>
+
+                            {!buyingAsBusiness ? (
+                                <div className="form-group">
+                                    <label>{isEn ? 'National ID (TC)' : 'TC Kimlik Numarası'}</label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={11}
+                                        value={nationalId}
+                                        onChange={(e) => setNationalId(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                                        placeholder={isEn ? '11 digits' : '11 hane'}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="field-grid">
+                                    <div className="form-group">
+                                        <label>{isEn ? 'Company Name' : 'Şirket Ünvanı'}</label>
+                                        <input
+                                            className="form-control"
+                                            type="text"
+                                            value={companyName}
+                                            onChange={(e) => setCompanyName(e.target.value)}
+                                            placeholder={isEn ? 'Company legal name' : 'Firma unvanı'}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{isEn ? 'Tax Office' : 'Vergi Dairesi'}</label>
+                                        <input
+                                            className="form-control"
+                                            type="text"
+                                            value={taxOffice}
+                                            onChange={(e) => setTaxOffice(e.target.value)}
+                                            placeholder={isEn ? 'e.g. Beşiktaş' : 'Örn. Beşiktaş'}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{isEn ? 'Tax Number (VKN)' : 'Vergi Numarası (VKN)'}</label>
+                                        <input
+                                            className="form-control"
+                                            type="text"
+                                            inputMode="numeric"
+                                            maxLength={11}
+                                            value={taxNumber}
+                                            onChange={(e) => setTaxNumber(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                                            placeholder={isEn ? '10 or 11 digits' : '10 veya 11 hane'}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        )}
+
+                        {/* 4-katmanlı SaaS standardı onay komponenti — Bilgiler adımında.
+                            (Terms+Privacy+Refund tek main_legal'da; ETK opsiyonel; B2B + auto-renewal koşullu) */}
+                        <div className="policy-checkboxes">
+                            <ConsentCheckboxes
+                                context="checkout"
+                                isEn={isEn}
+                                showB2B={buyingAsBusiness}
+                                showAutoRenewal={hasSubscription}
+                                onChange={setConsentState}
+                                initial={consentState}
                             />
-                            <span>
-                                {isEn ? 'I have read and accept the ' : ''}
-                                <Link to={privacyPolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                    {isEn ? 'Privacy Policy' : 'Gizlilik Politikası'}
-                                </Link>
-                                {isEn ? '.' : '’nı okudum ve kabul ediyorum.'}
-                            </span>
-                        </label>
+                        </div>
 
                         <div className="actions-row">
                             <button
@@ -798,74 +892,110 @@ export default function Checkout() {
                     </div>
                 )}
 
-                {step === 2 && (
+                {step === 2 && (() => {
+                    const policies: Array<{ key: string; slugKey: string; tr: string; en: string }> = [
+                        { key: 'termsOfService', slugKey: 'termsOfService', tr: 'Hizmet Şartları', en: 'Terms of Service' },
+                        { key: 'privacyPolicy', slugKey: 'privacyPolicy', tr: 'Gizlilik Politikası', en: 'Privacy Policy' },
+                        { key: 'cookiePolicy', slugKey: 'cookiePolicy', tr: 'Çerez Politikası', en: 'Cookie Policy' },
+                        { key: 'refundPolicy', slugKey: 'refundPolicy', tr: 'İade ve İptal Politikası', en: 'Cancellation & Refund Policy' },
+                        { key: 'distanceSale', slugKey: 'distanceSale', tr: 'Mesafeli Satış Sözleşmesi', en: 'Distance Sales Agreement' },
+                        { key: 'preInformation', slugKey: 'preInformation', tr: 'Ön Bilgilendirme Formu', en: 'Pre-Purchase Information Notice' },
+                        { key: 'acceptableUse', slugKey: 'acceptableUse', tr: 'Kullanım Koşulları', en: 'Terms of Use & Acceptable Use' },
+                    ];
+                    const allChecked = policies.every(p => policyChecks[p.key]);
+                    const toggle = (k: string) => setPolicyChecks(prev => ({ ...prev, [k]: !prev[k] }));
+                    const approveAll = () => {
+                        const next: Record<string, boolean> = {};
+                        for (const p of policies) next[p.key] = true;
+                        setPolicyChecks(next);
+                    };
+                    return (
                     <div className="checkout-card">
                         <div className="step-intro">
-                            <h2>{legalCopy.termsTitle}</h2>
-                            <p>{legalCopy.termsDescription}</p>
+                            <h2>{isEn ? 'Review and Approve the Agreements' : 'Sözleşmeleri İnceleyin ve Onaylayın'}</h2>
+                            <p>{isEn
+                                ? 'Please approve each agreement individually below. To read the full text, click the title — it will open in a new tab.'
+                                : 'Aşağıdaki her sözleşmeyi ayrı ayrı onaylayın. Tam metni okumak için başlığa tıklayın; yeni sekmede açılır.'}</p>
                         </div>
 
-                        <div className="terms-content" ref={termsContentRef}>
-                            <h3>{legalCopy.termsHeading}</h3>
-                            <p>{legalCopy.termsIntro}</p>
-                            <ul className="terms-list">
-                                {legalCopy.termsBullets.map((item) => (
-                                    <li key={item}>{item}</li>
-                                ))}
-                            </ul>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+                            <button
+                                type="button"
+                                onClick={approveAll}
+                                style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 16px', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}
+                            >
+                                {isEn ? '✓ Approve All' : '✓ Tümünü Onayla'}
+                            </button>
                         </div>
 
-                        <div className="policy-checkboxes">
-                            <label className="checkbox-row">
-                                <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)} />
-                                <span>
-                                    <Link to={termsPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                        {isEn ? 'Terms of Service' : 'Hizmet Şartları'}
-                                    </Link>
-                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
-                                </span>
-                            </label>
-                            <label className="checkbox-row">
-                                <input type="checkbox" checked={privacyAccepted} onChange={e => setPrivacyAccepted(e.target.checked)} />
-                                <span>
-                                    <Link to={privacyPolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                        {isEn ? 'Privacy Policy' : 'Gizlilik Politikası'}
-                                    </Link>
-                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
-                                </span>
-                            </label>
-                            <label className="checkbox-row">
-                                <input type="checkbox" checked={cookieAccepted} onChange={e => setCookieAccepted(e.target.checked)} />
-                                <span>
-                                    <Link to={cookiePolicyPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                        {isEn ? 'Cookie Policy' : 'Çerez Politikası'}
-                                    </Link>
-                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
-                                </span>
-                            </label>
-                            <label className="checkbox-row">
-                                <input type="checkbox" checked={refundAccepted} onChange={e => setRefundAccepted(e.target.checked)} />
-                                <span>
-                                    <Link to={refundPath} target="_blank" rel="noreferrer" className="checkout-inline-link">
-                                        {isEn ? 'Cancellation & Refund Policy' : 'İptal ve İade Politikası'}
-                                    </Link>
-                                    {isEn ? ' — I have read and accept.' : "'nı okudum ve kabul ediyorum."}
-                                </span>
-                            </label>
+                        <div className="policy-list" style={{ display: 'grid', gap: 10 }}>
+                            {policies.map((p) => {
+                                const href = getLocalizedPathByKey(currentLang, p.slugKey);
+                                const label = isEn ? p.en : p.tr;
+                                const acceptText = isEn ? 'I have read and accept' : 'Okudum, kabul ediyorum';
+                                return (
+                                    <label key={p.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', border: '1px solid #e2e8f0', borderRadius: 10, background: policyChecks[p.key] ? '#f0fdf4' : '#fff', cursor: 'pointer', transition: 'background 0.15s' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={!!policyChecks[p.key]}
+                                            onChange={() => toggle(p.key)}
+                                            style={{ width: 16, height: 16, marginTop: 2, flexShrink: 0 }}
+                                        />
+                                        <span style={{ fontSize: 14, lineHeight: 1.45, color: '#0f172a' }}>
+                                            <a href={href} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: '#2563eb', textDecoration: 'underline', fontWeight: 600 }}>
+                                                {label}
+                                            </a>
+                                            <span style={{ color: '#475569', marginLeft: 6 }}>— {acceptText}</span>
+                                        </span>
+                                    </label>
+                                );
+                            })}
                         </div>
 
                         <button
                             type="button"
                             className="btn-next"
-                            disabled={!allPoliciesAccepted}
+                            disabled={!allChecked || !allPoliciesAccepted}
                             onClick={() => setStep(3)}
+                            style={{ marginTop: 16 }}
                         >
                             {copy.buttons.acceptTerms}
                         </button>
                     </div>
+                    );
+                })()}
+
+                {step === 3 && hasMaestroItem && (
+                    <div style={{
+                        maxWidth: 720, margin: '2rem auto', background: '#fff',
+                        border: '1px solid #e2e8f0', borderRadius: 12, padding: '2rem',
+                        textAlign: 'center', boxShadow: '0 8px 24px rgba(15,23,42,0.06)'
+                    }}>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🛠️</div>
+                        <h2 style={{ margin: '0 0 0.75rem', color: '#1a3a52', fontSize: '1.35rem' }}>
+                            {isEn ? 'Coming soon' : 'Çok yakında'}
+                        </h2>
+                        <p style={{ color: '#475569', lineHeight: 1.7, fontSize: '1rem', marginBottom: '1.5rem' }}>
+                            {isEn
+                                ? 'Our sector-specific Maestro AI service is still under development and will be available very soon.'
+                                : 'Sektörünüze özel Maestro AI hizmetimiz için geliştirme çalışmalarımız devam etmekte olup çok yakında kullanıma açılacaktır.'}
+                            <br />
+                            {isEn ? 'For details: ' : 'Detaylı bilgi için: '}
+                            <a href="mailto:info@khilonfast.com" style={{ color: '#89b004', fontWeight: 700, textDecoration: 'none' }}>
+                                info@khilonfast.com
+                            </a>
+                        </p>
+                        <button
+                            type="button"
+                            className="btn-next"
+                            onClick={() => navigate(homePath)}
+                        >
+                            {isEn ? 'Back to homepage' : 'Anasayfaya Dön'}
+                        </button>
+                    </div>
                 )}
 
-                {step === 3 && (
+                {step === 3 && !hasMaestroItem && (
                     <div className="checkout-grid">
                         {/* Order Summary */}
                         <div className="order-summary">
@@ -944,6 +1074,27 @@ export default function Checkout() {
                                 <span>{copy.summary.total}</span>
                                 <strong>{formatPrice(pricingSummary?.total ?? baseSummary.total, pricingSummary?.currency ?? baseSummary.currency)}</strong>
                             </div>
+
+                            {items.some(i => (i.original_currency || '').toUpperCase() === 'USD') && (
+                                <div style={{ fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center', marginTop: 8, padding: '8px 4px 0', borderTop: '1px solid rgba(0,0,0,0.05)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {isEn ? 'Rate:' : 'Kur:'}
+                                    {(() => {
+                                        const usdItem = items.find(i => i.usd_try_rate);
+                                        return usdItem?.usd_try_rate
+                                            ? ` 1 USD = ${Number(usdItem.usd_try_rate).toFixed(4)} TL · `
+                                            : ' ';
+                                    })()}
+                                    <a
+                                        href="https://www.tcmb.gov.tr/kurlar/today.xml"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title={isEn ? 'Central Bank of Turkey — daily official rate' : 'Türkiye Cumhuriyet Merkez Bankası — resmi günlük kur'}
+                                        style={{ color: '#64748b', textDecoration: 'underline' }}
+                                    >
+                                        TCMB
+                                    </a>
+                                </div>
+                            )}
                         </div>
 
                         {/* Payment Form */}
@@ -952,22 +1103,28 @@ export default function Checkout() {
                                 <HiCreditCard /> {copy.payment.title}
                             </h2>
 
-                            {/* Ödeme Yöntemi Sekmeleri */}
+                            {/* Ödeme Yöntemi Sekmeleri — Anında Havale sadece banka tanımlıysa görünür.
+                                Lidio canlı ortamda DirectWireTransfer henüz aktif olmadığı için banka eklenmedikçe gizli. */}
                             <div className="payment-tabs">
-                                <button
-                                    type="button"
-                                    className={`payment-tab${paymentMethod === 'card' ? ' active' : ''}`}
-                                    onClick={() => setPaymentMethod('card')}
-                                >
-                                    <HiCreditCard /> {copy.payment.tabCard}
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`payment-tab${paymentMethod === 'wire_transfer' ? ' active' : ''}`}
-                                    onClick={() => setPaymentMethod('wire_transfer')}
-                                >
-                                    <HiLibrary /> {copy.payment.tabWire}
-                                </button>
+                                {/* EN locale + bank-only mode'da kart sekmesi gizli — sadece banka havalesi gösterilir */}
+                                {!enBankOnly && (
+                                    <button
+                                        type="button"
+                                        className={`payment-tab${paymentMethod === 'card' ? ' active' : ''}`}
+                                        onClick={() => setPaymentMethod('card')}
+                                    >
+                                        <HiCreditCard /> {copy.payment.tabCard}
+                                    </button>
+                                )}
+                                {bankAccounts.length > 0 && (
+                                    <button
+                                        type="button"
+                                        className={`payment-tab${paymentMethod === 'wire_transfer' ? ' active' : ''}`}
+                                        onClick={() => setPaymentMethod('wire_transfer')}
+                                    >
+                                        <HiLibrary /> {copy.payment.tabWire}
+                                    </button>
+                                )}
                             </div>
 
                             {paymentMethod === 'wire_transfer' ? (
@@ -981,7 +1138,7 @@ export default function Checkout() {
                                         <div className="payment-method-box" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                                                 <HiLibrary style={{ fontSize: '1.5rem', color: '#2563eb' }} />
-                                                <strong>{isEn ? 'Instant Wire Transfer' : 'Anında Havale'}</strong>
+                                                <strong>{isEn ? 'Pay by Wire Transfer' : 'Havale ile Ödeme'}</strong>
                                             </div>
                                             <p style={{ margin: '0.5rem 0 0', color: '#6b7280', fontSize: '0.9rem' }}>
                                                 {copy.payment.wireDesc}
@@ -989,9 +1146,44 @@ export default function Checkout() {
 
                                             {bankAccounts.length === 0 && (
                                                 <p style={{ margin: '0.75rem 0 0', color: '#dc2626', fontSize: '0.85rem' }}>
-                                                    {isEn ? 'No banks available right now. Please pay by card.' : 'Şu anda banka tanımlı değil. Lütfen kart ile ödeyin.'}
+                                                    {isEn
+                                                        ? 'No bank accounts available right now. Please contact us at info@khilon.com.'
+                                                        : 'Şu anda manuel havale hesabı tanımlı değil. info@khilon.com ile iletişime geçin.'}
                                                 </p>
                                             )}
+
+                                            {/* Seçili (veya tek) hesabın IBAN bilgileri — kullanıcı transferi yapacağı bilgileri görür */}
+                                            {(() => {
+                                                const sel = bankAccounts.find(b => b.id === selectedBankId) || (bankAccounts.length === 1 ? bankAccounts[0] : null);
+                                                if (!sel || !sel.iban) return null;
+                                                return (
+                                                    <div style={{ marginTop: '1rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 8, padding: '14px 16px', fontSize: '0.9rem' }}>
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: '6px 12px' }}>
+                                                            <strong>{isEn ? 'Bank' : 'Banka'}:</strong>
+                                                            <span>{sel.bank_name}</span>
+                                                            {sel.account_holder && <>
+                                                                <strong>{isEn ? 'Account' : 'Hesap'}:</strong>
+                                                                <span>{sel.account_holder}</span>
+                                                            </>}
+                                                            <strong>IBAN:</strong>
+                                                            <span style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{sel.iban}</span>
+                                                            {sel.swift && <>
+                                                                <strong>SWIFT:</strong>
+                                                                <span style={{ fontFamily: 'monospace' }}>{sel.swift}</span>
+                                                            </>}
+                                                            {sel.currency && <>
+                                                                <strong>{isEn ? 'Currency' : 'Para birimi'}:</strong>
+                                                                <span>{sel.currency}</span>
+                                                            </>}
+                                                        </div>
+                                                        <p style={{ margin: '10px 0 0', color: '#64748b', fontSize: '0.82rem' }}>
+                                                            {isEn
+                                                                ? 'Use your order number as the transfer description. Your order will be activated once payment is received.'
+                                                                : 'Açıklama kısmına sipariş numaranızı yazın. Ödemeniz alındığında siparişiniz aktif edilecek.'}
+                                                        </p>
+                                                    </div>
+                                                );
+                                            })()}
 
                                             {bankAccounts.length > 1 && (
                                                 <div style={{ marginTop: '1rem', width: '100%', display: 'grid', gap: '0.5rem' }}>
@@ -1051,9 +1243,27 @@ export default function Checkout() {
                                                 className="btn-pay"
                                                 disabled={loading || bankAccounts.length === 0 || (bankAccounts.length > 1 && !selectedBankId)}
                                             >
-                                                {loading ? copy.buttons.processing : (isEn ? 'Pay via Wire Transfer' : 'Havale ile Öde')}
+                                                {loading ? copy.buttons.processing : (isEn ? 'Place Order (Wire Transfer)' : 'Siparişi Ver (Havale)')}
                                             </button>
                                         </form>
+                                    )}
+
+                                    {wireTransferResult && (
+                                        <div style={{ background: '#dcfce7', border: '1px solid #86efac', borderRadius: 12, padding: '20px 24px', marginTop: '1rem' }}>
+                                            <h3 style={{ margin: '0 0 8px', color: '#166534' }}>
+                                                {isEn ? '✓ Order Created — Awaiting Payment' : '✓ Siparişiniz Oluşturuldu — Ödeme Bekleniyor'}
+                                            </h3>
+                                            <p style={{ margin: '0 0 8px', color: '#14532d' }}>
+                                                {isEn
+                                                    ? `Your order ${wireTransferResult.order?.order_number || ''} is awaiting payment confirmation. Please complete the bank transfer using the IBAN above.`
+                                                    : `Sipariş numaranız ${wireTransferResult.order?.order_number || ''}. Lütfen yukarıdaki IBAN'a transfer yapın.`}
+                                            </p>
+                                            <p style={{ margin: 0, color: '#14532d', fontSize: '0.9rem' }}>
+                                                {isEn
+                                                    ? 'You will receive an email confirmation when payment is received and your order is activated.'
+                                                    : 'Ödemeniz alındığında siparişiniz aktive edilecek ve size mail gönderilecek.'}
+                                            </p>
+                                        </div>
                                     )}
                                 </>
                             ) : (
@@ -1178,12 +1388,12 @@ export default function Checkout() {
                     <div style={{ textAlign: 'center' }}>
                         <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💬</div>
                         <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.3rem', color: '#1a3a52' }}>
-                            {isEn ? 'Need a hand?' : 'Takıldığınız bir nokta mı var?'}
+                            {isEn ? 'Need support?' : 'Desteğe mi ihtiyacınız var?'}
                         </h2>
                         <p style={{ color: '#64748b', marginBottom: '1.5rem', lineHeight: 1.6 }}>
                             {isEn
-                                ? 'Our team is ready to help you complete your purchase. Reach out now!'
-                                : 'Ekibimiz satın alma sürecinizde size yardımcı olmak için hazır. Hemen yazın!'}
+                                ? 'We can help you right away!'
+                                : 'Size hemen yardımcı olabiliriz!'}
                         </p>
                         <a
                             href="https://wa.me/905551234567"

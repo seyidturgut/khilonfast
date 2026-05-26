@@ -16,13 +16,13 @@ export default function Footer() {
     return (
         <footer className="footer">
             <div className="footer-pattern-bg">
-                <img src="/footer-pattern.svg" alt="Khilonfast dekoratif arkaplan deseni" aria-hidden="true" className="footer-pattern" />
+                <img src="/footer-pattern.svg" alt="Khilonfast dekoratif arkaplan deseni" aria-hidden="true" width={1920} height={400} className="footer-pattern" />
             </div>
 
             <div className="container footer-container">
                 <div className="footer-main">
                     <div className="footer-brand">
-                        <img src="/fast-logo-big.svg" alt="khilonfast" className="footer-logo" />
+                        <img src="/fast-logo-big.svg" alt="khilonfast" width={140} height={36} className="footer-logo" />
                         <p className="footer-description">
                             {t('footer.description')}
                         </p>
@@ -74,6 +74,10 @@ export default function Footer() {
                                 <li><Link to={toLocalized('cookiePolicy')}>{t('footer.cookies')}</Link></li>
                                 <li><Link to={toLocalized('termsOfService')}>{t('footer.terms')}</Link></li>
                                 <li><Link to={toLocalized('refundPolicy')}>{t('footer.refund')}</Link></li>
+                                <li><Link to={toLocalized('distanceSale')}>{t('footer.distanceSale')}</Link></li>
+                                <li><Link to={toLocalized('preInformation')}>{t('footer.preInformation')}</Link></li>
+                                <li><Link to={toLocalized('corporateB2B')}>{t('footer.corporateB2B')}</Link></li>
+                                <li><Link to={toLocalized('acceptableUse')}>{t('footer.acceptableUse')}</Link></li>
                             </ul>
                         </div>
                     </div>

@@ -7,11 +7,23 @@ set_exception_handler(function (Throwable $e) {
 });
 
 require_once __DIR__ . '/../services/CouponService.php';
+require_once __DIR__ . '/../services/CrmSchema.php';
 
 $db = Database::getInstance();
 try { ensureCouponSchema($db); } catch (Throwable $e) { error_log('[admin] ensureCouponSchema: ' . $e->getMessage()); }
 try { ensureTrainingAccessPagesSchema($db); } catch (Throwable $e) { error_log('[admin] ensureTrainingAccessPagesSchema: ' . $e->getMessage()); }
 try { ensureAutomationBuilderSchema($db); } catch (Throwable $e) { error_log('[admin] ensureAutomationBuilderSchema: ' . $e->getMessage()); }
+try { ensureCrmContactsSchema($db); } catch (Throwable $e) { error_log('[admin] ensureCrmContactsSchema: ' . $e->getMessage()); }
+// V2 otomasyon akışları + e-posta şablonları — sadece eksikse INSERT eder, mevcut kayıtlara dokunmaz.
+try {
+    require_once __DIR__ . '/../migrations/seed_automation_v2.php';
+    seedAutomationV2($db);
+} catch (Throwable $e) { error_log('[admin] seedAutomationV2: ' . $e->getMessage()); }
+// Eski 16 template'i v2 tasarımıyla yeniden sar — idempotent (gradient marker varsa atlar).
+try {
+    require_once __DIR__ . '/../migrations/redesign_legacy_templates.php';
+    redesignLegacyTemplates($db);
+} catch (Throwable $e) { error_log('[admin] redesignLegacyTemplates: ' . $e->getMessage()); }
 $subAction = $routes[3] ?? '';
 
 // Auth and Admin required
@@ -499,6 +511,9 @@ if ($action === 'users' && $method === 'GET' && empty($id)) {
         $u['id'] = $uid;
         $u['total_orders'] = (int) ($u['total_orders'] ?? 0);
         $u['total_spent'] = (float) ($u['total_spent'] ?? 0);
+        // PHP PDO TINYINT'i string olarak döndürebiliyor; frontend `Boolean('0')` === true
+        // bu yüzden TÜM kullanıcılar "Belirlenmedi" görünüyordu. Explicit bool cast.
+        $u['must_change_password'] = (bool) ($u['must_change_password'] ?? false);
         $u['purchased_products'] = $purchasesByUser[$uid] ?? [];
         $out[] = $u;
     }
@@ -1254,8 +1269,8 @@ if ($action === 'consultants') {
     }
     if ($method === 'POST' && empty($id)) {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
-        $stmt = $db->prepare("INSERT INTO consultants (slug,name,title,bio,photo_url,stars,review_count,sectors,is_active) VALUES (?,?,?,?,?,?,?,?,?)");
-        $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['bio']??'',$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1]);
+        $stmt = $db->prepare("INSERT INTO consultants (slug,name,title,title_en,bio,bio_en,photo_url,stars,review_count,sectors,is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1]);
         sendResponse(['success'=>true,'id'=>$db->lastInsertId()],201);
     }
     if ($method === 'PUT' && !empty($id)) {
@@ -1264,10 +1279,10 @@ if ($action === 'consultants') {
         $ical_sync_enabled = isset($data['ical_sync_enabled']) ? (int)$data['ical_sync_enabled'] : 0;
         // iCal kolonları varsa dahil et, yoksa graceful fallback
         try {
-            $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,title=?,bio=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=?,ical_url=?,ical_sync_enabled=? WHERE id=?");
-            $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['bio']??'',$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$ical_url ?: null,$ical_sync_enabled,$id]);
+            $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,title=?,title_en=?,bio=?,bio_en=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=?,ical_url=?,ical_sync_enabled=? WHERE id=?");
+            $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$ical_url ?: null,$ical_sync_enabled,$id]);
         } catch (PDOException $e) {
-            // iCal kolonları henüz eklenmemişse (migration çalıştırılmadı) temel alanlarla güncelle
+            // iCal/i18n kolonları henüz eklenmemişse temel alanlarla güncelle
             $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,title=?,bio=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=? WHERE id=?");
             $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['bio']??'',$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$id]);
         }
@@ -1298,10 +1313,26 @@ if ($action === 'consultants') {
         $slots = $data['slots'] ?? [];
         if (empty($slots)) sendResponse(['error' => 'slots boş'], 400);
         $stmt = $db->prepare("INSERT INTO consultant_availability (consultant_id, service_id, available_date, start_time, end_time) VALUES (?,?,?,?,?)");
+        $inserted = 0;
         foreach ($slots as $s) {
-            $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], $s['start_time'], $s['end_time']]);
+            // 60 dakikadan uzun aralıkları 1'er saatlik dilimlere böl
+            // → kullanıcı geniş aralık yerine exact saat seçer (docx beklentisi).
+            $start = strtotime((string)($s['start_time'] ?? ''));
+            $end   = strtotime((string)($s['end_time'] ?? ''));
+            if ($start === false || $end === false || $end <= $start) {
+                $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], $s['start_time'], $s['end_time']]);
+                $inserted++;
+                continue;
+            }
+            $cur = $start;
+            while ($cur < $end) {
+                $next = min($cur + 3600, $end);
+                $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], date('H:i:s', $cur), date('H:i:s', $next)]);
+                $inserted++;
+                $cur = $next;
+            }
         }
-        sendResponse(['success' => true, 'count' => count($slots)]);
+        sendResponse(['success' => true, 'count' => $inserted]);
     }
 }
 
@@ -1424,13 +1455,13 @@ if ($action === 'training-analytics' && $method === 'GET') {
         SELECT
             tws.product_key,
             tws.user_id,
-            u.name AS user_name,
+            CONCAT(COALESCE(u.first_name,''), ' ', COALESCE(u.last_name,'')) AS user_name,
             u.email AS user_email,
             SUM(tws.seconds_watched) AS total_seconds,
             MAX(tws.updated_at) AS last_access
         FROM training_watch_sessions tws
         JOIN users u ON u.id = tws.user_id
-        GROUP BY tws.product_key, tws.user_id
+        GROUP BY tws.product_key, tws.user_id, u.first_name, u.last_name, u.email
         ORDER BY tws.product_key, total_seconds DESC
     ");
     $details = $detailStmt->fetchAll();
@@ -1812,20 +1843,124 @@ function ensureAutomationBuilderSchema(PDO $db): void
         seedAutomations($db);
     }
 
-    // Seed "Aldı / Kullanmadı" automation if it doesn't exist yet
+    // Seed "Aldı / Kullanmadı" automation if it doesn't exist yet.
+    // LIKE pattern hem doğru UTF-8 hem de eski mojibake satırları yakalar (AldÄ± KullanmadÄ±)
+    // → tekrar seed çalışıp duplicate yaratmasın.
     $aldiCount = (int)$db->query(
         "SELECT COUNT(*) FROM automations WHERE name LIKE '%Ald%Kullanmad%'"
     )->fetchColumn();
     if ($aldiCount === 0) {
         $aldiTplCount = (int)$db->query(
-            "SELECT COUNT(*) FROM automation_email_templates WHERE name LIKE '%Aldı Kullanmadı%'"
+            "SELECT COUNT(*) FROM automation_email_templates
+             WHERE name LIKE '%Ald%Kullanmad%'"
         )->fetchColumn();
         if ($aldiTplCount === 0) {
             seedTemplatesAldiKullanmadi($db);
         }
         seedAutomationAldiKullanmadi($db);
     }
+
+    // ── V2 Execution Engine: schema additions ──────────────────────────────
+    // automations: stop_condition, restart_after_days, legacy_blocked, virtual trigger_event_idx
+    try {
+        $cols = $db->query("SHOW COLUMNS FROM automations")->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('stop_condition', $cols, true)) {
+            $db->exec("ALTER TABLE automations ADD COLUMN stop_condition TEXT DEFAULT NULL");
+        }
+        if (!in_array('restart_after_days', $cols, true)) {
+            $db->exec("ALTER TABLE automations ADD COLUMN restart_after_days INT DEFAULT NULL");
+        }
+        if (!in_array('legacy_blocked', $cols, true)) {
+            $db->exec("ALTER TABLE automations ADD COLUMN legacy_blocked TINYINT(1) DEFAULT 0");
+        }
+        if (!in_array('trigger_event_idx', $cols, true)) {
+            // Virtual generated column: nodes_json[0].config.trigger_event
+            $db->exec(
+                "ALTER TABLE automations
+                 ADD COLUMN trigger_event_idx VARCHAR(64)
+                 GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(nodes_json, '$[0].config.trigger_event'))) VIRTUAL"
+            );
+            // Index — eklenebilirse
+            try {
+                $db->exec("ALTER TABLE automations ADD INDEX idx_trigger_event_idx (trigger_event_idx, status)");
+            } catch (Throwable $e) { /* index zaten varsa atla */ }
+        }
+        // Status enum'a 'paused' ekle (mevcutsa noop)
+        $db->exec("ALTER TABLE automations MODIFY status ENUM('draft','active','inactive','paused') NOT NULL DEFAULT 'draft'");
+    } catch (Throwable $e) {
+        error_log('[automation] schema migration: ' . $e->getMessage());
+    }
+
+    // automation_executions: runtime tracking
+    $db->exec("CREATE TABLE IF NOT EXISTS automation_executions (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        automation_id INT NOT NULL,
+        contact_email VARCHAR(255) NOT NULL,
+        contact_user_id INT NULL,
+        trigger_event VARCHAR(64) NOT NULL,
+        contact_data_json JSON NOT NULL,
+        status ENUM('running','completed','cancelled','failed') NOT NULL DEFAULT 'running',
+        current_node_id VARCHAR(32) NULL,
+        next_run_at DATETIME NULL,
+        attempts INT NOT NULL DEFAULT 0,
+        last_error TEXT NULL,
+        started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        completed_at TIMESTAMP NULL,
+        INDEX idx_status_next (status, next_run_at),
+        INDEX idx_email_auto (contact_email, automation_id, status),
+        INDEX idx_event_email (trigger_event, contact_email)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // automation_execution_logs: per-node debug trail
+    $db->exec("CREATE TABLE IF NOT EXISTS automation_execution_logs (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        execution_id BIGINT NOT NULL,
+        node_id VARCHAR(32) NOT NULL,
+        node_type VARCHAR(32) NOT NULL,
+        status ENUM('ok','skipped','error') NOT NULL,
+        message TEXT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_exec (execution_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // consent_logs: form onaylarını kayıt altına al (chargeback / dispute koruması)
+    $db->exec("CREATE TABLE IF NOT EXISTS consent_logs (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NULL,
+        email VARCHAR(255) NOT NULL,
+        consent_key VARCHAR(48) NOT NULL,
+        consent_state TINYINT(1) NOT NULL,
+        context VARCHAR(64) NOT NULL,
+        product_key VARCHAR(255) NULL,
+        order_id INT NULL,
+        policy_version VARCHAR(32) NULL,
+        ip VARCHAR(64) NULL,
+        user_agent TEXT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_email (email),
+        INDEX idx_user (user_id),
+        INDEX idx_key_email (consent_key, email)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // automation_cron_key setting — yoksa rastgele üret
+    try {
+        $row = $db->prepare("SELECT setting_value FROM settings WHERE setting_key='automation_cron_key' LIMIT 1");
+        $row->execute();
+        $existing = $row->fetchColumn();
+        if (!$existing) {
+            $key = bin2hex(random_bytes(24));
+            $db->prepare(
+                "INSERT INTO settings (setting_key, setting_value, setting_group, description)
+                 VALUES ('automation_cron_key', ?, 'automation', 'Cron auth key (X-Cron-Key header)')
+                 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)"
+            )->execute([$key]);
+        }
+    } catch (Throwable $e) {
+        error_log('[automation] cron key seed: ' . $e->getMessage());
+    }
 }
+
+// CRM şema/backfill fonksiyonları services/CrmSchema.php'ye taşındı (üst kısımdaki require_once).
 
 function seedAutomationTemplates(PDO $db): void
 {
@@ -2198,8 +2333,8 @@ if ($action === 'automations' && $method === 'GET' && empty($id) && empty($subAc
     }
 }
 
-// GET /api/admin/automations/:id
-if ($action === 'automations' && $method === 'GET' && !empty($id) && empty($subAction)) {
+// GET /api/admin/automations/:id  (sadece sayısal ID — analytics/cron-key/executions farklı handler'lara)
+if ($action === 'automations' && $method === 'GET' && !empty($id) && empty($subAction) && ctype_digit((string)$id)) {
     $row = fetchAutomationRow($db, (int)$id);
     if (!$row) sendResponse(['error' => 'Not found'], 404);
     sendResponse(['automation' => $row]);
@@ -2252,6 +2387,55 @@ if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction
     sendResponse(['automation' => fetchAutomationRow($db, (int)$id)]);
 }
 
+// POST /api/admin/automations/:id/manual-trigger — admin manuel olarak bir akışı tetikler
+// body: { email, first_name?, last_name?, user_id?, order_id?, order_number? }
+if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction === 'manual-trigger') {
+    if (!ctype_digit((string)$id)) sendResponse(['error' => 'Invalid id'], 400);
+    $autoId = (int)$id;
+    $auto = $db->prepare("SELECT id, name, status, trigger_event_idx FROM automations WHERE id = ? LIMIT 1");
+    $auto->execute([$autoId]);
+    $row = $auto->fetch();
+    if (!$row) sendResponse(['error' => 'Automation not found'], 404);
+    if ($row['status'] !== 'active') sendResponse(['error' => 'Akış aktif değil — önce aktive edin'], 400);
+
+    $data = getJsonBody();
+    $email = strtolower(trim((string)($data['email'] ?? '')));
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendResponse(['error' => 'Geçerli bir email gerekli'], 400);
+    }
+
+    // contact_data'yı zenginleştir
+    $contact = [
+        'email'        => $email,
+        'first_name'   => (string)($data['first_name'] ?? ''),
+        'last_name'    => (string)($data['last_name'] ?? ''),
+        'user_id'      => isset($data['user_id']) ? (int)$data['user_id'] : null,
+        'order_id'     => (string)($data['order_id'] ?? ''),
+        'order_number' => (string)($data['order_number'] ?? ($data['order_id'] ?? '')),
+    ];
+
+    // Eğer email var ama first_name yok, users tablosundan tamamla
+    if (!$contact['first_name']) {
+        $u = $db->prepare("SELECT id, first_name, last_name FROM users WHERE email = ? LIMIT 1");
+        $u->execute([$email]);
+        $userRow = $u->fetch();
+        if ($userRow) {
+            $contact['first_name'] = (string)($userRow['first_name'] ?? '');
+            $contact['last_name'] = (string)($userRow['last_name'] ?? '');
+            if (!$contact['user_id']) $contact['user_id'] = (int)$userRow['id'];
+        }
+    }
+
+    require_once __DIR__ . '/../services/AutomationEngine.php';
+    $engine = new AutomationEngine($db);
+    // Tek akışı tetiklemek için trigger_event ile çağır — sadece bu automation match eder
+    // (isteğe bağlı: AutomationEngine'a triggerSingle eklenebilir, şimdilik full event)
+    $eventName = (string)($row['trigger_event_idx'] ?? 'manual');
+    if (!$eventName) sendResponse(['error' => 'Bu akışın trigger_event tanımı yok'], 400);
+    $result = $engine->trigger($eventName, $contact);
+    sendResponse(['ok' => true, 'result' => $result, 'event' => $eventName]);
+}
+
 // POST /api/admin/automations/:id/duplicate
 if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction === 'duplicate') {
     $orig = $db->query("SELECT * FROM automations WHERE id = " . (int)$id)->fetch();
@@ -2261,6 +2445,224 @@ if ($action === 'automations' && $method === 'POST' && !empty($id) && $subAction
          VALUES (?, ?, 'draft', ?, ?)"
     )->execute([$orig['name'] . ' (Kopya)', $orig['description'], $orig['nodes_json'], $orig['edges_json']]);
     sendResponse(['automation' => fetchAutomationRow($db, (int)$db->lastInsertId())], 201);
+}
+
+// GET /api/admin/automations/:id/executions — execution log paginated
+if ($action === 'automations' && $method === 'GET' && !empty($id) && $subAction === 'executions') {
+    $automationId = (int)$id;
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $perPage = max(1, min(100, (int)($_GET['per_page'] ?? 25)));
+    $offset = ($page - 1) * $perPage;
+    $statusFilter = (string)($_GET['status'] ?? '');
+    $emailFilter = trim((string)($_GET['email'] ?? ''));
+
+    $where = ['automation_id = ?'];
+    $params = [$automationId];
+    if (in_array($statusFilter, ['running','completed','cancelled','failed'], true)) {
+        $where[] = 'status = ?';
+        $params[] = $statusFilter;
+    }
+    if ($emailFilter !== '') {
+        $where[] = 'contact_email LIKE ?';
+        $params[] = '%' . $emailFilter . '%';
+    }
+    $whereSql = 'WHERE ' . implode(' AND ', $where);
+
+    $countStmt = $db->prepare("SELECT COUNT(*) FROM automation_executions $whereSql");
+    $countStmt->execute($params);
+    $total = (int)$countStmt->fetchColumn();
+
+    $listStmt = $db->prepare(
+        "SELECT id, automation_id, contact_email, contact_user_id, trigger_event, status,
+                current_node_id, next_run_at, attempts, last_error, started_at, completed_at
+         FROM automation_executions
+         $whereSql
+         ORDER BY started_at DESC
+         LIMIT $perPage OFFSET $offset"
+    );
+    $listStmt->execute($params);
+    sendResponse([
+        'executions' => $listStmt->fetchAll(),
+        'page' => $page,
+        'per_page' => $perPage,
+        'total' => $total,
+    ]);
+}
+
+// POST /api/admin/automations/executions/:execId/cancel
+if ($action === 'automations' && $method === 'POST' && $id === 'executions' && !empty($subAction)) {
+    $maybeAction = $routes[4] ?? '';
+    if ($maybeAction === 'cancel') {
+        require_once __DIR__ . '/../services/AutomationEngine.php';
+        $engine = new AutomationEngine($db);
+        $engine->cancel((int)$subAction, 'admin manual cancel');
+        sendResponse(['ok' => true]);
+    }
+}
+
+// GET /api/admin/automations/executions/:execId/logs
+if ($action === 'automations' && $method === 'GET' && $id === 'executions' && !empty($subAction)) {
+    $maybeAction = $routes[4] ?? '';
+    if ($maybeAction === 'logs') {
+        $stmt = $db->prepare(
+            "SELECT id, node_id, node_type, status, message, created_at
+             FROM automation_execution_logs
+             WHERE execution_id = ?
+             ORDER BY id DESC
+             LIMIT 200"
+        );
+        $stmt->execute([(int)$subAction]);
+        sendResponse(['logs' => $stmt->fetchAll()]);
+    }
+}
+
+// POST /api/admin/automations/cron-key/rotate — yeni cron key üret
+if ($action === 'automations' && $method === 'POST' && $id === 'cron-key' && $subAction === 'rotate') {
+    $key = bin2hex(random_bytes(24));
+    $db->prepare(
+        "INSERT INTO settings (setting_key, setting_value, setting_group, description)
+         VALUES ('automation_cron_key', ?, 'automation', 'Cron auth key (X-Cron-Key header)')
+         ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)"
+    )->execute([$key]);
+    sendResponse(['key' => $key]);
+}
+
+// GET /api/admin/automations/cron-key — mevcut cron key (admin görüntüleme)
+if ($action === 'automations' && $method === 'GET' && $id === 'cron-key' && empty($subAction)) {
+    $val = (string)getSetting($db, 'automation_cron_key', '');
+    sendResponse(['key' => $val]);
+}
+
+// GET /api/admin/automations/analytics?days=30 — agrega istatistik
+if ($action === 'automations' && $method === 'GET' && $id === 'analytics' && empty($subAction)) {
+    $days = max(1, min(365, (int)($_GET['days'] ?? 30)));
+
+    // 1) KPI özet — son N gün
+    $kpi = $db->prepare(
+        "SELECT
+           COUNT(*) AS total,
+           SUM(CASE WHEN status='running' THEN 1 ELSE 0 END) AS running,
+           SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS completed,
+           SUM(CASE WHEN status='cancelled' THEN 1 ELSE 0 END) AS cancelled,
+           SUM(CASE WHEN status='failed' THEN 1 ELSE 0 END) AS failed,
+           AVG(CASE WHEN status='completed' AND completed_at IS NOT NULL THEN TIMESTAMPDIFF(SECOND, started_at, completed_at) ELSE NULL END) AS avg_duration_sec
+         FROM automation_executions
+         WHERE started_at >= NOW() - INTERVAL ? DAY"
+    );
+    $kpi->execute([$days]);
+    $kpiRow = $kpi->fetch(PDO::FETCH_ASSOC) ?: [];
+
+    // 2) Per-automation breakdown
+    $perAuto = $db->prepare(
+        "SELECT a.id, a.name, a.status,
+           COUNT(e.id) AS total_runs,
+           SUM(CASE WHEN e.status='completed' THEN 1 ELSE 0 END) AS completed,
+           SUM(CASE WHEN e.status='running' THEN 1 ELSE 0 END) AS running,
+           SUM(CASE WHEN e.status='failed' THEN 1 ELSE 0 END) AS failed,
+           SUM(CASE WHEN e.status='cancelled' THEN 1 ELSE 0 END) AS cancelled,
+           MAX(e.started_at) AS last_run_at
+         FROM automations a
+         LEFT JOIN automation_executions e ON e.automation_id = a.id
+           AND e.started_at >= NOW() - INTERVAL ? DAY
+         GROUP BY a.id, a.name, a.status
+         ORDER BY total_runs DESC, a.id ASC"
+    );
+    $perAuto->execute([$days]);
+    $perAutoRows = $perAuto->fetchAll(PDO::FETCH_ASSOC);
+
+    // 3) Günlük trend — son N gün, status bazlı sayım
+    $daily = $db->prepare(
+        "SELECT DATE(started_at) AS d,
+           COUNT(*) AS total,
+           SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS completed,
+           SUM(CASE WHEN status='failed' THEN 1 ELSE 0 END) AS failed
+         FROM automation_executions
+         WHERE started_at >= NOW() - INTERVAL ? DAY
+         GROUP BY DATE(started_at)
+         ORDER BY d ASC"
+    );
+    $daily->execute([$days]);
+    $dailyRows = $daily->fetchAll(PDO::FETCH_ASSOC);
+
+    // 4) Top trigger events
+    $triggers = $db->prepare(
+        "SELECT trigger_event, COUNT(*) AS cnt
+         FROM automation_executions
+         WHERE started_at >= NOW() - INTERVAL ? DAY
+         GROUP BY trigger_event
+         ORDER BY cnt DESC
+         LIMIT 10"
+    );
+    $triggers->execute([$days]);
+    $triggerRows = $triggers->fetchAll(PDO::FETCH_ASSOC);
+
+    // 5) Top errors — failed executions, last_error grouping
+    $errors = $db->prepare(
+        "SELECT LEFT(COALESCE(last_error,''), 200) AS error, COUNT(*) AS cnt
+         FROM automation_executions
+         WHERE status='failed' AND last_error IS NOT NULL AND last_error <> ''
+           AND started_at >= NOW() - INTERVAL ? DAY
+         GROUP BY LEFT(COALESCE(last_error,''), 200)
+         ORDER BY cnt DESC
+         LIMIT 10"
+    );
+    $errors->execute([$days]);
+    $errorRows = $errors->fetchAll(PDO::FETCH_ASSOC);
+
+    // 6) Email node istatistik — kaç mail başarıyla gönderildi (logs.node_type='email' status='ok')
+    $mailStats = $db->prepare(
+        "SELECT COUNT(*) AS total_sent
+         FROM automation_execution_logs
+         WHERE node_type='email' AND status='ok' AND created_at >= NOW() - INTERVAL ? DAY"
+    );
+    $mailStats->execute([$days]);
+    $mailSent = (int)$mailStats->fetchColumn();
+
+    // 7) Son 15 çalıştırma — period filtresi UYGULAMADAN (debug & izleme için)
+    $recent = $db->query(
+        "SELECT e.id, e.automation_id, e.contact_email, e.trigger_event, e.status,
+                e.current_node_id, e.next_run_at, e.attempts, e.last_error,
+                e.started_at, e.completed_at,
+                a.name AS automation_name
+         FROM automation_executions e
+         LEFT JOIN automations a ON a.id = e.automation_id
+         ORDER BY e.started_at DESC
+         LIMIT 15"
+    )->fetchAll(PDO::FETCH_ASSOC);
+
+    // 8) All-time özet (tarih filtresiz) — kullanıcı 'hiç' başlayan görmediğinde fark etsin
+    $allTime = $db->query(
+        "SELECT
+           COUNT(*) AS total,
+           SUM(CASE WHEN status='running' THEN 1 ELSE 0 END) AS running,
+           SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS completed,
+           SUM(CASE WHEN status='failed' THEN 1 ELSE 0 END) AS failed
+         FROM automation_executions"
+    )->fetch(PDO::FETCH_ASSOC) ?: [];
+
+    sendResponse([
+        'period_days' => $days,
+        'kpi' => [
+            'total' => (int)($kpiRow['total'] ?? 0),
+            'running' => (int)($kpiRow['running'] ?? 0),
+            'completed' => (int)($kpiRow['completed'] ?? 0),
+            'cancelled' => (int)($kpiRow['cancelled'] ?? 0),
+            'failed' => (int)($kpiRow['failed'] ?? 0),
+            'avg_duration_sec' => $kpiRow['avg_duration_sec'] !== null ? (int)$kpiRow['avg_duration_sec'] : null,
+            'mail_sent' => $mailSent,
+        ],
+        'all_time' => [
+            'total' => (int)($allTime['total'] ?? 0),
+            'running' => (int)($allTime['running'] ?? 0),
+            'completed' => (int)($allTime['completed'] ?? 0),
+            'failed' => (int)($allTime['failed'] ?? 0),
+        ],
+        'per_automation' => $perAutoRows,
+        'daily' => $dailyRows,
+        'top_triggers' => $triggerRows,
+        'top_errors' => $errorRows,
+        'recent_executions' => $recent,
+    ]);
 }
 
 // ── EMAIL TEMPLATES CRUD ──────────────────────────────────────
@@ -2424,6 +2826,405 @@ if ($action === 'bank-accounts' && $method === 'DELETE' && !empty($id)) {
     ensureBankAccountsSchema($db);
     $db->prepare("DELETE FROM bank_accounts WHERE id = ?")->execute([(int)$id]);
     sendResponse(['message' => 'Banka hesabı silindi.']);
+}
+
+// ──────────────────────────────────────────────────
+// USD/TRY oranı yönetimi (admin)
+// ──────────────────────────────────────────────────
+require_once __DIR__ . '/../services/CurrencyService.php';
+
+if ($action === 'exchange-rate' && empty($subAction) && $method === 'GET') {
+    $info = getCurrentUsdTryRate($db);
+    $stmt = $db->prepare("SELECT setting_value FROM settings WHERE setting_key = 'usd_try_rate_auto_update' LIMIT 1");
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $autoUpdate = strtolower((string)($row['setting_value'] ?? 'true')) === 'true';
+    sendResponse([
+        'rate' => (float)$info['rate'],
+        'source' => $info['source'],
+        'updated_at' => $info['updatedAt'],
+        'auto_update' => $autoUpdate
+    ]);
+}
+
+if ($action === 'exchange-rate' && empty($subAction) && $method === 'PUT') {
+    $data = getJsonBody();
+    try {
+        if (isset($data['rate'])) {
+            $rate = (float)$data['rate'];
+            if ($rate <= 0) sendResponse(['error' => 'Geçersiz oran'], 400);
+            setManualUsdTryRate($db, $rate);
+        }
+        if (array_key_exists('auto_update', $data)) {
+            setUsdTryAutoUpdate($db, !empty($data['auto_update']));
+        }
+        $info = getCurrentUsdTryRate($db);
+        sendResponse([
+            'rate' => (float)$info['rate'],
+            'source' => $info['source'],
+            'updated_at' => $info['updatedAt']
+        ]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+if ($action === 'exchange-rate' && $id === 'refresh' && $method === 'POST') {
+    try {
+        $info = getCurrentUsdTryRate($db, true);
+        sendResponse([
+            'rate' => (float)$info['rate'],
+            'source' => $info['source'],
+            'updated_at' => $info['updatedAt']
+        ]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// /api/admin/manual-bank-accounts → manuel havale hesap CRUD'una delege et
+if ($action === 'manual-bank-accounts') {
+    require_once __DIR__ . '/manual-bank-accounts.php';
+}
+
+// POST /api/admin/seed-automation-v2 — yeni otomasyon akışları + e-posta şablonlarını DB'ye yükle (idempotent)
+if ($action === 'seed-automation-v2' && $method === 'POST') {
+    require_once __DIR__ . '/../migrations/seed_automation_v2.php';
+    try {
+        $result = seedAutomationV2($db);
+        sendResponse(['success' => true, 'result' => $result]);
+    } catch (Throwable $e) {
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// GET /api/admin/manual-orders — manuel havale siparişleri listesi (filtre: status)
+if ($action === 'manual-orders' && $method === 'GET' && empty($id)) {
+    $statusFilter = $_GET['status'] ?? 'all'; // all | pending | completed | cancelled
+    $where = "WHERE p.payment_method = 'manual_transfer'";
+    if ($statusFilter === 'pending')   $where .= " AND o.status = 'processing' AND p.status = 'pending'";
+    if ($statusFilter === 'completed') $where .= " AND o.status = 'completed'";
+    if ($statusFilter === 'cancelled') $where .= " AND o.status = 'cancelled'";
+
+    $sql = "SELECT
+                o.id, o.order_number, o.status AS order_status, o.total_amount, o.currency,
+                o.customer_lang, o.created_at,
+                u.id AS user_id, u.email, u.first_name, u.last_name, u.phone,
+                p.lidio_response AS payment_meta,
+                DATEDIFF(NOW(), o.created_at) AS age_days,
+                (SELECT COUNT(*) FROM order_items WHERE order_id = o.id) AS items_count
+            FROM orders o
+            LEFT JOIN users u ON u.id = o.user_id
+            INNER JOIN payments p ON p.order_id = o.id AND p.payment_method = 'manual_transfer'
+            $where
+            ORDER BY o.created_at DESC
+            LIMIT 200";
+    $stmt = $db->query($sql);
+    $rows = $stmt->fetchAll();
+
+    foreach ($rows as &$r) {
+        $itemsStmt = $db->prepare(
+            "SELECT oi.product_id, oi.quantity, oi.unit_price, p.name AS product_name
+             FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id
+             WHERE oi.order_id = ?"
+        );
+        $itemsStmt->execute([(int)$r['id']]);
+        $r['items'] = $itemsStmt->fetchAll();
+
+        $meta = json_decode((string)($r['payment_meta'] ?? ''), true);
+        $r['bank_info'] = is_array($meta) ? ($meta['bank_info'] ?? null) : null;
+        unset($r['payment_meta']);
+    }
+    unset($r);
+
+    sendResponse(['orders' => $rows]);
+}
+
+// POST /api/admin/orders/:id/confirm-manual-payment — manuel havale ödemesini onayla
+// → order completed + payment success + subscription oluştur + müşteriye onay maili
+if ($action === 'orders' && !empty($id) && ($routes[3] ?? '') === 'confirm-manual-payment' && $method === 'POST') {
+    $orderId = (int)$id;
+    $stmt = $db->prepare("SELECT * FROM orders WHERE id = ? LIMIT 1");
+    $stmt->execute([$orderId]);
+    $order = $stmt->fetch();
+    if (!$order) sendResponse(['error' => 'Order not found'], 404);
+    if (($order['status'] ?? '') === 'completed') {
+        sendResponse(['message' => 'Order already completed', 'already' => true]);
+    }
+
+    try {
+        $db->beginTransaction();
+        $db->prepare("UPDATE orders SET status = 'completed' WHERE id = ?")->execute([$orderId]);
+        $db->prepare("UPDATE payments SET status = 'success' WHERE order_id = ? AND payment_method = 'manual_transfer'")->execute([$orderId]);
+
+        // Manuel havale onayı — payment_method='manual_transfer', kart yok
+        createSubscriptionsForOrder($db, (int)$order['user_id'], (int)$orderId, 'manual_transfer', null);
+
+        $db->commit();
+
+        // Fatura kuyruğuna ekle (Paraşüt) — havale admin onayı
+        try {
+            require_once __DIR__ . '/../services/InvoiceService.php';
+            invoiceQueueForOrder($db, (int)$orderId);
+        } catch (Throwable $e) { error_log('[invoice queue manual] ' . $e->getMessage()); }
+
+        // Email automation event + müşteri mailleri
+        try {
+            $userStmt = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
+            $userStmt->execute([(int)$order['user_id']]);
+            $user = $userStmt->fetch();
+            $lang = (string)($order['customer_lang'] ?? 'tr');
+
+            // email_events: purchase_completed → mevcut email automation sequence'i tetikler
+            try {
+                // Tablo yoksa oluştur (lokal dev'de auto-migration)
+                $db->exec("CREATE TABLE IF NOT EXISTS email_events (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    event_type VARCHAR(50) NOT NULL,
+                    email VARCHAR(255) NOT NULL,
+                    user_id INT DEFAULT NULL,
+                    metadata JSON DEFAULT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    KEY idx_email (email), KEY idx_event_type (event_type)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                $db->prepare("INSERT INTO email_events (event_type, email, user_id) VALUES ('purchase_completed', ?, ?)")
+                   ->execute([(string)$user['email'], (int)$order['user_id']]);
+                $db->prepare("UPDATE email_queue SET status='cancelled' WHERE email=? AND status='pending'")
+                   ->execute([(string)$user['email']]);
+
+                // V2 Automation Engine — purchase_completed trigger (manuel havale onay path)
+                try {
+                    require_once __DIR__ . '/../services/AutomationEngine.php';
+                    (new AutomationEngine($db))->trigger('purchase_completed', [
+                        'email'      => (string)$user['email'],
+                        'first_name' => (string)($user['first_name'] ?? ''),
+                        'last_name'  => (string)($user['last_name'] ?? ''),
+                        'user_id'    => (int)$order['user_id'],
+                        'order_id'   => (string)$order['id'],
+                        'order_number' => (string)($order['order_number'] ?? $order['id']),
+                    ]);
+                } catch (Throwable $autoErr) {
+                    error_log('[automation] purchase_completed trigger fail (manual confirm): ' . $autoErr->getMessage());
+                }
+            } catch (Throwable $eaErr) { error_log('[confirm-manual] email_event: ' . $eaErr->getMessage()); }
+
+            if ($user && function_exists('sendTransactionalEmail')) {
+                // 1) Onay maili
+                $confMail = buildManualTransferEmail('confirmed', $lang, [
+                    'order_number' => $order['order_number'],
+                    'order_id' => $order['id'],
+                    'first_name' => $user['first_name'] ?? '',
+                    'amount' => $order['total_amount'],
+                    'currency' => $order['currency'] ?? 'TRY'
+                ]);
+                sendTransactionalEmail($db, (string)$user['email'], $confMail['subject'], $confMail['html']);
+
+                // 2) Form-required her sipariş kalemi için ayrı onboarding maili
+                $stmtItems = $db->prepare(
+                    "SELECT oi.id AS order_item_id, p.name AS product_name
+                     FROM order_items oi
+                     JOIN products p ON p.id = oi.product_id
+                     WHERE oi.order_id = ? AND COALESCE(p.requires_onboarding, 0) = 1"
+                );
+                $stmtItems->execute([$order['id']]);
+                foreach ($stmtItems->fetchAll() as $obIt) {
+                    $obMail = buildManualTransferEmail('onboarding-link', $lang, [
+                        'order_number' => $order['order_number'],
+                        'order_id' => $order['id'],
+                        'order_item_id' => $obIt['order_item_id'],
+                        'product_name' => $obIt['product_name'],
+                        'first_name' => $user['first_name'] ?? ''
+                    ]);
+                    sendTransactionalEmail($db, (string)$user['email'], $obMail['subject'], $obMail['html']);
+                }
+            }
+        } catch (Throwable $mailErr) {
+            error_log('[admin-confirm-manual] mail: ' . $mailErr->getMessage());
+        }
+
+        sendResponse(['message' => 'Order completed', 'order_id' => $orderId]);
+    } catch (Throwable $e) {
+        if ($db->inTransaction()) $db->rollBack();
+        sendResponse(['error' => $e->getMessage()], 500);
+    }
+}
+
+// ─────────────────────────────────────────────
+// GET /api/admin/subscriptions — abonelik listesi (filtre + arama + sayfalama)
+//   query: ?status=active|expired|cancelled  ?search=email|isim  ?page=1
+// ─────────────────────────────────────────────
+if ($action === 'subscriptions' && $method === 'GET' && empty($id)) {
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $limit = 30;
+    $offset = ($page - 1) * $limit;
+    $where = [];
+    $params = [];
+
+    $statusF = $_GET['status'] ?? '';
+    if (in_array($statusF, ['active', 'expired', 'cancelled'], true)) {
+        $where[] = 's.status = ?';
+        $params[] = $statusF;
+    }
+    $search = trim((string)($_GET['search'] ?? ''));
+    if ($search !== '') {
+        $where[] = '(u.email LIKE ? OR CONCAT(COALESCE(u.first_name,\'\'),\' \',COALESCE(u.last_name,\'\')) LIKE ?)';
+        $params[] = "%$search%";
+        $params[] = "%$search%";
+    }
+    // Sadece abonelik tipi ürünler (eğitim/lifetime hariç) — duration_days dolu olanlar
+    $where[] = "p.type = 'subscription'";
+    $whereSql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+
+    $countStmt = $db->prepare(
+        "SELECT COUNT(*) AS c
+         FROM subscriptions s
+         JOIN products p ON p.id = s.product_id
+         JOIN users u ON u.id = s.user_id
+         $whereSql"
+    );
+    $countStmt->execute($params);
+    $total = (int)($countStmt->fetch()['c'] ?? 0);
+
+    $listStmt = $db->prepare(
+        "SELECT s.id, s.status, s.starts_at, s.expires_at, s.next_renewal_at,
+                s.auto_renew, s.payment_method, s.cancellation_requested_at, s.cancelled_at,
+                s.last_renewal_at,
+                u.id AS user_id, u.email AS user_email,
+                CONCAT(COALESCE(u.first_name,''),' ',COALESCE(u.last_name,'')) AS user_name,
+                p.name AS product_name, p.product_key,
+                uc.masked_number AS card_masked, uc.card_brand
+         FROM subscriptions s
+         JOIN products p ON p.id = s.product_id
+         JOIN users u ON u.id = s.user_id
+         LEFT JOIN user_cards uc ON uc.id = s.renewal_card_id
+         $whereSql
+         ORDER BY (s.status='active' AND s.next_renewal_at IS NOT NULL) DESC,
+                  s.next_renewal_at ASC, s.id DESC
+         LIMIT $limit OFFSET $offset"
+    );
+    $listStmt->execute($params);
+    $rows = array_map(function ($r) {
+        $r['id'] = (int)$r['id'];
+        $r['user_id'] = (int)$r['user_id'];
+        $r['auto_renew'] = (int)($r['auto_renew'] ?? 0);
+        return $r;
+    }, $listStmt->fetchAll());
+
+    // Özet sayaçlar
+    $summary = $db->query(
+        "SELECT
+            SUM(s.status='active') AS active_total,
+            SUM(s.status='active' AND s.auto_renew=1) AS auto_renew_on,
+            SUM(s.status='active' AND s.cancellation_requested_at IS NOT NULL) AS cancel_pending,
+            SUM(s.status='active' AND s.next_renewal_at IS NOT NULL AND s.next_renewal_at <= NOW() + INTERVAL 7 DAY) AS due_7d
+         FROM subscriptions s JOIN products p ON p.id=s.product_id
+         WHERE p.type='subscription'"
+    )->fetch();
+
+    sendResponse([
+        'subscriptions' => $rows,
+        'total' => $total,
+        'page' => $page,
+        'pages' => (int)ceil($total / $limit),
+        'summary' => [
+            'active_total'   => (int)($summary['active_total'] ?? 0),
+            'auto_renew_on'  => (int)($summary['auto_renew_on'] ?? 0),
+            'cancel_pending' => (int)($summary['cancel_pending'] ?? 0),
+            'due_7d'         => (int)($summary['due_7d'] ?? 0),
+        ],
+    ]);
+}
+
+// POST /api/admin/subscriptions/:id/cancel — admin iptal (dönem sonu)
+if ($action === 'subscriptions' && $method === 'POST' && !empty($id) && ($routes[3] ?? '') === 'cancel') {
+    $sid = (int)$id;
+    $row = $db->prepare("SELECT id FROM subscriptions WHERE id = ? AND status = 'active' LIMIT 1");
+    $row->execute([$sid]);
+    if (!$row->fetch()) sendResponse(['error' => 'Abonelik bulunamadı'], 404);
+    $db->prepare(
+        "UPDATE subscriptions SET auto_renew = 0, cancellation_requested_at = NOW() WHERE id = ?"
+    )->execute([$sid]);
+    sendResponse(['success' => true, 'message' => 'Abonelik dönem sonunda sonlandırılacak.']);
+}
+
+// =====================================================================
+// MUHASEBE — Paraşüt e-fatura entegrasyonu
+// =====================================================================
+
+// GET /api/admin/invoices?status=&q=
+if ($action === 'invoices' && $method === 'GET' && empty($id)) {
+    $status = $_GET['status'] ?? '';
+    $q = trim((string)($_GET['q'] ?? ''));
+    $where = ["o.status = 'completed'"];
+    $params = [];
+    if (in_array($status, ['pending','queued','processing','sent','failed','skipped'], true)) {
+        $where[] = 'o.invoice_status = ?';
+        $params[] = $status;
+    }
+    if ($q !== '') {
+        $where[] = '(o.order_number LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)';
+        $like = '%' . $q . '%';
+        array_push($params, $like, $like, $like, $like);
+    }
+    $sql = "SELECT o.id, o.order_number, o.total_amount, o.currency, o.created_at,
+                   o.customer_type, o.invoice_status, o.parasut_invoice_id, o.parasut_invoice_type, o.invoice_sent_at,
+                   u.email, u.first_name, u.last_name,
+                   j.attempts, j.last_error, j.next_run_at
+            FROM orders o
+            JOIN users u ON u.id = o.user_id
+            LEFT JOIN invoice_jobs j ON j.order_id = o.id
+            WHERE " . implode(' AND ', $where) . "
+            ORDER BY o.created_at DESC LIMIT 500";
+    $st = $db->prepare($sql);
+    $st->execute($params);
+    sendResponse(['invoices' => $st->fetchAll()]);
+}
+
+// GET /api/admin/invoices/:orderId — detay
+if ($action === 'invoices' && $method === 'GET' && !empty($id) && empty($subAction)) {
+    $orderId = (int)$id;
+    $st = $db->prepare(
+        "SELECT o.*, u.email, u.first_name, u.last_name, u.phone, u.national_id, u.address,
+                ci.company_name, ci.tax_number, ci.tax_office,
+                j.id AS job_id, j.status AS job_status, j.attempts, j.last_error, j.next_run_at, j.updated_at AS job_updated_at
+         FROM orders o
+         JOIN users u ON u.id = o.user_id
+         LEFT JOIN company_info ci ON ci.user_id = o.user_id
+         LEFT JOIN invoice_jobs j ON j.order_id = o.id
+         WHERE o.id = ?"
+    );
+    $st->execute([$orderId]);
+    $order = $st->fetch();
+    if (!$order) sendResponse(['error' => 'Sipariş bulunamadı'], 404);
+
+    $itemsSt = $db->prepare(
+        "SELECT oi.*, p.product_key, p.name AS product_name FROM order_items oi
+         JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?"
+    );
+    $itemsSt->execute([$orderId]);
+    sendResponse(['order' => $order, 'items' => $itemsSt->fetchAll()]);
+}
+
+// POST /api/admin/invoices/:orderId/retry — başarısız işi tekrar dene
+if ($action === 'invoices' && $method === 'POST' && !empty($id) && $subAction === 'retry') {
+    require_once __DIR__ . '/../services/InvoiceService.php';
+    try {
+        $res = invoiceRetryForOrder($db, (int)$id);
+        sendResponse($res);
+    } catch (Throwable $e) {
+        sendResponse(['ok' => false, 'error' => $e->getMessage()], 500);
+    }
+}
+
+// POST /api/admin/parasut/test-connection — Ayarlar > Muhasebe bağlantı testi
+if ($action === 'parasut' && $method === 'POST' && $id === 'test-connection') {
+    require_once __DIR__ . '/../services/ParasutService.php';
+    try {
+        $res = parasutTestConnection($db);
+        sendResponse($res);
+    } catch (Throwable $e) {
+        sendResponse(['ok' => false, 'error' => $e->getMessage()], 500);
+    }
 }
 
 sendResponse(['error' => 'Action not found'], 404);

@@ -607,7 +607,7 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                                     />
                                 ) : (
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="heroImage" type="image" src={displayHero.image} currentLang={currentLang}>
-                                        {(src) => <img src={src} alt={displayHero.title} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />}
+                                        {(src) => <img src={src} alt={displayHero.title} width={1200} height={800} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />}
                                     </EditableMedia>
                                 )}
                                 {!displayHero.hideBadge && (

@@ -138,3 +138,5 @@ public/egitim-dokumanlar/
 # api/config/config.php — ortama özel (local geliştirme veya prod credentials)
 # config.example.php template'inden kopyalanır, git'te tutmuyoruz
 api/config/config.php
+# Production credentials — ZIP deploy için lokalde tutulur, repoda asla
+api/config/config.production.php

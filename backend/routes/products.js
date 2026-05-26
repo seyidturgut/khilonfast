@@ -1,8 +1,15 @@
-import express from 'express'; // trigger restart
+import express from 'express';
 import db from '../config/database.js';
 import cacheMiddleware from '../middleware/cache.js';
+import { normalizeProductToTry, normalizeProductBothCurrencies } from '../services/currencyService.js';
 
 const router = express.Router();
+
+// Tüm ürün satırlarını TRY'a normalize et (USD ürünler ise güncel kurla çevirir)
+async function normalizeProducts(products) {
+    if (!Array.isArray(products) || products.length === 0) return products;
+    return Promise.all(products.map((p) => normalizeProductBothCurrencies(p)));
+}
 
 // Get all products
 router.get('/', cacheMiddleware(3600), async (req, res) => {
@@ -10,7 +17,8 @@ router.get('/', cacheMiddleware(3600), async (req, res) => {
         const [products] = await db.query(
             'SELECT * FROM products WHERE is_active = TRUE ORDER BY category, id'
         );
-        res.json({ products });
+        const normalized = await normalizeProducts(products);
+        res.json({ products: normalized });
     } catch (error) {
         console.error('Get products error:', error);
         res.status(500).json({ error: 'Server error' });
@@ -26,7 +34,8 @@ router.get('/:id', cacheMiddleware(3600), async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        res.json({ product: products[0] });
+        const normalized = await normalizeProductBothCurrencies(products[0]);
+        res.json({ product: normalized });
     } catch (error) {
         console.error('Get product error:', error);
         res.status(500).json({ error: 'Server error' });
@@ -68,8 +77,10 @@ router.get('/key/:key', cacheMiddleware(3600), async (req, res) => {
             };
         };
 
-        const localizedProduct = localizeRow(product);
-        localizedProduct.packages = packages.map(localizeRow);
+        const localizedProduct = await normalizeProductBothCurrencies(localizeRow(product));
+        localizedProduct.packages = await Promise.all(
+            packages.map(async (p) => await normalizeProductBothCurrencies(localizeRow(p)))
+        );
 
         res.json({ product: localizedProduct });
     } catch (error) {

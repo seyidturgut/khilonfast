@@ -60,6 +60,35 @@ function composeTitle({ tr, en }: TitleOptions): LocaleValue {
     }
 }
 
+// SEO audit: menu başlıkları ≤60 char limitine sığmıyor; navigation UX'i bozmadan
+// meta title için kısaltılmış sürüm. Anahtar = menu key (b2b, fintech, vs.).
+const shortSectoralTitle: Record<string, { tr: string; en: string }> = {
+    b2b:           { tr: 'B2B için 360° Pazarlama',                  en: 'B2B 360° Marketing' },
+    fintech:       { tr: 'FinTech için 360° Pazarlama',              en: 'FinTech 360° Marketing' },
+    food:          { tr: 'Endüstriyel Gıda — 360° Pazarlama',        en: 'Industrial Food — 360° Marketing' },
+    payment:       { tr: 'Ödeme Sistemleri — 360° Pazarlama',        en: 'Payment Systems — 360° Marketing' },
+    tech:          { tr: 'Teknoloji & Yazılım — 360° Pazarlama',     en: 'Tech & Software — 360° Marketing' },
+    energy:        { tr: 'Enerji — 360° Pazarlama',                  en: 'Energy — 360° Marketing' },
+    design:        { tr: 'Ofis & İç Tasarım — 360° Pazarlama',       en: 'Office Design — 360° Marketing' },
+    fleet:         { tr: 'Filo Kiralama — 360° Pazarlama',           en: 'Fleet Rental — 360° Marketing' },
+    manufacturing: { tr: 'Üretim — 360° Pazarlama',                  en: 'Manufacturing — 360° Marketing' },
+    giftCard:      { tr: 'Kurumsal Hediye Kartı — 360° Pazarlama',   en: 'Corporate Gift Card — 360° Marketing' },
+    fuel:          { tr: 'Kurumsal Akaryakıt — 360° Pazarlama',      en: 'Corporate Fuel — 360° Marketing' }
+}
+
+const shortTrainingTitle: Record<string, { tr: string; en: string }> = {
+    growth:        { tr: 'Büyüme Odaklı Pazarlama Eğitimi',          en: 'Growth-Focused Marketing Training' },
+    payment:       { tr: 'Ödeme Sistemleri — Büyüme Eğitimi',        en: 'Payment Systems — Growth Training' },
+    b2b:           { tr: 'B2B — Büyüme Odaklı Pazarlama Eğitimi',    en: 'B2B — Growth Marketing Training' },
+    fintech:       { tr: 'Fintech — Büyüme Odaklı Eğitim',           en: 'Fintech — Growth Training' },
+    tech:          { tr: 'Teknoloji & Yazılım — Büyüme Eğitimi',     en: 'Tech & Software — Growth Training' },
+    manufacturing: { tr: 'Üretim — Büyüme Odaklı Eğitim',            en: 'Manufacturing — Growth Training' },
+    energy:        { tr: 'Enerji — Büyüme Odaklı Eğitim',            en: 'Energy — Growth Training' },
+    design:        { tr: 'Ofis & İç Tasarım — Büyüme Eğitimi',       en: 'Office Design — Growth Training' },
+    fleet:         { tr: 'Filo Kiralama — Büyüme Eğitimi',           en: 'Fleet Rental — Growth Training' },
+    food:          { tr: 'Endüstriyel Gıda — Büyüme Eğitimi',        en: 'Industrial Food — Growth Training' }
+}
+
 const productSeoEntries: SeoEntry[] = productProgramCatalog
     .filter((program) => program.path.tr !== `/${trSlugs.maestro}` && program.path.tr !== `/${trSlugs.eyeTracking}`)
     .map((program) => ({
@@ -97,8 +126,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.about}`,
         en: `/en/${enSlugs.about}`,
         title: {
-            tr: 'Hakkımızda | khilonfast',
-            en: 'About | khilonfast'
+            tr: 'Hakkımızda — Khilonfast B2B Pazarlama Ajansı',
+            en: 'About — Khilonfast B2B Marketing Agency'
         },
         description: {
             tr: trCommon.aboutPage.hero.description,
@@ -112,8 +141,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.contact}`,
         en: `/en/${enSlugs.contact}`,
         title: {
-            tr: 'İletişim | khilonfast',
-            en: 'Contact | khilonfast'
+            tr: 'İletişim — Khilonfast Pazarlama Danışmanlığı',
+            en: 'Contact — Khilonfast Marketing Consulting'
         },
         description: {
             tr: trCommon.contact.hero.lead,
@@ -215,11 +244,11 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.paymentCallback}`,
         en: `/en/${enSlugs.paymentCallback}`,
         title: {
-            tr: 'Odeme Durumu | khilonfast',
+            tr: 'Ödeme Sonucu | khilonfast',
             en: 'Payment Status | khilonfast'
         },
         description: {
-            tr: 'Odeme isleminizin durumu kontrol ediliyor.',
+            tr: 'Ödeme işleminizin durumu kontrol ediliyor.',
             en: 'Your payment transaction status is being checked.'
         },
         kind: 'website' as const
@@ -229,8 +258,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.howItWorks}`,
         en: `/en/${enSlugs.howItWorks}`,
         title: {
-            tr: 'Nasıl Çalışır? | khilonfast',
-            en: 'How It Works | khilonfast'
+            tr: 'Nasıl Çalışır? — Khilonfast Pazarlama Süreci',
+            en: 'How It Works — Khilonfast Marketing Process'
         },
         description: {
             tr: trCommon.howItWorksPage.hero.description,
@@ -244,8 +273,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.trainings}`,
         en: `/en/${enSlugs.trainings}`,
         title: {
-            tr: 'Eğitimler | khilonfast',
-            en: 'Trainings | khilonfast'
+            tr: 'Eğitimler — Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Trainings — Growth-Focused Marketing Courses'
         },
         description: {
             tr: 'Büyüme odaklı pazarlama eğitimleri ile satış, değer önerisi, dönüşüm ve ölçümleme süreçlerini güçlendirin.',
@@ -274,8 +303,8 @@ const pageEntries: SeoEntry[] = [
         tr: '/danismanlar',
         en: '/en/consultants',
         title: {
-            tr: 'Danışmanlarımız | khilonfast',
-            en: 'Our Consultants | khilonfast'
+            tr: 'Danışmanlarımız — Uzman B2B Pazarlama Danışmanları',
+            en: 'Our Consultants — Expert B2B Marketing Advisors'
         },
         description: {
             tr: 'Uzman danışmanlarımızla tanışın ve işinizi büyütmek için profesyonel destek alın.',
@@ -318,8 +347,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.idm}`,
         en: `/en/${enSlugs.idm}`,
         title: composeTitle({
-            tr: 'Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            en: 'Integrated Digital Marketing and Growth Management'
+            tr: 'Bütünleşik Dijital Pazarlama',
+            en: 'Integrated Digital Marketing'
         }),
         description: {
             tr: trCommon.serviceIDM.videoShowcase.description,
@@ -408,88 +437,88 @@ const pageEntries: SeoEntry[] = [
         {
             tr: '/hizmetlerimiz/b2b-butunlesik-dijital-pazarlama',
             en: '/en/services/b2b-integrated-digital-marketing',
-            titleTr: 'B2B Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'B2B Integrated Digital Marketing and Growth Management',
+            titleTr: 'B2B Bütünleşik Dijital Pazarlama',
+            titleEn: 'B2B Integrated Digital Marketing',
             descTr: trSectoralMenu.b2b.desc,
             descEn: enSectoralMenu.b2b.desc
         },
         {
             tr: '/hizmetlerimiz/fintech-butunlesik-dijital-pazarlama',
             en: '/en/services/fintech-integrated-digital-marketing',
-            titleTr: 'Fintech Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Fintech Integrated Digital Marketing and Growth Management',
+            titleTr: 'Fintech Bütünleşik Dijital Pazarlama',
+            titleEn: 'Fintech Integrated Digital Marketing',
             descTr: trSectoralMenu.fintech.desc,
             descEn: enSectoralMenu.fintech.desc
         },
         {
             tr: '/hizmetlerimiz/uretim-butunlesik-dijital-pazarlama',
             en: '/en/services/manufacturing-integrated-digital-marketing',
-            titleTr: 'Üretim Sektörü Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Manufacturing Integrated Digital Marketing and Growth Management',
+            titleTr: 'Üretim Sektörü Bütünleşik Dijital Pazarlama',
+            titleEn: 'Manufacturing Integrated Digital Marketing',
             descTr: trSectoralMenu.manufacturing.desc,
             descEn: enSectoralMenu.manufacturing.desc
         },
         {
             tr: '/hizmetlerimiz/enerji-butunlesik-dijital-pazarlama',
             en: '/en/services/energy-integrated-digital-marketing',
-            titleTr: 'Enerji Sektörü Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Energy Sector Integrated Digital Marketing and Growth Management',
+            titleTr: 'Enerji Sektörü Bütünleşik Dijital Pazarlama',
+            titleEn: 'Energy Sector Integrated Digital Marketing',
             descTr: trSectoralMenu.energy.desc,
             descEn: enSectoralMenu.energy.desc
         },
         {
             tr: '/hizmetlerimiz/filo-kiralama-butunlesik-dijital-pazarlama',
             en: '/en/services/fleet-rental-integrated-digital-marketing',
-            titleTr: 'Filo Kiralama Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Fleet Rental Integrated Digital Marketing and Growth Management',
+            titleTr: 'Filo Kiralama Bütünleşik Dijital Pazarlama',
+            titleEn: 'Fleet Rental Integrated Digital Marketing',
             descTr: trSectoralMenu.fleet.desc,
             descEn: enSectoralMenu.fleet.desc
         },
         {
             tr: '/hizmetlerimiz/ofis-tasarim-butunlesik-dijital-pazarlama',
             en: '/en/services/office-design-integrated-digital-marketing',
-            titleTr: 'Ofis & İç Tasarım Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Office Design Integrated Digital Marketing and Growth Management',
+            titleTr: 'Ofis & İç Tasarım Bütünleşik Dijital Pazarlama',
+            titleEn: 'Office Design Integrated Digital Marketing',
             descTr: trSectoralMenu.design.desc,
             descEn: enSectoralMenu.design.desc
         },
         {
             tr: '/hizmetlerimiz/teknoloji-yazilim-butunlesik-dijital-pazarlama',
             en: '/en/services/tech-software-integrated-digital-marketing',
-            titleTr: 'Teknoloji & Yazılım Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Tech & Software Integrated Digital Marketing and Growth Management',
+            titleTr: 'Teknoloji & Yazılım Bütünleşik Dijital Pazarlama',
+            titleEn: 'Tech & Software Integrated Digital Marketing',
             descTr: trSectoralMenu.tech.desc,
             descEn: enSectoralMenu.tech.desc
         },
         {
             tr: '/hizmetlerimiz/endustriyel-gida-butunlesik-dijital-pazarlama',
             en: '/en/services/industrial-food-integrated-digital-marketing',
-            titleTr: 'Endüstriyel Gıda Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Industrial Food Integrated Digital Marketing and Growth Management',
+            titleTr: 'Endüstriyel Gıda Bütünleşik Dijital Pazarlama',
+            titleEn: 'Industrial Food & Culinary Integrated Digital Marketing',
             descTr: trSectoralMenu.food.desc,
             descEn: enSectoralMenu.food.desc
         },
         {
             tr: '/hizmetlerimiz/odeme-sistemleri-butunlesik-dijital-pazarlama',
             en: '/en/services/payment-systems-integrated-digital-marketing',
-            titleTr: 'Ödeme Sistemleri Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Payment Systems Integrated Digital Marketing and Growth Management',
+            titleTr: 'Ödeme Sistemleri Bütünleşik Dijital Pazarlama',
+            titleEn: 'Payment Systems Integrated Digital Marketing',
             descTr: trSectoralMenu.payment.desc,
             descEn: enSectoralMenu.payment.desc
         },
         {
             tr: '/hizmetlerimiz/hediye-karti-butunlesik-dijital-pazarlama',
             en: '/en/services/corporate-gift-card-integrated-digital-marketing',
-            titleTr: 'Kurumsal Hediye Kartı Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Corporate Gift Card Integrated Digital Marketing and Growth Management',
+            titleTr: 'Kurumsal Hediye Kartı Bütünleşik Dijital Pazarlama',
+            titleEn: 'Corporate Gift Card Integrated Digital Marketing',
             descTr: trSectoralMenu.giftCard.desc,
             descEn: enSectoralMenu.giftCard.desc
         },
         {
             tr: '/hizmetlerimiz/akaryakit-butunlesik-dijital-pazarlama',
             en: '/en/services/corporate-fuel-integrated-digital-marketing',
-            titleTr: 'Kurumsal Akaryakıt Bütünleşik Dijital Pazarlama ve Büyüme Yönetimi',
-            titleEn: 'Corporate Fuel Integrated Digital Marketing and Growth Management',
+            titleTr: 'Kurumsal Akaryakıt Bütünleşik Dijital Pazarlama',
+            titleEn: 'Corporate Fuel Integrated Digital Marketing',
             descTr: trSectoralMenu.fuel.desc,
             descEn: enSectoralMenu.fuel.desc
         }
@@ -518,8 +547,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs[key]}`,
         en: `/en/${enSlugs[key]}`,
         title: composeTitle({
-            tr: trSectoralMenu[menu].title,
-            en: enSectoralMenu[menu].title
+            tr: shortSectoralTitle[menu]?.tr || trSectoralMenu[menu].title,
+            en: shortSectoralTitle[menu]?.en || enSectoralMenu[menu].title
         }),
         description: {
             tr: trSectoralMenu[menu].desc,
@@ -544,8 +573,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs[key]}`,
         en: `/en/${enSlugs[key]}`,
         title: composeTitle({
-            tr: trTrainingMenu[menu]?.title || trainingSeoFallbacks[menu]?.tr,
-            en: enTrainingMenu[menu]?.title || trainingSeoFallbacks[menu]?.en
+            tr: shortTrainingTitle[menu]?.tr || trTrainingMenu[menu]?.title || trainingSeoFallbacks[menu]?.tr,
+            en: shortTrainingTitle[menu]?.en || enTrainingMenu[menu]?.title || trainingSeoFallbacks[menu]?.en
         }),
         description: {
             tr: trTrainingMenu[menu]?.desc || trainingSeoFallbacks[menu]?.trDesc,
@@ -648,19 +677,50 @@ const pageEntries: SeoEntry[] = [
         tr: '/dashboard',
         en: '/en/dashboard',
         title: { tr: 'Hesabım | khilonfast', en: 'My Account | khilonfast' },
-        description: { tr: 'Hesap bilgileriniz, siparişleriniz ve satın aldığınız içerikler.', en: 'Your account details, orders and purchased content.' }
+        description: { tr: 'Hesap bilgileriniz, siparişleriniz ve satın aldığınız içerikler.', en: 'Your account details, orders and purchased content.' },
+        kind: 'website' as const
     },
     {
         tr: '/onboarding-formu',
         en: '/en/onboarding-form',
         title: { tr: 'Onboarding Formu | khilonfast', en: 'Onboarding Form | khilonfast' },
-        description: { tr: 'Hizmet başlangıç bilgilerini doldurun.', en: 'Fill in your service onboarding details.' }
+        description: { tr: 'Hizmet başlangıç bilgilerini doldurun.', en: 'Fill in your service onboarding details.' },
+        kind: 'website' as const
     },
     {
         tr: '/sifre-belirle',
         en: '/en/set-password',
         title: { tr: 'Şifre Belirle | khilonfast', en: 'Set Password | khilonfast' },
-        description: { tr: 'Hesabınız için yeni şifre belirleyin.', en: 'Set a new password for your account.' }
+        description: { tr: 'Hesabınız için yeni şifre belirleyin.', en: 'Set a new password for your account.' },
+        kind: 'website' as const
+    },
+    {
+        tr: '/giris',
+        en: '/en/login',
+        title: { tr: 'Giriş Yap | khilonfast', en: 'Login | khilonfast' },
+        description: { tr: 'Khilonfast hesabınıza giriş yapın.', en: 'Sign in to your Khilonfast account.' },
+        kind: 'website' as const
+    },
+    {
+        tr: '/kayit-ol',
+        en: '/en/register',
+        title: { tr: 'Kayıt Ol | khilonfast', en: 'Register | khilonfast' },
+        description: { tr: 'Khilonfast hesabı oluşturun.', en: 'Create your Khilonfast account.' },
+        kind: 'website' as const
+    },
+    {
+        tr: '/sifremi-unuttum',
+        en: '/en/forgot-password',
+        title: { tr: 'Şifremi Unuttum | khilonfast', en: 'Forgot Password | khilonfast' },
+        description: { tr: 'Şifre sıfırlama bağlantısı isteyin.', en: 'Request a password reset link.' },
+        kind: 'website' as const
+    },
+    {
+        tr: '/payment-success',
+        en: '/en/payment-success',
+        title: { tr: 'Ödeme Başarılı | khilonfast', en: 'Payment Successful | khilonfast' },
+        description: { tr: 'Ödemeniz başarıyla alındı.', en: 'Your payment was received successfully.' },
+        kind: 'website' as const
     }
 ]
 
@@ -913,8 +973,8 @@ function buildSchema({
 function localizedSectionLabel(section: SeoSection | undefined, inLanguage: string) {
     const isEnglish = inLanguage === 'en-US'
     if (section === 'services') return isEnglish ? 'Services' : 'Hizmetlerimiz'
-    if (section === 'sectoral') return isEnglish ? 'Sectoral Services' : 'Sektörel Hizmetler'
-    if (section === 'trainings') return isEnglish ? 'Trainings' : 'Egitimler'
+    if (section === 'sectoral') return isEnglish ? 'Industries' : 'Sektörel Hizmetler'
+    if (section === 'trainings') return isEnglish ? 'Programs' : 'Egitimler'
     if (section === 'products') return isEnglish ? 'Products' : 'Urunler'
     if (section === 'flows') return isEnglish ? 'Setup Flows' : 'Kurulum Akislari'
     if (section === 'company') return isEnglish ? 'Company' : 'Kurumsal'
@@ -1069,6 +1129,9 @@ export default function SeoHead() {
         const isConsultantDetail = resolvedPath.startsWith('/danismanlar/') || resolvedPath.startsWith('/en/consultants/')
         const isAdmin = resolvedPath.startsWith('/admin')
         const isTrainingContent = resolvedPath.startsWith('/egitimllerim/') || resolvedPath.startsWith('/en/egitimllerim/')
+        // Bilinen utility/dynamic path prefix'leri için generic title fallback (kullanıcıya
+        // asla "Sayfa Bulunamadı" gösterme — sadece gerçek 404 durumda RouteNotFound
+        // component'i kendi başlığını set eder).
         const title = matchedEntry
             ? matchedEntry.title[isEnglish ? 'en' : 'tr']
             : isAdmin
@@ -1078,13 +1141,13 @@ export default function SeoHead() {
                     : isTrainingContent
                         ? isEnglish ? 'Training | khilonfast' : 'Eğitim İçeriği | khilonfast'
                         : isEnglish
-                            ? 'Page Not Found | khilonfast'
-                            : 'Sayfa Bulunamadı | khilonfast'
+                            ? 'khilonfast'
+                            : 'khilonfast'
         const description = matchedEntry
             ? matchedEntry.description[isEnglish ? 'en' : 'tr']
             : isEnglish
-                ? 'This page could not be matched to an indexable khilonfast page.'
-                : 'Bu URL indekslenebilir bir khilonfast sayfasıyla eşleşmedi.'
+                ? 'Khilonfast — Growth-focused marketing platform.'
+                : 'Khilonfast — Büyüme odaklı pazarlama platformu.'
         const shouldIndex =
             Boolean(matchedEntry) &&
             !isAliasPath &&

@@ -2,15 +2,19 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import './Contact.css'
 import { useRouteLocale } from '../utils/locale'
+import ConsentCheckboxes from './ConsentCheckboxes'
 
 export default function Contact() {
     const { t } = useTranslation('common')
     const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [privacyAccepted, setPrivacyAccepted] = useState(false)
+    const [, setEtkAccepted] = useState(false)
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        if (!privacyAccepted) return
         setIsSubmitted(true)
     }
     return (
@@ -31,14 +35,14 @@ export default function Contact() {
                                 <div className="contact-icon">📧</div>
                                 <div>
                                     <h4>{isEn ? 'Email' : 'E-posta'}</h4>
-                                    <p>info@khilonfast.com</p>
+                                    <p>info@khilon.com</p>
                                 </div>
                             </div>
                             <div className="contact-item">
                                 <div className="contact-icon">📱</div>
                                 <div>
                                     <h4>{isEn ? 'Phone' : 'Telefon'}</h4>
-                                    <p>+90 XXX XXX XX XX</p>
+                                    <p>+90 533 494 58 69</p>
                                 </div>
                             </div>
                             <div className="contact-item">
@@ -91,7 +95,15 @@ export default function Contact() {
                                         rows={5}
                                     ></textarea>
                                 </div>
-                                <button type="submit" className="btn btn-primary btn-full">
+                                <div style={{ marginTop: 8 }}>
+                                    <ConsentCheckboxes
+                                        context="contact"
+                                        isEn={isEn}
+                                        contactMode
+                                        onChange={s => { setPrivacyAccepted(s.main_legal); setEtkAccepted(s.etk); }}
+                                    />
+                                </div>
+                                <button type="submit" className="btn btn-primary btn-full" disabled={!privacyAccepted}>
                                     {isEn ? 'Send Message' : 'Mesaj Gönder'}
                                 </button>
                             </form>

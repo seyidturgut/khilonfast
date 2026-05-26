@@ -202,11 +202,48 @@ function couponResolveCartLines(PDO $db, array $items)
         throw new CouponValidationException('Sepette ürün bulunmuyor.');
     }
 
+    require_once __DIR__ . '/CurrencyService.php';
+
     $resolved = [];
     foreach ($items as $item) {
         $productId = isset($item['product_id']) ? (int)$item['product_id'] : 0;
         $productKey = trim((string)($item['product_key'] ?? ''));
         $quantity = max(1, (int)($item['quantity'] ?? 1));
+
+        // Danışmanlık hizmeti — products tablosunda DEĞİL, consultant_services'te.
+        // product_key formatı: consultant-service-{consultant_services.id}
+        if (strpos($productKey, 'consultant-service-') === 0) {
+            $svcId = (int)substr($productKey, strlen('consultant-service-'));
+            $svcStmt = $db->prepare("SELECT id, title, price, currency FROM consultant_services WHERE id = ?");
+            $svcStmt->execute([$svcId]);
+            $svc = $svcStmt->fetch();
+            if (!$svc) {
+                throw new CouponValidationException('Danışmanlık hizmeti bulunamadı.');
+            }
+            // order_items.product_id FK'sı için generic "Danışmanlık Randevusu" ürünü
+            $anchor = $db->query("SELECT id FROM products WHERE product_key = 'consultant-booking' LIMIT 1")->fetch();
+            if (!$anchor) {
+                throw new CouponValidationException('Danışmanlık ödeme yapılandırması eksik.');
+            }
+            $svcCurrency = (string)($svc['currency'] ?? 'TRY');
+            $svcUnitTry = (float)$svc['price'];
+            if ($svcCurrency === 'USD') {
+                $info = getCurrentUsdTryRate($db);
+                $svcUnitTry = round((float)$svc['price'] * (float)$info['rate'], 2);
+            }
+            $resolved[] = [
+                'product_id' => (int)$anchor['id'],
+                'product_key' => $productKey,
+                'product_name' => (string)$svc['title'],
+                'category' => 'danismanlik',
+                'currency' => 'TRY',
+                'original_currency' => $svcCurrency,
+                'quantity' => $quantity,
+                'unit_price' => $svcUnitTry,
+                'total_price' => $svcUnitTry * $quantity,
+            ];
+            continue;
+        }
 
         $product = null;
         if ($productId > 0) {
@@ -223,16 +260,24 @@ function couponResolveCartLines(PDO $db, array $items)
             throw new CouponValidationException('Bu sepette geçerli değil');
         }
 
-        $unitPrice = (float)$product['price'];
-        $totalPrice = $unitPrice * $quantity;
+        // Sepet/checkout TRY üzerinden hesaplanır — USD ürünler kurla çevrilir.
+        $originalCurrency = (string)($product['currency'] ?? 'TRY');
+        $unitPriceTry = (float)$product['price'];
+        if ($originalCurrency === 'USD') {
+            $info = getCurrentUsdTryRate($db);
+            $unitPriceTry = round((float)$product['price'] * (float)$info['rate'], 2);
+        }
+        $totalPrice = $unitPriceTry * $quantity;
+
         $resolved[] = [
             'product_id' => (int)$product['id'],
             'product_key' => (string)$product['product_key'],
             'product_name' => (string)$product['name'],
             'category' => trim((string)($product['category'] ?? '')),
-            'currency' => (string)($product['currency'] ?? 'TRY'),
+            'currency' => 'TRY', // Sepet hep TRY
+            'original_currency' => $originalCurrency,
             'quantity' => $quantity,
-            'unit_price' => $unitPrice,
+            'unit_price' => $unitPriceTry,
             'total_price' => $totalPrice
         ];
     }
@@ -405,14 +450,21 @@ function couponBuildPricingPreview(PDO $db, array $items, $couponCode = '', ?arr
         $discountAmount = couponCalculateDiscountAmount($coupon, $summary['subtotal']);
     }
 
-    $total = max(0, round($summary['subtotal'] - $discountAmount + $summary['shipping'] + $summary['tax'], 2));
+    // KDV HARİÇ fiyat modeli: ürün fiyatları net, KDV indirimden SONRA eklenir (Türkiye standardı)
+    // prices_include_vat='1' (eski model) ise KDV eklenmez — fiyatlar zaten dahil sayılır
+    $pricesIncludeVat = (string)getSetting($db, 'prices_include_vat', '0') === '1';
+    $vatRate = (float)getSetting($db, 'default_vat_rate', '20') / 100;
+    $taxBase = max(0, $summary['subtotal'] - $discountAmount + $summary['shipping']);
+    $tax = $pricesIncludeVat ? 0.0 : round($taxBase * $vatRate, 2);
+
+    $total = max(0, round($taxBase + $tax, 2));
 
     return [
         'items' => $cartLines,
         'subtotal' => round($summary['subtotal'], 2),
         'discount' => round($discountAmount, 2),
         'shipping' => round($summary['shipping'], 2),
-        'tax' => round($summary['tax'], 2),
+        'tax' => $tax,
         'total' => $total,
         'currency' => $summary['currency'],
         'applied_coupon' => $coupon ? [

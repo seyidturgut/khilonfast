@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation, matchPath, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import type { ReactElement } from 'react'
@@ -52,13 +52,17 @@ import SearchConsoleSetup from './pages/SearchConsoleSetup'
 import SetupFlowPage from './pages/SetupFlowPage'
 import IntegratedMarketingSetupFlow from './pages/IntegratedMarketingSetupFlow'
 import ContactPage from './pages/ContactPage'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import SetPassword from './pages/SetPassword'
-import Checkout from './pages/Checkout'
-import PaymentSuccess from './pages/PaymentSuccess'
-import PaymentCallback from './pages/PaymentCallback'
-import Dashboard from './pages/Dashboard'
+// Auth/checkout/dashboard — lazy (not prerendered)
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const SetPassword = lazy(() => import('./pages/SetPassword'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const DanismanlikOdeme = lazy(() => import('./pages/DanismanlikOdeme'))
+const DanismanlikRandevu = lazy(() => import('./pages/DanismanlikRandevu'))
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'))
+const PaymentCallback = lazy(() => import('./pages/PaymentCallback'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 import Trainings from './pages/Trainings'
 import TrainingProgramPage from './pages/TrainingProgramPage'
 import Consulting from './pages/Consulting'
@@ -78,30 +82,54 @@ import { ConsentProvider } from './context/ConsentContext'
 import trCommon from './locales/tr/common.json'
 import enCommon from './locales/en/common.json'
 
-// Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard'
-import SettingsPage from './pages/admin/Settings'
-import ProductList from './pages/admin/ProductList'
-import ProductEditor from './pages/admin/ProductEditor'
-import UsersPage from './pages/admin/Users'
-import PagesList from './pages/admin/Pages'
-import PageBuilder from './pages/admin/PageBuilder'
-import TrainingContentEditor from './pages/admin/TrainingContentEditor'
-import TrainingAnalytics from './pages/admin/TrainingAnalytics'
-import TrainingAccessPages from './pages/admin/TrainingAccessPages'
-import TrainingContentPage from './pages/TrainingContentPage'
-import OnboardingForm from './pages/OnboardingForm'
-import ConsultantList from './pages/admin/ConsultantList'
-import ConsultantEditor from './pages/admin/ConsultantEditor'
-import BookingList from './pages/admin/BookingList'
-import CouponList from './pages/admin/CouponList'
-import BankAccountsAdmin from './pages/admin/BankAccounts'
-import OnboardingFormsList from './pages/admin/OnboardingFormsList'
-import EmailAutomation from './pages/admin/EmailAutomation'
-import AutomationListPage from './automation/pages/AutomationListPage'
-import AutomationBuilderPage from './automation/pages/AutomationBuilderPage'
-import EmailTemplatesPage from './automation/pages/EmailTemplatesPage'
-import AutomationLogsPage from './automation/pages/AutomationLogsPage'
+// Admin Pages — lazy loaded (admin/CRM/automation never reached by public users)
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+const SettingsPage = lazy(() => import('./pages/admin/Settings'))
+const ProductList = lazy(() => import('./pages/admin/ProductList'))
+const ProductEditor = lazy(() => import('./pages/admin/ProductEditor'))
+const UsersPage = lazy(() => import('./pages/admin/Users'))
+const PagesList = lazy(() => import('./pages/admin/Pages'))
+const PageBuilder = lazy(() => import('./pages/admin/PageBuilder'))
+const TrainingContentEditor = lazy(() => import('./pages/admin/TrainingContentEditor'))
+const TrainingAnalytics = lazy(() => import('./pages/admin/TrainingAnalytics'))
+const TrainingAccessPages = lazy(() => import('./pages/admin/TrainingAccessPages'))
+const TrainingContentPage = lazy(() => import('./pages/TrainingContentPage'))
+const OnboardingForm = lazy(() => import('./pages/OnboardingForm'))
+const OnboardingPresentation = lazy(() => import('./pages/OnboardingPresentation'))
+const ConsultantList = lazy(() => import('./pages/admin/ConsultantList'))
+const ConsultantEditor = lazy(() => import('./pages/admin/ConsultantEditor'))
+const BookingList = lazy(() => import('./pages/admin/BookingList'))
+const CouponList = lazy(() => import('./pages/admin/CouponList'))
+const BankAccountsAdmin = lazy(() => import('./pages/admin/BankAccounts'))
+const ManualBankAccountsAdmin = lazy(() => import('./pages/admin/ManualBankAccounts'))
+const ManualOrdersAdmin = lazy(() => import('./pages/admin/ManualOrders'))
+const OnboardingFormsList = lazy(() => import('./pages/admin/OnboardingFormsList'))
+const EyeTrackingUploadsList = lazy(() => import('./pages/admin/EyeTrackingUploadsList'))
+const AdminSubscriptions = lazy(() => import('./pages/admin/Subscriptions'))
+const EmailAutomation = lazy(() => import('./pages/admin/EmailAutomation'))
+const InvoicesList = lazy(() => import('./pages/admin/InvoicesList'))
+const InvoiceDetail = lazy(() => import('./pages/admin/InvoiceDetail'))
+const AutomationListPage = lazy(() => import('./automation/pages/AutomationListPage'))
+const AutomationBuilderPage = lazy(() => import('./automation/pages/AutomationBuilderPage'))
+const EmailTemplatesPage = lazy(() => import('./automation/pages/EmailTemplatesPage'))
+const AutomationLogsPage = lazy(() => import('./automation/pages/AutomationLogsPage'))
+const ExecutionsPage = lazy(() => import('./automation/pages/ExecutionsPage'))
+const CrmContactsPage = lazy(() => import('./pages/admin/crm/Contacts'))
+const CrmContactDetailPage = lazy(() => import('./pages/admin/crm/ContactDetail'))
+const CrmTagsPage = lazy(() => import('./pages/admin/crm/Tags'))
+const CrmListsPage = lazy(() => import('./pages/admin/crm/Lists'))
+const CrmListDetailPage = lazy(() => import('./pages/admin/crm/Lists').then(m => ({ default: m.CrmListDetailPage })))
+const CrmCustomFieldsPage = lazy(() => import('./pages/admin/crm/CustomFields'))
+const CrmScoringRulesPage = lazy(() => import('./pages/admin/crm/ScoringRules'))
+const CrmSmartLinksPage = lazy(() => import('./pages/admin/crm/SmartLinks'))
+const CrmCampaignsPage = lazy(() => import('./pages/admin/crm/Campaigns'))
+const CrmCampaignDetailPage = lazy(() => import('./pages/admin/crm/CampaignDetail'))
+const CrmFormsPage = lazy(() => import('./pages/admin/crm/Forms'))
+const CrmFormDetailPage = lazy(() => import('./pages/admin/crm/FormDetail'))
+const CrmImportPage = lazy(() => import('./pages/admin/crm/Import'))
+const CrmDashboardPage = lazy(() => import('./pages/admin/crm/Dashboard'))
+const CrmFunnelsPage = lazy(() => import('./pages/admin/crm/Funnels'))
+const AutomationTestPage = lazy(() => import('./pages/admin/AutomationTest'))
 
 const slugsTr = trCommon.slugs as Record<string, string>
 const slugsEn = enCommon.slugs as Record<string, string>
@@ -224,6 +252,8 @@ function MainContent() {
         '/register',
         '/checkout',
         '/odeme',
+        '/danismanlik-odeme/:bookingId',
+        '/danismanlik/randevu/:bookingId',
         '/payment-success',
         '/payment-callback',
         '/dashboard',
@@ -243,11 +273,14 @@ function MainContent() {
         '/admin/consultants/new',
         '/admin/consultants/:id',
         '/admin/bookings',
+        '/admin/invoices',
+        '/admin/invoices/:orderId',
         '/admin/training-analytics',
         '/admin/training-content',
         '/admin/coupons',
         '/admin/bank-accounts',
         '/admin/onboarding-forms',
+        '/admin/subscriptions',
         '/egitimllerim/:slug',
         '/en/egitimllerim/:slug',
         '/danismanlar',
@@ -309,6 +342,7 @@ function MainContent() {
                 key={`lang-${routeLang}`}
                 className={isAdminRoute ? 'admin-main' : isLegacyRoute ? 'legacy-main' : ''}
             >
+                <Suspense fallback={<div style={{ padding: '64px', textAlign: 'center', color: '#1e3a5f' }}>Yükleniyor...</div>}>
                 <Routes>
                     {/* English Routes */}
                     <Route path="/en">
@@ -358,11 +392,17 @@ function MainContent() {
                         <Route path={slugsEn.cookiePolicy} element={<LegalPage documentKey="cookiePolicy" />} />
                         <Route path={slugsEn.termsOfService} element={<LegalPage documentKey="termsOfService" />} />
                         <Route path={slugsEn.refundPolicy} element={<LegalPage documentKey="refundPolicy" />} />
+                        <Route path={slugsEn.distanceSale} element={<LegalPage documentKey="distanceSale" />} />
+                        <Route path={slugsEn.preInformation} element={<LegalPage documentKey="preInformation" />} />
+                        <Route path={slugsEn.corporateB2B} element={<LegalPage documentKey="corporateB2B" />} />
+                        <Route path={slugsEn.acceptableUse} element={<LegalPage documentKey="acceptableUse" />} />
                         <Route path={slugsEn.login} element={<Login />} />
                         <Route path={slugsEn.register} element={<Register />} />
+                        <Route path={slugsEn.forgotPassword} element={<ForgotPassword />} />
                         <Route path="set-password" element={<SetPassword />} />
                         <Route path={slugsEn.dashboard} element={<Dashboard />} />
                         <Route path={slugsEn.onboardingForm} element={<OnboardingForm />} />
+                        <Route path="onboarding-presentation/:orderId" element={<OnboardingPresentation />} />
                         <Route path={slugsEn.checkout} element={<Checkout />} />
                         <Route path={slugsEn.paymentSuccess} element={<PaymentSuccess />} />
                         <Route path={slugsEn.paymentCallback} element={<PaymentCallback />} />
@@ -532,16 +572,26 @@ function MainContent() {
                     <Route path={`/${slugsTr.cookiePolicy}`} element={<LegalPage documentKey="cookiePolicy" />} />
                     <Route path={`/${slugsTr.termsOfService}`} element={<LegalPage documentKey="termsOfService" />} />
                     <Route path={`/${slugsTr.refundPolicy}`} element={<LegalPage documentKey="refundPolicy" />} />
+                    <Route path={`/${slugsTr.distanceSale}`} element={<LegalPage documentKey="distanceSale" />} />
+                    <Route path={`/${slugsTr.preInformation}`} element={<LegalPage documentKey="preInformation" />} />
+                    <Route path={`/${slugsTr.corporateB2B}`} element={<LegalPage documentKey="corporateB2B" />} />
+                    <Route path={`/${slugsTr.acceptableUse}`} element={<LegalPage documentKey="acceptableUse" />} />
                     <Route path={`/${slugsTr.register}`} element={<Register />} />
                     <Route path="/kayit-ol" element={<Register />} />
+                    <Route path={`/${slugsTr.forgotPassword}`} element={<ForgotPassword />} />
                     <Route path="/sifre-belirle" element={<SetPassword />} />
                     <Route path="/login" element={<Navigate to="/giris" replace />} />
                     <Route path="/register" element={<Navigate to="/kayit-ol" replace />} />
                     <Route path={`/${slugsTr.checkout}`} element={<Checkout />} />
+                    <Route path="/danismanlik-odeme/:bookingId" element={<DanismanlikOdeme />} />
+                    <Route path="/danismanlik/randevu/:bookingId" element={<DanismanlikRandevu />} />
                     <Route path={`/${slugsTr.paymentSuccess}`} element={<PaymentSuccess />} />
                     <Route path={`/${slugsTr.paymentCallback}`} element={<PaymentCallback />} />
                     <Route path={`/${slugsTr.dashboard}`} element={<Dashboard />} />
+                    {/* ASCII alias — mail/SMS gibi yerlerde Türkçe karakter URL-encode olunca 404 olmasın */}
+                    <Route path="/hesabim" element={<Dashboard />} />
                     <Route path={`/${slugsTr.onboardingForm}`} element={<OnboardingForm />} />
+                    <Route path="/onboarding-sunumu/:orderId" element={<OnboardingPresentation />} />
                     <Route path="/hizmetlerimiz/:slug" element={<ProductSlugResolver />} />
                     <Route path="/sektorel-hizmetler/:slug" element={<ProductSlugResolver />} />
 
@@ -560,16 +610,42 @@ function MainContent() {
                     <Route path="/admin/consultants/new" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
                     <Route path="/admin/consultants/:id" element={<RequireAdmin><ConsultantEditor /></RequireAdmin>} />
                     <Route path="/admin/bookings" element={<RequireAdmin><BookingList /></RequireAdmin>} />
+                    <Route path="/admin/invoices" element={<RequireAdmin><InvoicesList /></RequireAdmin>} />
+                    <Route path="/admin/invoices/:orderId" element={<RequireAdmin><InvoiceDetail /></RequireAdmin>} />
                     <Route path="/admin/training-analytics" element={<RequireAdmin><TrainingAnalytics /></RequireAdmin>} />
                     <Route path="/admin/training-content" element={<RequireAdmin><TrainingAccessPages /></RequireAdmin>} />
                     <Route path="/admin/coupons" element={<RequireAdmin><CouponList /></RequireAdmin>} />
                     <Route path="/admin/bank-accounts" element={<RequireAdmin><BankAccountsAdmin /></RequireAdmin>} />
+                    <Route path="/admin/manual-bank-accounts" element={<RequireAdmin><ManualBankAccountsAdmin /></RequireAdmin>} />
+                    <Route path="/admin/manual-orders" element={<RequireAdmin><ManualOrdersAdmin /></RequireAdmin>} />
                     <Route path="/admin/onboarding-forms" element={<RequireAdmin><OnboardingFormsList /></RequireAdmin>} />
+                    <Route path="/admin/eye-tracking-uploads" element={<RequireAdmin><EyeTrackingUploadsList /></RequireAdmin>} />
+                    <Route path="/admin/subscriptions" element={<RequireAdmin><AdminSubscriptions /></RequireAdmin>} />
                     <Route path="/admin/email-automation" element={<RequireAdmin><EmailAutomation /></RequireAdmin>} />
                     <Route path="/admin/automations" element={<RequireAdmin><AutomationListPage /></RequireAdmin>} />
+                    <Route path="/admin/automations/:id/executions" element={<RequireAdmin><ExecutionsPage /></RequireAdmin>} />
                     <Route path="/admin/automations/:id" element={<RequireAdmin><AutomationBuilderPage /></RequireAdmin>} />
                     <Route path="/admin/email-templates" element={<RequireAdmin><EmailTemplatesPage /></RequireAdmin>} />
                     <Route path="/admin/automation-logs" element={<RequireAdmin><AutomationLogsPage /></RequireAdmin>} />
+                    <Route path="/admin/automation-test" element={<RequireAdmin><AutomationTestPage /></RequireAdmin>} />
+
+                    {/* CRM (Faz 1-9) */}
+                    <Route path="/admin/crm" element={<RequireAdmin><CrmDashboardPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/dashboard" element={<RequireAdmin><CrmDashboardPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/funnels" element={<RequireAdmin><CrmFunnelsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/contacts" element={<RequireAdmin><CrmContactsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/contacts/:id" element={<RequireAdmin><CrmContactDetailPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/tags" element={<RequireAdmin><CrmTagsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/lists" element={<RequireAdmin><CrmListsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/lists/:id" element={<RequireAdmin><CrmListDetailPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/custom-fields" element={<RequireAdmin><CrmCustomFieldsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/scoring-rules" element={<RequireAdmin><CrmScoringRulesPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/smart-links" element={<RequireAdmin><CrmSmartLinksPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/campaigns" element={<RequireAdmin><CrmCampaignsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/campaigns/:id" element={<RequireAdmin><CrmCampaignDetailPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/forms" element={<RequireAdmin><CrmFormsPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/forms/:id" element={<RequireAdmin><CrmFormDetailPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/import" element={<RequireAdmin><CrmImportPage /></RequireAdmin>} />
 
                     {/* Training Content Routes */}
                     <Route path="/egitimllerim/:slug" element={<TrainingContentPage />} />
@@ -577,6 +653,7 @@ function MainContent() {
 
                     <Route path="*" element={<LegacyWordpressPage />} />
                 </Routes>
+                </Suspense>
             </main>
             {!isAdminRoute && !isLegacyRoute && !isPlayerRoute && <Footer />}
             {!isAdminRoute && !isLegacyRoute && !isPlayerRoute && <CookieConsent />}

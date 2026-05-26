@@ -33,7 +33,7 @@ export default function GrowthMarketingTraining() {
         hero: {
             title: 'Büyüme Odaklı Pazarlama Eğitimi',
             subtitle: 'Bütünleşik pazarlama stratejileri ile markanızı büyütün!',
-            description: 'khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.',
+            description: 'khilonfast ile bütçenizi doğru kanallara yönlendirin. Tüm kanallarınızı tek strateji ile yönetin, performans artırın.',
             buttonText: 'Satın Al',
             buttonLink: '#pricing',
             image: '/img/marketing-training-hero.png',
@@ -167,7 +167,7 @@ export default function GrowthMarketingTraining() {
                 { title: 'Baseline Metrics Setup', description: 'Define and operationalize the metrics that guide scalable growth.', icon: <HiChartBar /> },
                 { title: 'Three Core Marketing Goals', description: 'Design around acquisition, expansion, and retention outcomes.', icon: <HiBolt /> },
                 { title: 'Website Conversion Architecture', description: 'Align page responsibilities to increase conversion flow quality.', icon: <HiGlobeAlt /> },
-                { title: 'Post-Lead Journey', description: 'Run timing, psychology, and multi-channel follow-up with discipline.', icon: <HiComputerDesktop /> },
+                { title: 'Lead Nurturing Journey', description: 'Run timing, psychology, and multi-channel follow-up with discipline.', icon: <HiComputerDesktop /> },
                 { title: 'Sales Conversation Excellence', description: 'Improve objection handling, follow-up quality, and close rates.', icon: <HiChatBubbleLeftRight /> }
             ]
         },

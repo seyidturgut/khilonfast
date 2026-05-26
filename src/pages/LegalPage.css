@@ -35,9 +35,9 @@
 .legal-hero h1 {
     margin: 0;
     color: #1a3a52;
-    font-size: clamp(2.4rem, 5vw, 4.2rem);
-    line-height: 0.96;
-    max-width: 11ch;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.1;
+    max-width: 28ch;
 }
 
 .legal-hero__lead {

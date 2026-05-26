@@ -7,8 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet">
+    </noscript>
+    <style>
+        /* Fallback font metrics to minimize CLS during font swap */
+        @font-face {
+            font-family: 'Inter Tight Fallback';
+            src: local('Arial');
+            ascent-override: 95%;
+            descent-override: 23%;
+            line-gap-override: 0%;
+            size-adjust: 102%;
+        }
+        body { font-family: 'Inter Tight', 'Inter Tight Fallback', system-ui, -apple-system, sans-serif; }
+    </style>
     <title>khilonfast – İşletmenizi Zirveye Taşıyan Çözümler</title>
 </head>
 

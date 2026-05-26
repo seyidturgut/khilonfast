@@ -53,7 +53,7 @@ export function automationEdgesToFlowEdges(edges: AutomationEdge[]): Edge[] {
 }
 
 export function delayLabel(type: string, value: number): string {
-  const labels: Record<string, string> = { minutes: 'dakika', hours: 'saat', days: 'gün' };
+  const labels: Record<string, string> = { minutes: 'dakika', hours: 'saat', days: 'gün', weeks: 'hafta' };
   return `${value} ${labels[type] ?? type}`;
 }
 
@@ -61,10 +61,19 @@ export function triggerEventLabel(event: string): string {
   const labels: Record<string, string> = {
     purchase_completed: 'Satın alma tamamlandı',
     checkout_email_entered: 'Ödeme e-postası girildi',
+    checkout_abandoned: 'Sepet terk edildi',
+    purchase_completed_no_onboarding: 'Aldı / Onboarding doldurmadı',
     onboarding_not_completed: 'Onboarding tamamlanmadı',
     service_not_used: 'Servis kullanılmadı',
     payment_failed: 'Ödeme başarısız',
     subscription_cancelled: 'Abonelik iptal edildi',
+    course_purchased_not_started: 'Eğitim — Aldı, başlamadı',
+    course_started_incomplete: 'Eğitim — Başladı, tamamlamadı',
+    course_completed: 'Eğitim — Tamamlandı',
+    course_yearly_reactivation: 'Eğitim — Yıllık reactivation',
+    consulting_appointment: 'Danışmanlık — Randevu olayı',
+    maestro_lifecycle: 'Maestro AI — Lifecycle',
+    eyetracking_pending_upload: 'Eye Tracking — Görsel yükleme bekleniyor',
   };
   return labels[event] ?? event;
 }

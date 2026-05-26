@@ -7,12 +7,24 @@ $hasMustChangePassword = hasMustChangePasswordColumn($db);
 $payload = requireAuth();
 
 if ($method === 'GET' && $action === 'contents') {
+    // Aynı kullanıcı aynı ürünü birden fazla kez almışsa (ör. başarısız denemelerden
+    // sonra tekrar deneme), subscriptions tablosunda birden fazla satır olabilir.
+    // Frontend'de "İçeriklerim"de tekrarlı kart oluşmasın diye product_key başına
+    // en güncel aktif aboneliği dönüyoruz.
+    // Kullanıcının aktif abonelikleri (her product_key için en yeni satır — duplicate gizlenir)
     $stmt = $db->prepare(
         "SELECT
             s.id AS subscription_id,
             s.status AS subscription_status,
             s.starts_at,
             s.expires_at,
+            s.next_renewal_at,
+            s.auto_renew,
+            s.payment_method,
+            s.cancellation_requested_at,
+            s.cancelled_at,
+            uc.masked_number AS card_masked,
+            uc.card_brand AS card_brand,
             p.id AS product_id,
             p.product_key,
             p.name,
@@ -20,6 +32,7 @@ if ($method === 'GET' && $action === 'contents') {
             p.features,
             p.type,
             p.category,
+            p.duration_days,
             p.access_content_url,
             tap.slug AS training_slug,
             o.status AS order_status
@@ -27,13 +40,52 @@ if ($method === 'GET' && $action === 'contents') {
          INNER JOIN products p ON p.id = s.product_id
          LEFT JOIN training_access_pages tap ON tap.product_key = p.product_key
          LEFT JOIN orders o ON o.id = s.order_id
+         LEFT JOIN user_cards uc ON uc.id = s.renewal_card_id
          WHERE s.user_id = ?
            AND s.status = 'active'
            AND (o.status = 'completed' OR o.status IS NULL)
+           AND s.id IN (
+               SELECT max_id FROM (
+                   SELECT MAX(s2.id) AS max_id
+                   FROM subscriptions s2
+                   INNER JOIN products p2 ON p2.id = s2.product_id
+                   WHERE s2.user_id = ? AND s2.status = 'active'
+                   GROUP BY p2.product_key
+               ) AS dedupe
+           )
          ORDER BY s.created_at DESC"
     );
-    $stmt->execute([$payload['id']]);
-    sendResponse(['contents' => $stmt->fetchAll()]);
+    $stmt->execute([$payload['id'], $payload['id']]);
+    $rows = $stmt->fetchAll();
+
+    // has_started: Kullanıcının training_watch_sessions tablosunda kaydı olan product_key'leri çek,
+    // sonra PHP tarafında flag set et. Bu yaklaşım collation farklarına immün.
+    $startedKeys = [];
+    try {
+        $tws = $db->prepare(
+            "SELECT DISTINCT product_key FROM training_watch_sessions WHERE user_id = ?"
+        );
+        $tws->execute([$payload['id']]);
+        foreach ($tws->fetchAll() as $r) {
+            $startedKeys[trim((string)$r['product_key'])] = true;
+        }
+    } catch (Throwable $e) {
+        // Tablo yoksa veya sorun varsa sessizce geç — has_started false kalır
+        error_log('has_started check skipped: ' . $e->getMessage());
+    }
+
+    foreach ($rows as &$row) {
+        $row['has_started'] = isset($startedKeys[trim((string)$row['product_key'])]);
+        // PDO bazen integer kolonları string döndürür — frontend Set/lookup tutarlılığı için int cast
+        $row['product_id'] = (int)$row['product_id'];
+        $row['subscription_id'] = (int)$row['subscription_id'];
+        $row['auto_renew'] = (int)($row['auto_renew'] ?? 0);
+        $row['duration_days'] = $row['duration_days'] !== null ? (int)$row['duration_days'] : null;
+        $row['is_subscription'] = ($row['type'] === 'subscription');
+    }
+    unset($row);
+
+    sendResponse(['contents' => $rows]);
 }
 
 if ($method === 'GET' && empty($action)) {
@@ -139,6 +191,59 @@ if ($method === 'GET' && $action === 'protected-pdf' && !empty($id)) {
     header('Content-Length: ' . filesize($filePath));
     readfile($filePath);
     exit;
+}
+
+// ─────────────────────────────────────────────
+// POST /api/profile/subscriptions/:id/cancel
+//   Dönem sonu iptal: auto_renew=0 + cancellation_requested_at=NOW().
+//   Mevcut dönem (expires_at) sonuna kadar erişim sürer; status='active' kalır.
+// ─────────────────────────────────────────────
+$subAction = $routes[3] ?? '';
+if ($method === 'POST' && $action === 'subscriptions' && !empty($id) && $subAction === 'cancel') {
+    $subId = (int)$id;
+    // Sahiplik kontrolü
+    $own = $db->prepare("SELECT id, auto_renew, expires_at, cancellation_requested_at
+                         FROM subscriptions WHERE id = ? AND user_id = ? AND status = 'active' LIMIT 1");
+    $own->execute([$subId, $payload['id']]);
+    $sub = $own->fetch();
+    if (!$sub) {
+        sendResponse(['error' => 'Abonelik bulunamadı veya yetkisiz'], 404);
+    }
+    if ((int)($sub['auto_renew'] ?? 0) === 0 && !empty($sub['cancellation_requested_at'])) {
+        sendResponse(['success' => true, 'already' => true, 'message' => 'Bu abonelik için yenileme zaten kapalı.']);
+    }
+    $upd = $db->prepare(
+        "UPDATE subscriptions
+         SET auto_renew = 0, cancellation_requested_at = NOW()
+         WHERE id = ? AND user_id = ?"
+    );
+    $upd->execute([$subId, $payload['id']]);
+    sendResponse([
+        'success' => true,
+        'message' => 'Aboneliğiniz dönem sonunda sonlandırılacak. Mevcut erişiminiz süre bitimine kadar devam eder.',
+        'expires_at' => $sub['expires_at'] ?? null
+    ]);
+}
+
+// ─────────────────────────────────────────────
+// POST /api/profile/subscriptions/:id/resume
+//   İptal geri al: auto_renew=1 + cancellation_requested_at=NULL (dönem dolmamışsa)
+// ─────────────────────────────────────────────
+if ($method === 'POST' && $action === 'subscriptions' && !empty($id) && $subAction === 'resume') {
+    $subId = (int)$id;
+    $own = $db->prepare("SELECT id, expires_at FROM subscriptions
+                         WHERE id = ? AND user_id = ? AND status = 'active' LIMIT 1");
+    $own->execute([$subId, $payload['id']]);
+    $sub = $own->fetch();
+    if (!$sub) {
+        sendResponse(['error' => 'Abonelik bulunamadı veya yetkisiz'], 404);
+    }
+    $db->prepare(
+        "UPDATE subscriptions
+         SET auto_renew = 1, cancellation_requested_at = NULL
+         WHERE id = ? AND user_id = ?"
+    )->execute([$subId, $payload['id']]);
+    sendResponse(['success' => true, 'message' => 'Otomatik yenileme yeniden aktif edildi.']);
 }
 
 sendResponse(['error' => 'Action not found'], 404);

@@ -3,6 +3,46 @@
 require_once __DIR__ . '/../services/LidioService.php';
 require_once __DIR__ . '/../services/CouponService.php';
 
+/**
+ * Misafir (guest) checkout sırasında oluşturulan kullanıcılara welcome e-postası gönder.
+ * SADECE ödeme başarıyla tamamlanınca (callback'te resolvedStatus='completed') tetiklenir.
+ * Daha önce hatalı şekilde sipariş oluşturulurken gidiyordu (3D Secure öncesi); bug fix.
+ */
+function sendGuestWelcomeEmailIfNeeded(PDO $db, int $userId): void
+{
+    try {
+        $stmt = $db->prepare("SELECT email, first_name, must_change_password, welcome_email_sent FROM users WHERE id = ? LIMIT 1");
+        $stmt->execute([$userId]);
+        $u = $stmt->fetch();
+        if (!$u) return;
+        // Sadece must_change_password=1 olan (misafir checkout ile oluşturulan) kullanıcılar
+        if ((int)$u['must_change_password'] !== 1) return;
+        // Idempotency: aynı kullanıcıya tekrar gönderme
+        if (!empty($u['welcome_email_sent'])) return;
+
+        $authToken = encodeJWT(['id' => $userId, 'email' => $u['email'], 'role' => 'user']);
+        // orders.php içindeki helper'ı yeniden kullan
+        require_once __DIR__ . '/orders.php';
+        if (function_exists('sendWelcomeAccountEmail')) {
+            sendWelcomeAccountEmail($db, $u['email'], $u['first_name'] ?? '', $authToken);
+            // Flag set — bu kullanıcıya bir daha gönderme (PN callback ya da retry tekrarlasa bile)
+            try {
+                $db->prepare("UPDATE users SET welcome_email_sent = NOW() WHERE id = ?")->execute([$userId]);
+            } catch (Throwable $e) {
+                // welcome_email_sent kolonu yoksa ALTER ekle
+                try {
+                    $db->exec("ALTER TABLE users ADD COLUMN welcome_email_sent TIMESTAMP NULL");
+                    $db->prepare("UPDATE users SET welcome_email_sent = NOW() WHERE id = ?")->execute([$userId]);
+                } catch (Throwable $alterErr) {
+                    error_log('[guest-welcome] flag column add: ' . $alterErr->getMessage());
+                }
+            }
+        }
+    } catch (Throwable $e) {
+        error_log('[guest-welcome] send: ' . $e->getMessage());
+    }
+}
+
 $db = Database::getInstance();
 try { ensureMustChangePasswordColumn($db); } catch (Throwable $e) { error_log('ensureMustChangePasswordColumn: ' . $e->getMessage()); }
 try { ensureCouponSchema($db); } catch (Throwable $e) { error_log('ensureCouponSchema: ' . $e->getMessage()); }
@@ -146,6 +186,23 @@ function resolveOrderByCallback(PDO $db, $orderIdLike, $merchantProcessId)
         if ($row) return $row;
     }
 
+    // Son fallback: bizim ürettiğimiz orderId pattern'i `KHL{10-digit-timestamp}{order_id}` veya
+    // `KHLBT{10-digit-timestamp}{order_id}` veya `KHLH{10-digit-timestamp}{order_id}` formatında —
+    // trailing digit'leri parse edip orders.id ile eşle. Eski kayıtlar (lidio_response.orderId yok) için.
+    if ($orderIdLike !== '' && preg_match('/^KHL(?:BT|H)?(\d{10,})$/i', $orderIdLike, $m)) {
+        $tail = $m[1];
+        // İlk 10 hane unix timestamp, geri kalanı order id
+        if (strlen($tail) > 10) {
+            $parsedOrderId = (int)substr($tail, 10);
+            if ($parsedOrderId > 0) {
+                $stmt = $db->prepare("SELECT * FROM orders WHERE id = ? LIMIT 1");
+                $stmt->execute([$parsedOrderId]);
+                $row = $stmt->fetch();
+                if ($row) return $row;
+            }
+        }
+    }
+
     return null;
 }
 
@@ -203,20 +260,52 @@ if ($action === 'initiate' && $method === 'POST') {
         try {
             $db->beginTransaction();
             $db->prepare("UPDATE orders SET status = 'completed' WHERE id = ?")->execute([$orderId]);
-            $itemsStmt = $db->prepare(
-                "SELECT oi.product_id, p.duration_days FROM order_items oi
-                 LEFT JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?"
-            );
-            $itemsStmt->execute([$orderId]);
-            foreach ($itemsStmt->fetchAll() as $item) {
-                $days = (int)($item['duration_days'] ?? 365);
-                $db->prepare(
-                    "INSERT INTO subscriptions (user_id, product_id, order_id, status, starts_at, expires_at)
-                     VALUES (?, ?, ?, 'active', NOW(), DATE_ADD(NOW(), INTERVAL ? DAY))
-                     ON DUPLICATE KEY UPDATE status='active', expires_at=DATE_ADD(NOW(), INTERVAL ? DAY)"
-                )->execute([$payload['id'], $item['product_id'], $orderId, $days, $days]);
-            }
+            // Ücretsiz sipariş (kupon ile %100 indirim) — kart yok, manual_transfer işaretle
+            createSubscriptionsForOrder($db, (int)$payload['id'], (int)$orderId, 'manual_transfer', null);
             $db->commit();
+
+            // Bedava sipariş mailleri — onay + (varsa) form-required onboarding daveti.
+            // Önceden bu blokta HİÇ mail yoktu.
+            try {
+                if (function_exists('buildManualTransferEmail')) {
+                    $stmtFo = $db->prepare("SELECT u.email, u.first_name, o.order_number, o.total_amount, o.currency, o.customer_lang
+                                            FROM orders o JOIN users u ON u.id = o.user_id WHERE o.id = ? LIMIT 1");
+                    $stmtFo->execute([$orderId]);
+                    $fo = $stmtFo->fetch();
+                    if ($fo && !empty($fo['email'])) {
+                        $foLang = (string)($fo['customer_lang'] ?? 'tr');
+                        $confMail = buildManualTransferEmail('confirmed', $foLang, [
+                            'order_number' => $fo['order_number'],
+                            'order_id'     => $orderId,
+                            'first_name'   => $fo['first_name'] ?? '',
+                            'amount'       => $fo['total_amount'] ?? 0,
+                            'currency'     => $fo['currency'] ?? 'TRY'
+                        ]);
+                        sendTransactionalEmail($db, (string)$fo['email'], $confMail['subject'], $confMail['html']);
+
+                        $stmtFoItems = $db->prepare(
+                            "SELECT oi.id AS order_item_id, p.name AS product_name
+                             FROM order_items oi JOIN products p ON p.id = oi.product_id
+                             WHERE oi.order_id = ? AND COALESCE(p.requires_onboarding, 0) = 1"
+                        );
+                        $stmtFoItems->execute([$orderId]);
+                        foreach ($stmtFoItems->fetchAll() as $foIt) {
+                            $obMail = buildManualTransferEmail('onboarding-link', $foLang, [
+                                'order_number'  => $fo['order_number'],
+                                'order_id'      => $orderId,
+                                'order_item_id' => $foIt['order_item_id'],
+                                'product_name'  => $foIt['product_name'],
+                                'first_name'    => $fo['first_name'] ?? ''
+                            ]);
+                            sendTransactionalEmail($db, (string)$fo['email'], $obMail['subject'], $obMail['html']);
+                        }
+                    }
+                }
+                sendGuestWelcomeEmailIfNeeded($db, (int)$payload['id']);
+            } catch (Throwable $foErr) {
+                error_log('[free-order] mail: ' . $foErr->getMessage());
+            }
+
             sendResponse(['success' => true, 'free_order' => true, 'message' => 'Ücretsiz sipariş tamamlandı.']);
         } catch (Throwable $e) {
             $db->rollBack();
@@ -230,13 +319,60 @@ if ($action === 'initiate' && $method === 'POST') {
         $stmt = $db->prepare("UPDATE orders SET status = 'processing' WHERE id = ?");
         $stmt->execute([$orderId]);
 
+        // Sepet kalemlerini Lidio formatına çevir (fraud kontrolü için zorunlu)
+        $itemsStmt = $db->prepare(
+            "SELECT oi.product_id, oi.quantity, oi.unit_price, p.name AS product_name, p.category
+             FROM order_items oi
+             LEFT JOIN products p ON p.id = oi.product_id
+             WHERE oi.order_id = ?"
+        );
+        $itemsStmt->execute([$orderId]);
+        $basketItems = [];
+        foreach ($itemsStmt->fetchAll() as $oi) {
+            $basketItems[] = [
+                'name' => (string)($oi['product_name'] ?? 'Khilonfast Hizmet'),
+                'category1' => (string)($oi['category'] ?? ''),
+                'quantity' => (int)$oi['quantity'],
+                'unitPrice' => (float)$oi['unit_price'],
+                'criticalCategory' => 'Other',
+                'itemType' => 'Virtual'
+            ];
+        }
+
+        // Fatura adresi: company_info varsa oradan, yoksa profile'dan, yoksa default
+        $companyStmt = $db->prepare("SELECT * FROM company_info WHERE user_id = ? LIMIT 1");
+        $companyStmt->execute([$user['id']]);
+        $company = $companyStmt->fetch();
+
+        $profileStmt = $db->prepare("SELECT address FROM users WHERE id = ? LIMIT 1");
+        $profileStmt->execute([$user['id']]);
+        $profile = $profileStmt->fetch();
+        $userAddress = trim((string)($profile['address'] ?? ''));
+
+        $invoiceAddress = [
+            'contactName' => trim((string)$user['first_name'] . ' ' . (string)$user['last_name']),
+            'country' => 'Türkiye',
+            'city' => 'İstanbul',
+            'town' => 'Şişli',
+            'district' => 'Maslak',
+            'address' => $userAddress !== '' ? $userAddress : 'Khilonfast',
+            'postalCode' => '34000'
+        ];
+        if ($company) {
+            $invoiceAddress['contactName'] = (string)($company['company_name'] ?? $invoiceAddress['contactName']);
+            if (!empty($company['company_address'])) {
+                $invoiceAddress['address'] = (string)$company['company_address'];
+            }
+        }
+
         $customerInfo = [
             'customerId' => (string)$user['id'],
             'customerName' => (string)$user['first_name'],
             'customerSurname' => (string)$user['last_name'],
             'customerEmail' => (string)$user['email'],
             'customerPhoneNumber' => normalizePhoneNumber($user['phone'] ?? ''),
-            'customerIpAddress' => getClientIpAddress()
+            'customerIpAddress' => getClientIpAddress(),
+            'customerPort' => (string)($_SERVER['REMOTE_PORT'] ?? '0')
         ];
 
         $paymentData = [
@@ -246,7 +382,10 @@ if ($action === 'initiate' && $method === 'POST') {
             'currency' => (string)($order['currency'] ?? 'TRY'),
             'returnUrl' => resolveFrontendBaseUrl() . '/payment-callback',
             'notificationUrl' => resolveBackendBaseUrl() . '/payment/callback',
-            'customerInfo' => $customerInfo
+            'customerInfo' => $customerInfo,
+            'basketItems' => $basketItems,
+            'invoiceAddress' => $invoiceAddress,
+            'deliveryAddress' => $invoiceAddress // Dijital ürün — fatura ile aynı
         ];
 
         if ($useHosted) {
@@ -268,13 +407,21 @@ if ($action === 'initiate' && $method === 'POST') {
              VALUES (?, 'credit_card', ?, ?, ?, ?, ?)"
         );
         $paymentSuccess = !empty($paymentResult['success']) && empty($paymentResult['requires3DS']);
+        // Bizim ürettiğimiz orderId/merchantProcessId'yi response'a sar — callback geldiğinde
+        // resolveOrderByCallback JSON_EXTRACT ile bu order'ı bulabilsin (Lidio cevabı orderId içermiyor)
+        $storedResponse = [
+            'orderId' => $paymentData['orderId'],
+            'merchantProcessId' => $paymentData['merchantProcessId'],
+            'hostedOrderId' => $paymentData['hostedOrderId'] ?? null,
+            'raw' => $paymentResult
+        ];
         $stmt->execute([
             $orderId,
             $paymentResult['transactionId'] ?? null,
             $paymentData['amount'],
             $paymentData['currency'],
             $paymentSuccess ? 'success' : 'pending',
-            json_encode($paymentResult, JSON_UNESCAPED_UNICODE)
+            json_encode($storedResponse, JSON_UNESCAPED_UNICODE)
         ]);
 
         if ($paymentSuccess) {
@@ -283,11 +430,42 @@ if ($action === 'initiate' && $method === 'POST') {
             $stmt = $db->prepare("UPDATE payments SET status = 'success' WHERE order_id = ?");
             $stmt->execute([$orderId]);
 
+            // Fatura kuyruğuna ekle (Paraşüt) — başarısızsa sipariş akışını bloklamaz
+            try {
+                require_once __DIR__ . '/../services/InvoiceService.php';
+                invoiceQueueForOrder($db, (int)$orderId);
+            } catch (Throwable $e) { error_log('[invoice queue cc] ' . $e->getMessage()); }
+
+            // Misafir checkout welcome email — yalnızca ödeme onaylanınca (bug fix)
+            try {
+                sendGuestWelcomeEmailIfNeeded($db, (int)$user['id']);
+            } catch (Throwable $welcomeErr) {
+                error_log('[immediate] guest welcome: ' . $welcomeErr->getMessage());
+            }
+
             // Email automation: purchase_completed event + terk edilen sepet queue'sunu iptal et
             try {
                 $eaStmt = $db->prepare("INSERT INTO email_events (event_type, email, user_id) VALUES ('purchase_completed', ?, ?)");
                 $eaStmt->execute([$user['email'], $user['id']]);
                 $db->prepare("UPDATE email_queue SET status='cancelled' WHERE email=? AND status='pending'")->execute([$user['email']]);
+
+                // V2 Automation Engine — purchase_completed trigger
+                try {
+                    require_once __DIR__ . '/../services/AutomationEngine.php';
+                    (new AutomationEngine($db))->trigger('purchase_completed', [
+                        'email'      => (string)$user['email'],
+                        'first_name' => (string)($user['first_name'] ?? ''),
+                        'last_name'  => (string)($user['last_name'] ?? ''),
+                        'user_id'    => (int)$user['id'],
+                        'order_id'   => (string)$orderId,
+                        'order_number' => (string)($order['order_number'] ?? $orderId),
+                    ]);
+                } catch (Throwable $autoErr) {
+                    error_log('[automation] purchase_completed trigger fail (inline): ' . $autoErr->getMessage());
+                }
+
+                // Eye Tracking welcome mail + pending-upload otomasyonu
+                dispatchEyeWelcomeMail($db, (int)$orderId, $user);
             } catch (Throwable $eaError) {
                 error_log('Email automation event error: ' . $eaError->getMessage());
             }
@@ -442,12 +620,17 @@ if ($action === 'bank-transfer' && $method === 'POST') {
             "INSERT INTO payments (order_id, payment_method, lidio_transaction_id, amount, currency, status, lidio_response)
              VALUES (?, 'bank_transfer', ?, ?, ?, 'pending', ?)"
         );
+        $bankTransferStored = [
+            'orderId' => $transferData['orderId'],
+            'merchantProcessId' => $transferData['merchantProcessId'],
+            'raw' => $result
+        ];
         $stmt->execute([
             $orderId,
             $result['transactionId'] ?? null,
             $transferData['amount'],
             $transferData['currency'],
-            json_encode($result, JSON_UNESCAPED_UNICODE)
+            json_encode($bankTransferStored, JSON_UNESCAPED_UNICODE)
         ]);
 
         $db->commit();
@@ -472,6 +655,111 @@ if ($action === 'bank-transfer' && $method === 'POST') {
             $db->prepare("UPDATE orders SET status = 'pending' WHERE id = ?")->execute([$orderId]);
         } catch (Throwable $ignored) {}
         sendResponse(['error' => 'Bank transfer initiation failed: ' . $e->getMessage()], 500);
+    }
+}
+
+// POST /api/payment/manual-transfer — Manuel havale (Lidio'dan bağımsız).
+// Müşteri sipariş verir → status=processing (ödeme bekleniyor) → IBAN bilgileri döner.
+// Admin parayı alıp manuel onaylayınca completed + subscription aktif.
+if ($action === 'manual-transfer' && $method === 'POST') {
+    $payload = requireAuth();
+    $data = getJsonBody();
+
+    $orderId = (int)($data['order_id'] ?? 0);
+    $manualBankAccountId = (int)($data['manual_bank_account_id'] ?? 0);
+
+    if ($orderId <= 0) {
+        sendResponse(['error' => 'order_id zorunludur'], 400);
+    }
+
+    $stmt = $db->prepare("SELECT * FROM orders WHERE id = ? AND user_id = ? LIMIT 1");
+    $stmt->execute([$orderId, $payload['id']]);
+    $order = $stmt->fetch();
+    if (!$order) {
+        sendResponse(['error' => 'Order not found'], 404);
+    }
+
+    // Banka bilgisini al — frontend gösterecek + admin maile koyacağız
+    $bankInfo = null;
+    if ($manualBankAccountId > 0) {
+        $bankStmt = $db->prepare(
+            "SELECT id, bank_name, account_holder, iban, swift, currency, notes
+             FROM manual_bank_accounts WHERE id = ? AND is_active = 1 LIMIT 1"
+        );
+        $bankStmt->execute([$manualBankAccountId]);
+        $bankInfo = $bankStmt->fetch() ?: null;
+    }
+
+    try {
+        $db->beginTransaction();
+
+        $db->prepare("UPDATE orders SET status = 'processing' WHERE id = ?")->execute([$orderId]);
+
+        $stmt = $db->prepare(
+            "INSERT INTO payments (order_id, payment_method, amount, currency, status, lidio_response)
+             VALUES (?, 'manual_transfer', ?, ?, 'pending', ?)"
+        );
+        $stmt->execute([
+            $orderId,
+            (float)$order['total_amount'],
+            (string)($order['currency'] ?? 'TRY'),
+            json_encode([
+                'manual_transfer' => true,
+                'manual_bank_account_id' => $manualBankAccountId ?: null,
+                'bank_info' => $bankInfo
+            ], JSON_UNESCAPED_UNICODE)
+        ]);
+
+        $db->commit();
+
+        // Müşteri + admin bilgilendirme maili (sessiz başarısızlık)
+        try {
+            $userStmt = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
+            $userStmt->execute([$payload['id']]);
+            $user = $userStmt->fetch();
+            $contactEmail = (string)getSetting($db, 'contact_email', '');
+            $lang = (string)($order['customer_lang'] ?? 'tr');
+
+            if ($user && function_exists('sendTransactionalEmail')) {
+                // Müşteri: locale-aware "ödeme bekleniyor"
+                $custMail = buildManualTransferEmail('pending', $lang, [
+                    'order_number' => $order['order_number'],
+                    'order_id' => $order['id'],
+                    'first_name' => $user['first_name'] ?? '',
+                    'amount' => $order['total_amount'],
+                    'currency' => $order['currency'] ?? 'TRY',
+                    'bank_info' => $bankInfo
+                ]);
+                sendTransactionalEmail($db, (string)$user['email'], $custMail['subject'], $custMail['html']);
+
+                // Admin: kısa Türkçe bildirim
+                if ($contactEmail) {
+                    $orderNo = htmlspecialchars((string)$order['order_number'], ENT_QUOTES, 'UTF-8');
+                    $amountFmt = number_format((float)$order['total_amount'], 2, '.', ',') . ' ' . (string)($order['currency'] ?? 'TRY');
+                    $custEmail = htmlspecialchars((string)$user['email'], ENT_QUOTES, 'UTF-8');
+                    $adminHtml = "<p>Yeni manuel havale siparişi: <strong>{$orderNo}</strong>, müşteri {$custEmail}, tutar {$amountFmt}.
+                        Para hesaba ulaştığında admin panelinden onaylayın.</p>";
+                    sendTransactionalEmail($db, $contactEmail, '[Khilonfast] Manual Transfer Pending — ' . (string)$order['order_number'], $adminHtml);
+                }
+            }
+        } catch (Throwable $mailErr) {
+            error_log('[manual-transfer] mail error: ' . $mailErr->getMessage());
+        }
+
+        sendResponse([
+            'message' => 'Manual transfer order created. Awaiting payment.',
+            'order' => [
+                'id' => (int)$order['id'],
+                'order_number' => $order['order_number'],
+                'status' => 'processing'
+            ],
+            'amount' => (float)$order['total_amount'],
+            'currency' => (string)($order['currency'] ?? 'TRY'),
+            'bank_info' => $bankInfo
+        ]);
+    } catch (Throwable $e) {
+        if ($db->inTransaction()) $db->rollBack();
+        sendResponse(['error' => 'Manual transfer failed: ' . $e->getMessage()], 500);
     }
 }
 
@@ -517,72 +805,217 @@ if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
                 'message' => 'Payment already finalized (idempotent)',
                 'status' => 'success',
                 'transactionId' => $transactionId,
+                'resolvedStatus' => 'completed',
+                'finalSuccess' => true,
                 'alreadyProcessed' => true
             ]);
         }
 
         $normalizedStatus = strtolower($status);
+        $is3dSuccess = in_array($normalizedStatus, ['3dsuccess', 'success'], true) && stripos($status, '3d') !== false;
         $isSuccess = in_array($normalizedStatus, ['success', '3dsuccess', 'approved', 'completed', 'transferred', 'received'], true);
 
-        $stmt = $db->prepare("UPDATE payments SET status = ?, lidio_response = ? WHERE order_id = ?");
-        $stmt->execute([$isSuccess ? 'success' : 'failed', json_encode($callback, JSON_UNESCAPED_UNICODE), $order['id']]);
+        // 3DSuccess durumunda Lidio FinishPaymentProcess çağrısı zorunlu — aksi halde
+        // ödeme banka tarafında preauth'da kalır, finansallaşmaz.
+        // Ayrıca FinishPP cevabında fraudControlResult döner (final fraud kararı).
+        $finishResponse = null;
+        if ($is3dSuccess && $transactionId) {
+            try {
+                $finishResponse = $lidio->finishPaymentProcess([
+                    'orderId' => $orderIdLike ?: ('KHL' . $order['id']),
+                    'transactionId' => $transactionId,
+                    'amount' => (float)$order['total_amount'],
+                    'currency' => (string)($order['currency'] ?? 'TRY')
+                ]);
+            } catch (Throwable $finishErr) {
+                error_log('FinishPaymentProcess error: ' . $finishErr->getMessage());
+            }
+        }
 
-        if ($isSuccess) {
+        // Sipariş statüsünü Result + FraudControlResult'a göre belirle
+        $combinedPayload = [ 'callback' => $callback, 'finishPaymentProcess' => $finishResponse ];
+        $resolvedStatus = 'failed';
+        if ($finishResponse) {
+            $resolvedStatus = $lidio->resolveOrderStatusFromResponse($finishResponse);
+        } elseif ($isSuccess) {
+            // PN (notification) gibi callback'ler — fraudControlResult callback payload'ında olabilir
+            $cbFraud = strtolower((string)(
+                $callback['fraudControlResult']
+                ?? $callback['FraudControlResult']
+                ?? $callback['fraudControlInfo']['fraudControlResult']
+                ?? $callback['FraudControlInfo']['FraudControlResult']
+                ?? ''
+            ));
+            if ($cbFraud === 'riskdetected') $resolvedStatus = 'failed';
+            elseif ($cbFraud === 'inprocess') $resolvedStatus = 'processing';
+            else $resolvedStatus = 'completed'; // RiskNotDetected, NotProcessed veya alan yok
+        }
+
+        $paymentStatusMap = [
+            'completed' => 'success',
+            'processing' => 'pending',  // InProcess — PN beklenir
+            'failed' => 'failed'
+        ];
+
+        $stmt = $db->prepare("UPDATE payments SET status = ?, lidio_response = ? WHERE order_id = ?");
+        $stmt->execute([
+            $paymentStatusMap[$resolvedStatus] ?? 'failed',
+            json_encode($combinedPayload, JSON_UNESCAPED_UNICODE),
+            $order['id']
+        ]);
+
+        // RiskDetected veya InProcess durumunda subscription oluşturulmaz (ürün gönderilmez/beklenir)
+        if ($resolvedStatus === 'completed') {
             $stmt = $db->prepare("UPDATE orders SET status = 'completed' WHERE id = ?");
             $stmt->execute([$order['id']]);
 
+            // Fatura kuyruğuna ekle (Paraşüt) — 3D Secure callback başarı
+            try {
+                require_once __DIR__ . '/../services/InvoiceService.php';
+                invoiceQueueForOrder($db, (int)$order['id']);
+            } catch (Throwable $e) { error_log('[invoice queue 3ds] ' . $e->getMessage()); }
+
+            // Misafir checkout welcome e-postası — yalnızca ödeme onaylanınca gönder.
+            // (Daha önce orders.php'de pending durumdayken gidiyordu — bug fix)
+            try {
+                sendGuestWelcomeEmailIfNeeded($db, (int)$order['user_id']);
+            } catch (Throwable $welcomeErr) {
+                error_log('[callback] guest welcome: ' . $welcomeErr->getMessage());
+            }
+
             // Email automation: purchase_completed event + terk edilen sepet queue'sunu iptal et
             try {
-                $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ? LIMIT 1");
+                $stmtUser = $db->prepare("SELECT email, first_name, last_name FROM users WHERE id = ? LIMIT 1");
                 $stmtUser->execute([$order['user_id']]);
                 $cbUser = $stmtUser->fetch();
                 if ($cbUser) {
                     $eaStmt = $db->prepare("INSERT INTO email_events (event_type, email, user_id) VALUES ('purchase_completed', ?, ?)");
                     $eaStmt->execute([$cbUser['email'], $order['user_id']]);
                     $db->prepare("UPDATE email_queue SET status='cancelled' WHERE email=? AND status='pending'")->execute([$cbUser['email']]);
+
+                    // V2 Automation Engine — purchase_completed trigger (separate from legacy)
+                    try {
+                        require_once __DIR__ . '/../services/AutomationEngine.php';
+                        (new AutomationEngine($db))->trigger('purchase_completed', [
+                            'email'      => $cbUser['email'],
+                            'first_name' => $cbUser['first_name'] ?? '',
+                            'last_name'  => $cbUser['last_name'] ?? '',
+                            'user_id'    => (int)$order['user_id'],
+                            'order_id'   => (string)$order['id'],
+                            'order_number' => (string)($order['order_number'] ?? $order['id']),
+                        ]);
+                    } catch (Throwable $autoErr) {
+                        error_log('[automation] purchase_completed trigger fail: ' . $autoErr->getMessage());
+                    }
+
+                    // Eye Tracking welcome mail + pending-upload otomasyonu
+                    dispatchEyeWelcomeMail($db, (int)$order['id'], [
+                        'email' => $cbUser['email'],
+                        'first_name' => $cbUser['first_name'] ?? '',
+                        'last_name' => $cbUser['last_name'] ?? '',
+                        'id' => $order['user_id']
+                    ]);
                 }
             } catch (Throwable $eaError) {
                 error_log('Email automation event error (callback): ' . $eaError->getMessage());
             }
 
-            $stmtItems = $db->prepare("SELECT product_id FROM order_items WHERE order_id = ?");
-            $stmtItems->execute([$order['id']]);
-            $items = $stmtItems->fetchAll();
-
-            $stmtExists = $db->prepare("SELECT id FROM subscriptions WHERE user_id = ? AND product_id = ? AND order_id = ? LIMIT 1");
-            $stmtInsert = $db->prepare(
-                "INSERT INTO subscriptions (user_id, product_id, order_id, status, starts_at, expires_at, auto_renew, next_renewal_at)
-                 VALUES (?, ?, ?, 'active', NOW(), ?, ?, ?)"
-            );
-            foreach ($items as $item) {
-                $stmtExists->execute([$order['user_id'], $item['product_id'], $order['id']]);
-                if (!$stmtExists->fetch()) {
-                    // duration_days varsa expires_at hesapla
-                    $stmtDur = $db->prepare("SELECT duration_days, type FROM products WHERE id = ? LIMIT 1");
-                    $stmtDur->execute([$item['product_id']]);
-                    $prod = $stmtDur->fetch();
-                    $expiresAt = null;
-                    $nextRenewalAt = null;
-                    $autoRenew = 0;
-                    if ($prod && (int)($prod['duration_days'] ?? 0) > 0) {
-                        $days = (int)$prod['duration_days'];
-                        $expiresAt = date('Y-m-d H:i:s', strtotime("+{$days} days"));
-                        if ($prod['type'] === 'subscription') {
-                            $autoRenew = 1;
-                            $nextRenewalAt = $expiresAt;
-                        }
-                    }
-                    $stmtInsert->execute([$order['user_id'], $item['product_id'], $order['id'], $expiresAt, $autoRenew, $nextRenewalAt]);
+            // Lidio sanal POS — kart token'ı varsa user_cards'a yaz, renewal_card_id olarak bağla.
+            $renewalCardId = null;
+            $cardToken = $finishResponse['cardToken'] ?? $finishResponse['CardToken'] ?? null;
+            if ($cardToken) {
+                $maskedNumber = $finishResponse['maskedCardNumber'] ?? $finishResponse['MaskedCardNumber'] ?? '';
+                $cardBrand = $finishResponse['cardBrand'] ?? $finishResponse['CardBrand'] ?? null;
+                // Token zaten varsa idempotent
+                $stmtCardExists = $db->prepare("SELECT id FROM user_cards WHERE user_id = ? AND lidio_token = ? LIMIT 1");
+                $stmtCardExists->execute([$order['user_id'], $cardToken]);
+                $existingCard = $stmtCardExists->fetch();
+                if ($existingCard) {
+                    $renewalCardId = (int)$existingCard['id'];
+                } else {
+                    $stmtCardInsert = $db->prepare(
+                        "INSERT INTO user_cards (user_id, lidio_token, masked_number, card_brand, is_default)
+                         VALUES (?, ?, ?, ?, 0)"
+                    );
+                    $stmtCardInsert->execute([$order['user_id'], $cardToken, $maskedNumber, $cardBrand]);
+                    $renewalCardId = (int)$db->lastInsertId();
                 }
             }
+            createSubscriptionsForOrder($db, (int)$order['user_id'], (int)$order['id'], 'credit_card', $renewalCardId);
+
+            // Onboarding form mail tetikleyici — form-required her sipariş kalemi için ayrı mail
+            try {
+                if (function_exists('buildManualTransferEmail')) {
+                    $stmtUser2 = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
+                    $stmtUser2->execute([$order['user_id']]);
+                    $cbUser2 = $stmtUser2->fetch();
+                    if ($cbUser2) {
+                        $stmtItems = $db->prepare(
+                            "SELECT oi.id AS order_item_id, p.name AS product_name
+                             FROM order_items oi
+                             JOIN products p ON p.id = oi.product_id
+                             WHERE oi.order_id = ? AND COALESCE(p.requires_onboarding, 0) = 1"
+                        );
+                        $stmtItems->execute([$order['id']]);
+                        $obItems = $stmtItems->fetchAll();
+                        foreach ($obItems as $obIt) {
+                            $obMail = buildManualTransferEmail('onboarding-link', (string)($order['customer_lang'] ?? 'tr'), [
+                                'order_number' => $order['order_number'],
+                                'order_id' => $order['id'],
+                                'order_item_id' => $obIt['order_item_id'],
+                                'product_name' => $obIt['product_name'],
+                                'first_name' => $cbUser2['first_name'] ?? ''
+                            ]);
+                            sendTransactionalEmail($db, (string)$cbUser2['email'], $obMail['subject'], $obMail['html']);
+                        }
+                    }
+                }
+            } catch (Throwable $obErr) {
+                error_log('[callback] onboarding mail: ' . $obErr->getMessage());
+            }
+
+            // Genel sipariş onay maili — HER tamamlanan sipariş için (ürün tipi/form fark etmez).
+            // Kayıtlı müşteri + form-gerektirmeyen ürün (eğitim/Maestro/Eye Tracking) alımında
+            // başka hiçbir mail tetiklenmiyordu; bu blok o boşluğu kapatır.
+            try {
+                if (function_exists('buildManualTransferEmail')) {
+                    $stmtCu = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
+                    $stmtCu->execute([$order['user_id']]);
+                    $cu = $stmtCu->fetch();
+                    if ($cu && !empty($cu['email'])) {
+                        $confMail = buildManualTransferEmail('confirmed', (string)($order['customer_lang'] ?? 'tr'), [
+                            'order_number' => $order['order_number'],
+                            'order_id'     => $order['id'],
+                            'first_name'   => $cu['first_name'] ?? '',
+                            'amount'       => $order['total_amount'] ?? 0,
+                            'currency'     => $order['currency'] ?? 'TRY'
+                        ]);
+                        sendTransactionalEmail($db, (string)$cu['email'], $confMail['subject'], $confMail['html']);
+                    }
+                }
+            } catch (Throwable $cmErr) {
+                error_log('[callback] confirm mail: ' . $cmErr->getMessage());
+            }
+        } elseif ($resolvedStatus === 'processing') {
+            // Fraud kontrolü InProcess — Lidio'dan asenkron PN beklenir, sipariş bekleme statüsünde
+            $stmt = $db->prepare("UPDATE orders SET status = 'processing' WHERE id = ?");
+            $stmt->execute([$order['id']]);
         } else {
+            // RiskDetected veya Refused — sipariş başarısız
             $stmt = $db->prepare("UPDATE orders SET status = 'failed' WHERE id = ?");
             $stmt->execute([$order['id']]);
             couponReleaseUsageForOrder($db, $order['id']);
         }
 
         $db->commit();
-        sendResponse(['message' => 'Payment callback processed', 'status' => $status, 'transactionId' => $transactionId]);
+        sendResponse([
+            'message' => 'Payment callback processed',
+            'status' => $status,
+            'transactionId' => $transactionId,
+            'resolvedStatus' => $resolvedStatus,
+            'fraudControlResult' => $finishResponse['fraudControlResult'] ?? ($callback['fraudControlResult'] ?? null),
+            'finalSuccess' => $resolvedStatus === 'completed'
+        ]);
     } catch (Throwable $e) {
         if ($db->inTransaction()) $db->rollBack();
         sendResponse(['error' => $e->getMessage()], 500);

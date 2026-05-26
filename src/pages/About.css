@@ -209,18 +209,21 @@
 /* Service Model */
 .about-model-top {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 34px;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
     padding: 100px 0 24px;
+    align-items: center;
 }
 
 .model-hero-visual {
-    order: -1;
+    order: 2;
 }
 
 .model-hero-visual .rounded-img {
-    max-height: 460px;
+    width: 100%;
+    max-height: 340px;
     object-fit: cover;
+    border-radius: 16px;
 }
 
 .model-sub-sections {
@@ -581,7 +584,16 @@
     }
 
     .about-model-top {
+        grid-template-columns: 1fr;
         padding: 60px 0 16px;
+    }
+
+    .model-hero-visual {
+        order: -1;
+    }
+
+    .model-hero-visual .rounded-img {
+        max-height: 240px;
     }
 
     .about-banner-quote h3 {

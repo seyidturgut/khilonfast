@@ -12,6 +12,14 @@ Options -MultiViews
   <FilesMatch "\.mjs$">
     Header set Content-Type "application/javascript"
   </FilesMatch>
+
+  # SEO audit: HSTS — tüm cevaplara HTTPS-zorlama bildirimi
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # SEO audit: PDF/image gibi statik asset'ler arama sonuçlarında listelenmesin
+  <FilesMatch "\.(pdf|png|jpg|jpeg|svg|webp|gif|ico|css|js|mjs|woff|woff2|ttf|eot)$">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </FilesMatch>
 </IfModule>
 
 # Apache mod_dir'in otomatik trailing slash eklemesini kapat (canonical = no-slash)

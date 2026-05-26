@@ -33,7 +33,7 @@ export default function IndustrialFoodMarketing() {
 
     const trConfig = {
         hero: {
-            title: 'Endüstriyel Gıda & Şef Çözümleri Firmaları İçin Tek Noktadan Pazarlama Çözümleri',
+            title: 'Endüstriyel Gıda & Şef Çözümleri için 360° Pazarlama Çözümleri',
             subtitle: '',
             description: 'khilonfast ile Endüstriyel Gıda ve Şef Çözümleri sektöründe fark yaratacak pazarlama süreçlerinizi zahmetsizce yönetin, sektör uzmanlığıyla etkili sonuçlar elde edin.',
             buttonText: 'Hizmetleri Keşfedin',
@@ -151,16 +151,16 @@ export default function IndustrialFoodMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Endüstriyel Gıda Bütünleşik Dijital Pazarlama" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Endüstriyel Gıda Bütünleşik Dijital Pazarlama" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Endüstriyel Gıda & Şef Çözümleri Sektörü İçin Dijital Kanalları Tek Bir Stratejide Birleştirin!</h2>
-                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Endüstriyel Gıda & Şef Çözümleri için Bütünleşik Dijital Pazarlama</h2>
+                                    <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Endüstriyel Gıda için bütünleşik pazarlama stratejileri ile markanızı büyütün!</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
-                                        khilonfast ile bütçenizi doğru kanallara yönlendirerek dijital pazarlamanızı güçlendirin. Tüm kanallarınızı tek bir strateji ile yöneterek performansınızı artırın.
+                                        khilonfast ile bütçenizi doğru kanallara yönlendirin. Tüm kanallarınızı tek strateji ile yönetin, performans artırın.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
                                         Endüstriyel Gıda & Şef Çözümleri Sektöründe Bütünleşik Dijital Pazarlama ile Başarıya Ulaşın. Dijital kanalların entegrasyonu ile daha fazla etkileşim, daha fazla dönüşüm elde edin. khilonfast ile pazarlama yatırımlarınızı optimize edin.
@@ -299,15 +299,15 @@ export default function IndustrialFoodMarketing() {
         ...trConfig,
         hero: {
             ...trConfig.hero,
-            title: `360° Marketing Management for Industrial Food & Chef Solutions Companies`,
+            title: `360° Marketing Management for Industrial Food & Culinary Companies`,
             subtitle: '',
             description: `Scale B2B demand generation in food with khilonfast through an integrated and execution-focused marketing operating model.`,
             buttonText: 'Explore Solutions',
-            badgeText: 'Industrial Food & Chef Solution Companies Growth Engine'
+            badgeText: 'Industrial Food & Culinary Companies Growth Engine'
         },
         breadcrumbs: [
             { label: 'Sectoral Services', path: `${path('home')}#sectoral-services`.replace('/#', '/#') },
-            { label: `360 Marketing Management for Industrial Food & Chef Solution Companies` }
+            { label: `360 Marketing Management for Industrial Food & Culinary Companies` }
         ],
         videoShowcase: {
             ...trConfig.videoShowcase,
@@ -322,7 +322,7 @@ export default function IndustrialFoodMarketing() {
         },
         tabsSection: {
             ...trConfig.tabsSection,
-            tag: `For Industrial Food & Chef Solution Companies`,
+            tag: `For Industrial Food & Culinary Companies`,
             title: '360 Strategic Marketing Solutions',
             description1: 'Choose the right growth architecture for your market dynamics.',
             description2: 'Deploy quickly with khilonfast and scale with measurable outcomes.',
@@ -349,7 +349,7 @@ export default function IndustrialFoodMarketing() {
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h3>Growth-Focused Training for Industrial Food & Chef Solution Companies</h3>
+                                    <h3>Growth-Focused Training for Industrial Food & Culinary Companies</h3>
                                     <p>Master a proven operating system that aligns strategy, channel execution, and commercial outcomes.</p>
                                     <Link to={path('trainingFood')} className="sectoral-btn">{t('pricing.buyNow')}</Link>
                                 </div>
@@ -404,22 +404,22 @@ export default function IndustrialFoodMarketing() {
                                     <EditableMedia pageSlug={cmsSlug} fieldKey="tab_packages_image" type="image" src="/images/hizmetlerimiz/butunlesik-dijital-pazarlama/hero.avif" currentLang={currentLang}>
                                         {(src) => (
                                             <div className="sectoral-split-video" style={{ display: 'flex', alignItems: 'center' }}>
-                                                <img src={src} alt="Industrial Food Integrated Digital Marketing" style={{ width: '100%', borderRadius: '16px', objectFit: 'cover' }} />
+                                                <img src={src} alt="Industrial Food & Culinary Integrated Digital Marketing" width={1200} height={675} style={{ width: '100%', height: 'auto', aspectRatio: '16/9', borderRadius: '16px', objectFit: 'cover' }} />
                                             </div>
                                         )}
                                     </EditableMedia>
                                 </div>
                                 <div className="sectoral-card">
-                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Unify Industrial Food Digital Channels Into a Single Strategy!</h2>
+                                    <h2 style={{ fontSize: '1.4rem', color: '#1a3a52', marginBottom: '12px' }}>Unify Industrial Food & Culinary Digital Channels Into a Single Strategy!</h2>
                                     <h4 style={{ fontSize: '1rem', color: '#374151', marginBottom: '16px', fontWeight: '600' }}>Grow your brand with integrated marketing strategies!</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
                                         With khilonfast, direct your budget to the right channels and strengthen your digital marketing. Manage all your channels with a single strategy to boost performance.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '12px' }}>
-                                        Achieve success with Integrated Digital Marketing in the Industrial Food Sector. Get more engagement and more conversions through digital channel integration. Optimize your marketing investments with khilonfast.
+                                        Achieve success with Integrated Digital Marketing in the Industrial Food & Culinary Sector. Get more engagement and more conversions through digital channel integration. Optimize your marketing investments with khilonfast.
                                     </p>
                                     <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '20px' }}>
-                                        Integrated Digital Marketing Solutions for the Industrial Food Sector
+                                        Integrated Digital Marketing Solutions for the Industrial Food & Culinary Sector
                                     </p>
                                     <Link to="/en/services/industrial-food-integrated-digital-marketing" className="sectoral-btn">Learn More</Link>
                                 </div>
@@ -466,7 +466,7 @@ export default function IndustrialFoodMarketing() {
                     id: 'strategy',
                     label: 'Strategy & Advisory',
                     icon: tabIcon('strategy') || <HiChartBar />,
-                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Industrial Food & Chef Solution Companies" gtmContext="For industrial food and chef solution companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-industrial-food" sectorSlug="endustriyel-gida" />
+                    content: <StrategyAdvisoryTabContent isEn={true} advisoryTitle="Growth-Focused Marketing Advisory for Industrial Food & Culinary Companies" gtmContext="For industrial food and culinary companies," advisoryPath="/en/consulting/growth-focused-marketing-consulting-for-industrial-food" sectorSlug="endustriyel-gida" />
                 },
                 {
                     id: 'analysis',

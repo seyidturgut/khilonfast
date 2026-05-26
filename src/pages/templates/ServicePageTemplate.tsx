@@ -20,6 +20,7 @@ import enCommon from '../../locales/en/common.json'
 import { getLocalePrefix, resolveLocaleFromPath } from '../../utils/locale'
 import { API_BASE_URL } from '../../config/api'
 import EditableMedia from '../../components/cms/EditableMedia'
+import ComingSoonModal from '../../components/ComingSoonModal'
 
 export interface PricingPackage {
     id: string;
@@ -244,6 +245,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     const { addToCart } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [downloadModalUrl, setDownloadModalUrl] = useState<string | null>(null);
+    const [comingSoonOpen, setComingSoonOpen] = useState(false);
     const [dynamicPackages, setDynamicPackages] = useState<PricingPackage[]>(props.serviceKey ? [] : props.pricingSection.packages);
     const [dynamicHero, setDynamicHero] = useState(props.hero);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
@@ -585,7 +587,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     fullName: localizedPkg.name || localPkg.name,
                                     name: localPkg.name || (localizedPkg.name?.includes('-') ? localizedPkg.name.split('-').pop()?.trim() : localizedPkg.name),
                                     price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: pkg.currency, maximumFractionDigits: 0 }).format(pkg.price) + '*',
-                                    period: pkg.duration_days ? (currentLang === 'tr' ? `${pkg.duration_days} Gün` : `${pkg.duration_days} Days`) : (localPkg.period || t('pricing.monthly')),
+                                    period: pkg.duration_days
+                                        ? (pkg.duration_days === 30 ? (currentLang === 'tr' ? 'Ay' : 'Month') : (currentLang === 'tr' ? `${pkg.duration_days} Gün` : `${pkg.duration_days} Days`))
+                                        : (localPkg.period || t('pricing.monthly')),
                                     description: localizedPkg.description || localPkg.description || props.pricingSection.description,
                                     features: (localPkg.features && localPkg.features.length > 0) ? localPkg.features : (localizedPkg.features ? localizedPkg.features.split('\n') : []),
                                     isPopular: pkg.product_key.includes('growth') || localPkg.isPopular,
@@ -608,7 +612,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     maximumFractionDigits: 0
                                 }).format(Number(priceProduct.price)) + '*',
                                 period: priceProduct.duration_days
-                                    ? (currentLang === 'tr' ? `${priceProduct.duration_days} Gün` : `${priceProduct.duration_days} Days`)
+                                    ? (priceProduct.duration_days === 30
+                                        ? (currentLang === 'tr' ? 'Ay' : 'Month')
+                                        : (currentLang === 'tr' ? `${priceProduct.duration_days} Gün` : `${priceProduct.duration_days} Days`))
                                     : (localPkg.period || t('pricing.monthly')),
                                 description: localPkg.description || textProduct.description || props.pricingSection.description,
                                 features: (localPkg.features && localPkg.features.length > 0) ? localPkg.features : (textProduct.features ? String(textProduct.features).split('\n') : []),
@@ -917,6 +923,12 @@ export default function ServicePageTemplate(props: ServicePageProps) {
 
             const productKey = pkg.productKey || productKeyMap[pkg.id] || pkg.id;
 
+            // Maestro AI henüz satın alınamaz — sepete eklenmez, "çok yakında" modalı açılır.
+            if (String(productKey).toLowerCase().startsWith('maestro-')) {
+                setComingSoonOpen(true);
+                return;
+            }
+
             const priceNum = parseLocalizedPrice(pkg.price)
 
             addToCart({
@@ -1107,7 +1119,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         </EditableMedia>
                                     ) : (
                                         <EditableMedia pageSlug={cmsSlug} fieldKey="heroImage" type="image" src={displayHero.image} currentLang={currentLang}>
-                                            {(src) => <img src={src} alt={displayHero.title} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />}
+                                            {(src) => <img src={src} alt={displayHero.title} width={1200} height={800} className={`hero-main-img ${displayHero.hideBadge ? 'no-badge-image' : ''} ${displayHero.imageClassName || ''}`} />}
                                         </EditableMedia>
                                     )}
                                     {!displayHero.hideBadge && (
@@ -1266,7 +1278,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         {feature.image ? (
                                             <div className="feature-image-box" style={{ position: 'relative' }}>
                                                 <EditableMedia pageSlug={cmsSlug} fieldKey={`feature_image_${idx}`} type="image" src={feature.image} currentLang={currentLang}>
-                                                    {(src) => <img src={src} alt={feature.title} />}
+                                                    {(src) => <img src={src} alt={feature.title} width={600} height={400} loading="lazy" />}
                                                 </EditableMedia>
                                             </div>
                                         ) : (
@@ -1359,6 +1371,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                             <div className="pkg-price-wrap">
                                                 <span className="pkg-price">{pkg.price}</span>
                                                 <span className="pkg-period">/{pkg.period}</span>
+                                            </div>
+                                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: 4, textAlign: 'center' }}>
+                                                {currentLang === 'en' ? '+ VAT (20%)' : '+ KDV (%20)'}
                                             </div>
                                             <p className="pkg-desc">{pkg.description}</p>
                                         </div>
@@ -1462,6 +1477,9 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                             <div className="pkg-price-wrap">
                                                 <span className="pkg-price">{pkg.price}</span>
                                                 <span className="pkg-period">/{pkg.period}</span>
+                                            </div>
+                                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: 4, textAlign: 'center' }}>
+                                                {currentLang === 'en' ? '+ VAT (20%)' : '+ KDV (%20)'}
                                             </div>
                                             <p className="pkg-desc">{pkg.description}</p>
                                         </div>
@@ -1756,7 +1774,7 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                         {item.image && (
                                             <div className="approach-image-box" style={{ position: 'relative' }}>
                                                 <EditableMedia pageSlug={cmsSlug} fieldKey={`approach_image_${idx}`} type="image" src={item.image} currentLang={currentLang}>
-                                                    {(src) => <img src={src} alt={item.title} className="approach-image" />}
+                                                    {(src) => <img src={src} alt={item.title} width={600} height={400} loading="lazy" className="approach-image" />}
                                                 </EditableMedia>
                                             </div>
                                         )}
@@ -2059,6 +2077,12 @@ export default function ServicePageTemplate(props: ServicePageProps) {
             )}
 
             <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+            <ComingSoonModal
+                open={comingSoonOpen}
+                onClose={() => setComingSoonOpen(false)}
+                lang={currentLang}
+            />
         </div>
     )
 }

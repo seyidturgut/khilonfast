@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
-import { HiSave } from 'react-icons/hi';
+import { HiSave, HiRefresh, HiCurrencyDollar } from 'react-icons/hi';
+
+interface ExchangeRateInfo {
+    rate: number;
+    source: 'manual' | 'auto';
+    updated_at: string | null;
+    auto_update?: boolean;
+}
 
 export default function SettingsPage() {
     const ADMIN_API_BASE = import.meta.env.VITE_API_URL || '/api';
@@ -9,10 +16,64 @@ export default function SettingsPage() {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-    // Initial load
+    // USD/TRY oranı
+    const [rateInfo, setRateInfo] = useState<ExchangeRateInfo | null>(null);
+    const [rateInput, setRateInput] = useState('');
+    const [rateAutoUpdate, setRateAutoUpdate] = useState(true);
+    const [rateBusy, setRateBusy] = useState(false);
+
+    const fetchRate = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${ADMIN_API_BASE}/admin/exchange-rate`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!res.ok) return;
+            const data = (await res.json()) as ExchangeRateInfo;
+            setRateInfo(data);
+            setRateInput(String(data.rate));
+            setRateAutoUpdate(data.auto_update !== false);
+        } catch { /* ignore */ }
+    };
+
+    const saveRate = async () => {
+        setRateBusy(true);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${ADMIN_API_BASE}/admin/exchange-rate`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ rate: Number(rateInput), auto_update: rateAutoUpdate })
+            });
+            if (!res.ok) throw new Error('save failed');
+            await fetchRate();
+            setMessage({ type: 'success', text: 'USD/TRY oranı güncellendi.' });
+        } catch (err: any) {
+            setMessage({ type: 'error', text: 'Oran kaydedilemedi: ' + (err?.message || '') });
+        } finally {
+            setRateBusy(false);
+        }
+    };
+
+    const refreshRateFromApi = async () => {
+        setRateBusy(true);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${ADMIN_API_BASE}/admin/exchange-rate/refresh`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('refresh failed');
+            await fetchRate();
+            setMessage({ type: 'success', text: 'Kur güncel piyasa verisinden yenilendi.' });
+        } catch (err: any) {
+            setMessage({ type: 'error', text: 'Kur yenilenemedi (API erişilemedi): ' + (err?.message || '') });
+        } finally {
+            setRateBusy(false);
+        }
+    };
+
     useEffect(() => {
-        // Since we don't have the api method yet, we'll fetch directly or add to api.ts later
-        // For now let's assume direct fetch with token
         const fetchSettings = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -30,6 +91,7 @@ export default function SettingsPage() {
             }
         };
         fetchSettings();
+        fetchRate();
     }, []);
 
     const handleChange = (key: string, value: string) => {
@@ -120,6 +182,68 @@ export default function SettingsPage() {
                                 className="form-control"
                             />
                         </div>
+                    </div>
+                </div>
+
+                {/* USD/TRY Kuru */}
+                <div className="card" style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+                    <h2 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <HiCurrencyDollar /> USD/TRY Kuru
+                    </h2>
+                    <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 1rem' }}>
+                        USD ürünleri sepette/ödemede bu kurla TRY'a çevrilir. Otomatik güncelleme açıksa
+                        24 saatte bir piyasa verisinden yenilenir; manuel set ettiğinde override eder.
+                    </p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: '0.75rem', alignItems: 'end' }}>
+                        <div className="form-group" style={{ minWidth: 160 }}>
+                            <label>Kur (1 USD = ? TL)</label>
+                            <input
+                                type="number"
+                                step="0.0001"
+                                min="0"
+                                value={rateInput}
+                                onChange={(e) => setRateInput(e.target.value)}
+                                className="form-control"
+                            />
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: '#475569', paddingBottom: 8 }}>
+                            <div><strong>Kaynak:</strong> {rateInfo?.source === 'auto' ? 'Otomatik (TCMB günlük kur)' : 'Manuel'}</div>
+                            <div><strong>Son güncelleme:</strong> {rateInfo?.updated_at
+                                ? new Date(rateInfo.updated_at).toLocaleString('tr-TR')
+                                : '—'}
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={refreshRateFromApi}
+                            disabled={rateBusy}
+                            className="btn"
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: 6, cursor: 'pointer', height: 38 }}
+                        >
+                            <HiRefresh /> {rateBusy ? '...' : 'Şimdi yenile'}
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: '0.75rem' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.9rem' }}>
+                            <input
+                                type="checkbox"
+                                checked={rateAutoUpdate}
+                                onChange={(e) => setRateAutoUpdate(e.target.checked)}
+                            />
+                            24 saatte bir otomatik güncelle (TCMB günlük kur)
+                        </label>
+                        <button
+                            type="button"
+                            onClick={saveRate}
+                            disabled={rateBusy}
+                            className="btn btn-primary"
+                            style={{ marginLeft: 'auto' }}
+                        >
+                            <HiSave style={{ marginRight: 6 }} />
+                            {rateBusy ? 'Kaydediliyor...' : 'Kuru kaydet'}
+                        </button>
                     </div>
                 </div>
 
@@ -377,6 +501,158 @@ export default function SettingsPage() {
                         </div>
                         <small style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '-0.5rem' }}>
                             ⚠️ Bu bilgiler hassastır. Güvenli bir şekilde saklanır ve asla loglanmaz.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            {/* Paraşüt / Muhasebe Ayarları */}
+            <div id="muhasebe" className="card" style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', marginTop: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
+                    <h2 style={{ fontSize: '1.2rem', margin: 0 }}>Paraşüt E-Fatura Ayarları</h2>
+                    {/* AÇIK/KAPALI Toggle — admin tek tıkla entegrasyonu duraklat/aktifleştir */}
+                    {(() => {
+                        const enabled = (settings.parasut_enabled || '0') === '1';
+                        return (
+                            <label style={{ display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                                <span style={{ fontSize: '0.9rem', fontWeight: 600, color: enabled ? '#16a34a' : '#94a3b8' }}>
+                                    {enabled ? '✅ Aktif' : '⏸️ Pasif'}
+                                </span>
+                                <span
+                                    role="switch"
+                                    aria-checked={enabled}
+                                    onClick={() => handleChange('parasut_enabled', enabled ? '0' : '1')}
+                                    style={{
+                                        position: 'relative', display: 'inline-block', width: 48, height: 26,
+                                        background: enabled ? '#16a34a' : '#cbd5e1', borderRadius: 999,
+                                        transition: 'background 0.2s',
+                                    }}
+                                >
+                                    <span style={{
+                                        position: 'absolute', top: 3, left: enabled ? 25 : 3,
+                                        width: 20, height: 20, background: '#fff', borderRadius: '50%',
+                                        transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                                    }} />
+                                </span>
+                            </label>
+                        );
+                    })()}
+                </div>
+                {(settings.parasut_enabled || '0') !== '1' && (
+                    <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', color: '#92400e', padding: 10, borderRadius: 8, marginBottom: 14, fontSize: '0.9rem' }}>
+                        ⚠️ Paraşüt entegrasyonu şu an <strong>pasif</strong>. Yeni siparişlerde fatura kesilmiyor. Aktifleştirmek için sağ üstteki anahtarı aç ve <strong>Ayarları Kaydet</strong>.
+                    </div>
+                )}
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div className="form-group">
+                            <label>Client ID</label>
+                            <input
+                                type="text"
+                                value={settings.parasut_client_id || ''}
+                                onChange={e => handleChange('parasut_client_id', e.target.value)}
+                                className="form-control"
+                                autoComplete="off"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Client Secret</label>
+                            <input
+                                type="password"
+                                value={settings.parasut_client_secret || ''}
+                                onChange={e => handleChange('parasut_client_secret', e.target.value)}
+                                className="form-control"
+                                autoComplete="new-password"
+                                placeholder={settings.parasut_client_secret ? '••••••••' : ''}
+                            />
+                        </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div className="form-group">
+                            <label>Paraşüt E-posta</label>
+                            <input
+                                type="email"
+                                value={settings.parasut_email || ''}
+                                onChange={e => handleChange('parasut_email', e.target.value)}
+                                className="form-control"
+                                autoComplete="off"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Paraşüt Şifre</label>
+                            <input
+                                type="password"
+                                value={settings.parasut_password || ''}
+                                onChange={e => handleChange('parasut_password', e.target.value)}
+                                className="form-control"
+                                autoComplete="new-password"
+                                placeholder={settings.parasut_password ? '••••••••' : ''}
+                            />
+                        </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div className="form-group">
+                            <label>Company ID (boşsa otomatik)</label>
+                            <input
+                                type="text"
+                                value={settings.parasut_company_id || ''}
+                                onChange={e => handleChange('parasut_company_id', e.target.value)}
+                                className="form-control"
+                                placeholder="Otomatik tespit edilecek"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Varsayılan KDV (%)</label>
+                            <input
+                                type="number"
+                                value={settings.default_vat_rate || '20'}
+                                onChange={e => handleChange('default_vat_rate', e.target.value)}
+                                className="form-control"
+                                min={0}
+                                max={100}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                            <input
+                                type="checkbox"
+                                checked={(settings.prices_include_vat || '0') === '1'}
+                                onChange={e => handleChange('prices_include_vat', e.target.checked ? '1' : '0')}
+                            />
+                            <span>Ürün fiyatları <strong>KDV DAHİL</strong> (eski model — değiştirme önerilmez)</span>
+                        </label>
+                        <small style={{ color: '#6b7280', display: 'block', marginTop: 4 }}>
+                            <strong>Kapalı (önerilen / varsayılan):</strong> Fiyatlar KDV hariç tutarlardır. Checkout'ta KDV ayrı görünür, müşteri net + KDV öder. 100 TRY ürün → 100 + 20 KDV = 120 TRY ödenir, faturaya da 120 TRY yazılır.<br />
+                            <strong>Açık (eski model):</strong> 100 TRY KDV dahil. Müşteri 100 TRY öder, Paraşüt'e net 83.33 + KDV 16.67 = 100 TRY gönderilir.
+                        </small>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                try {
+                                    const t = localStorage.getItem('token');
+                                    const r = await fetch(`/api/admin/parasut/test-connection`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) },
+                                    });
+                                    const j = await r.json();
+                                    if (!r.ok || j.ok === false) {
+                                        alert('Bağlantı başarısız: ' + (j.error || 'Bilinmeyen hata'));
+                                    } else {
+                                        alert(`✅ Bağlantı OK\nCompany: ${j.company_name || '-'} (#${j.company_id || '-'})`);
+                                    }
+                                } catch (e: any) {
+                                    alert('İstek hatası: ' + e.message);
+                                }
+                            }}
+                            style={{ padding: '8px 18px', borderRadius: 8, border: '1px solid #1a3a52', background: '#fff', color: '#1a3a52', fontWeight: 600, cursor: 'pointer' }}
+                        >
+                            Bağlantıyı Test Et
+                        </button>
+                        <small style={{ color: '#6b7280' }}>
+                            Önce ayarları kaydet, sonra test et. Hesap bilgileri DB'de saklanır.
                         </small>
                     </div>
                 </div>

@@ -1,8 +1,26 @@
 import express from 'express';
 import db from '../config/database.js';
 import cacheMiddleware from '../middleware/cache.js';
+import { sendCustomMail } from '../services/emailService.js';
+import { CONSULTANT_TPL, consultantBuildVars, consultantSendMail, consultantBookingToken } from '../services/consultantMailer.js';
 
 const router = express.Router();
+
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'https://khilonfast.com').replace(/\/+$/, '');
+
+// settings tablosundan tekil değer
+async function getSettingValue(key, fallback = '') {
+    try {
+        const [r] = await db.query('SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1', [key]);
+        return r[0]?.setting_value ?? fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+));
 
 // GET /api/consultants — aktif danışmanlar listesi
 router.get('/', cacheMiddleware(300), async (req, res) => {
@@ -25,6 +43,30 @@ router.get('/', cacheMiddleware(300), async (req, res) => {
         res.json({ consultants: filtered });
     } catch (err) {
         console.error('Get consultants error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/consultants/bookings/:id — ödeme devam sayfası için booking özeti
+// (':slug' route'undan ÖNCE tanımlanmalı — Express sıra ile eşler)
+router.get('/bookings/:id', async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT b.id, b.name, b.email, b.status, b.service_id, b.availability_id,
+                    cs.title AS service_title, cs.price, cs.currency, cs.plus_vat,
+                    c.name AS consultant_name, c.slug AS consultant_slug,
+                    a.available_date, a.start_time, a.end_time
+             FROM consultant_bookings b
+             JOIN consultant_services cs ON cs.id = b.service_id
+             JOIN consultants c ON c.id = b.consultant_id
+             LEFT JOIN consultant_availability a ON a.id = b.availability_id
+             WHERE b.id = ?`,
+            [req.params.id]
+        );
+        if (!rows.length) return res.status(404).json({ error: 'Booking not found' });
+        res.json({ booking: rows[0] });
+    } catch (err) {
+        console.error('Get booking error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
@@ -144,8 +186,34 @@ router.post('/bookings/hold', async (req, res) => {
 
         await connection.commit();
 
+        const newBookingId = result.insertId;
+
+        // Admin'e yeni randevu bildirimi
+        try {
+            const adminEmail = await getSettingValue('contact_email', '');
+            if (adminEmail) {
+                const v = await consultantBuildVars({ id: newBookingId, service_id, availability_id, name });
+                const html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;margin:0;color:#102a43">'
+                    + '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                    + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px">'
+                    + '<h2 style="margin:0;font-size:1.15rem">Yeni Danışmanlık Randevusu</h2></div>'
+                    + '<div style="padding:24px;line-height:1.7">'
+                    + `<p><strong>Müşteri:</strong> ${escapeHtml(name)} (${escapeHtml(email)})</p>`
+                    + `<p><strong>Telefon:</strong> ${escapeHtml(phone || '-')}</p>`
+                    + `<p><strong>Hizmet:</strong> ${escapeHtml(v.package_name || ('#' + service_id))}</p>`
+                    + `<p><strong>Seçilen Tarih & Saat:</strong> ${escapeHtml(v.appointment_datetime || 'Belirtilmedi')}</p>`
+                    + `<p><strong>Konu:</strong> ${escapeHtml(topic || '-')}</p>`
+                    + `<p style="margin-top:18px"><a href="${FRONTEND_URL}/admin/bookings" `
+                    + 'style="background:#1a3a52;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600">Admin Panelinde Aç</a></p>'
+                    + '</div></div></body></html>';
+                await sendCustomMail({ to: adminEmail, subject: `[Khilonfast] Yeni Danışmanlık Randevusu — ${name}`, html });
+            }
+        } catch (e) {
+            console.error('[consultants] admin notify failed:', e.message);
+        }
+
         res.json({
-            booking_id: result.insertId,
+            booking_id: newBookingId,
             hold_expires_at: availability_id ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null,
             message: 'Rezervasyon talebi alındı'
         });
@@ -178,9 +246,121 @@ router.post('/bookings/:id/confirm', async (req, res) => {
             );
         }
 
+        // "Randevu Onaylandı" maili — tekrar göndermeyi önle
+        if (!booking[0].confirmation_sent_at) {
+            const vars = await consultantBuildVars(booking[0]);
+            if (await consultantSendMail(CONSULTANT_TPL.CONFIRM, booking[0].email, vars)) {
+                await db.query('UPDATE consultant_bookings SET confirmation_sent_at = NOW() WHERE id = ?', [req.params.id]);
+            }
+        }
+
         res.json({ success: true, message: 'Rezervasyon onaylandı' });
     } catch (err) {
         console.error('Confirm booking error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/consultants/bookings/:id/defer — "Daha Sonra Öde" → ödeme son-adım maili
+router.post('/bookings/:id/defer', async (req, res) => {
+    try {
+        const [booking] = await db.query('SELECT * FROM consultant_bookings WHERE id = ?', [req.params.id]);
+        if (!booking.length) return res.status(404).json({ error: 'Booking not found' });
+
+        if (!booking[0].payment_reminder_sent_at) {
+            const vars = await consultantBuildVars(booking[0]);
+            if (await consultantSendMail(CONSULTANT_TPL.PAYMENT, booking[0].email, vars)) {
+                await db.query('UPDATE consultant_bookings SET payment_reminder_sent_at = NOW() WHERE id = ?', [req.params.id]);
+            }
+        }
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Defer booking error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/consultants/bookings/:id/reschedule — takvim değiştir (48 saat kuralı)
+router.post('/bookings/:id/reschedule', async (req, res) => {
+    const { token, availability_id } = req.body;
+    const bookingId = req.params.id;
+    try {
+        if (token !== consultantBookingToken(bookingId)) {
+            return res.status(403).json({ error: 'Geçersiz bağlantı.' });
+        }
+        if (!availability_id) return res.status(400).json({ error: 'Yeni slot seçilmedi.' });
+
+        const [rows] = await db.query('SELECT * FROM consultant_bookings WHERE id = ?', [bookingId]);
+        if (!rows.length) return res.status(404).json({ error: 'Booking not found' });
+        const booking = rows[0];
+        if (['cancelled', 'completed'].includes(booking.status)) {
+            return res.status(409).json({ error: 'Bu randevu güncellenemez.' });
+        }
+
+        // 48 saat kuralı
+        if (booking.availability_id) {
+            const [a] = await db.query(
+                'SELECT TIMESTAMP(available_date, start_time) AS appt FROM consultant_availability WHERE id = ?',
+                [booking.availability_id]
+            );
+            if (a[0]?.appt && new Date(a[0].appt).getTime() < Date.now() + 48 * 3600 * 1000) {
+                return res.status(409).json({ error: 'Randevunuza 48 saatten az kaldığı için değişiklik yapılamaz.' });
+            }
+        }
+
+        const [ns] = await db.query(
+            `SELECT id FROM consultant_availability WHERE id = ? AND status = 'available'`,
+            [availability_id]
+        );
+        if (!ns.length) return res.status(409).json({ error: 'Seçilen slot artık müsait değil.' });
+
+        if (booking.availability_id) {
+            await db.query(`UPDATE consultant_availability SET status='available', held_until=NULL WHERE id=?`, [booking.availability_id]);
+        }
+        await db.query(`UPDATE consultant_availability SET status='booked', held_until=NULL WHERE id=?`, [availability_id]);
+        await db.query('UPDATE consultant_bookings SET availability_id=?, reminder_sent_at=NULL WHERE id=?', [availability_id, bookingId]);
+
+        const vars = await consultantBuildVars({ ...booking, availability_id });
+        await consultantSendMail(CONSULTANT_TPL.RESCHEDULE, booking.email, vars);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Reschedule booking error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST /api/consultants/bookings/:id/cancel — randevu iptali (48 saat kuralı)
+router.post('/bookings/:id/cancel', async (req, res) => {
+    const { token } = req.body;
+    const bookingId = req.params.id;
+    try {
+        if (token !== consultantBookingToken(bookingId)) {
+            return res.status(403).json({ error: 'Geçersiz bağlantı.' });
+        }
+        const [rows] = await db.query('SELECT * FROM consultant_bookings WHERE id = ?', [bookingId]);
+        if (!rows.length) return res.status(404).json({ error: 'Booking not found' });
+        const booking = rows[0];
+        if (booking.status === 'cancelled') return res.json({ success: true });
+        if (booking.status === 'completed') return res.status(409).json({ error: 'Tamamlanmış randevu iptal edilemez.' });
+
+        if (booking.availability_id) {
+            const [a] = await db.query(
+                'SELECT TIMESTAMP(available_date, start_time) AS appt FROM consultant_availability WHERE id = ?',
+                [booking.availability_id]
+            );
+            if (a[0]?.appt && new Date(a[0].appt).getTime() < Date.now() + 48 * 3600 * 1000) {
+                return res.status(409).json({ error: 'Randevunuza 48 saatten az kaldığı için iptal yapılamaz.' });
+            }
+        }
+
+        await db.query(`UPDATE consultant_bookings SET status='cancelled' WHERE id=?`, [bookingId]);
+        if (booking.availability_id) {
+            await db.query(`UPDATE consultant_availability SET status='available', held_until=NULL WHERE id=?`, [booking.availability_id]);
+        }
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Cancel booking error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });

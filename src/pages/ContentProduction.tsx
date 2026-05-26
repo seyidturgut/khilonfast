@@ -21,13 +21,15 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
 export default function ContentProduction() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
-    const homeServicesPath = `/${t('slugs.home')}#services`.replace(/\/\#/, '/#')
+    const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
-        document.title = isEn ? 'Content Production Services | khilonfast' : 'İçerik Üretimi | khilonfast'
+        document.title = isEn
+            ? 'Content Production and Conversion-Focused Services | khilonfast'
+            : 'İçerik Üretimi ve Dönüşüm Odaklı İçerik Hizmetleri | khilonfast'
     }, [isEn])
 
     const trConfig = {
@@ -102,39 +104,49 @@ export default function ContentProduction() {
             ]
         },
         processSection: {
-            tag: 'Nasıl Çalışır?',
-            title: 'Hizmet Süreci',
+            tag: t('process.tag', { defaultValue: 'Nasıl Çalışır?' }),
+            title: t('process.title', { defaultValue: 'Hizmet Süreci' }),
             description: 'İçerik üretim stratejinizi hayata geçirmek için izlediğimiz 5 adımlı yol haritası.',
             videoUrl: 'https://player.vimeo.com/video/1128822985',
             steps: [
                 {
                     stepNumber: 1,
-                    title: 'Satın Al',
-                    description: 'İhtiyacınıza uygun paketi seçin. Satın alma işlemi tamamlandığında süreç otomatik olarak başlar.',
+                    title: t('process.steps.buy.title'),
+                    description: t('process.steps.buy.description'),
                     icon: <HiShoppingCart />
                 },
                 {
                     stepNumber: 2,
-                    title: 'Yetkilendir',
-                    description: <>khilonfast ekibine gerekli erişim izinlerini verin. Yetkilendirme detayları için <a href="#authorization" style={{ textDecoration: 'underline' }}>tıklayın</a></>,
+                    title: t('process.steps.auth.title'),
+                    description: (() => {
+                        const raw = t('process.steps.auth.description') as string
+                        const tokens = ['tıklayın>>', 'tıklayın.', 'tıklayın', 'Click for authorization details >>', 'Click >>', 'Click']
+                        for (const tok of tokens) {
+                            const idx = raw.indexOf(tok)
+                            if (idx !== -1) {
+                                return <>{raw.slice(0, idx)}<a href="#authorization" style={{ textDecoration: 'underline' }}>{tok.replace('>>', '').trim()}</a>{raw.slice(idx + tok.length)}</>
+                            }
+                        }
+                        return raw
+                    })(),
                     icon: <HiKey />
                 },
                 {
                     stepNumber: 3,
-                    title: 'Brief Ver',
-                    description: 'Size gönderilen formdaki soruları cevaplayarak hedeflerinizi, hedef kitlenizi ve marka dilinizi paylaşın. Bu form, stratejinin temelini oluşturur.',
+                    title: t('process.steps.brief.title'),
+                    description: t('process.steps.brief.description'),
                     icon: <HiClipboardDocumentList />
                 },
                 {
                     stepNumber: 4,
-                    title: 'Analiz',
-                    description: 'khilonfast ekibi brief’inizi analiz eder ve sizi nasıl anladığını gösteren de-brief raporunu hazırlar. Bu rapor, hizmetin yönünü birlikte netleştirmemizi sağlar.',
+                    title: t('process.steps.analysis.title'),
+                    description: t('process.steps.analysis.description'),
                     icon: <HiMagnifyingGlass />
                 },
                 {
                     stepNumber: 5,
-                    title: 'Onay',
-                    description: 'De-brief raporunun onaylanması ile isteyin. hizmet kurulumları başlar ve ölçümlemeler 1 hafta içerisinde aktif edilir.',
+                    title: t('process.steps.approval.title'),
+                    description: t('process.steps.approval.description'),
                     icon: <HiCheckBadge />
                 }
             ]
@@ -219,21 +231,16 @@ export default function ContentProduction() {
                 { title: 'Growth', icon: <HiChartBar /> },
                 { title: 'Ultimate', icon: <HiTrophy /> }
             ],
-            rows: [
-                {
-                    feature: 'Blog Yazısı',
-                    values: ['4 içerik x 750 kelime', '6 içerik x 750 kelime', '8 içerik x 750 kelime']
-                },
-                {
-                    feature: 'Görsel',
-                    values: ['-', true, true]
-                },
-                {
-                    feature: 'Revizyon Hakkı',
-                    values: ['1', '2', '4']
-                }
+            rows: i18n.language === 'en' ? [
+                { feature: 'Blog Posts', values: ['4 posts x 750 words', '6 posts x 750 words', '8 posts x 750 words'] },
+                { feature: 'Visuals', values: ['-', true, true] },
+                { feature: 'Revision Rounds', values: ['1', '2', '4'] }
+            ] : [
+                { feature: 'Blog Yazısı', values: ['4 içerik x 750 kelime', '6 içerik x 750 kelime', '8 içerik x 750 kelime'] },
+                { feature: 'Görsel', values: ['-', true, true] },
+                { feature: 'Revizyon Hakkı', values: ['1', '2', '4'] }
             ],
-            note: '(*) KDV hariç.'
+            note: i18n.language === 'en' ? '(*) Prices exclude VAT.' : '(*) KDV hariç.'
         },
         testimonial: {
             quote: 'İçerik üretimindeki tıkanıklığımızı khilonfast ile aştık. Düzenli ve kaliteli içerikler sayesinde organik trafiğimizde %40 artış gördük.',
@@ -241,32 +248,18 @@ export default function ContentProduction() {
             role: 'Pazarlama Müdürü'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ],
-        authorizationSection: {
-            title: "İçerik Üretimi Yetkilendirme Adımları",
-            description: "Hizmet paketine uygun olarak, aşağıda yer alan platformların yetkilendirme adımlarını bulabilirsiniz. Bu adımlar, içerik stratejinizin doğru verilerle beslenmesi için gereklidir.",
-            cards: [
-                {
-                    title: "Google Search Console Yetkilendirme",
-                    description: "Detaylı bir içerik stratejisi için Google Search Console yetkilerini ekleyin.",
-                    highlightText: "Organik görünürlüğünüzü analiz ederek performansınızı geliştirin.",
-                    buttonText: "KEŞFET",
-                    buttonLink: "/hizmetlerimiz/google-search-console-kurulum-akisi",
-                    theme: "light" as const
-                },
-                {
-                    title: "Google Analytics Yetkilendirme",
-                    description: "Detaylı analiz için Google Analytics erişimlerini tanımlayın.",
-                    highlightText: "Analiz süreçlerinizin ölçüm doğruluğunu artırın.",
-                    buttonText: "KEŞFET",
-                    buttonLink: "/google-analytics-kurulum-akisi",
-                    theme: "dark" as const
-                }
-            ]
-        }
+            { question: t('serviceContentProduction.faqs.q1.q'), answer: t('serviceContentProduction.faqs.q1.a') },
+            { question: t('serviceContentProduction.faqs.q2.q'), answer: t('serviceContentProduction.faqs.q2.a') },
+            { question: t('serviceContentProduction.faqs.q3.q'), answer: t('serviceContentProduction.faqs.q3.a') },
+            { question: t('serviceContentProduction.faqs.q4.q'), answer: t('serviceContentProduction.faqs.q4.a') },
+            { question: t('serviceContentProduction.faqs.q5.q'), answer: t('serviceContentProduction.faqs.q5.a') },
+            { question: t('serviceContentProduction.faqs.q6.q'), answer: t('serviceContentProduction.faqs.q6.a') },
+            { question: t('serviceContentProduction.faqs.q7.q'), answer: t('serviceContentProduction.faqs.q7.a') },
+            { question: t('serviceContentProduction.faqs.q8.q'), answer: t('serviceContentProduction.faqs.q8.a') },
+            { question: t('serviceContentProduction.faqs.q9.q'), answer: t('serviceContentProduction.faqs.q9.a') },
+            { question: t('serviceContentProduction.faqs.q10.q'), answer: t('serviceContentProduction.faqs.q10.a') },
+            { question: t('serviceContentProduction.faqs.q11.q'), answer: t('serviceContentProduction.faqs.q11.a') }
+        ]
     }
 
     const enConfig = {
@@ -286,7 +279,7 @@ export default function ContentProduction() {
             disableBadgeAnimation: true
         },
         breadcrumbs: [
-            { label: t('nav.services'), path: homeServicesPath },
+            { label: t('header.services'), path: homeServicesPath },
             { label: 'Content Production' }
         ],
         videoShowcase: {
@@ -368,32 +361,18 @@ export default function ContentProduction() {
             role: 'Marketing Manager'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
-        ],
-        authorizationSection: {
-            title: "Content Production Authorization Steps",
-            description: "In accordance with your service package, you can find the authorization steps for the platforms below.",
-            cards: [
-                {
-                    title: "Google Search Console Authorization",
-                    description: "Add Google Search Console permissions for a detailed content strategy.",
-                    highlightText: "Improve your performance by analyzing your organic visibility.",
-                    buttonText: "EXPLORE",
-                    buttonLink: "/en/services/google-search-console-setup-flow",
-                    theme: "light" as const
-                },
-                {
-                    title: "Google Analytics Authorization",
-                    description: "Define Google Analytics access for detailed analysis.",
-                    highlightText: "Increase the measurement accuracy of your analysis processes.",
-                    buttonText: "EXPLORE",
-                    buttonLink: "/en/google-analytics-setup-flow",
-                    theme: "dark" as const
-                }
-            ]
-        }
+            { question: t('serviceContentProduction.faqs.q1.q'), answer: t('serviceContentProduction.faqs.q1.a') },
+            { question: t('serviceContentProduction.faqs.q2.q'), answer: t('serviceContentProduction.faqs.q2.a') },
+            { question: t('serviceContentProduction.faqs.q3.q'), answer: t('serviceContentProduction.faqs.q3.a') },
+            { question: t('serviceContentProduction.faqs.q4.q'), answer: t('serviceContentProduction.faqs.q4.a') },
+            { question: t('serviceContentProduction.faqs.q5.q'), answer: t('serviceContentProduction.faqs.q5.a') },
+            { question: t('serviceContentProduction.faqs.q6.q'), answer: t('serviceContentProduction.faqs.q6.a') },
+            { question: t('serviceContentProduction.faqs.q7.q'), answer: t('serviceContentProduction.faqs.q7.a') },
+            { question: t('serviceContentProduction.faqs.q8.q'), answer: t('serviceContentProduction.faqs.q8.a') },
+            { question: t('serviceContentProduction.faqs.q9.q'), answer: t('serviceContentProduction.faqs.q9.a') },
+            { question: t('serviceContentProduction.faqs.q10.q'), answer: t('serviceContentProduction.faqs.q10.a') },
+            { question: t('serviceContentProduction.faqs.q11.q'), answer: t('serviceContentProduction.faqs.q11.a') }
+        ]
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-production" disableApiHeroTextOverride={true} />

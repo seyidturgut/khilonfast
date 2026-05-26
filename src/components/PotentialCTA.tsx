@@ -23,7 +23,7 @@ export default function PotentialCTA({ tx }: { tx: (key: string) => string }) {
                     </Link>
                 </div>
                 <div className="potential-image">
-                    <img src="/potential-cta.png" alt="işletme büyüme potansiyelini ve pazarlama fırsatlarını temsil eden görsel" />
+                    <img src="/potential-cta.webp" alt="işletme büyüme potansiyelini ve pazarlama fırsatlarını temsil eden görsel" width={800} height={600} loading="lazy" decoding="async" />
                 </div>
             </div>
         </section>

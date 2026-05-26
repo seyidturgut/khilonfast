@@ -184,7 +184,7 @@ export default function ConsultantDetail() {
         if (!slug) return
         setLoading(true)
         setError(null)
-        fetch(`${API_BASE_URL}/consultants/${encodeURIComponent(slug)}`)
+        fetch(`${API_BASE_URL}/consultants/${encodeURIComponent(slug)}?lang=${isEn ? 'en' : 'tr'}`)
             .then((res) => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`)
                 return res.json()
