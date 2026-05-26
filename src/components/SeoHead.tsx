@@ -77,7 +77,7 @@ const shortSectoralTitle: Record<string, { tr: string; en: string }> = {
 }
 
 const shortTrainingTitle: Record<string, { tr: string; en: string }> = {
-    growth:        { tr: 'Büyüme Odaklı Pazarlama Eğitimi',          en: 'Growth-Focused Marketing Training' },
+    growth:        { tr: 'Büyüme Odaklı Pazarlama Eğitimi — Bora Işık', en: 'Growth-Focused Marketing Training with Bora Işık' },
     payment:       { tr: 'Ödeme Sistemleri — Büyüme Eğitimi',        en: 'Payment Systems — Growth Training' },
     b2b:           { tr: 'B2B — Büyüme Odaklı Pazarlama Eğitimi',    en: 'B2B — Growth Marketing Training' },
     fintech:       { tr: 'Fintech — Büyüme Odaklı Eğitim',           en: 'Fintech — Growth Training' },

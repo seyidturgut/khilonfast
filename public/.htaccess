@@ -33,7 +33,16 @@ DirectorySlash Off
   RewriteRule ^api/ - [L]
 
   # Crawl ve makine-okunur statik dosyalari her zaman dogrudan servis et
-  RewriteRule ^(robots\.txt|sitemap\.xml|sitemap-[^.]+\.xml|llms\.txt|llm\.txt)$ - [L]
+  RewriteRule ^(robots\.txt|sitemap[._]index\.xml|sitemap\.xml|sitemap\.xsl|[a-z]+-sitemap\.xml|sitemap-[^.]+\.xml|llms\.txt|llm\.txt)$ - [L]
+
+  # Eski sitemap URL'lerini Yoast tarzı yeni isimlere 301 redirect (Google index korumak için)
+  RewriteRule ^sitemap\.xml$ /sitemap_index.xml [R=301,L]
+  RewriteRule ^sitemap-pages\.xml$ /page-sitemap.xml [R=301,L]
+  RewriteRule ^sitemap-services\.xml$ /service-sitemap.xml [R=301,L]
+  RewriteRule ^sitemap-sectoral\.xml$ /sectoral-sitemap.xml [R=301,L]
+  RewriteRule ^sitemap-products\.xml$ /product-sitemap.xml [R=301,L]
+  RewriteRule ^sitemap-trainings\.xml$ /training-sitemap.xml [R=301,L]
+  RewriteRule ^sitemap-flows\.xml$ /flow-sitemap.xml [R=301,L]
 
   # Trailing slash'i kanonikalleştir: /foo/ → /foo (ana sayfa hariç)
   # SEO: hreflang ve canonical URL'leri trailing slash'siz, Apache de aynı şekilde serve etsin

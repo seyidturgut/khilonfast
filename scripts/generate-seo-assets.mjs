@@ -133,6 +133,7 @@ const escapeXml = (value) =>
     .replace(/'/g, '&apos;')
 
 const renderUrlset = (entries) => `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${entries
   .flatMap((entry) => {
@@ -169,15 +170,16 @@ ${variant.alternateEn ? `    <xhtml:link rel="alternate" hreflang="en" href="${e
 `
 
 const sitemapFiles = {
-  'sitemap-pages.xml': renderUrlset(segmentedEntries.pages),
-  'sitemap-services.xml': renderUrlset(segmentedEntries.services),
-  'sitemap-sectoral.xml': renderUrlset(segmentedEntries.sectoral),
-  'sitemap-products.xml': renderUrlset(segmentedEntries.products),
-  'sitemap-trainings.xml': renderUrlset(segmentedEntries.trainings),
-  'sitemap-flows.xml': renderUrlset(segmentedEntries.flows)
+  'page-sitemap.xml': renderUrlset(segmentedEntries.pages),
+  'service-sitemap.xml': renderUrlset(segmentedEntries.services),
+  'sectoral-sitemap.xml': renderUrlset(segmentedEntries.sectoral),
+  'product-sitemap.xml': renderUrlset(segmentedEntries.products),
+  'training-sitemap.xml': renderUrlset(segmentedEntries.trainings),
+  'flow-sitemap.xml': renderUrlset(segmentedEntries.flows)
 }
 
 const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${Object.keys(sitemapFiles)
   .map((file) => `  <sitemap>
@@ -224,7 +226,7 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: ${siteUrl}/sitemap.xml
+Sitemap: ${siteUrl}/sitemap_index.xml
 `
 
 const redirectRules = [
@@ -278,7 +280,7 @@ khilonfast is a bilingual website for marketing services, sector-specific market
 - Canonical English URLs live under ${siteUrl}/en/.
 
 ## Discovery and canonical sources
-- Primary sitemap index: ${siteUrl}/sitemap.xml
+- Primary sitemap index: ${siteUrl}/sitemap_index.xml
 - Crawl policy: ${siteUrl}/robots.txt
 - Canonical URLs and alternate languages are published with canonical and hreflang tags in page head markup.
 - If a URL redirects or has a canonical target, prefer the canonical target over the requested URL.
@@ -390,7 +392,7 @@ ${setupFlows.map((flow) => `- ${siteUrl}${flow}`).join('\n')}
 `
 
 await fs.mkdir(publicDir, { recursive: true })
-await fs.writeFile(path.join(publicDir, 'sitemap.xml'), sitemapIndex, 'utf8')
+await fs.writeFile(path.join(publicDir, 'sitemap_index.xml'), sitemapIndex, 'utf8')
 await Promise.all(
   Object.entries(sitemapFiles).map(([fileName, contents]) =>
     fs.writeFile(path.join(publicDir, fileName), contents, 'utf8')
@@ -400,4 +402,4 @@ await fs.writeFile(path.join(publicDir, 'robots.txt'), robots, 'utf8')
 await fs.writeFile(path.join(publicDir, 'llms.txt'), llms, 'utf8')
 await fs.writeFile(path.join(publicDir, '_redirects'), redirects, 'utf8')
 
-console.log('SEO assets generated:', ['public/sitemap.xml', 'public/sitemap-pages.xml', 'public/sitemap-services.xml', 'public/sitemap-sectoral.xml', 'public/sitemap-products.xml', 'public/sitemap-trainings.xml', 'public/sitemap-flows.xml', 'public/robots.txt', 'public/llms.txt', 'public/_redirects'].join(', '))
+console.log('SEO assets generated:', ['public/sitemap_index.xml', 'public/page-sitemap.xml', 'public/service-sitemap.xml', 'public/sectoral-sitemap.xml', 'public/product-sitemap.xml', 'public/training-sitemap.xml', 'public/flow-sitemap.xml', 'public/sitemap.xsl', 'public/robots.txt', 'public/llms.txt', 'public/_redirects'].join(', '))
