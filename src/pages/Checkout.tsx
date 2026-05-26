@@ -1209,7 +1209,7 @@ export default function Checkout() {
                                                                     fontSize: '0.85rem'
                                                                 }}
                                                             >
-                                                                {bank.logo_url && <img src={bank.logo_url} alt={bank.bank_name} style={{ height: '24px' }} />}
+                                                                {bank.logo_url && <img src={bank.logo_url} alt={bank.bank_name} width={80} height={24} loading="lazy" decoding="async" style={{ height: '24px', width: 'auto' }} />}
                                                                 <span>{bank.bank_name}</span>
                                                             </button>
                                                         ))}

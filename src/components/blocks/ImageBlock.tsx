@@ -48,8 +48,11 @@ export default function ImageBlock({ data }: ImageBlockProps) {
                 <img
                     src={src}
                     alt={alt}
+                    width={1200}
+                    height={800}
                     style={imageStyle}
                     loading="lazy"
+                    decoding="async"
                     onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 />

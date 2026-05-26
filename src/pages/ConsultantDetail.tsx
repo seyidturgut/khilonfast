@@ -287,6 +287,10 @@ export default function ConsultantDetail() {
                                         src={consultant.photo_url}
                                         alt={consultant.name}
                                         className="consultant-hero-photo"
+                                        width={480}
+                                        height={480}
+                                        loading="eager"
+                                        decoding="async"
                                         onError={(e) => {
                                             const target = e.currentTarget
                                             target.style.display = 'none'

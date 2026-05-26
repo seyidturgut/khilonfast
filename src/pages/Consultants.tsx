@@ -143,6 +143,10 @@ export default function Consultants() {
                                                 src={consultant.photo_url}
                                                 alt={consultant.name}
                                                 className="consultant-photo"
+                                                width={240}
+                                                height={240}
+                                                loading="lazy"
+                                                decoding="async"
                                                 onError={(e) => {
                                                     const target = e.currentTarget
                                                     target.style.display = 'none'

@@ -230,7 +230,7 @@ export default function BankAccountsAdmin() {
                                         <td style={tdStyle}>{bank.lidio_bank_account_id}</td>
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                {bank.logo_url && <img src={bank.logo_url} alt="" style={{ height: 22 }} />}
+                                                {bank.logo_url && <img src={bank.logo_url} alt="" width={80} height={22} loading="lazy" decoding="async" style={{ height: 22, width: 'auto' }} />}
                                                 <strong>{bank.bank_name}</strong>
                                             </div>
                                         </td>

@@ -573,6 +573,10 @@ export default function ConsultantEditor() {
                                 <div style={{ flexShrink: 0 }}>
                                     {form.photo_url ? (
                                         <img src={form.photo_url} alt="Profil"
+                                            width={100}
+                                            height={100}
+                                            loading="lazy"
+                                            decoding="async"
                                             style={{ width: 100, height: 100, borderRadius: 12, objectFit: 'cover', border: '2px solid #e5e7eb' }} />
                                     ) : (
                                         <div style={{ width: 100, height: 100, borderRadius: 12, background: 'linear-gradient(135deg, #d4f04d, #a8c938)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800, color: '#1e3a5f' }}>

@@ -260,7 +260,7 @@ export default function EyeTrackingUploadsList() {
                                 )}
 
                                 <a href={selected.image_url} target="_blank" rel="noreferrer" style={{ display: 'block' }}>
-                                    <img src={selected.image_url} alt="upload" style={{ maxWidth: '100%', maxHeight: 360, borderRadius: 8, border: '1px solid #e2e8f0' }} />
+                                    <img src={selected.image_url} alt="upload" width={640} height={360} loading="lazy" decoding="async" style={{ maxWidth: '100%', maxHeight: 360, borderRadius: 8, border: '1px solid #e2e8f0', width: 'auto', height: 'auto' }} />
                                 </a>
 
                                 <div style={{ marginTop: 16 }}>

@@ -32,8 +32,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Payment Systems'
         },
         summary: {
-            tr: 'Ödeme sistemleri şirketinizde yüz yüze, uygulamalı büyüme odaklı pazarlama danışmanlığı.',
-            en: 'Face-to-face, hands-on growth-focused marketing consulting at your payment systems company.'
+            tr: 'Ödeme sistemleri şirketinizde yüz yüze, uygulamalı büyüme odaklı pazarlama danışmanlığı. Uyumlu kampanya, dönüşüm ve karar verici hedefleme planlaması.',
+            en: 'Face-to-face, hands-on growth-focused marketing consulting for payment systems firms. Compliant campaigns, conversion planning, and decision-maker targeting.'
         }
     },
     {
@@ -47,8 +47,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for B2B Companies'
         },
         summary: {
-            tr: 'B2B firmanızda yüz yüze pazarlama ve satış entegrasyonu danışmanlığı.',
-            en: 'Face-to-face marketing and sales integration consulting at your B2B company.'
+            tr: 'B2B firmanızda yüz yüze pazarlama ve satış entegrasyonu danışmanlığı. Khilonfast ile alıcı yolculuğu, MQL/SQL süreci ve içerik stratejisini birlikte kurgulayın.',
+            en: 'Face-to-face marketing & sales integration consulting at your B2B company. Khilonfast designs buyer journey, MQL/SQL flow, and content strategy hands-on.'
         }
     },
     {
@@ -62,8 +62,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Fintech Companies'
         },
         summary: {
-            tr: 'Fintech firmanızda büyüme stratejileri ve kanal optimizasyonu danışmanlığı.',
-            en: 'Growth strategies and channel optimization consulting at your fintech company.'
+            tr: 'Fintech firmanızda büyüme stratejileri ve kanal optimizasyonu danışmanlığı. Uyumlu içerik, karar verici hedeflemesi ve dönüşüm planlamasını birlikte yapılandırın.',
+            en: 'Growth strategies and channel optimization consulting at your fintech company. Build compliant content, decision-maker targeting, and conversion planning hands-on.'
         }
     },
     {
@@ -77,8 +77,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Tech & Software Companies'
         },
         summary: {
-            tr: 'SaaS ve teknoloji şirketinizde performans odaklı danışmanlık.',
-            en: 'Performance-oriented consulting at your SaaS or technology company.'
+            tr: 'SaaS ve teknoloji şirketinizde performans odaklı pazarlama danışmanlığı. Ürün-pazar uyumu, talep yaratma ve aktivasyon süreçlerini birlikte ölçeklendirin.',
+            en: 'Performance-oriented marketing consulting at your SaaS or technology company. Scale product-market fit, demand generation, and activation processes together.'
         }
     },
     {
@@ -92,8 +92,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Manufacturing Companies'
         },
         summary: {
-            tr: 'Üretim firmanızda sürdürülebilir talep ve dönüşüm yönetimi danışmanlığı.',
-            en: 'Sustainable demand and conversion management consulting at your manufacturing company.'
+            tr: 'Üretim firmanızda sürdürülebilir talep ve dönüşüm yönetimi danışmanlığı. B2B alıcı yolculuğu, teklif süreci ve içerik stratejisini birlikte yapılandırın.',
+            en: 'Sustainable demand and conversion management consulting at your manufacturing firm. Structure B2B buyer journey, quote workflows, and content strategy together.'
         }
     },
     {
@@ -107,8 +107,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Energy Companies'
         },
         summary: {
-            tr: 'Enerji şirketinizde karar verici odaklı pazarlama planlama danışmanlığı.',
-            en: 'Decision-maker-focused marketing planning consulting at your energy company.'
+            tr: 'Enerji şirketinizde karar verici odaklı pazarlama planlama danışmanlığı. Stratejik kampanya altyapısı, içerik ve performans planlamayı birlikte kurgulayın.',
+            en: 'Decision-maker-focused marketing planning consulting at your energy company. Build strategic campaign infrastructure, content, and performance plans together.'
         }
     },
     {
@@ -122,8 +122,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Corporate Interior Design Companies'
         },
         summary: {
-            tr: 'Kurumsal iç tasarım firmanızda tekliften satışa pazarlama danışmanlığı.',
-            en: 'From proposal to sale marketing consulting at your corporate interior design company.'
+            tr: 'Kurumsal iç tasarım firmanızda tekliften satışa pazarlama danışmanlığı. Portföy temelli içerik, referans yönetimi ve teklif sürecini birlikte yapılandırın.',
+            en: 'From proposal to sale marketing consulting at your corporate interior design firm. Build portfolio-led content, referral management, and quote workflows together.'
         }
     },
     {
@@ -137,8 +137,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Fleet Rental Companies'
         },
         summary: {
-            tr: 'Filo kiralama firmanızda lead kalitesi ve dönüşüm yönetimi danışmanlığı.',
-            en: 'Lead quality and conversion management consulting at your fleet rental company.'
+            tr: 'Filo kiralama firmanızda lead kalitesi ve dönüşüm yönetimi danışmanlığı. Kurumsal mobilite teklif sürecini ve müşteri elde tutmayı birlikte güçlendirin.',
+            en: 'Lead quality and conversion management consulting at your fleet rental firm. Strengthen corporate mobility quote workflows and customer retention together.'
         }
     },
     {
@@ -152,8 +152,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Industrial Food Companies'
         },
         summary: {
-            tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama danışmanlığı.',
-            en: 'Growth-focused marketing consulting tailored to the industrial food sector.'
+            tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama danışmanlığı. B2B kanal stratejisi, satış noktası performansı ve içerik planlamasını birlikte yapın.',
+            en: 'Growth-focused marketing consulting tailored to the industrial food sector. Build B2B channel strategy, per-location performance, and content planning together.'
         }
     },
     {
@@ -167,8 +167,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Corporate Gift Card Companies'
         },
         summary: {
-            tr: 'Kurumsal hediye kartı firmanızda büyüme odaklı pazarlama danışmanlığı.',
-            en: 'Growth-focused marketing consulting at your corporate gift card company.'
+            tr: 'Kurumsal hediye kartı firmanızda büyüme odaklı pazarlama danışmanlığı. B2B satın alma merkezlerini besleyen kampanya ve içerik stratejisini birlikte kurgulayın.',
+            en: 'Growth-focused marketing consulting at your corporate gift card firm. Build campaign and content strategy nurturing B2B buying centers, hands-on together.'
         }
     },
     {
@@ -182,8 +182,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Corporate Fuel Solution Companies'
         },
         summary: {
-            tr: 'Kurumsal akaryakıt firmanızda büyüme odaklı pazarlama danışmanlığı.',
-            en: 'Growth-focused marketing consulting at your corporate fuel solution company.'
+            tr: 'Kurumsal akaryakıt firmanızda büyüme odaklı pazarlama danışmanlığı. Filo yöneticilerini hedefleyen içerik ve performans stratejisini birlikte yapılandırın.',
+            en: 'Growth-focused marketing consulting at your corporate fuel solution firm. Build content and performance strategy targeting fleet managers, hands-on together.'
         }
     }
 ]

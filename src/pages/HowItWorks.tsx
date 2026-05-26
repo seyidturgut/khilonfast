@@ -171,6 +171,10 @@ export default function HowItWorks() {
                 <img
                   src={src}
                   alt={t('howItWorksPage.hero.title')}
+                  width={1200}
+                  height={800}
+                  loading="lazy"
+                  decoding="async"
                 />
               )}
             </EditableMedia>

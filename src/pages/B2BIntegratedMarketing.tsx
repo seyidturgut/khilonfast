@@ -19,9 +19,11 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 
 export default function B2BIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
+    const isEn = i18n.language === 'en'
+    const SECTOR_TR = 'B2B'
+    const SECTOR_EN = 'B2B'
 
     useEffect(() => {
-        document.title = 'B2B için Bütünleşik Dijital Pazarlama'
 
         const upsertMeta = (name: string, content: string) => {
             let tag = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null
@@ -38,8 +40,8 @@ export default function B2BIntegratedMarketing() {
 
     const config = {
         hero: {
-            title: 'B2B için Bütünleşik Dijital Pazarlama',
-            subtitle: 'B2B sektörü için bütünleşik pazarlama stratejileri ile markanızı büyütün!',
+            title: isEn ? `${SECTOR_EN} Integrated Digital Marketing` : `${SECTOR_TR} için Bütünleşik Dijital Pazarlama`,
+            subtitle: isEn ? `Marketing Strategies Tailored for ${SECTOR_EN}` : `${SECTOR_TR} Sektörüne Özel Pazarlama Stratejileri`,
             description: 'khilonfast ile bütçenizi doğru kanallara yönlendirin. SEO, reklam, içerik ve sosyal medyayı tek stratejide birleştirin.',
             buttonText: t('serviceIDM.hero.buttonText'),
             buttonLink: '#pricing',
@@ -55,7 +57,7 @@ export default function B2BIntegratedMarketing() {
         ],
         videoShowcase: {
             tag: t('serviceIDM.videoShowcase.tag'),
-            title: <>{t('serviceIDM.videoShowcase.title')}</>,
+            title: <>{isEn ? `Digital Marketing Approach for ${SECTOR_EN}` : `${SECTOR_TR} Sektörüne Özel Dijital Pazarlama Yaklaşımı`}</>,
             description: t('serviceIDM.videoShowcase.description'),
             videoUrl: 'https://www.youtube.com/embed/hWXnoXCsPMw'
         },
@@ -207,7 +209,7 @@ export default function B2BIntegratedMarketing() {
         },
         pricingSection: {
             tag: t('serviceIDM.pricing.tag'),
-            title: t('serviceIDM.pricing.title'),
+            title: isEn ? `${SECTOR_EN} Marketing Service Packages` : `${SECTOR_TR} için Pazarlama Hizmet Paketleri`,
             description: t('serviceIDM.pricing.description'),
             packages: [
                 {

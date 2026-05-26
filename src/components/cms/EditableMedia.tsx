@@ -235,6 +235,10 @@ export default function EditableMedia({ pageSlug, fieldKey, type, src, currentLa
                                 <img
                                     src={activeTab === 'tr' ? editTr : editEn}
                                     alt="preview"
+                                    width={400}
+                                    height={160}
+                                    loading="lazy"
+                                    decoding="async"
                                     style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 10, background: '#f1f5f9', display: 'block' }}
                                     onError={e => { (e.target as HTMLImageElement).style.opacity = '0.15'; }}
                                 />

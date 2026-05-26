@@ -28,8 +28,8 @@ export default function ContentProduction() {
 
     useEffect(() => {
         document.title = isEn
-            ? 'Content Production and Conversion-Focused Services | khilonfast'
-            : 'İçerik Üretimi ve Dönüşüm Odaklı İçerik Hizmetleri | khilonfast'
+            ? 'Content Production & Conversion Services | khilonfast'
+            : 'İçerik Üretimi ve Dönüşüm Hizmetleri | khilonfast'
     }, [isEn])
 
     const trConfig = {

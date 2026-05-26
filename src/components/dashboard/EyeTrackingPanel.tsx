@@ -237,6 +237,10 @@ export default function EyeTrackingPanel({ isEn = false }: { isEn?: boolean }) {
                                     <img
                                         src={u.image_url}
                                         alt="upload"
+                                        width={320}
+                                        height={140}
+                                        loading="lazy"
+                                        decoding="async"
                                         style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, display: 'block' }}
                                     />
                                 </a>
