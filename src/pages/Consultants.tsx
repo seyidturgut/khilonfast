@@ -106,6 +106,44 @@ export default function Consultants() {
                 </div>
             </section>
 
+            <section className="consultants-intro" style={{ padding: '32px 0 8px' }}>
+                <div className="container" style={{ maxWidth: 1080 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, fontSize: '0.98rem', lineHeight: 1.7, color: '#334155' }}>
+                        {isEn ? (
+                            <>
+                                <p>
+                                    <strong>Khilonfast consulting</strong> is a hands-on, sector-focused growth program where a senior CMO and category specialists work directly inside your team. We don't deliver generic slide decks — we build an executable growth roadmap, prioritize the highest-impact channels, and operationalize measurement so every decision is backed by data.
+                                </p>
+                                <p>
+                                    Our consultants come from B2B SaaS, fintech, manufacturing, energy, payment systems, fleet rental, corporate interior design, industrial food, gift card, and corporate fuel sectors. Each program is tailored to your buyer journey, sales cycle, and account-based marketing needs. Whether you are launching a new product, restructuring marketing operations, or scaling demand generation, we plug in alongside your team for measurable outcomes.
+                                </p>
+                                <p>
+                                    A typical engagement covers <strong>positioning &amp; ICP definition</strong>, <strong>integrated channel strategy</strong> (SEO, content, paid media, lifecycle email), <strong>MQL/SQL conversion frameworks</strong>, <strong>sales &amp; marketing alignment</strong>, and <strong>weekly KPI cadence</strong>. The goal is simple: a marketing function that compounds value every quarter.
+                                </p>
+                                <p>
+                                    Pick a consultant by sector below, review their expertise and case background, and book an introductory session. We typically respond within one business day.
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <p>
+                                    <strong>Khilonfast danışmanlığı</strong>, kıdemli bir CMO ve sektör uzmanlarının ekibinizin içinde, uygulamalı çalıştığı bir büyüme programıdır. Genel sunumlar yerine; uygulanabilir bir büyüme yol haritası kurar, en yüksek etkili kanalları önceliklendirir ve her kararı veriyle destekleyecek ölçümleme altyapısını birlikte hayata geçiririz.
+                                </p>
+                                <p>
+                                    Danışmanlarımız B2B SaaS, FinTech, üretim, enerji, ödeme sistemleri, filo kiralama, ofis &amp; kurumsal iç tasarım, endüstriyel gıda, kurumsal hediye kartı ve kurumsal akaryakıt sektörlerinden geliyor. Her program; alıcı yolculuğunuza, satış döngünüze ve hedef hesap (ABM) ihtiyaçlarınıza özel tasarlanır. Yeni ürün lansmanı, pazarlama operasyonu yeniden yapılandırması veya talep yaratma (demand generation) ölçeklendirmesi olsun, ekibinizle yan yana çalışırız.
+                                </p>
+                                <p>
+                                    Tipik bir danışmanlık programı <strong>konumlanma ve ICP tanımı</strong>, <strong>bütünleşik kanal stratejisi</strong> (SEO, içerik, performans reklamları, yaşam döngüsü e-postası), <strong>MQL/SQL dönüşüm çerçeveleri</strong>, <strong>satış–pazarlama uyumu</strong> ve <strong>haftalık KPI takibi</strong> başlıklarını kapsar. Amaç net: her çeyrek katlanan değer üreten bir pazarlama fonksiyonu.
+                                </p>
+                                <p>
+                                    Aşağıdan sektörünüze uygun bir danışman seçin, uzmanlık alanlarını ve referans deneyimini inceleyin ve tanışma görüşmesi planlayın. Genellikle bir iş günü içinde geri dönüş yaparız.
+                                </p>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </section>
+
             <section className="consultants-list">
                 <div className="container">
                     <h2 style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>

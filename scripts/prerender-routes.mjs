@@ -110,6 +110,19 @@ const enStaticRoutes = [
     '/en/trainings'
 ]
 
+// Setup flow sayfalarını da prerender et — SeoHead'in doğru canonical set etmesi için
+// (Aksi takdirde Apache fallback /index.html sunar, canonical "/" olur — SEO bug)
+const setupFlowRoutes = [
+    '/google-analytics-kurulum-akisi',
+    '/google-tag-manager-kurulum-akisi',
+    '/linkedin-reklamlari-kurulum-akisi-khilonfast',
+    '/meta-facebook-instagram-reklamlari-kurulum-akisi',
+    '/search-ads-google-reklamlari-kurulum-akisi',
+    '/tiktok-kurulum-akisi',
+    '/butunlesik-pazarlama-kurulum-akisi',
+    '/hizmetlerimiz/google-search-console-kurulum-akisi'
+]
+
 // slugValues içindeki dinamik route'ları da ekle (eksik olabilir)
 const dynamicTrSlugRoutes = Object.values(trSlugs)
     .filter(Boolean)
@@ -126,7 +139,8 @@ export const prerenderRoutes = Array.from(new Set([
     ...trStaticRoutes,
     ...enStaticRoutes,
     ...dynamicTrSlugRoutes,
-    ...dynamicEnSlugRoutes
+    ...dynamicEnSlugRoutes,
+    ...setupFlowRoutes
 ])).sort()
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

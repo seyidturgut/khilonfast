@@ -234,6 +234,66 @@ const pageEntries: SeoEntry[] = [
         section: 'company'
     },
     {
+        key: 'distanceSale',
+        tr: `/${trSlugs.distanceSale}`,
+        en: `/en/${enSlugs.distanceSale}`,
+        title: {
+            tr: legalContent.tr.distanceSale.seoTitle,
+            en: legalContent.en.distanceSale.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.distanceSale.seoDescription,
+            en: legalContent.en.distanceSale.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
+        key: 'preInformation',
+        tr: `/${trSlugs.preInformation}`,
+        en: `/en/${enSlugs.preInformation}`,
+        title: {
+            tr: legalContent.tr.preInformation.seoTitle,
+            en: legalContent.en.preInformation.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.preInformation.seoDescription,
+            en: legalContent.en.preInformation.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
+        key: 'corporateB2B',
+        tr: `/${trSlugs.corporateB2B}`,
+        en: `/en/${enSlugs.corporateB2B}`,
+        title: {
+            tr: legalContent.tr.corporateB2B.seoTitle,
+            en: legalContent.en.corporateB2B.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.corporateB2B.seoDescription,
+            en: legalContent.en.corporateB2B.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
+        key: 'acceptableUse',
+        tr: `/${trSlugs.acceptableUse}`,
+        en: `/en/${enSlugs.acceptableUse}`,
+        title: {
+            tr: legalContent.tr.acceptableUse.seoTitle,
+            en: legalContent.en.acceptableUse.seoTitle
+        },
+        description: {
+            tr: legalContent.tr.acceptableUse.seoDescription,
+            en: legalContent.en.acceptableUse.seoDescription
+        },
+        kind: 'website' as const,
+        section: 'company'
+    },
+    {
         key: 'checkout',
         tr: `/${trSlugs.checkout}`,
         en: `/en/${enSlugs.checkout}`,
@@ -640,8 +700,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.maestro}`,
         en: `/en/${enSlugs.maestro}`,
         title: composeTitle({
-            tr: 'Maestro AI B2B Pazarlama Stratejisti',
-            en: 'Maestro AI B2B Marketing Strategist'
+            tr: 'Maestro AI — Sektörel Yapay Zeka Pazarlama Stratejisti',
+            en: 'Maestro AI — Industry AI Marketing Strategist'
         }),
         description: {
             tr: 'B2B sektörü için özelleştirilmiş Maestro AI pazarlama stratejisti. Khilonfast ile içerik, kampanya ve dönüşüm planlamasını yapay zeka ile hızlandırın.',
@@ -1197,15 +1257,23 @@ export default function SeoHead() {
         document.title = seoState.title
 
         ensureLink('canonical').href = seoState.canonicalUrl
-        ensureLink('alternate', 'tr').href = seoState.alternateTr
 
-        if (seoState.alternateEn) {
-            ensureLink('alternate', 'en').href = seoState.alternateEn
+        // SEO audit fix: noindex sayfalardan hreflang alternate link'i KALDIR
+        // (Aksi takdirde "Hreflang: Noindex Return Links" sorunu üretir — Screaming Frog)
+        if (seoState.shouldIndex) {
+            ensureLink('alternate', 'tr').href = seoState.alternateTr
+            if (seoState.alternateEn) {
+                ensureLink('alternate', 'en').href = seoState.alternateEn
+            } else {
+                document.head.querySelector('link[rel="alternate"][hreflang="en"]')?.remove()
+            }
+            ensureLink('alternate', 'x-default').href = seoState.alternateTr
         } else {
+            // noindex sayfa → tüm hreflang'ları kaldır
+            document.head.querySelector('link[rel="alternate"][hreflang="tr"]')?.remove()
             document.head.querySelector('link[rel="alternate"][hreflang="en"]')?.remove()
+            document.head.querySelector('link[rel="alternate"][hreflang="x-default"]')?.remove()
         }
-
-        ensureLink('alternate', 'x-default').href = seoState.alternateTr
 
         ensureMeta('robots').content = seoState.shouldIndex
             ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'

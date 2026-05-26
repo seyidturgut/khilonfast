@@ -16,6 +16,17 @@ Options -MultiViews
   # SEO audit: HSTS — tüm cevaplara HTTPS-zorlama bildirimi
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
+  # SEO audit (2026-05-27): Security headers — Screaming Frog audit'i kapatır
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+
+  # CSP — ÖNCE Report-Only modda (site kırılmasın). 1-2 hafta gözlem sonrası
+  # browser console'da hata yoksa "Content-Security-Policy" olarak değiştirilecek.
+  # React/Vite inline JSON-LD ve style attribute kullanır → unsafe-inline gerekli.
+  Header always set Content-Security-Policy-Report-Only "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.youtube.com https://player.vimeo.com https://*.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; media-src 'self' https: data: blob:; connect-src 'self' https: wss:; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.googletagmanager.com; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https:; frame-ancestors 'self';"
+
   # SEO audit: PDF/image gibi statik asset'ler arama sonuçlarında listelenmesin
   <FilesMatch "\.(pdf|png|jpg|jpeg|svg|webp|gif|ico|css|js|mjs|woff|woff2|ttf|eot)$">
     Header set X-Robots-Tag "noindex, nofollow"
@@ -56,6 +67,12 @@ DirectorySlash Off
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteCond %{REQUEST_FILENAME}/index.html -f
   RewriteRule ^(.+)$ /$1/index.html [L]
+
+  # SEO audit fix: asset extension'lı (.png, .jpg, .css, .js, .pdf vb.) URL'lere
+  # dosya yoksa SPA index.html dönmek yerine 404 dön. Aksi takdirde crawler
+  # PNG isteğine HTML cevap alıp canonical "/" görüyor (yanlış canonical bug).
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule \.(png|jpg|jpeg|webp|avif|gif|svg|ico|css|js|mjs|map|pdf|zip|woff|woff2|ttf|eot|mp4|webm|mp3|wav|xml|txt|json)$ - [R=404,L]
 
   # Gerçek dosya varsa dokunma (assets, images vb.)
   RewriteCond %{REQUEST_FILENAME} !-f
