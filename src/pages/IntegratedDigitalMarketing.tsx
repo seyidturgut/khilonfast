@@ -21,7 +21,6 @@ export default function IntegratedDigitalMarketing() {
     const { t, i18n } = useTranslation('common')
 
     useEffect(() => {
-        document.title = t('serviceIDM.hero.title')
 
         const upsertMeta = (name: string, content: string) => {
             let tag = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null

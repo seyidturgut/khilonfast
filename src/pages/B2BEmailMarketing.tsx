@@ -28,7 +28,6 @@ export default function B2BEmailMarketing() {
     const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
-        document.title = isEn ? 'B2B Email Marketing | khilonfast' : 'B2B Email Pazarlama | khilonfast'
     }, [isEn])
 
     const trConfig = {

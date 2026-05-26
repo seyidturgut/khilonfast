@@ -43,7 +43,6 @@ export default function Home() {
   const [cmsError, setCmsError] = useState('')
 
   useEffect(() => {
-    document.title = t('pages.home.seo.title')
     let tag = document.querySelector('meta[name="description"]') as HTMLMetaElement | null
     if (!tag) {
       tag = document.createElement('meta')

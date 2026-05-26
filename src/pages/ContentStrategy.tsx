@@ -23,7 +23,6 @@ export default function ContentStrategy() {
     const isEn = currentLang === 'en'
 
     useEffect(() => {
-        document.title = isEn ? 'Content Strategy Services | khilonfast' : 'İçerik Stratejisi | khilonfast'
     }, [isEn])
 
     const trConfig = {

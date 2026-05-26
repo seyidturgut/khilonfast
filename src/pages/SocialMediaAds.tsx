@@ -26,7 +26,6 @@ export default function SocialMediaAds() {
     const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
-        document.title = isEn ? 'Social Media Advertising | khilonfast' : 'Sosyal Medya Reklamcılığı | khilonfast'
     }, [isEn])
 
     const trConfig = {

@@ -339,8 +339,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.gtm}`,
         en: `/en/${enSlugs.gtm}`,
         title: composeTitle({
-            tr: 'Go To Market Stratejisi ve Pazara Giriş Planlaması',
-            en: 'Go-To-Market Strategy and Market Entry Planning'
+            tr: 'Go To Market Stratejisi',
+            en: 'Go-To-Market Strategy'
         }),
         description: {
             tr: 'Hedef kitlenizi netleştirin, konumlanmanızı keskinleştirin ve pazara ölçülebilir bir Go To Market stratejisiyle güçlü giriş yapın.',
@@ -354,8 +354,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.contentStrategy}`,
         en: `/en/${enSlugs.contentStrategy}`,
         title: composeTitle({
-            tr: 'İçerik Stratejisi ve İçerik Planlama Hizmetleri',
-            en: 'Content Strategy and Editorial Planning Services'
+            tr: 'İçerik Stratejisi Hizmeti',
+            en: 'Content Strategy Services'
         }),
         description: {
             tr: trServiceMenu.content.desc,
@@ -384,8 +384,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.googleAds}`,
         en: `/en/${enSlugs.googleAds}`,
         title: composeTitle({
-            tr: 'Google Ads Yönetimi ve Performans Reklamcılığı',
-            en: 'Google Ads Management and Performance Advertising'
+            tr: 'Google Ads Yönetimi',
+            en: 'Google Ads Management'
         }),
         description: {
             tr: 'Khilonfast ile arama ağı, görüntülü ve YouTube reklamlarınızı performans odaklı yönetin. Doğru anahtar kelime, doğru bütçe, ölçülebilir dönüşüm.',
@@ -399,8 +399,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.socialAds}`,
         en: `/en/${enSlugs.socialAds}`,
         title: composeTitle({
-            tr: 'Sosyal Medya Reklamcılığı ve Performans Kampanyaları',
-            en: 'Social Media Advertising and Performance Campaigns'
+            tr: 'Sosyal Medya Reklamcılığı Hizmeti',
+            en: 'Social Media Advertising Services'
         }),
         description: {
             tr: 'Meta, LinkedIn, TikTok ve X reklamlarınızı khilonfast ile hedef kitleye uygun, yüksek etkileşim ve dönüşüm getiren kampanyalarla yönetin.',
@@ -414,8 +414,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.seo}`,
         en: `/en/${enSlugs.seo}`,
         title: composeTitle({
-            tr: 'SEO Yönetimi ve Organik Büyüme Hizmetleri',
-            en: 'SEO Management and Organic Growth Services'
+            tr: 'SEO Yönetimi Hizmeti',
+            en: 'SEO Management Services'
         }),
         description: {
             tr: 'Khilonfast SEO yönetimi ile teknik altyapı, içerik ve link otoritesini birleştirin; arama sonuçlarında üst sıralarda kalıcı organik büyüme elde edin.',
@@ -444,8 +444,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.b2bEmail}`,
         en: `/en/${enSlugs.b2bEmail}`,
         title: composeTitle({
-            tr: 'B2B Email Pazarlama ve Lead Nurturing',
-            en: 'B2B Email Marketing and Lead Nurturing'
+            tr: 'B2B Email Pazarlama Hizmeti',
+            en: 'B2B Email Marketing Services'
         }),
         description: {
             tr: 'Khilonfast B2B e-posta pazarlama hizmeti ile segmentasyon, otomasyon ve lead nurturing süreçlerinizi profesyonelce yönetin, satış döngüsünü hızlandırın.',
@@ -459,88 +459,88 @@ const pageEntries: SeoEntry[] = [
         {
             tr: '/hizmetlerimiz/b2b-butunlesik-dijital-pazarlama',
             en: '/en/services/b2b-integrated-digital-marketing',
-            titleTr: 'B2B Bütünleşik Dijital Pazarlama',
-            titleEn: 'B2B Integrated Digital Marketing',
+            titleTr: 'B2B Bütünleşik Pazarlama',
+            titleEn: 'B2B Integrated Marketing',
             descTr: 'B2B markaların satış döngüsünü kısaltan bütünleşik dijital pazarlama. Khilonfast ile içerik, reklam, e-posta ve SEO\'yu tek stratejide yönetin.',
             descEn: 'Integrated digital marketing that shortens B2B sales cycles. Khilonfast unifies content, ads, email, and SEO into one measurable growth strategy.'
         },
         {
             tr: '/hizmetlerimiz/fintech-butunlesik-dijital-pazarlama',
             en: '/en/services/fintech-integrated-digital-marketing',
-            titleTr: 'Fintech Bütünleşik Dijital Pazarlama',
-            titleEn: 'Fintech Integrated Digital Marketing',
+            titleTr: 'FinTech Bütünleşik Pazarlama',
+            titleEn: 'FinTech Integrated Marketing',
             descTr: 'FinTech şirketlerinde lead kalitesi ve dönüşümü artıran sektör odaklı bütünleşik dijital pazarlama. Khilonfast ile uyumlu, ölçülebilir kampanyalar.',
             descEn: 'Sector-focused integrated digital marketing that lifts lead quality and conversion for fintech brands. Khilonfast runs compliant, measurable campaigns.'
         },
         {
             tr: '/hizmetlerimiz/uretim-butunlesik-dijital-pazarlama',
             en: '/en/services/manufacturing-integrated-digital-marketing',
-            titleTr: 'Üretim Sektörü Bütünleşik Dijital Pazarlama',
-            titleEn: 'Manufacturing Integrated Digital Marketing',
+            titleTr: 'Üretim — Bütünleşik Pazarlama',
+            titleEn: 'Manufacturing — Integrated Marketing',
             descTr: 'Üretim ve endüstri firmalarına özel bütünleşik dijital pazarlama. Khilonfast ile teklif sürecini hızlandıran içerik, reklam ve teknik SEO yönetimi.',
             descEn: 'Integrated digital marketing built for manufacturing and industry. Khilonfast accelerates quote workflows with content, ads, and technical SEO.'
         },
         {
             tr: '/hizmetlerimiz/enerji-butunlesik-dijital-pazarlama',
             en: '/en/services/energy-integrated-digital-marketing',
-            titleTr: 'Enerji Sektörü Bütünleşik Dijital Pazarlama',
-            titleEn: 'Energy Sector Integrated Digital Marketing',
+            titleTr: 'Enerji — Bütünleşik Pazarlama',
+            titleEn: 'Energy — Integrated Marketing',
             descTr: 'Enerji ve yeşil teknoloji firmalarına yönelik bütünleşik dijital pazarlama. Khilonfast ile B2B karar vericilere ulaşan ölçülebilir kampanyalar yönetin.',
             descEn: 'Integrated digital marketing for energy and clean-tech companies. Khilonfast delivers measurable campaigns that reach B2B decision-makers.'
         },
         {
             tr: '/hizmetlerimiz/filo-kiralama-butunlesik-dijital-pazarlama',
             en: '/en/services/fleet-rental-integrated-digital-marketing',
-            titleTr: 'Filo Kiralama Bütünleşik Dijital Pazarlama',
-            titleEn: 'Fleet Rental Integrated Digital Marketing',
+            titleTr: 'Filo Kiralama — Bütünleşik Pazarlama',
+            titleEn: 'Fleet Rental — Integrated Marketing',
             descTr: 'Filo kiralama firmaları için kurumsal mobilite odaklı bütünleşik dijital pazarlama. Khilonfast ile lead kalitesi ve müşteri elde tutmayı artırın.',
             descEn: 'Integrated digital marketing for fleet rental companies focused on corporate mobility. Khilonfast lifts lead quality and customer retention.'
         },
         {
             tr: '/hizmetlerimiz/ofis-tasarim-butunlesik-dijital-pazarlama',
             en: '/en/services/office-design-integrated-digital-marketing',
-            titleTr: 'Ofis & İç Tasarım Bütünleşik Dijital Pazarlama',
-            titleEn: 'Office Design Integrated Digital Marketing',
+            titleTr: 'Ofis & İç Tasarım — Bütünleşik Pazarlama',
+            titleEn: 'Office Design — Integrated Marketing',
             descTr: 'Ofis ve kurumsal iç tasarım firmaları için referans odaklı bütünleşik dijital pazarlama. Khilonfast ile satış hattınızı sürdürülebilir biçimde besleyin.',
             descEn: 'Integrated digital marketing for office and corporate interior design firms. Khilonfast feeds your sales pipeline with referral-led demand.'
         },
         {
             tr: '/hizmetlerimiz/teknoloji-yazilim-butunlesik-dijital-pazarlama',
             en: '/en/services/tech-software-integrated-digital-marketing',
-            titleTr: 'Teknoloji & Yazılım Bütünleşik Dijital Pazarlama',
-            titleEn: 'Tech & Software Integrated Digital Marketing',
+            titleTr: 'Teknoloji & Yazılım — Bütünleşik Pazarlama',
+            titleEn: 'Tech & Software — Integrated Marketing',
             descTr: 'SaaS ve yazılım şirketleri için ürün-pazar uyumunu hızlandıran bütünleşik dijital pazarlama. Khilonfast ile MQL hacmini ve aktivasyonu büyütün.',
             descEn: 'Integrated digital marketing for SaaS and software companies. Khilonfast accelerates product-market fit, MQL volume, and activation rates.'
         },
         {
             tr: '/hizmetlerimiz/endustriyel-gida-butunlesik-dijital-pazarlama',
             en: '/en/services/industrial-food-integrated-digital-marketing',
-            titleTr: 'Endüstriyel Gıda Bütünleşik Dijital Pazarlama',
-            titleEn: 'Industrial Food & Culinary Integrated Digital Marketing',
+            titleTr: 'Endüstriyel Gıda — Bütünleşik Pazarlama',
+            titleEn: 'Industrial Food — Integrated Marketing',
             descTr: 'Endüstriyel gıda ve şef çözümleri için B2B kanal pazarlamasını güçlendiren bütünleşik dijital strateji. Khilonfast ile satış noktası başına büyüyün.',
             descEn: 'Integrated digital marketing for industrial food and chef solutions. Khilonfast strengthens B2B channel marketing and per-location growth.'
         },
         {
             tr: '/hizmetlerimiz/odeme-sistemleri-butunlesik-dijital-pazarlama',
             en: '/en/services/payment-systems-integrated-digital-marketing',
-            titleTr: 'Ödeme Sistemleri Bütünleşik Dijital Pazarlama',
-            titleEn: 'Payment Systems Integrated Digital Marketing',
+            titleTr: 'Ödeme Sistemleri — Bütünleşik Pazarlama',
+            titleEn: 'Payment Systems — Integrated Marketing',
             descTr: 'Ödeme sistemleri firmalarına özel B2B bütünleşik dijital pazarlama. Khilonfast ile uyumlu, dönüşüm odaklı kampanya ve içerik stratejisi yönetin.',
             descEn: 'Integrated digital marketing for payment systems firms. Khilonfast runs compliant, conversion-driven campaigns for B2B audiences.'
         },
         {
             tr: '/hizmetlerimiz/hediye-karti-butunlesik-dijital-pazarlama',
             en: '/en/services/corporate-gift-card-integrated-digital-marketing',
-            titleTr: 'Kurumsal Hediye Kartı Bütünleşik Dijital Pazarlama',
-            titleEn: 'Corporate Gift Card Integrated Digital Marketing',
+            titleTr: 'Hediye Kartı — Bütünleşik Pazarlama',
+            titleEn: 'Gift Card — Integrated Marketing',
             descTr: 'Kurumsal hediye kartı firmaları için B2B müşteri kazandıran bütünleşik dijital pazarlama. Khilonfast ile satış kanalını ölçülebilir biçimde besleyin.',
             descEn: 'Integrated digital marketing for corporate gift card programs. Khilonfast nurtures B2B buying centers with measurable, predictable demand.'
         },
         {
             tr: '/hizmetlerimiz/akaryakit-butunlesik-dijital-pazarlama',
             en: '/en/services/corporate-fuel-integrated-digital-marketing',
-            titleTr: 'Kurumsal Akaryakıt Bütünleşik Dijital Pazarlama',
-            titleEn: 'Corporate Fuel Integrated Digital Marketing',
+            titleTr: 'Kurumsal Akaryakıt — Bütünleşik Pazarlama',
+            titleEn: 'Corporate Fuel — Integrated Marketing',
             descTr: 'Kurumsal akaryakıt çözümleri için filo yöneticilerine yönelik bütünleşik dijital pazarlama. Khilonfast ile B2B müşteri yaşam değerini artırın.',
             descEn: 'Integrated digital marketing for corporate fuel solutions and fleet managers. Khilonfast increases B2B customer lifetime value.'
         }
@@ -610,8 +610,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.trainingGiftCard}`,
         en: `/en/${enSlugs.trainingGiftCard}`,
         title: composeTitle({
-            tr: 'Kurumsal Hediye Kartı Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-            en: 'Growth-Focused Marketing Training for Corporate Gift Card Sector'
+            tr: 'Hediye Kartı — Büyüme Odaklı Eğitim',
+            en: 'Gift Card — Growth Marketing Training'
         }),
         description: {
             tr: 'Kurumsal hediye kartı sektörüne özel büyüme odaklı pazarlama eğitimi ile satış, değer önerisi ve dönüşüm süreçlerini güçlendirin.',
@@ -625,8 +625,8 @@ const pageEntries: SeoEntry[] = [
         tr: `/${trSlugs.trainingFuel}`,
         en: `/en/${enSlugs.trainingFuel}`,
         title: composeTitle({
-            tr: 'Kurumsal Akaryakıt Sektöründe Büyüme Odaklı Pazarlama Eğitimi',
-            en: 'Growth-Focused Marketing Training for Corporate Fuel Solutions Sector'
+            tr: 'Kurumsal Akaryakıt — Büyüme Eğitimi',
+            en: 'Corporate Fuel — Growth Marketing Training'
         }),
         description: {
             tr: 'Kurumsal akaryakıt çözümleri sektörüne özel büyüme odaklı pazarlama eğitimi ile satış, müşteri edinimi ve ölçümleme süreçlerini yapılandırın.',

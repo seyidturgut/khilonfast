@@ -27,9 +27,6 @@ export default function ContentProduction() {
     const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
-        document.title = isEn
-            ? 'Content Production & Conversion Services | khilonfast'
-            : 'İçerik Üretimi ve Dönüşüm Hizmetleri | khilonfast'
     }, [isEn])
 
     const trConfig = {

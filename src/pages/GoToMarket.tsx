@@ -24,7 +24,6 @@ export default function GoToMarket() {
     const langPrefix = currentLang === 'en' ? '/en' : ''
 
     useEffect(() => {
-        document.title = t('serviceGTM.seo.title')
 
         const upsertMeta = (name: string, content: string) => {
             let tag = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null

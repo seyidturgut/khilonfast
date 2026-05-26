@@ -27,9 +27,6 @@ export default function SeoService() {
     const langPrefix = isEn ? '/en' : ''
 
     useEffect(() => {
-        document.title = isEn
-            ? 'SEO Management and Organic Growth Services | khilonfast'
-            : 'SEO Yönetimi ve Organik Büyüme Hizmetleri | khilonfast'
     }, [isEn])
 
     const trConfig = {

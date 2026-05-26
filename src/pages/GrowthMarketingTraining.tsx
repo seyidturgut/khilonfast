@@ -26,7 +26,6 @@ export default function GrowthMarketingTraining() {
     const langPrefix = isEn ? '/en' : ''
 
     useEffect(() => {
-        document.title = isEn ? 'Growth-Focused Marketing Training | khilonfast' : 'Büyüme Odaklı Pazarlama Eğitimi | khilonfast'
     }, [isEn])
 
     const trConfig = {

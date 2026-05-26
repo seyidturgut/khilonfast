@@ -28,9 +28,6 @@ export default function GoogleAds() {
     const homeServicesPath = isEn ? '/en/#services' : '/#services'
 
     useEffect(() => {
-        document.title = isEn
-            ? 'Google Ads Management and Performance Advertising | khilonfast'
-            : 'Google Ads Yönetimi ve Performans Reklamcılığı | khilonfast'
     }, [isEn])
 
     const trConfig = {
