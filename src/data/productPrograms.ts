@@ -19,7 +19,7 @@ export const productProgramCatalog: LocalizedProgram[] = [
     },
     {
         path: { tr: '/urunler/maestro-ai-b2b', en: '/en/products/maestro-ai-b2b' },
-        title: { tr: 'Maestro AI (B2B)', en: 'Maestro AI (B2B)' },
+        title: { tr: 'Maestro AI B2B Pazarlama Stratejisti', en: 'Maestro AI B2B Marketing Strategist' },
         summary: {
             tr: 'B2B markalar için Maestro AI pazarlama stratejisti. Khilonfast ile alıcı yolculuğu, MQL/SQL süreci ve içerik stratejisini AI ile yönetin.',
             en: 'Maestro AI marketing strategist tailored to B2B brands. Khilonfast manages buyer journey, MQL/SQL flow, and content strategy with AI.'

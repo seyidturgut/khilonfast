@@ -28,8 +28,8 @@ export const trainingProgramCatalog: LocalizedProgram[] = [
         },
         productKey: 'training-buyume-odakli-pazarlama',
         title: {
-            tr: 'Büyüme Odaklı Pazarlama Eğitimi',
-            en: 'Growth-Oriented Marketing Training'
+            tr: 'Bora Işık ile Büyüme Odaklı Pazarlama Eğitimi',
+            en: 'Growth-Focused Marketing Training with Bora Işık'
         },
         summary: {
             tr: 'khilonfast temel büyüme odaklı pazarlama eğitim programı.',

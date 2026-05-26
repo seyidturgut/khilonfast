@@ -358,8 +358,8 @@ const pageEntries: SeoEntry[] = [
             en: 'Content Strategy Services'
         }),
         description: {
-            tr: trServiceMenu.content.desc,
-            en: enServiceMenu.content.desc
+            tr: 'Khilonfast ile marka hikayenizi güçlendiren içerik stratejisi: hedef kitle analizi, mesaj çerçevesi ve editoryal planlama ile dönüşüm sağlayın.',
+            en: 'Khilonfast content strategy that strengthens your brand narrative: audience research, message framework, and editorial planning for measurable conversion.'
         },
         kind: 'service' as const,
         section: 'services' as const
@@ -644,8 +644,8 @@ const pageEntries: SeoEntry[] = [
             en: 'Maestro AI B2B Marketing Strategist'
         }),
         description: {
-            tr: trProductMenu.maestro.desc,
-            en: enProductMenu.maestro.desc
+            tr: 'B2B sektörü için özelleştirilmiş Maestro AI pazarlama stratejisti. Khilonfast ile içerik, kampanya ve dönüşüm planlamasını yapay zeka ile hızlandırın.',
+            en: 'Customized AI marketing strategist for the B2B sector. Khilonfast accelerates content, campaign, and conversion planning with Maestro AI.'
         },
         kind: 'product' as const,
         section: 'products' as const

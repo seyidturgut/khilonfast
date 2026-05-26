@@ -33,7 +33,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
         },
         summary: {
             tr: 'Ödeme sistemleri şirketinizde yüz yüze, uygulamalı büyüme odaklı pazarlama danışmanlığı. Uyumlu kampanya, dönüşüm ve karar verici hedefleme planlaması.',
-            en: 'Face-to-face, hands-on growth-focused marketing consulting for payment systems firms. Compliant campaigns, conversion planning, and decision-maker targeting.'
+            en: 'Hands-on growth-focused marketing consulting for payment systems firms. Compliant campaigns, conversion planning, and decision-maker targeting.'
         }
     },
     {
@@ -47,8 +47,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for B2B Companies'
         },
         summary: {
-            tr: 'B2B firmanızda yüz yüze pazarlama ve satış entegrasyonu danışmanlığı. Khilonfast ile alıcı yolculuğu, MQL/SQL süreci ve içerik stratejisini birlikte kurgulayın.',
-            en: 'Face-to-face marketing & sales integration consulting at your B2B company. Khilonfast designs buyer journey, MQL/SQL flow, and content strategy hands-on.'
+            tr: 'B2B firmanızda pazarlama ve satış entegrasyonu danışmanlığı. Khilonfast ile alıcı yolculuğu, MQL/SQL süreci ve içerik stratejisi kurgusu.',
+            en: 'Marketing & sales integration consulting at your B2B firm. Khilonfast designs buyer journey, MQL/SQL flow, and content strategy hands-on.'
         }
     },
     {
@@ -62,8 +62,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Fintech Companies'
         },
         summary: {
-            tr: 'Fintech firmanızda büyüme stratejileri ve kanal optimizasyonu danışmanlığı. Uyumlu içerik, karar verici hedeflemesi ve dönüşüm planlamasını birlikte yapılandırın.',
-            en: 'Growth strategies and channel optimization consulting at your fintech company. Build compliant content, decision-maker targeting, and conversion planning hands-on.'
+            tr: 'Fintech firmanızda büyüme stratejileri ve kanal optimizasyonu danışmanlığı. Uyumlu içerik, hedefleme ve dönüşüm planlamasını yapılandırın.',
+            en: 'Growth strategies and channel optimization consulting at your fintech firm. Build compliant content, targeting, and conversion plans hands-on.'
         }
     },
     {
@@ -78,7 +78,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
         },
         summary: {
             tr: 'SaaS ve teknoloji şirketinizde performans odaklı pazarlama danışmanlığı. Ürün-pazar uyumu, talep yaratma ve aktivasyon süreçlerini birlikte ölçeklendirin.',
-            en: 'Performance-oriented marketing consulting at your SaaS or technology company. Scale product-market fit, demand generation, and activation processes together.'
+            en: 'Performance-driven marketing consulting at your SaaS or tech company. Scale product-market fit, demand generation, and activation together.'
         }
     },
     {
@@ -93,7 +93,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
         },
         summary: {
             tr: 'Üretim firmanızda sürdürülebilir talep ve dönüşüm yönetimi danışmanlığı. B2B alıcı yolculuğu, teklif süreci ve içerik stratejisini birlikte yapılandırın.',
-            en: 'Sustainable demand and conversion management consulting at your manufacturing firm. Structure B2B buyer journey, quote workflows, and content strategy together.'
+            en: 'Sustainable demand and conversion management consulting for manufacturers. Structure B2B buyer journey, quote workflows, and content strategy.'
         }
     },
     {
@@ -108,7 +108,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
         },
         summary: {
             tr: 'Enerji şirketinizde karar verici odaklı pazarlama planlama danışmanlığı. Stratejik kampanya altyapısı, içerik ve performans planlamayı birlikte kurgulayın.',
-            en: 'Decision-maker-focused marketing planning consulting at your energy company. Build strategic campaign infrastructure, content, and performance plans together.'
+            en: 'Decision-maker-focused marketing consulting at your energy firm. Build strategic campaign infrastructure, content, and performance plans.'
         }
     },
     {
@@ -123,7 +123,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
         },
         summary: {
             tr: 'Kurumsal iç tasarım firmanızda tekliften satışa pazarlama danışmanlığı. Portföy temelli içerik, referans yönetimi ve teklif sürecini birlikte yapılandırın.',
-            en: 'From proposal to sale marketing consulting at your corporate interior design firm. Build portfolio-led content, referral management, and quote workflows together.'
+            en: 'Proposal-to-sale marketing consulting for corporate interior design firms. Build portfolio-led content, referrals, and quote workflows together.'
         }
     },
     {
@@ -152,8 +152,8 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Industrial Food Companies'
         },
         summary: {
-            tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama danışmanlığı. B2B kanal stratejisi, satış noktası performansı ve içerik planlamasını birlikte yapın.',
-            en: 'Growth-focused marketing consulting tailored to the industrial food sector. Build B2B channel strategy, per-location performance, and content planning together.'
+            tr: 'Endüstriyel gıda sektörüne özel büyüme odaklı pazarlama danışmanlığı. B2B kanal stratejisi, satış noktası ve içerik planlaması birlikte.',
+            en: 'Growth-focused marketing consulting for the industrial food sector. Build B2B channel strategy, per-location performance, and content plans.'
         }
     },
     {
@@ -167,7 +167,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
             en: 'Growth-Focused Marketing Consulting for Corporate Gift Card Companies'
         },
         summary: {
-            tr: 'Kurumsal hediye kartı firmanızda büyüme odaklı pazarlama danışmanlığı. B2B satın alma merkezlerini besleyen kampanya ve içerik stratejisini birlikte kurgulayın.',
+            tr: 'Kurumsal hediye kartı firmanızda büyüme odaklı pazarlama danışmanlığı. B2B satın alma merkezlerini besleyen kampanya ve içerik stratejisi.',
             en: 'Growth-focused marketing consulting at your corporate gift card firm. Build campaign and content strategy nurturing B2B buying centers, hands-on together.'
         }
     },
@@ -183,7 +183,7 @@ export const consultingProgramCatalog: LocalizedProgram[] = [
         },
         summary: {
             tr: 'Kurumsal akaryakıt firmanızda büyüme odaklı pazarlama danışmanlığı. Filo yöneticilerini hedefleyen içerik ve performans stratejisini birlikte yapılandırın.',
-            en: 'Growth-focused marketing consulting at your corporate fuel solution firm. Build content and performance strategy targeting fleet managers, hands-on together.'
+            en: 'Growth-focused marketing consulting for corporate fuel firms. Build content and performance strategy targeting fleet managers, hands-on.'
         }
     }
 ]

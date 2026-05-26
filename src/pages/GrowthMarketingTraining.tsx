@@ -30,7 +30,7 @@ export default function GrowthMarketingTraining() {
 
     const trConfig = {
         hero: {
-            title: 'Büyüme Odaklı Pazarlama Eğitimi',
+            title: 'Bora Işık ile Büyüme Odaklı Pazarlama Eğitimi',
             subtitle: 'Bütünleşik pazarlama stratejileri ile markanızı büyütün!',
             description: 'khilonfast ile bütçenizi doğru kanallara yönlendirin. Tüm kanallarınızı tek strateji ile yönetin, performans artırın.',
             buttonText: 'Satın Al',
@@ -127,7 +127,7 @@ export default function GrowthMarketingTraining() {
 
     const enConfig = {
         hero: {
-            title: 'Growth-Focused Marketing Training',
+            title: 'Growth-Focused Marketing Training with Bora Işık',
             subtitle: 'Scale your brand with integrated marketing strategy.',
             description: 'khilonfast helps you allocate budget across the right channels, align teams, and execute with a measurable growth framework.',
             buttonText: t('pricing.buyNow'),
