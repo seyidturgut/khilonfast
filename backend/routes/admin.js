@@ -1173,21 +1173,26 @@ router.get('/consultants/:id/services', authMiddleware, adminMiddleware, async (
 router.post('/consultants/:id/services', authMiddleware, adminMiddleware, async (req, res) => {
     const { category, parent_service_id, title, title_en, description, description_en,
             scope_items, scope_items_en, duration_text, sessions_text, price, currency,
-            plus_vat, cta_text, cta_text_en, badge_text, sort_order } = req.body;
+            plus_vat, cta_text, cta_text_en, badge_text, sort_order,
+            booking_type, duration_minutes, fixed_start_time, fixed_end_time, slot_interval_minutes } = req.body;
     try {
+        const bt = ['slot', 'fixed_day', 'lead_form'].includes(booking_type) ? booking_type : 'slot';
         const [result] = await db.query(
             `INSERT INTO consultant_services
              (consultant_id, category, parent_service_id, title, title_en, description, description_en,
               scope_items, scope_items_en, duration_text, sessions_text, price, currency, plus_vat,
-              cta_text, cta_text_en, badge_text, sort_order)
-             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+              cta_text, cta_text_en, badge_text, sort_order,
+              booking_type, duration_minutes, fixed_start_time, fixed_end_time, slot_interval_minutes)
+             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             [req.params.id, category, parent_service_id || null, title, title_en || null,
              description || null, description_en || null,
              scope_items ? JSON.stringify(scope_items) : null,
              scope_items_en ? JSON.stringify(scope_items_en) : null,
              duration_text || null, sessions_text || null,
              price ?? 0, currency || 'TRY', plus_vat ? 1 : 0,
-             cta_text || null, cta_text_en || null, badge_text || null, sort_order ?? 0]
+             cta_text || null, cta_text_en || null, badge_text || null, sort_order ?? 0,
+             bt, bt === 'lead_form' ? null : (parseInt(duration_minutes) || 60),
+             fixed_start_time || null, fixed_end_time || null, parseInt(slot_interval_minutes) || 60]
         );
         clearCache();
         res.json({ id: result.insertId });
@@ -1201,20 +1206,25 @@ router.post('/consultants/:id/services', authMiddleware, adminMiddleware, async 
 router.put('/consultant-services/:id', authMiddleware, adminMiddleware, async (req, res) => {
     const { title, title_en, description, description_en, scope_items, scope_items_en,
             duration_text, sessions_text, price, currency, plus_vat,
-            cta_text, cta_text_en, badge_text, sort_order, is_active } = req.body;
+            cta_text, cta_text_en, badge_text, sort_order, is_active,
+            booking_type, duration_minutes, fixed_start_time, fixed_end_time, slot_interval_minutes } = req.body;
     try {
+        const bt = ['slot', 'fixed_day', 'lead_form'].includes(booking_type) ? booking_type : 'slot';
         await db.query(
             `UPDATE consultant_services SET title=?, title_en=?, description=?, description_en=?,
              scope_items=?, scope_items_en=?, duration_text=?, sessions_text=?,
              price=?, currency=?, plus_vat=?, cta_text=?, cta_text_en=?, badge_text=?,
-             sort_order=?, is_active=? WHERE id=?`,
+             sort_order=?, is_active=?,
+             booking_type=?, duration_minutes=?, fixed_start_time=?, fixed_end_time=?, slot_interval_minutes=? WHERE id=?`,
             [title, title_en || null, description || null, description_en || null,
              scope_items ? JSON.stringify(scope_items) : null,
              scope_items_en ? JSON.stringify(scope_items_en) : null,
              duration_text || null, sessions_text || null,
              price ?? 0, currency || 'TRY', plus_vat ? 1 : 0,
              cta_text || null, cta_text_en || null, badge_text || null,
-             sort_order ?? 0, is_active !== undefined ? is_active : 1, req.params.id]
+             sort_order ?? 0, is_active !== undefined ? is_active : 1,
+             bt, bt === 'lead_form' ? null : (parseInt(duration_minutes) || 60),
+             fixed_start_time || null, fixed_end_time || null, parseInt(slot_interval_minutes) || 60, req.params.id]
         );
         clearCache();
         res.json({ success: true });

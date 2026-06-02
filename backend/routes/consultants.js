@@ -22,6 +22,72 @@ const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
 
+// İki zaman aralığı çakışıyor mu (HH:MM:SS karşılaştırması)
+const toSec = (t) => { const [h, m, s] = String(t).split(':').map(Number); return (h || 0) * 3600 + (m || 0) * 60 + (s || 0); };
+function rangesOverlap(aStart, aEnd, bStart, bEnd) {
+    return toSec(aStart) < toSec(bEnd) && toSec(aEnd) > toSec(bStart);
+}
+
+// Ürün tipine göre runtime slot üretir (PHP generateSlotsForService muadili)
+async function generateSlotsForService(consultantId, service) {
+    const bookingType = service.booking_type || 'slot';
+    if (bookingType === 'lead_form') return [];
+
+    const [ranges] = await db.query(
+        `SELECT DATE_FORMAT(available_date, "%Y-%m-%d") as available_date, start_time, end_time
+         FROM consultant_availability
+         WHERE consultant_id = ? AND status = 'available' AND available_date >= CURDATE()
+         ORDER BY available_date, start_time`,
+        [consultantId]
+    );
+    const [bookings] = await db.query(
+        `SELECT b.start_at, b.end_at, b.availability_id,
+                DATE_FORMAT(a.available_date, "%Y-%m-%d") as a_date, a.start_time as a_start, a.end_time as a_end
+         FROM consultant_bookings b
+         LEFT JOIN consultant_availability a ON a.id = b.availability_id
+         WHERE b.consultant_id = ? AND b.status IN ('pending','confirmed','completed')`,
+        [consultantId]
+    );
+    const busy = {};
+    for (const bk of bookings) {
+        if (bk.start_at && bk.end_at) {
+            const d = String(bk.start_at).slice(0, 10);
+            (busy[d] ||= []).push([String(bk.start_at).slice(11, 19), String(bk.end_at).slice(11, 19)]);
+        } else if (bk.a_date) {
+            (busy[bk.a_date] ||= []).push([bk.a_start, bk.a_end]);
+        }
+    }
+    const isFree = (date, start, end) => !(busy[date] || []).some(([bs, be]) => rangesOverlap(start, end, bs, be));
+    const out = [];
+
+    if (bookingType === 'fixed_day') {
+        const fs = service.fixed_start_time || '10:00:00';
+        const fe = service.fixed_end_time || '16:00:00';
+        for (const r of ranges) {
+            if (toSec(r.start_time) <= toSec(fs) && toSec(r.end_time) >= toSec(fe) && isFree(r.available_date, fs, fe)) {
+                out.push({ available_date: r.available_date, start_time: fs, end_time: fe });
+            }
+        }
+        return out;
+    }
+
+    let dur = parseInt(service.duration_minutes) || 60;
+    let interval = parseInt(service.slot_interval_minutes) || 60;
+    if (dur <= 0) dur = 60;
+    if (interval <= 0) interval = 60;
+    for (const r of ranges) {
+        const startSec = toSec(r.start_time), endSec = toSec(r.end_time);
+        for (let s = startSec; s + dur * 60 <= endSec; s += interval * 60) {
+            const fmt = (sec) => `${String(Math.floor(sec / 3600)).padStart(2, '0')}:${String(Math.floor((sec % 3600) / 60)).padStart(2, '0')}:00`;
+            const slotStart = fmt(s), slotEnd = fmt(s + dur * 60);
+            if (isFree(r.available_date, slotStart, slotEnd)) {
+                out.push({ available_date: r.available_date, start_time: slotStart, end_time: slotEnd });
+            }
+        }
+    }
+    return out;
+}
+
 // GET /api/consultants — aktif danışmanlar listesi
 router.get('/', cacheMiddleware(300), async (req, res) => {
     try {
@@ -121,15 +187,22 @@ router.get('/:slug/availability', async (req, res) => {
              WHERE status='held' AND held_until < NOW()`
         );
 
+        // service_id verilirse ürün tipine göre runtime slot üret (dinamik)
+        if (service_id) {
+            const [svc] = await db.query('SELECT * FROM consultant_services WHERE id = ?', [service_id]);
+            if (!svc.length) return res.status(404).json({ error: 'Service not found' });
+            const service = svc[0];
+            const bookingType = service.booking_type || 'slot';
+            if (bookingType === 'lead_form') return res.json({ slots: [], booking_type: 'lead_form' });
+            const slots = await generateSlotsForService(consultant[0].id, service);
+            return res.json({ slots, booking_type: bookingType });
+        }
+
+        // Legacy: ham müsaitlik
         let query = `SELECT id, DATE_FORMAT(available_date, "%Y-%m-%d") as available_date, start_time, end_time, service_id
                      FROM consultant_availability
                      WHERE consultant_id = ? AND status = 'available'`;
         const params = [consultant[0].id];
-
-        if (service_id) {
-            query += ' AND (service_id = ? OR service_id IS NULL)';
-            params.push(service_id);
-        }
         if (month) {
             query += ' AND DATE_FORMAT(available_date, "%Y-%m") = ?';
             params.push(month);
@@ -146,7 +219,7 @@ router.get('/:slug/availability', async (req, res) => {
 
 // POST /api/consultants/bookings/hold — slot hold et + booking oluştur
 router.post('/bookings/hold', async (req, res) => {
-    const { consultant_slug, service_id, availability_id, name, email, phone, company, topic } = req.body;
+    const { consultant_slug, service_id, availability_id, start_at, name, email, phone, company, topic } = req.body;
 
     if (!consultant_slug || !service_id || !name || !email) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -157,10 +230,46 @@ router.post('/bookings/hold', async (req, res) => {
         await connection.beginTransaction();
 
         const [consultant] = await connection.query('SELECT id FROM consultants WHERE slug = ?', [consultant_slug]);
-        if (!consultant.length) return res.status(404).json({ error: 'Consultant not found' });
+        if (!consultant.length) { await connection.rollback(); return res.status(404).json({ error: 'Consultant not found' }); }
         const consultantId = consultant[0].id;
 
-        // Slot hold
+        const [svc] = await connection.query('SELECT * FROM consultant_services WHERE id = ?', [service_id]);
+        if (!svc.length) { await connection.rollback(); return res.status(404).json({ error: 'Service not found' }); }
+        const service = svc[0];
+        const bookingType = service.booking_type || 'slot';
+        if (bookingType === 'lead_form') { await connection.rollback(); return res.status(400).json({ error: 'Bu hizmet randevu değil, başvuru formu ile alınır.' }); }
+
+        // start_at + end_at hesapla + çakışma kontrolü
+        let endAt = null;
+        if (start_at) {
+            const startSec = new Date(start_at.replace(' ', 'T')).getTime();
+            if (bookingType === 'fixed_day') {
+                endAt = start_at.slice(0, 10) + ' ' + (service.fixed_end_time || '16:00:00');
+            } else {
+                const dur = parseInt(service.duration_minutes) || 60;
+                endAt = new Date(startSec + dur * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ');
+            }
+            const [existing] = await connection.query(
+                `SELECT start_at, end_at, availability_id FROM consultant_bookings
+                 WHERE consultant_id = ? AND status IN ('pending','confirmed','completed')
+                   AND ((start_at IS NOT NULL AND DATE(start_at)=?) OR availability_id IS NOT NULL)`,
+                [consultantId, start_at.slice(0, 10)]
+            );
+            for (const ex of existing) {
+                let exStart = ex.start_at, exEnd = ex.end_at;
+                if ((!exStart || !exEnd) && ex.availability_id) {
+                    const [a] = await connection.query('SELECT available_date, start_time, end_time FROM consultant_availability WHERE id=?', [ex.availability_id]);
+                    if (a.length) { exStart = `${String(a[0].available_date).slice(0,10)} ${a[0].start_time}`; exEnd = `${String(a[0].available_date).slice(0,10)} ${a[0].end_time}`; }
+                }
+                if (exStart && exEnd) {
+                    const s1 = new Date(start_at.replace(' ', 'T')).getTime(), e1 = new Date(endAt.replace(' ', 'T')).getTime();
+                    const s2 = new Date(String(exStart).replace(' ', 'T')).getTime(), e2 = new Date(String(exEnd).replace(' ', 'T')).getTime();
+                    if (s1 < e2 && e1 > s2) { await connection.rollback(); return res.status(409).json({ error: 'Bu saat artık dolu. Lütfen başka bir zaman seçin.' }); }
+                }
+            }
+        }
+
+        // Eski model: availability_id hold (geriye uyum)
         if (availability_id) {
             const [slot] = await connection.query(
                 `SELECT * FROM consultant_availability WHERE id = ? AND status = 'available' FOR UPDATE`,
@@ -177,11 +286,11 @@ router.post('/bookings/hold', async (req, res) => {
             );
         }
 
-        // Booking oluştur
+        // Booking oluştur (start_at/end_at + booking_type)
         const [result] = await connection.query(
-            `INSERT INTO consultant_bookings (consultant_id, service_id, availability_id, name, email, phone, company, topic, status)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
-            [consultantId, service_id, availability_id || null, name, email, phone || null, company || null, topic || null]
+            `INSERT INTO consultant_bookings (consultant_id, service_id, availability_id, start_at, end_at, booking_type, name, email, phone, company, topic, status)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+            [consultantId, service_id, availability_id || null, start_at || null, endAt, bookingType, name, email, phone || null, company || null, topic || null]
         );
 
         await connection.commit();
@@ -223,6 +332,65 @@ router.post('/bookings/hold', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     } finally {
         connection.release();
+    }
+});
+
+// POST /api/consultants/leads — Fractional CMO (lead_form) başvurusu (takvimsiz)
+router.post('/leads', async (req, res) => {
+    const { consultant_slug, service_id, name, company, position, email, phone, website, needs, monthly_pref, kvkk_consent } = req.body;
+    if (!consultant_slug || !name || !email) return res.status(400).json({ error: 'Ad, e-posta ve danışman zorunlu' });
+    if (!kvkk_consent) return res.status(400).json({ error: 'KVKK onayı gereklidir' });
+    try {
+        const [consultant] = await db.query('SELECT id, name FROM consultants WHERE slug = ? AND is_active = TRUE', [consultant_slug]);
+        if (!consultant.length) return res.status(404).json({ error: 'Consultant not found' });
+        const consultantId = consultant[0].id;
+
+        const [result] = await db.query(
+            `INSERT INTO consultant_leads (consultant_id, service_id, name, company, position, email, phone, website, needs, monthly_pref, kvkk_consent, status)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new')`,
+            [consultantId, service_id || null, name, company || null, position || null, email, phone || null, website || null, needs || null, monthly_pref || null, kvkk_consent ? 1 : 0]
+        );
+        const leadId = result.insertId;
+
+        // CRM (best-effort)
+        try {
+            const parts = String(name).trim().split(/\s+/);
+            const first = parts.shift() || name;
+            const last = parts.join(' ');
+            await db.query(
+                `INSERT INTO crm_contacts (first_name, last_name, email, phone, company, source, status, created_at)
+                 VALUES (?, ?, ?, ?, ?, 'consultant_lead', 'subscribed', NOW())
+                 ON DUPLICATE KEY UPDATE phone=VALUES(phone), company=VALUES(company), source='consultant_lead'`,
+                [first, last, email, phone || null, company || null]
+            );
+        } catch (e) { /* crm şeması farklıysa geç */ }
+
+        // Admin bildirimi (consultants.email kolonu yok → danışman maili FAZ 2)
+        try {
+            const adminEmail = await getSettingValue('contact_email', '');
+            if (adminEmail) {
+                let svcTitle = '';
+                if (service_id) { const [t] = await db.query('SELECT title FROM consultant_services WHERE id=?', [service_id]); svcTitle = t[0]?.title || ''; }
+                const html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;color:#102a43">'
+                    + '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                    + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px"><h2 style="margin:0;font-size:1.15rem">Yeni Danışmanlık Başvurusu (Lead)</h2></div>'
+                    + '<div style="padding:24px;line-height:1.7">'
+                    + `<p><strong>Program:</strong> ${escapeHtml(svcTitle || 'Fractional CMO')}</p>`
+                    + `<p><strong>Ad Soyad:</strong> ${escapeHtml(name)}</p>`
+                    + `<p><strong>Şirket:</strong> ${escapeHtml(company || '-')} — <strong>Pozisyon:</strong> ${escapeHtml(position || '-')}</p>`
+                    + `<p><strong>E-posta:</strong> ${escapeHtml(email)} — <strong>Telefon:</strong> ${escapeHtml(phone || '-')}</p>`
+                    + `<p><strong>Web:</strong> ${escapeHtml(website || '-')} — <strong>Aylık tercih:</strong> ${escapeHtml(monthly_pref || '-')}</p>`
+                    + `<p><strong>İhtiyaç:</strong><br>${escapeHtml(needs || '-')}</p>`
+                    + `<p><a href="${FRONTEND_URL}/admin/bookings" style="background:#1a3a52;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600">Admin Panelinde Aç</a></p>`
+                    + '</div></div></body></html>';
+                await sendCustomMail(adminEmail, `[Khilonfast] Yeni Danışmanlık Başvurusu — ${name}`, html);
+            }
+        } catch (e) { console.error('lead notify failed:', e.message); }
+
+        res.json({ lead_id: leadId, message: 'Başvurunuz alınmıştır. Ekibimiz sizinle iletişime geçecektir.' });
+    } catch (err) {
+        console.error('Consultant lead error:', err);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 

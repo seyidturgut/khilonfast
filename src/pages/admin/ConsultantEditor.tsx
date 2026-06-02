@@ -47,6 +47,11 @@ interface ServiceForm {
     badge_text: string;
     sort_order: number;
     is_active: boolean;
+    booking_type: 'slot' | 'fixed_day' | 'lead_form';
+    duration_minutes: number;
+    fixed_start_time: string;
+    fixed_end_time: string;
+    slot_interval_minutes: number;
 }
 
 const emptyService = (): ServiceForm => ({
@@ -54,6 +59,7 @@ const emptyService = (): ServiceForm => ({
     scope_items: [], duration_text: '', sessions_text: '',
     price: 0, currency: 'TRY', plus_vat: true,
     cta_text: '', badge_text: '', sort_order: 0, is_active: true,
+    booking_type: 'slot', duration_minutes: 60, fixed_start_time: '10:00', fixed_end_time: '16:00', slot_interval_minutes: 60,
 });
 
 // scope_items'ı her formattan güvenle string[]'e çevirir.
@@ -198,6 +204,48 @@ function ServiceFormPanel({
                     <label style={S.label}>Seans</label>
                     <input style={S.input} value={form.sessions_text} onChange={e => setForm({ ...form, sessions_text: e.target.value })} placeholder="x3 seans" />
                 </div>
+            </div>
+
+            {/* Randevu Davranışı — booking_type */}
+            <div style={{ background: '#f8faff', border: '1px solid #e0e7ff', borderRadius: 10, padding: '14px 16px', marginTop: 4 }}>
+                <label style={{ ...S.label, color: '#4338ca' }}>Randevu Davranışı</label>
+                <div style={S.grid2}>
+                    <div>
+                        <label style={S.label}>Tip</label>
+                        <select style={S.select} value={form.booking_type}
+                            onChange={e => setForm({ ...form, booking_type: e.target.value as ServiceForm['booking_type'] })}>
+                            <option value="slot">Saatlik Randevu (slot)</option>
+                            <option value="fixed_day">Tam Gün Sabit Blok</option>
+                            <option value="lead_form">Lead / Başvuru Formu (takvimsiz)</option>
+                        </select>
+                    </div>
+                    {form.booking_type === 'slot' && (
+                        <div>
+                            <label style={S.label}>Slot Süresi (dakika)</label>
+                            <input type="number" style={S.input} value={form.duration_minutes}
+                                onChange={e => setForm({ ...form, duration_minutes: parseInt(e.target.value) || 60 })} placeholder="60" />
+                        </div>
+                    )}
+                    {form.booking_type === 'fixed_day' && (
+                        <div style={S.grid2}>
+                            <div>
+                                <label style={S.label}>Blok Başlangıç</label>
+                                <input type="time" style={S.input} value={form.fixed_start_time}
+                                    onChange={e => setForm({ ...form, fixed_start_time: e.target.value })} />
+                            </div>
+                            <div>
+                                <label style={S.label}>Blok Bitiş</label>
+                                <input type="time" style={S.input} value={form.fixed_end_time}
+                                    onChange={e => setForm({ ...form, fixed_end_time: e.target.value })} />
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <p style={{ fontSize: '0.78rem', color: '#6b7280', margin: '8px 0 0' }}>
+                    {form.booking_type === 'slot' && '💡 Müsaitlik aralığı, slot süresine göre dilimlenir (örn. 10:00-17:00 → 60dk slotlar).'}
+                    {form.booking_type === 'fixed_day' && '💡 Sadece müsaitlik bu sabit bloğu tamamen kapsayan günlerde gösterilir.'}
+                    {form.booking_type === 'lead_form' && '💡 Takvim/saat seçimi gösterilmez. Kullanıcı başvuru formu doldurur, lead oluşur.'}
+                </p>
             </div>
             <div style={S.grid2}>
                 <div>
@@ -384,6 +432,11 @@ export default function ConsultantEditor() {
             price: parseFloat(s.price) || 0, currency: s.currency || 'TRY',
             plus_vat: Boolean(s.plus_vat), cta_text: s.cta_text || '',
             badge_text: s.badge_text || '', sort_order: s.sort_order || 0, is_active: Boolean(s.is_active),
+            booking_type: (s.booking_type === 'fixed_day' || s.booking_type === 'lead_form') ? s.booking_type : 'slot',
+            duration_minutes: s.duration_minutes != null ? Number(s.duration_minutes) : 60,
+            fixed_start_time: s.fixed_start_time ? String(s.fixed_start_time).slice(0, 5) : '10:00',
+            fixed_end_time: s.fixed_end_time ? String(s.fixed_end_time).slice(0, 5) : '16:00',
+            slot_interval_minutes: s.slot_interval_minutes != null ? Number(s.slot_interval_minutes) : 60,
         });
         setShowServiceForm(true);
     };
@@ -426,42 +479,18 @@ export default function ConsultantEditor() {
         setSlotTimes(t => t.map((s, j) => j === i ? { ...s, [field]: val } : s));
     };
 
-    // Geniş aralıkları (09:00-17:00 gibi) 60 dakikalık dilimlere böler.
-    // Böylece her dilim ayrı slot kaydı olur ve booking modal'da kullanıcı
-    // tek tek 60dk seans seçebilir. 60dk'dan kısa aralık tek slot kalır.
-    const splitInto60 = (start: string, end: string): { start: string; end: string }[] => {
-        const out: { start: string; end: string }[] = [];
-        const [sh, sm] = start.split(':').map(Number);
-        const [eh, em] = end.split(':').map(Number);
-        const startMin = sh * 60 + sm;
-        const endMin = eh * 60 + em;
-        if (!Number.isFinite(startMin) || !Number.isFinite(endMin) || endMin <= startMin) {
-            return [{ start, end }];
-        }
-        let cur = startMin;
-        while (cur + 60 <= endMin) {
-            const s = `${String(Math.floor(cur / 60)).padStart(2, '0')}:${String(cur % 60).padStart(2, '0')}`;
-            const next = cur + 60;
-            const e = `${String(Math.floor(next / 60)).padStart(2, '0')}:${String(next % 60).padStart(2, '0')}`;
-            out.push({ start: s, end: e });
-            cur = next;
-        }
-        // Tam 60'a bölünmeyen artık (örn. 09:00-09:45) varsa, hiç dilim oluşmadıysa orijinali koru
-        if (out.length === 0) return [{ start, end }];
-        return out;
-    };
-
+    // Müsaitlik HAM ARALIK olarak kaydedilir (10:00-17:00 tek kayıt).
+    // Slot'lar booking sırasında ürün süresine göre RUNTIME üretilir (backend
+    // generateSlotsForService). Bu yüzden burada bölme YAPILMAZ.
     const addSlots = async () => {
         if (!slotDate) return;
         setAddingSlots(true);
-        const slotsPayload = slotTimes.flatMap(t =>
-            splitInto60(t.start, t.end).map(seg => ({ available_date: slotDate, start_time: seg.start, end_time: seg.end }))
-        );
+        const slotsPayload = slotTimes.map(t => ({ available_date: slotDate, start_time: t.start, end_time: t.end }));
         await fetch(`${ADMIN_API_BASE}/admin/consultants/${id}/availability`, {
             method: 'POST', headers: authHeaders(), body: JSON.stringify({ slots: slotsPayload })
         });
         setSlotDate('');
-        setSlotTimes([{ start: '09:00', end: '10:00' }]);
+        setSlotTimes([{ start: '09:00', end: '17:00' }]);
         setAddingSlots(false);
         fetchSlots();
     };
@@ -908,12 +937,13 @@ export default function ConsultantEditor() {
                                         </button>
                                     </div>
                                     <div style={{ fontSize: '0.78rem', color: '#6b7280', marginTop: 6 }}>
-                                        💡 Geniş aralık girince sistem otomatik olarak 1 saatlik dilimlere böler.
+                                        💡 Müsaitliği <strong>çalışma aralığı</strong> olarak girin (örn. 10:00-17:00). Randevu saatleri,
+                                        kullanıcının seçtiği ürünün süresine göre otomatik üretilir (60dk ürün → 10-11, 11-12...).
                                     </div>
                                 </div>
                                 <button onClick={addSlots} disabled={!slotDate || addingSlots}
                                     style={{ ...S.btnPrimary, width: 'fit-content', opacity: !slotDate ? 0.5 : 1 }}>
-                                    {addingSlots ? '⏳ Ekleniyor...' : `📅 ${slotTimes.length} Slot Ekle`}
+                                    {addingSlots ? '⏳ Ekleniyor...' : `📅 ${slotTimes.length} Müsaitlik Aralığı Ekle`}
                                 </button>
                             </div>
                         </div>

@@ -19,11 +19,15 @@ export interface ConsultantBookingModalProps {
         currency: string
         plus_vat: boolean
         cta_text: string
+        booking_type?: 'slot' | 'fixed_day' | 'lead_form'
+        duration_minutes?: number | null
+        fixed_start_time?: string | null
+        fixed_end_time?: string | null
     }
 }
 
 interface AvailabilitySlot {
-    id: number
+    id?: number // runtime slot'larda id yok; start_at kullanılır
     available_date: string // YYYY-MM-DD
     start_time: string
     end_time: string
@@ -135,6 +139,15 @@ export default function ConsultantBookingModal({
 
     // Confirmation state
     const [bookingId, setBookingId] = useState<number | null>(null)
+
+    // Lead form state (Fractional CMO — booking_type='lead_form')
+    const bookingType = service.booking_type || 'slot'
+    const isLeadForm = bookingType === 'lead_form'
+    const [leadPosition, setLeadPosition] = useState('')
+    const [leadWebsite, setLeadWebsite] = useState('')
+    const [leadNeeds, setLeadNeeds] = useState('')
+    const [leadKvkk, setLeadKvkk] = useState(false)
+    const [leadDone, setLeadDone] = useState(false)
 
     const overlayRef = useRef<HTMLDivElement>(null)
     const navigate = useNavigate()
@@ -263,8 +276,13 @@ export default function ConsultantBookingModal({
                 company: company.trim(),
                 topic: topic.trim()
             }
+            // Yeni model: seçilen slot'tan start_at gönder (backend end_at'i süreden hesaplar).
             if (selectedSlot) {
-                body.availability_id = selectedSlot.id
+                const d = selectedSlot.available_date.includes('T')
+                    ? selectedSlot.available_date.split('T')[0]
+                    : selectedSlot.available_date
+                body.start_at = `${d} ${String(selectedSlot.start_time).slice(0, 8).padEnd(8, ':00')}`
+                if (selectedSlot.id) body.availability_id = selectedSlot.id // legacy uyum
             }
 
             const res = await fetch(`${API_BASE_URL}/consultants/bookings/hold`, {
@@ -275,7 +293,7 @@ export default function ConsultantBookingModal({
 
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}))
-                throw new Error(errData.message || `HTTP ${res.status}`)
+                throw new Error(errData.error || errData.message || `HTTP ${res.status}`)
             }
 
             const data = await res.json()
@@ -287,6 +305,48 @@ export default function ConsultantBookingModal({
                     ? err.message
                     : 'Rezervasyon gönderilemedi. Lütfen tekrar deneyin.'
             )
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
+    // Fractional CMO lead/başvuru formu gönderimi (takvimsiz)
+    const handleLeadSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setFormError(null)
+        if (!name.trim() || !email.trim()) {
+            setFormError('Ad Soyad ve E-posta alanları zorunludur.')
+            return
+        }
+        if (!leadKvkk) {
+            setFormError('Devam etmek için KVKK onayı gereklidir.')
+            return
+        }
+        setSubmitting(true)
+        try {
+            const res = await fetch(`${API_BASE_URL}/consultants/leads`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    consultant_slug: consultant.slug,
+                    service_id: service.id,
+                    name: name.trim(),
+                    company: company.trim(),
+                    position: leadPosition.trim(),
+                    email: email.trim(),
+                    phone: phone.trim(),
+                    website: leadWebsite.trim(),
+                    needs: leadNeeds.trim(),
+                    kvkk_consent: leadKvkk
+                })
+            })
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}))
+                throw new Error(errData.error || `HTTP ${res.status}`)
+            }
+            setLeadDone(true)
+        } catch (err) {
+            setFormError(err instanceof Error ? err.message : 'Başvuru gönderilemedi. Lütfen tekrar deneyin.')
         } finally {
             setSubmitting(false)
         }
@@ -306,7 +366,7 @@ export default function ConsultantBookingModal({
                 {/* Header */}
                 <div className="booking-modal-header">
                     <h3 className="booking-modal-title">
-                        {step === 3 ? 'Rezervasyon Onayı' : service.title}
+                        {isLeadForm ? service.title : (step === 3 ? 'Rezervasyon Onayı' : service.title)}
                     </h3>
                     <button
                         className="booking-modal-close"
@@ -317,10 +377,58 @@ export default function ConsultantBookingModal({
                     </button>
                 </div>
 
-                <StepIndicator current={step} />
+                {/* ── Fractional CMO / Lead başvuru formu (takvimsiz) ────── */}
+                {isLeadForm && (
+                    <div className="booking-step-content" key="lead-form">
+                        {leadDone ? (
+                            <div className="booking-confirmation" style={{ textAlign: 'center', padding: '12px 4px' }}>
+                                <div style={{ fontSize: '2.4rem', marginBottom: 8 }}>✅</div>
+                                <h4 style={{ margin: '0 0 8px' }}>Başvurunuz Alındı</h4>
+                                <p style={{ color: '#475569', lineHeight: 1.6 }}>
+                                    <strong>{service.title}</strong> başvurunuz/satın alma talebiniz alınmıştır.
+                                    Ekibimiz en kısa sürede sizinle iletişime geçecektir.
+                                </p>
+                                <button type="button" className="booking-btn-primary" style={{ marginTop: 16 }} onClick={onClose}>
+                                    Kapat
+                                </button>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleLeadSubmit} className="booking-form">
+                                <p className="slots-message" style={{ marginBottom: 12 }}>
+                                    Bu program aylık olarak yürütülür. Başvuru formunu doldurun, ekibimiz sizinle iletişime geçsin.
+                                </p>
+                                <div className="form-row">
+                                    <label>Ad Soyad *<input type="text" value={name} onChange={e => setName(e.target.value)} required /></label>
+                                    <label>Şirket<input type="text" value={company} onChange={e => setCompany(e.target.value)} /></label>
+                                </div>
+                                <div className="form-row">
+                                    <label>Pozisyon<input type="text" value={leadPosition} onChange={e => setLeadPosition(e.target.value)} /></label>
+                                    <label>Şirket Web Sitesi<input type="text" value={leadWebsite} onChange={e => setLeadWebsite(e.target.value)} placeholder="ornek.com" /></label>
+                                </div>
+                                <div className="form-row">
+                                    <label>E-posta *<input type="email" value={email} onChange={e => setEmail(e.target.value)} required /></label>
+                                    <label>Telefon<input type="tel" value={phone} onChange={e => setPhone(e.target.value)} /></label>
+                                </div>
+                                <label>İhtiyaç / Beklenti
+                                    <textarea rows={3} value={leadNeeds} onChange={e => setLeadNeeds(e.target.value)} placeholder="Aradığınız desteği kısaca anlatın..." />
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.85rem', marginTop: 8 }}>
+                                    <input type="checkbox" checked={leadKvkk} onChange={e => setLeadKvkk(e.target.checked)} style={{ marginTop: 3 }} />
+                                    <span>Kişisel verilerimin KVKK kapsamında işlenmesini onaylıyorum. *</span>
+                                </label>
+                                {formError && <p className="slots-message error" style={{ marginTop: 8 }}>{formError}</p>}
+                                <button type="submit" className="booking-btn-primary" disabled={submitting} style={{ marginTop: 14, width: '100%' }}>
+                                    {submitting ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
+                                </button>
+                            </form>
+                        )}
+                    </div>
+                )}
+
+                {!isLeadForm && <StepIndicator current={step} />}
 
                 {/* ── Step 1: Calendar ──────────────────────────────────── */}
-                {step === 1 && (
+                {!isLeadForm && step === 1 && (
                     <div className="booking-step-content" key="step-1">
                         <div className="calendar-nav">
                             <button type="button" className="cal-nav-btn" onClick={handlePrevMonth} aria-label="Önceki ay">‹</button>
@@ -375,18 +483,22 @@ export default function ConsultantBookingModal({
 
                                 {selectedDate && slotsByDate[selectedDate] && (
                                     <div className="time-slots-section animate-fade-in">
-                                        <p className="time-slots-label">{formatDateDisplay(selectedDate)} — Saat Seçin:</p>
+                                        <p className="time-slots-label">{formatDateDisplay(selectedDate)} — {bookingType === 'fixed_day' ? 'Blok Seçin' : 'Saat Seçin'}:</p>
                                         <div className="time-slots">
-                                            {slotsByDate[selectedDate].map((slot) => (
-                                                <button
-                                                    key={slot.id}
-                                                    type="button"
-                                                    className={`slot-btn${selectedSlot?.id === slot.id ? ' selected' : ''}`}
-                                                    onClick={() => handleSlotSelect(slot)}
-                                                >
-                                                    {formatTimeRange(slot.start_time, slot.end_time)}
-                                                </button>
-                                            ))}
+                                            {slotsByDate[selectedDate].map((slot) => {
+                                                const slotKey = `${slot.available_date}_${slot.start_time}`
+                                                const selKey = selectedSlot ? `${selectedSlot.available_date}_${selectedSlot.start_time}` : ''
+                                                return (
+                                                    <button
+                                                        key={slotKey}
+                                                        type="button"
+                                                        className={`slot-btn${selKey === slotKey ? ' selected' : ''}`}
+                                                        onClick={() => handleSlotSelect(slot)}
+                                                    >
+                                                        {formatTimeRange(slot.start_time, slot.end_time)}
+                                                    </button>
+                                                )
+                                            })}
                                         </div>
                                     </div>
                                 )}
@@ -407,7 +519,7 @@ export default function ConsultantBookingModal({
                 )}
 
                 {/* ── Step 2: Info Form ─────────────────────────────────── */}
-                {step === 2 && (
+                {!isLeadForm && step === 2 && (
                     <div className="booking-step-content">
                         {/* Summary */}
                         <div className="booking-summary">
@@ -531,11 +643,13 @@ export default function ConsultantBookingModal({
                 )}
 
                 {/* ── Step 3: Confirmation ──────────────────────────────── */}
-                {step === 3 && (
+                {!isLeadForm && step === 3 && (
                     <div className="booking-step-content booking-confirmation">
                         <div className="confirmation-icon">✅</div>
                         <h4 className="confirmation-title">
-                            Rezervasyon Talebiniz Alındı!
+                            {bookingType === 'fixed_day'
+                                ? 'Executive Strategy Day Rezervasyonunuz Oluşturuldu!'
+                                : 'Randevunuz Oluşturuldu!'}
                         </h4>
                         {bookingId && (
                             <p className="confirmation-id">

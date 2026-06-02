@@ -1359,8 +1359,9 @@ if ($action === 'consultants' && $method === 'POST' && !empty($id) && $subAction
         "INSERT INTO consultant_services
          (consultant_id, category, parent_service_id, title, title_en, description, description_en,
           scope_items, scope_items_en, duration_text, sessions_text, price, currency, plus_vat,
-          cta_text, cta_text_en, badge_text, sort_order)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+          cta_text, cta_text_en, badge_text, sort_order,
+          booking_type, duration_minutes, fixed_start_time, fixed_end_time, slot_interval_minutes)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     );
     $stmt->execute([
         $id,
@@ -1381,6 +1382,11 @@ if ($action === 'consultants' && $method === 'POST' && !empty($id) && $subAction
         $d['cta_text_en'] ?? null,
         $d['badge_text'] ?? null,
         $d['sort_order'] ?? 0,
+        in_array($d['booking_type'] ?? 'slot', ['slot','fixed_day','lead_form'], true) ? $d['booking_type'] : 'slot',
+        ($d['booking_type'] ?? 'slot') === 'lead_form' ? null : (int)($d['duration_minutes'] ?? 60),
+        !empty($d['fixed_start_time']) ? $d['fixed_start_time'] : null,
+        !empty($d['fixed_end_time']) ? $d['fixed_end_time'] : null,
+        (int)($d['slot_interval_minutes'] ?? 60),
     ]);
     sendResponse(['id' => $db->lastInsertId()]);
 }
@@ -1392,7 +1398,9 @@ if ($action === 'consultant-services' && $method === 'PUT' && !empty($id)) {
         "UPDATE consultant_services SET title=?, title_en=?, description=?, description_en=?,
          scope_items=?, scope_items_en=?, duration_text=?, sessions_text=?,
          price=?, currency=?, plus_vat=?, cta_text=?, cta_text_en=?, badge_text=?,
-         sort_order=?, is_active=? WHERE id=?"
+         sort_order=?, is_active=?,
+         booking_type=?, duration_minutes=?, fixed_start_time=?, fixed_end_time=?, slot_interval_minutes=?
+         WHERE id=?"
     );
     $stmt->execute([
         $d['title'],
@@ -1411,6 +1419,11 @@ if ($action === 'consultant-services' && $method === 'PUT' && !empty($id)) {
         $d['badge_text'] ?? null,
         $d['sort_order'] ?? 0,
         isset($d['is_active']) ? $d['is_active'] : 1,
+        in_array($d['booking_type'] ?? 'slot', ['slot','fixed_day','lead_form'], true) ? $d['booking_type'] : 'slot',
+        ($d['booking_type'] ?? 'slot') === 'lead_form' ? null : (int)($d['duration_minutes'] ?? 60),
+        !empty($d['fixed_start_time']) ? $d['fixed_start_time'] : null,
+        !empty($d['fixed_end_time']) ? $d['fixed_end_time'] : null,
+        (int)($d['slot_interval_minutes'] ?? 60),
         $id,
     ]);
     sendResponse(['success' => true]);

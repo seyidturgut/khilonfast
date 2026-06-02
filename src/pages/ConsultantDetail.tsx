@@ -19,6 +19,10 @@ interface SubPackage {
     plus_vat: boolean
     cta_text: string
     badge_text: string | null
+    booking_type?: 'slot' | 'fixed_day' | 'lead_form'
+    duration_minutes?: number | null
+    fixed_start_time?: string | null
+    fixed_end_time?: string | null
 }
 
 interface Service {
@@ -35,6 +39,10 @@ interface Service {
     cta_text: string
     badge_text: string | null
     sub_packages: SubPackage[]
+    booking_type?: 'slot' | 'fixed_day' | 'lead_form'
+    duration_minutes?: number | null
+    fixed_start_time?: string | null
+    fixed_end_time?: string | null
 }
 
 interface ConsultantDetail {
@@ -103,6 +111,10 @@ interface BookingServicePayload {
     currency: string
     plus_vat: boolean
     cta_text: string
+    booking_type?: 'slot' | 'fixed_day' | 'lead_form'
+    duration_minutes?: number | null
+    fixed_start_time?: string | null
+    fixed_end_time?: string | null
 }
 
 interface ServiceCardProps {
@@ -157,7 +169,11 @@ function ServiceCard({ service, isSubPackage = false, isEn, onBook }: ServiceCar
                         price: service.price,
                         currency: service.currency,
                         plus_vat: service.plus_vat,
-                        cta_text: service.cta_text
+                        cta_text: service.cta_text,
+                        booking_type: service.booking_type,
+                        duration_minutes: service.duration_minutes,
+                        fixed_start_time: service.fixed_start_time,
+                        fixed_end_time: service.fixed_end_time
                     })}
                 >
                     {service.cta_text || (isEn ? 'Book Now' : 'Rezervasyon Yap')}
