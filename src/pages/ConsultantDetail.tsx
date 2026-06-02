@@ -438,7 +438,11 @@ export default function ConsultantDetail() {
                                                         price: service.price,
                                                         currency: service.currency,
                                                         plus_vat: service.plus_vat,
-                                                        cta_text: service.cta_text
+                                                        cta_text: service.cta_text,
+                                                        booking_type: service.booking_type,
+                                                        duration_minutes: service.duration_minutes,
+                                                        fixed_start_time: service.fixed_start_time,
+                                                        fixed_end_time: service.fixed_end_time
                                                     })}
                                                 >
                                                     {service.cta_text || (isEn ? 'Book Now' : 'Rezervasyon Yap')}
