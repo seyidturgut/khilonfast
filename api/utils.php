@@ -713,3 +713,23 @@ function sendSmtpEmail($host, $port, $username, $password, $from, $to, $subject,
     $write("QUIT");
     fclose($fp);
 }
+
+/**
+ * scope_items / scope_items_en JSON alanlarını her zaman düz string[] döndürür.
+ * Eski kayıtlar "double-encode" olabilir ('["a"]' yerine '"[\"a\"]"'); bu durumda
+ * tek json_decode string döndürür, ikinci kez decode edilir.
+ * Admin paneldeki "n.map is not a function" hatasını kökten önler.
+ */
+if (!function_exists('decodeScopeItemsSafe')) {
+    function decodeScopeItemsSafe($raw): array
+    {
+        if (is_array($raw)) return array_values(array_filter($raw, 'is_string'));
+        if ($raw === null || $raw === '') return [];
+        $decoded = json_decode($raw, true);
+        if (is_string($decoded)) {
+            $again = json_decode($decoded, true);
+            if (is_array($again)) $decoded = $again;
+        }
+        return is_array($decoded) ? array_values(array_filter($decoded, 'is_string')) : [];
+    }
+}

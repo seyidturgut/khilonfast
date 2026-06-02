@@ -8,6 +8,7 @@ set_exception_handler(function (Throwable $e) {
 
 require_once __DIR__ . '/../services/CouponService.php';
 require_once __DIR__ . '/../services/CrmSchema.php';
+// decodeScopeItemsSafe() utils.php'de global tanımlı (index.php require eder).
 
 $db = Database::getInstance();
 try { ensureCouponSchema($db); } catch (Throwable $e) { error_log('[admin] ensureCouponSchema: ' . $e->getMessage()); }
@@ -1340,7 +1341,15 @@ if ($action === 'consultants') {
 if ($action === 'consultants' && $method === 'GET' && !empty($id) && $subAction === 'services') {
     $stmt = $db->prepare("SELECT * FROM consultant_services WHERE consultant_id=? ORDER BY sort_order ASC");
     $stmt->execute([$id]);
-    sendResponse(['services' => $stmt->fetchAll()]);
+    $services = $stmt->fetchAll();
+    // scope_items'ı her zaman array olarak döndür (double-encode'a dayanıklı).
+    // Aksi halde admin panel ScopeEditor'da "n.map is not a function" hatası oluşur.
+    foreach ($services as &$svc) {
+        $svc['scope_items']    = decodeScopeItemsSafe($svc['scope_items'] ?? null);
+        $svc['scope_items_en'] = decodeScopeItemsSafe($svc['scope_items_en'] ?? null);
+    }
+    unset($svc);
+    sendResponse(['services' => $services]);
 }
 
 // POST /api/admin/consultants/:id/services

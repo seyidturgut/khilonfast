@@ -1135,13 +1135,34 @@ router.delete('/consultants/:id', authMiddleware, adminMiddleware, async (req, r
 });
 
 // GET /api/admin/consultants/:id/services
+// scope_items'ı her zaman düz array döndürür (double-encode'a dayanıklı).
+// '["a"]' yerine '"[\"a\"]"' gelen eski kayıtlar için iki kez parse eder.
+function decodeScopeItemsSafe(raw) {
+    if (Array.isArray(raw)) return raw.filter((x) => typeof x === 'string');
+    if (raw == null || raw === '') return [];
+    try {
+        let parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        if (typeof parsed === 'string') {
+            try { parsed = JSON.parse(parsed); } catch { /* tek katman */ }
+        }
+        return Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+    } catch {
+        return [];
+    }
+}
+
 router.get('/consultants/:id/services', authMiddleware, adminMiddleware, async (req, res) => {
     try {
         const [rows] = await db.query(
             'SELECT * FROM consultant_services WHERE consultant_id=? ORDER BY sort_order ASC',
             [req.params.id]
         );
-        res.json({ services: rows });
+        const services = rows.map((svc) => ({
+            ...svc,
+            scope_items: decodeScopeItemsSafe(svc.scope_items),
+            scope_items_en: decodeScopeItemsSafe(svc.scope_items_en),
+        }));
+        res.json({ services });
     } catch (err) {
         console.error('Admin get services error:', err);
         res.status(500).json({ error: 'Server error' });

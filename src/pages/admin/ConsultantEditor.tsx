@@ -56,6 +56,26 @@ const emptyService = (): ServiceForm => ({
     cta_text: '', badge_text: '', sort_order: 0, is_active: true,
 });
 
+// scope_items'ı her formattan güvenle string[]'e çevirir.
+// Backend bazı kayıtları "double-encode" döndürebilir ('["a"]' yerine '"[\"a\"]"').
+// Bu yüzden parse sonucu hâlâ string ise bir kez daha parse edilir.
+function parseScopeItems(raw: any): string[] {
+    if (Array.isArray(raw)) return raw.filter((x) => typeof x === 'string');
+    if (typeof raw === 'string' && raw.trim()) {
+        try {
+            let parsed = JSON.parse(raw);
+            if (typeof parsed === 'string') {
+                try { parsed = JSON.parse(parsed); } catch { /* tek katman string kalsın */ }
+            }
+            if (Array.isArray(parsed)) return parsed.filter((x) => typeof x === 'string');
+            return typeof parsed === 'string' ? [parsed] : [];
+        } catch {
+            return [raw];
+        }
+    }
+    return [];
+}
+
 function slugify(text: string) {
     return text.toLowerCase()
         .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
@@ -83,18 +103,20 @@ const S = {
 // ── Scope Items Editor ───────────────────────────────────────────────────
 function ScopeEditor({ items, onChange }: { items: string[]; onChange: (v: string[]) => void }) {
     const [draft, setDraft] = useState('');
+    // Savunmacı: items array değilse (null / JSON string / obje gelirse) crash etme
+    const safeItems: string[] = Array.isArray(items) ? items : [];
     const add = () => {
         if (!draft.trim()) return;
-        onChange([...items, draft.trim()]);
+        onChange([...safeItems, draft.trim()]);
         setDraft('');
     };
     return (
         <div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
-                {items.map((item, i) => (
+                {safeItems.map((item, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f8faff', border: '1px solid #e5e7eb', borderRadius: 7, padding: '6px 10px' }}>
                         <span style={{ flex: 1, fontSize: '0.88rem' }}>✓ {item}</span>
-                        <button type="button" onClick={() => onChange(items.filter((_, j) => j !== i))}
+                        <button type="button" onClick={() => onChange(safeItems.filter((_, j) => j !== i))}
                             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '0.9rem' }}>×</button>
                     </div>
                 ))}
@@ -354,8 +376,7 @@ export default function ConsultantEditor() {
 
     const openEditService = (s: any) => {
         setEditingServiceId(s.id);
-        const scopeItems = Array.isArray(s.scope_items) ? s.scope_items
-            : (typeof s.scope_items === 'string' ? (() => { try { return JSON.parse(s.scope_items); } catch { return s.scope_items ? [s.scope_items] : []; } })() : []);
+        const scopeItems = parseScopeItems(s.scope_items);
         setServiceForm({
             id: s.id, category: s.category, parent_service_id: s.parent_service_id ? String(s.parent_service_id) : '',
             title: s.title, description: s.description || '', scope_items: scopeItems,
@@ -373,7 +394,9 @@ export default function ConsultantEditor() {
         const body = {
             ...serviceForm,
             parent_service_id: serviceForm.parent_service_id ? parseInt(serviceForm.parent_service_id) : null,
-            scope_items: JSON.stringify(serviceForm.scope_items),
+            // ÖNEMLİ: array olarak gönder — backend json_encode eder. Burada JSON.stringify
+            // yaparsak backend tekrar sarar ve "double-encode" bug'ı oluşur (scope_items bozulur).
+            scope_items: Array.isArray(serviceForm.scope_items) ? serviceForm.scope_items : [],
         };
         if (editingServiceId) {
             await fetch(`${ADMIN_API_BASE}/admin/consultant-services/${editingServiceId}`, {
@@ -724,8 +747,7 @@ export default function ConsultantEditor() {
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                         {catServices.map(s => {
-                                            const scopeItems = Array.isArray(s.scope_items) ? s.scope_items
-                                                : (typeof s.scope_items === 'string' ? (() => { try { return JSON.parse(s.scope_items); } catch { return []; } })() : []);
+                                            const scopeItems = parseScopeItems(s.scope_items);
                                             return (
                                                 <div key={s.id} style={{ background: '#fff', borderRadius: 10, border: '1px solid #e5e7eb', padding: '14px 18px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

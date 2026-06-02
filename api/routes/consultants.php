@@ -83,8 +83,8 @@ if ($method === 'GET') {
         $services = $stmt->fetchAll();
 
         foreach ($services as &$svc) {
-            $svc['scope_items']    = json_decode($svc['scope_items'] ?? '[]', true);
-            $svc['scope_items_en'] = json_decode($svc['scope_items_en'] ?? '[]', true);
+            $svc['scope_items']    = decodeScopeItemsSafe($svc['scope_items'] ?? null);
+            $svc['scope_items_en'] = decodeScopeItemsSafe($svc['scope_items_en'] ?? null);
             if ($lang === 'en') {
                 $svc['title']       = !empty($svc['title_en']) ? $svc['title_en'] : $svc['title'];
                 $svc['description'] = !empty($svc['description_en']) ? $svc['description_en'] : $svc['description'];
