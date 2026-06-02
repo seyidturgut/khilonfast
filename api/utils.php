@@ -442,6 +442,14 @@ function sendBrevoApiEmail($apiKey, $fromEmail, $fromName, $to, $subject, $html,
     if (is_array($attachments) && count($attachments)) {
         $payload['attachment'] = [];
         foreach ($attachments as $att) {
+            // Inline content (örn. .ics string) — dosya yolu olmadan
+            if (is_array($att) && isset($att['content']) && !empty($att['name'])) {
+                $payload['attachment'][] = [
+                    'name' => $att['name'],
+                    'content' => base64_encode((string)$att['content'])
+                ];
+                continue;
+            }
             $path = is_array($att) ? ($att['path'] ?? '') : (string)$att;
             $name = is_array($att) && !empty($att['name']) ? $att['name'] : basename($path);
             if ($path && is_readable($path)) {

@@ -288,7 +288,7 @@ export default function ConsultantEditor() {
 
     // ── Info ──
     const [form, setForm] = useState({
-        slug: '', name: '', title: '', title_en: '', bio: '', bio_en: '', photo_url: '',
+        slug: '', name: '', email: '', title: '', title_en: '', bio: '', bio_en: '', photo_url: '',
         stars: 5.0, review_count: 0, sectors: [] as string[], is_active: 1,
         ical_url: '', ical_sync_enabled: 0
     });
@@ -322,7 +322,7 @@ export default function ConsultantEditor() {
                 const c = (data.consultants || []).find((x: any) => String(x.id) === id);
                 if (!c) return;
                 setForm({
-                    slug: c.slug, name: c.name,
+                    slug: c.slug, name: c.name, email: c.email || '',
                     title: c.title || '', title_en: c.title_en || '',
                     bio: c.bio || '', bio_en: c.bio_en || '',
                     photo_url: c.photo_url || '', stars: parseFloat(c.stars) || 5.0,
@@ -617,6 +617,15 @@ export default function ConsultantEditor() {
                                             placeholder="bora-isik" />
                                         <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>/danismanlar/{form.slug || '...'}</span>
                                     </div>
+                                </div>
+                                <div>
+                                    <label style={S.label}>E-posta (randevu &amp; lead bildirimleri)</label>
+                                    <input style={S.input} type="email" value={form.email}
+                                        onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                                        placeholder="danisman@khilonfast.com" />
+                                    <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                                        Randevu oluşturulduğunda ve Fractional CMO başvurusu geldiğinde bu adrese .ics davet + bildirim gider.
+                                    </span>
                                 </div>
                                 <div>
                                     <label style={S.label}>Unvan / Uzmanlık (TR)</label>

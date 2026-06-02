@@ -1270,18 +1270,26 @@ if ($action === 'consultants') {
     }
     if ($method === 'POST' && empty($id)) {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
-        $stmt = $db->prepare("INSERT INTO consultants (slug,name,title,title_en,bio,bio_en,photo_url,stars,review_count,sectors,is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1]);
+        $email = isset($data['email']) ? trim($data['email']) : null;
+        try {
+            $stmt = $db->prepare("INSERT INTO consultants (slug,name,email,title,title_en,bio,bio_en,photo_url,stars,review_count,sectors,is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->execute([$data['slug'],$data['name'],$email ?: null,$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1]);
+        } catch (PDOException $e) {
+            // email kolonu henüz eklenmemişse temel alanlarla ekle
+            $stmt = $db->prepare("INSERT INTO consultants (slug,name,title,title_en,bio,bio_en,photo_url,stars,review_count,sectors,is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1]);
+        }
         sendResponse(['success'=>true,'id'=>$db->lastInsertId()],201);
     }
     if ($method === 'PUT' && !empty($id)) {
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
         $ical_url = isset($data['ical_url']) ? trim($data['ical_url']) : null;
         $ical_sync_enabled = isset($data['ical_sync_enabled']) ? (int)$data['ical_sync_enabled'] : 0;
-        // iCal kolonları varsa dahil et, yoksa graceful fallback
+        $email = isset($data['email']) ? trim($data['email']) : null;
+        // iCal/email kolonları varsa dahil et, yoksa graceful fallback
         try {
-            $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,title=?,title_en=?,bio=?,bio_en=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=?,ical_url=?,ical_sync_enabled=? WHERE id=?");
-            $stmt->execute([$data['slug'],$data['name'],$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$ical_url ?: null,$ical_sync_enabled,$id]);
+            $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,email=?,title=?,title_en=?,bio=?,bio_en=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=?,ical_url=?,ical_sync_enabled=? WHERE id=?");
+            $stmt->execute([$data['slug'],$data['name'],$email ?: null,$data['title'],$data['title_en']??null,$data['bio']??'',$data['bio_en']??null,$data['photo_url']??'',$data['stars']??5,$data['review_count']??0,json_encode($data['sectors']??[]),$data['is_active']??1,$ical_url ?: null,$ical_sync_enabled,$id]);
         } catch (PDOException $e) {
             // iCal/i18n kolonları henüz eklenmemişse temel alanlarla güncelle
             $stmt = $db->prepare("UPDATE consultants SET slug=?,name=?,title=?,bio=?,photo_url=?,stars=?,review_count=?,sectors=?,is_active=? WHERE id=?");

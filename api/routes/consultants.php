@@ -5,7 +5,7 @@ $db = Database::getInstance();
 
 require_once __DIR__ . '/../services/ConsultantMailer.php';
 
-// Idempotent migration: title_en + bio_en kolonları (EN locale için)
+// Idempotent migration: title_en + bio_en + email kolonları
 try {
     $cols = $db->query("SHOW COLUMNS FROM consultants")->fetchAll(PDO::FETCH_COLUMN);
     if (!in_array('title_en', $cols, true)) {
@@ -14,8 +14,131 @@ try {
     if (!in_array('bio_en', $cols, true)) {
         $db->exec("ALTER TABLE consultants ADD COLUMN bio_en TEXT DEFAULT NULL AFTER bio");
     }
+    if (!in_array('email', $cols, true)) {
+        $db->exec("ALTER TABLE consultants ADD COLUMN email VARCHAR(190) DEFAULT NULL AFTER name");
+    }
 } catch (Throwable $e) {
     error_log('[consultants] schema migration: ' . $e->getMessage());
+}
+
+/**
+ * Bir randevu için .ics (iCalendar) içeriği üretir — mail eki olarak gönderilir.
+ * $start/$end: "Y-m-d H:i:s" formatında. TR yereli (Europe/Istanbul).
+ */
+function buildIcsInvite(array $opts): string
+{
+    $uid = ($opts['uid'] ?? uniqid('kf', true)) . '@khilonfast.com';
+    $fmt = function ($dt) {
+        // Yerel saat → UTC'ye çevirmeden floating local time olarak ver (TZID ile)
+        $ts = strtotime($dt);
+        return date('Ymd\THis', $ts);
+    };
+    $esc = function ($s) {
+        return preg_replace('/([,;\\\\])/', '\\\\$1', str_replace("\n", '\\n', (string)$s));
+    };
+    $now = gmdate('Ymd\THis\Z');
+    $lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//khilonfast//Danismanlik//TR',
+        'CALSCALE:GREGORIAN',
+        'METHOD:REQUEST',
+        'BEGIN:VEVENT',
+        'UID:' . $uid,
+        'DTSTAMP:' . $now,
+        'DTSTART;TZID=Europe/Istanbul:' . $fmt($opts['start']),
+        'DTEND;TZID=Europe/Istanbul:' . $fmt($opts['end']),
+        'SUMMARY:' . $esc($opts['summary'] ?? 'Danışmanlık Randevusu'),
+        'DESCRIPTION:' . $esc($opts['description'] ?? ''),
+        'LOCATION:' . $esc($opts['location'] ?? 'Online'),
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR',
+    ];
+    return implode("\r\n", $lines) . "\r\n";
+}
+
+/**
+ * Randevulu booking için danışmana + kullanıcıya bildirim (+ .ics eki).
+ * consultants.email doluysa danışmana, her durumda kullanıcıya gönderilir.
+ * lead_form ürünlerinde çağrılmaz.
+ */
+function consultantNotifyBooking(PDO $db, int $bookingId): void
+{
+    try {
+        $stmt = $db->prepare("
+            SELECT b.*, c.name AS c_name, c.email AS c_email, c.slug AS c_slug,
+                   cs.title AS service_title, cs.booking_type, cs.duration_minutes,
+                   cs.fixed_start_time, cs.fixed_end_time
+            FROM consultant_bookings b
+            JOIN consultants c ON c.id = b.consultant_id
+            JOIN consultant_services cs ON cs.id = b.service_id
+            WHERE b.id = ?
+        ");
+        $stmt->execute([$bookingId]);
+        $b = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$b) return;
+        if (($b['booking_type'] ?? 'slot') === 'lead_form') return;
+        if (!function_exists('sendTransactionalEmail')) return;
+
+        // Tarih/saat
+        $startAt = $b['start_at'];
+        $endAt = $b['end_at'];
+        if ((!$startAt || !$endAt) && !empty($b['availability_id'])) {
+            $a = $db->prepare("SELECT available_date, start_time, end_time FROM consultant_availability WHERE id=?");
+            $a->execute([$b['availability_id']]);
+            if ($av = $a->fetch(PDO::FETCH_ASSOC)) {
+                $startAt = $av['available_date'] . ' ' . $av['start_time'];
+                $endAt = $av['available_date'] . ' ' . $av['end_time'];
+            }
+        }
+        if (!$startAt || !$endAt) return;
+
+        $dateLabel = date('d.m.Y', strtotime($startAt));
+        $timeLabel = date('H:i', strtotime($startAt)) . '–' . date('H:i', strtotime($endAt));
+        $safe = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+
+        // .ics eki
+        $ics = buildIcsInvite([
+            'uid' => 'booking-' . $bookingId,
+            'start' => $startAt,
+            'end' => $endAt,
+            'summary' => $b['service_title'] . ' — ' . $b['c_name'],
+            'description' => "Müşteri: {$b['name']} ({$b['email']})\nTelefon: " . ($b['phone'] ?: '-') . "\nKonu: " . ($b['topic'] ?: '-'),
+            'location' => 'Online',
+        ]);
+        $icsAtt = [['name' => 'randevu.ics', 'content' => $ics]];
+
+        // 1) Danışmana bildirim (email kolonu doluysa)
+        if (!empty($b['c_email'])) {
+            $html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;color:#102a43">'
+                . '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                . '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px"><h2 style="margin:0;font-size:1.15rem">Yeni Randevunuz Var</h2></div>'
+                . '<div style="padding:24px;line-height:1.7">'
+                . '<p><strong>Hizmet:</strong> ' . $safe($b['service_title']) . '</p>'
+                . '<p><strong>Tarih:</strong> ' . $safe($dateLabel) . ' — <strong>Saat:</strong> ' . $safe($timeLabel) . '</p>'
+                . '<p><strong>Müşteri:</strong> ' . $safe($b['name']) . ' (' . $safe($b['email']) . ')</p>'
+                . '<p><strong>Telefon:</strong> ' . $safe($b['phone'] ?: '-') . '</p>'
+                . '<p><strong>Konu:</strong> ' . $safe($b['topic'] ?: '-') . '</p>'
+                . '<p style="color:#6b7280;font-size:0.9rem;margin-top:14px">Takvim daveti ekte (.ics) — tıklayarak kendi takviminize ekleyebilirsiniz.</p>'
+                . '</div></div></body></html>';
+            sendTransactionalEmail($db, $b['c_email'], '[Khilonfast] Yeni Randevu — ' . $dateLabel . ' ' . $timeLabel, $html, null, $icsAtt);
+        }
+
+        // 2) Kullanıcıya onay + .ics
+        $html2 = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;color:#102a43">'
+            . '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+            . '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px"><h2 style="margin:0;font-size:1.15rem">Randevunuz Oluşturuldu</h2></div>'
+            . '<div style="padding:24px;line-height:1.7">'
+            . '<p>Merhaba ' . $safe($b['name']) . ',</p>'
+            . '<p><strong>' . $safe($b['service_title']) . '</strong> randevunuz oluşturuldu.</p>'
+            . '<p><strong>Tarih:</strong> ' . $safe($dateLabel) . '<br><strong>Saat:</strong> ' . $safe($timeLabel) . '<br><strong>Danışman:</strong> ' . $safe($b['c_name']) . '</p>'
+            . '<p style="color:#6b7280;font-size:0.9rem;margin-top:14px">Takvim daveti ekte (.ics).</p>'
+            . '</div></div></body></html>';
+        sendTransactionalEmail($db, $b['email'], '[Khilonfast] Randevu Onayı — ' . $dateLabel . ' ' . $timeLabel, $html2, null, $icsAtt);
+    } catch (Throwable $e) {
+        error_log('[consultants] booking notify failed: ' . $e->getMessage());
+    }
 }
 
 // Idempotent migration: randevu davranış modeli (booking_type / süre / sabit blok)
@@ -385,9 +508,9 @@ if ($method === 'POST') {
             $stmt->execute([$availability_id]);
             $slot = $stmt->fetch();
             if (!$slot) sendResponse(['error' => 'Bu slot artık müsait değil. Lütfen başka bir zaman seçin.'], 409);
-            $holdUntil = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+            $holdUntil = date('Y-m-d H:i:s', strtotime('+10 minutes'));
             $db->prepare("UPDATE consultant_availability SET status='held', held_until=? WHERE id=?")->execute([$holdUntil, $availability_id]);
-            $holdExpires = date('c', strtotime('+15 minutes'));
+            $holdExpires = date('c', strtotime('+10 minutes'));
         }
 
         // Booking oluştur (start_at/end_at + booking_type ile)
@@ -422,6 +545,9 @@ if ($method === 'POST') {
             error_log('[consultants] admin notify failed: ' . $e->getMessage());
         }
 
+        // Danışman + kullanıcı bildirimi (+ .ics takvim daveti) — randevulu ürünlerde
+        consultantNotifyBooking($db, $newBookingId);
+
         sendResponse([
             'booking_id'     => $newBookingId,
             'hold_expires_at' => $holdExpires,
@@ -451,7 +577,7 @@ if ($method === 'POST') {
             sendResponse(['error' => 'KVKK onayı gereklidir'], 400);
         }
 
-        $stmt = $db->prepare("SELECT id, name FROM consultants WHERE slug = ? AND is_active = TRUE");
+        $stmt = $db->prepare("SELECT id, name, email FROM consultants WHERE slug = ? AND is_active = TRUE");
         $stmt->execute([$consultant_slug]);
         $consultant = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$consultant) sendResponse(['error' => 'Consultant not found'], 404);
@@ -500,11 +626,14 @@ if ($method === 'POST') {
                 . '<p style="margin-top:18px"><a href="' . $frontend . '/admin/bookings" '
                 . 'style="background:#1a3a52;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600">Admin Panelinde Aç</a></p>'
                 . '</div></div></body></html>';
-            // NOT: consultants tablosunda 'email' kolonu yok → danışmana doğrudan mail FAZ 2'de
-            // (email kolonu eklenince). FAZ 1'de admin bildirimi gönderilir.
             if (function_exists('sendTransactionalEmail')) {
+                // Danışmana bildirim (email kolonu doluysa)
+                if (!empty($consultant['email'])) {
+                    sendTransactionalEmail($db, $consultant['email'], '[Khilonfast] Yeni Program Başvurusu — ' . $name, $html);
+                }
+                // Admin'e bildirim
                 $adminEmail = (string)getSetting($db, 'contact_email', '');
-                if ($adminEmail !== '') {
+                if ($adminEmail !== '' && strcasecmp($adminEmail, (string)($consultant['email'] ?? '')) !== 0) {
                     sendTransactionalEmail($db, $adminEmail, '[Khilonfast] Yeni Danışmanlık Başvurusu — ' . $name, $html);
                 }
             }

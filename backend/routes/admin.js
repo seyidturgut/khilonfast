@@ -1087,15 +1087,26 @@ router.get('/consultants', authMiddleware, adminMiddleware, async (req, res) => 
 
 // POST /api/admin/consultants
 router.post('/consultants', authMiddleware, adminMiddleware, async (req, res) => {
-    const { slug, name, title, bio, photo_url, stars, review_count, sectors } = req.body;
+    const { slug, name, email, title, bio, photo_url, stars, review_count, sectors } = req.body;
     if (!slug || !name) return res.status(400).json({ error: 'slug and name required' });
     try {
-        const [result] = await db.query(
-            `INSERT INTO consultants (slug, name, title, bio, photo_url, stars, review_count, sectors, is_active)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
-            [slug, name, title || null, bio || null, photo_url || null,
-             stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || [])]
-        );
+        let result;
+        try {
+            [result] = await db.query(
+                `INSERT INTO consultants (slug, name, email, title, bio, photo_url, stars, review_count, sectors, is_active)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+                [slug, name, email || null, title || null, bio || null, photo_url || null,
+                 stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || [])]
+            );
+        } catch (e) {
+            // email kolonu yoksa temel alanlarla ekle
+            [result] = await db.query(
+                `INSERT INTO consultants (slug, name, title, bio, photo_url, stars, review_count, sectors, is_active)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+                [slug, name, title || null, bio || null, photo_url || null,
+                 stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || [])]
+            );
+        }
         clearCache();
         res.json({ id: result.insertId });
     } catch (err) {
@@ -1106,14 +1117,24 @@ router.post('/consultants', authMiddleware, adminMiddleware, async (req, res) =>
 
 // PUT /api/admin/consultants/:id
 router.put('/consultants/:id', authMiddleware, adminMiddleware, async (req, res) => {
-    const { slug, name, title, bio, photo_url, stars, review_count, sectors, is_active } = req.body;
+    const { slug, name, email, title, bio, photo_url, stars, review_count, sectors, is_active } = req.body;
     try {
-        await db.query(
-            `UPDATE consultants SET slug=?, name=?, title=?, bio=?, photo_url=?, stars=?, review_count=?, sectors=?, is_active=? WHERE id=?`,
-            [slug, name, title || null, bio || null, photo_url || null,
-             stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || []),
-              is_active !== undefined ? is_active : 1, req.params.id]
-        );
+        try {
+            await db.query(
+                `UPDATE consultants SET slug=?, name=?, email=?, title=?, bio=?, photo_url=?, stars=?, review_count=?, sectors=?, is_active=? WHERE id=?`,
+                [slug, name, email || null, title || null, bio || null, photo_url || null,
+                 stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || []),
+                  is_active !== undefined ? is_active : 1, req.params.id]
+            );
+        } catch (e) {
+            // email kolonu yoksa temel alanlarla güncelle
+            await db.query(
+                `UPDATE consultants SET slug=?, name=?, title=?, bio=?, photo_url=?, stars=?, review_count=?, sectors=?, is_active=? WHERE id=?`,
+                [slug, name, title || null, bio || null, photo_url || null,
+                 stars ?? 5.0, review_count ?? 0, JSON.stringify(sectors || []),
+                  is_active !== undefined ? is_active : 1, req.params.id]
+            );
+        }
         clearCache();
         res.json({ success: true });
     } catch (err) {

@@ -22,6 +22,120 @@ const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
 
+// .ics (iCalendar) takvim daveti üretir — PHP buildIcsInvite muadili
+function icsEscape(s) {
+    return String(s ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+}
+// 'YYYY-MM-DD HH:MM:SS' → 'YYYYMMDDTHHMMSS' (yerel, TZID ile birlikte kullanılır)
+function icsLocalStamp(dt) {
+    const m = String(dt).match(/(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/);
+    if (!m) return null;
+    return `${m[1]}${m[2]}${m[3]}T${m[4]}${m[5]}${m[6] || '00'}`;
+}
+function buildIcsInvite({ uid, startAt, endAt, summary, description, location, organizerEmail, attendeeEmail, sequence = 0 }) {
+    const dtStart = icsLocalStamp(startAt);
+    const dtEnd = icsLocalStamp(endAt);
+    // DTSTAMP: sabit referans (Date.now kullanılmıyor; start baz alınır)
+    const dtStamp = dtStart || '20260101T000000';
+    const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//KhilonFast//Consultant Booking//TR',
+        'CALSCALE:GREGORIAN',
+        'METHOD:REQUEST',
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `SEQUENCE:${sequence}`,
+        `DTSTAMP:${dtStamp}`,
+        `DTSTART;TZID=Europe/Istanbul:${dtStart}`,
+        `DTEND;TZID=Europe/Istanbul:${dtEnd}`,
+        `SUMMARY:${icsEscape(summary)}`,
+        `DESCRIPTION:${icsEscape(description)}`,
+    ];
+    if (location) lines.push(`LOCATION:${icsEscape(location)}`);
+    if (organizerEmail) lines.push(`ORGANIZER:mailto:${organizerEmail}`);
+    if (attendeeEmail) lines.push(`ATTENDEE;RSVP=TRUE:mailto:${attendeeEmail}`);
+    lines.push('STATUS:CONFIRMED', 'END:VEVENT', 'END:VCALENDAR');
+    return lines.join('\r\n');
+}
+
+// Randevu sonrası danışman + kullanıcı bildirimi (.ics davet ekli) — PHP consultantNotifyBooking muadili
+async function consultantNotifyBooking(bookingId) {
+    try {
+        const [rows] = await db.query(
+            `SELECT b.*, c.name AS consultant_name, c.email AS consultant_email,
+                    s.title AS service_title, s.fixed_end_time
+               FROM consultant_bookings b
+               JOIN consultants c ON c.id = b.consultant_id
+               LEFT JOIN consultant_services s ON s.id = b.service_id
+              WHERE b.id = ? LIMIT 1`,
+            [bookingId]
+        );
+        if (!rows.length) return;
+        const b = rows[0];
+        if ((b.booking_type || 'slot') === 'lead_form') return;
+
+        // start/end çöz (availability_id fallback)
+        let startAt = b.start_at, endAt = b.end_at;
+        if ((!startAt || !endAt) && b.availability_id) {
+            const [a] = await db.query('SELECT available_date, start_time, end_time FROM consultant_availability WHERE id=?', [b.availability_id]);
+            if (a.length) {
+                const d = String(a[0].available_date).slice(0, 10);
+                startAt = `${d} ${a[0].start_time}`;
+                endAt = `${d} ${a[0].end_time}`;
+            }
+        }
+        if (!startAt || !endAt) return;
+
+        const sd = String(startAt);
+        const dateLabel = sd.slice(8, 10) + '.' + sd.slice(5, 7) + '.' + sd.slice(0, 4);
+        const timeLabel = sd.slice(11, 16) + '–' + String(endAt).slice(11, 16);
+        const svcTitle = b.service_title || 'Danışmanlık';
+
+        const ics = buildIcsInvite({
+            uid: `consultant-booking-${bookingId}@khilonfast.com`,
+            startAt, endAt,
+            summary: `KhilonFast — ${svcTitle}`,
+            description: `Danışman: ${b.consultant_name}\\nMüşteri: ${b.name}\\nHizmet: ${svcTitle}`,
+            location: 'Online / KhilonFast',
+            organizerEmail: b.consultant_email || undefined,
+            attendeeEmail: b.email || undefined,
+        });
+        const icsAtt = [{ filename: 'randevu.ics', content: ics, contentType: 'text/calendar; method=REQUEST; charset=UTF-8' }];
+
+        const buildHtml = (title, intro) => '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;margin:0;color:#102a43">'
+            + '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+            + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px">'
+            + `<h2 style="margin:0;font-size:1.15rem">${title}</h2></div>`
+            + '<div style="padding:24px;line-height:1.7">'
+            + `<p>${intro}</p>`
+            + `<p><strong>Hizmet:</strong> ${escapeHtml(svcTitle)}</p>`
+            + `<p><strong>Tarih:</strong> ${escapeHtml(dateLabel)}</p>`
+            + `<p><strong>Saat:</strong> ${escapeHtml(timeLabel)}</p>`
+            + `<p><strong>Danışman:</strong> ${escapeHtml(b.consultant_name)}</p>`
+            + `<p><strong>Müşteri:</strong> ${escapeHtml(b.name)} (${escapeHtml(b.email)})</p>`
+            + `<p><strong>Telefon:</strong> ${escapeHtml(b.phone || '-')}</p>`
+            + (b.topic ? `<p><strong>Konu:</strong> ${escapeHtml(b.topic)}</p>` : '')
+            + '<p style="margin-top:16px;color:#627d98;font-size:0.9rem">Takvim daveti (.ics) ektedir.</p>'
+            + '</div></div></body></html>';
+
+        // Danışmana
+        if (b.consultant_email) {
+            try {
+                await sendCustomMail({ to: b.consultant_email, subject: `[Khilonfast] Yeni Randevu — ${b.name} (${dateLabel} ${sd.slice(11,16)})`, html: buildHtml('Yeni Randevunuz Var', `Sayın ${escapeHtml(b.consultant_name)}, aşağıdaki randevu oluşturuldu.`), attachments: icsAtt });
+            } catch (e) { console.error('[consultants] consultant notify failed:', e.message); }
+        }
+        // Kullanıcıya
+        if (b.email) {
+            try {
+                await sendCustomMail({ to: b.email, subject: `[Khilonfast] Randevunuz Oluşturuldu — ${dateLabel} ${sd.slice(11,16)}`, html: buildHtml('Randevunuz Oluşturuldu', `Sayın ${escapeHtml(b.name)}, randevunuz başarıyla oluşturuldu.`), attachments: icsAtt });
+            } catch (e) { console.error('[consultants] user notify failed:', e.message); }
+        }
+    } catch (e) {
+        console.error('[consultants] consultantNotifyBooking error:', e.message);
+    }
+}
+
 // İki zaman aralığı çakışıyor mu (HH:MM:SS karşılaştırması)
 const toSec = (t) => { const [h, m, s] = String(t).split(':').map(Number); return (h || 0) * 3600 + (m || 0) * 60 + (s || 0); };
 function rangesOverlap(aStart, aEnd, bStart, bEnd) {
@@ -279,7 +393,7 @@ router.post('/bookings/hold', async (req, res) => {
                 await connection.rollback();
                 return res.status(409).json({ error: 'Bu slot artık müsait değil. Lütfen başka bir zaman seçin.' });
             }
-            const holdUntil = new Date(Date.now() + 15 * 60 * 1000);
+            const holdUntil = new Date(Date.now() + 10 * 60 * 1000);
             await connection.query(
                 `UPDATE consultant_availability SET status='held', held_until=? WHERE id=?`,
                 [holdUntil, availability_id]
@@ -321,9 +435,12 @@ router.post('/bookings/hold', async (req, res) => {
             console.error('[consultants] admin notify failed:', e.message);
         }
 
+        // Danışman + kullanıcı bildirimi (.ics takvim daveti ekli)
+        await consultantNotifyBooking(newBookingId);
+
         res.json({
             booking_id: newBookingId,
-            hold_expires_at: availability_id ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null,
+            hold_expires_at: availability_id ? new Date(Date.now() + 10 * 60 * 1000).toISOString() : null,
             message: 'Rezervasyon talebi alındı'
         });
     } catch (err) {
@@ -341,9 +458,16 @@ router.post('/leads', async (req, res) => {
     if (!consultant_slug || !name || !email) return res.status(400).json({ error: 'Ad, e-posta ve danışman zorunlu' });
     if (!kvkk_consent) return res.status(400).json({ error: 'KVKK onayı gereklidir' });
     try {
-        const [consultant] = await db.query('SELECT id, name FROM consultants WHERE slug = ? AND is_active = TRUE', [consultant_slug]);
+        let consultant;
+        try {
+            [consultant] = await db.query('SELECT id, name, email FROM consultants WHERE slug = ? AND is_active = TRUE', [consultant_slug]);
+        } catch (e) {
+            // email kolonu yoksa
+            [consultant] = await db.query('SELECT id, name FROM consultants WHERE slug = ? AND is_active = TRUE', [consultant_slug]);
+        }
         if (!consultant.length) return res.status(404).json({ error: 'Consultant not found' });
         const consultantId = consultant[0].id;
+        const consultantEmail = consultant[0].email || '';
 
         const [result] = await db.query(
             `INSERT INTO consultant_leads (consultant_id, service_id, name, company, position, email, phone, website, needs, monthly_pref, kvkk_consent, status)
@@ -365,25 +489,31 @@ router.post('/leads', async (req, res) => {
             );
         } catch (e) { /* crm şeması farklıysa geç */ }
 
-        // Admin bildirimi (consultants.email kolonu yok → danışman maili FAZ 2)
+        // Danışman + admin bildirimi
         try {
+            let svcTitle = '';
+            if (service_id) { const [t] = await db.query('SELECT title FROM consultant_services WHERE id=?', [service_id]); svcTitle = t[0]?.title || ''; }
+            const html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;color:#102a43">'
+                + '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px"><h2 style="margin:0;font-size:1.15rem">Yeni Danışmanlık Başvurusu (Lead)</h2></div>'
+                + '<div style="padding:24px;line-height:1.7">'
+                + `<p><strong>Program:</strong> ${escapeHtml(svcTitle || 'Fractional CMO')}</p>`
+                + `<p><strong>Ad Soyad:</strong> ${escapeHtml(name)}</p>`
+                + `<p><strong>Şirket:</strong> ${escapeHtml(company || '-')} — <strong>Pozisyon:</strong> ${escapeHtml(position || '-')}</p>`
+                + `<p><strong>E-posta:</strong> ${escapeHtml(email)} — <strong>Telefon:</strong> ${escapeHtml(phone || '-')}</p>`
+                + `<p><strong>Web:</strong> ${escapeHtml(website || '-')} — <strong>Aylık tercih:</strong> ${escapeHtml(monthly_pref || '-')}</p>`
+                + `<p><strong>İhtiyaç:</strong><br>${escapeHtml(needs || '-')}</p>`
+                + `<p><a href="${FRONTEND_URL}/admin/bookings" style="background:#1a3a52;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600">Admin Panelinde Aç</a></p>`
+                + '</div></div></body></html>';
+            // Danışmana
+            if (consultantEmail) {
+                try { await sendCustomMail({ to: consultantEmail, subject: `[Khilonfast] Yeni Program Başvurusu — ${name}`, html }); }
+                catch (e) { console.error('lead consultant notify failed:', e.message); }
+            }
+            // Admin'e (danışmandan farklıysa)
             const adminEmail = await getSettingValue('contact_email', '');
-            if (adminEmail) {
-                let svcTitle = '';
-                if (service_id) { const [t] = await db.query('SELECT title FROM consultant_services WHERE id=?', [service_id]); svcTitle = t[0]?.title || ''; }
-                const html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;color:#102a43">'
-                    + '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
-                    + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px"><h2 style="margin:0;font-size:1.15rem">Yeni Danışmanlık Başvurusu (Lead)</h2></div>'
-                    + '<div style="padding:24px;line-height:1.7">'
-                    + `<p><strong>Program:</strong> ${escapeHtml(svcTitle || 'Fractional CMO')}</p>`
-                    + `<p><strong>Ad Soyad:</strong> ${escapeHtml(name)}</p>`
-                    + `<p><strong>Şirket:</strong> ${escapeHtml(company || '-')} — <strong>Pozisyon:</strong> ${escapeHtml(position || '-')}</p>`
-                    + `<p><strong>E-posta:</strong> ${escapeHtml(email)} — <strong>Telefon:</strong> ${escapeHtml(phone || '-')}</p>`
-                    + `<p><strong>Web:</strong> ${escapeHtml(website || '-')} — <strong>Aylık tercih:</strong> ${escapeHtml(monthly_pref || '-')}</p>`
-                    + `<p><strong>İhtiyaç:</strong><br>${escapeHtml(needs || '-')}</p>`
-                    + `<p><a href="${FRONTEND_URL}/admin/bookings" style="background:#1a3a52;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600">Admin Panelinde Aç</a></p>`
-                    + '</div></div></body></html>';
-                await sendCustomMail(adminEmail, `[Khilonfast] Yeni Danışmanlık Başvurusu — ${name}`, html);
+            if (adminEmail && adminEmail.toLowerCase() !== consultantEmail.toLowerCase()) {
+                await sendCustomMail({ to: adminEmail, subject: `[Khilonfast] Yeni Danışmanlık Başvurusu — ${name}`, html });
             }
         } catch (e) { console.error('lead notify failed:', e.message); }
 

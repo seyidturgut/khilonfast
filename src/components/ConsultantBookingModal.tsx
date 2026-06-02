@@ -394,30 +394,45 @@ export default function ConsultantBookingModal({
                             </div>
                         ) : (
                             <form onSubmit={handleLeadSubmit} className="booking-form">
-                                <p className="slots-message" style={{ marginBottom: 12 }}>
+                                <p className="slots-message" style={{ margin: '0 0 6px' }}>
                                     Bu program aylık olarak yürütülür. Başvuru formunu doldurun, ekibimiz sizinle iletişime geçsin.
                                 </p>
-                                <div className="form-row">
-                                    <label>Ad Soyad *<input type="text" value={name} onChange={e => setName(e.target.value)} required /></label>
-                                    <label>Şirket<input type="text" value={company} onChange={e => setCompany(e.target.value)} /></label>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
+                                    <div className="form-group">
+                                        <label htmlFor="lf-name">Ad Soyad <span className="required">*</span></label>
+                                        <input id="lf-name" type="text" value={name} onChange={e => setName(e.target.value)} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lf-company">Şirket</label>
+                                        <input id="lf-company" type="text" value={company} onChange={e => setCompany(e.target.value)} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lf-position">Pozisyon</label>
+                                        <input id="lf-position" type="text" value={leadPosition} onChange={e => setLeadPosition(e.target.value)} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lf-website">Şirket Web Sitesi</label>
+                                        <input id="lf-website" type="text" value={leadWebsite} onChange={e => setLeadWebsite(e.target.value)} placeholder="ornek.com" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lf-email">E-posta <span className="required">*</span></label>
+                                        <input id="lf-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lf-phone">Telefon</label>
+                                        <input id="lf-phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
+                                    </div>
                                 </div>
-                                <div className="form-row">
-                                    <label>Pozisyon<input type="text" value={leadPosition} onChange={e => setLeadPosition(e.target.value)} /></label>
-                                    <label>Şirket Web Sitesi<input type="text" value={leadWebsite} onChange={e => setLeadWebsite(e.target.value)} placeholder="ornek.com" /></label>
+                                <div className="form-group">
+                                    <label htmlFor="lf-needs">İhtiyaç / Beklenti</label>
+                                    <textarea id="lf-needs" rows={3} value={leadNeeds} onChange={e => setLeadNeeds(e.target.value)} placeholder="Aradığınız desteği kısaca anlatın..." />
                                 </div>
-                                <div className="form-row">
-                                    <label>E-posta *<input type="email" value={email} onChange={e => setEmail(e.target.value)} required /></label>
-                                    <label>Telefon<input type="tel" value={phone} onChange={e => setPhone(e.target.value)} /></label>
-                                </div>
-                                <label>İhtiyaç / Beklenti
-                                    <textarea rows={3} value={leadNeeds} onChange={e => setLeadNeeds(e.target.value)} placeholder="Aradığınız desteği kısaca anlatın..." />
+                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.85rem', color: '#374151', cursor: 'pointer' }}>
+                                    <input type="checkbox" checked={leadKvkk} onChange={e => setLeadKvkk(e.target.checked)} style={{ marginTop: 3, flexShrink: 0 }} />
+                                    <span>Kişisel verilerimin KVKK kapsamında işlenmesini onaylıyorum. <span className="required">*</span></span>
                                 </label>
-                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.85rem', marginTop: 8 }}>
-                                    <input type="checkbox" checked={leadKvkk} onChange={e => setLeadKvkk(e.target.checked)} style={{ marginTop: 3 }} />
-                                    <span>Kişisel verilerimin KVKK kapsamında işlenmesini onaylıyorum. *</span>
-                                </label>
-                                {formError && <p className="slots-message error" style={{ marginTop: 8 }}>{formError}</p>}
-                                <button type="submit" className="booking-btn-primary" disabled={submitting} style={{ marginTop: 14, width: '100%' }}>
+                                {formError && <p className="form-error">{formError}</p>}
+                                <button type="submit" className="booking-btn-primary" disabled={submitting} style={{ marginTop: 6, width: '100%' }}>
                                     {submitting ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
                                 </button>
                             </form>
