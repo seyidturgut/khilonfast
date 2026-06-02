@@ -1249,6 +1249,47 @@ if ($action === 'bookings') {
     }
 }
 
+// --- Consultant Leads (Fractional CMO başvuruları) ---
+if ($action === 'consultant-leads') {
+    if ($method === 'GET' && empty($id)) {
+        $status = $_GET['status'] ?? null;
+        $consultant_id = $_GET['consultant_id'] ?? null;
+        try {
+            $query = "SELECT cl.*, c.name AS consultant_name, cs.title AS service_title
+                      FROM consultant_leads cl
+                      LEFT JOIN consultants c ON cl.consultant_id = c.id
+                      LEFT JOIN consultant_services cs ON cl.service_id = cs.id
+                      WHERE 1=1";
+            $params = [];
+            if ($status) { $query .= " AND cl.status = ?"; $params[] = $status; }
+            if ($consultant_id) { $query .= " AND cl.consultant_id = ?"; $params[] = $consultant_id; }
+            $query .= " ORDER BY cl.created_at DESC";
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+            sendResponse(['leads' => $stmt->fetchAll()]);
+        } catch (Throwable $e) {
+            // consultant_leads tablosu yoksa boş liste
+            sendResponse(['leads' => []]);
+        }
+    }
+    if (($method === 'PATCH' || $method === 'PUT') && !empty($id)) {
+        $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        $allowed = ['new', 'contacted', 'converted', 'closed'];
+        if (!isset($data['status']) || !in_array($data['status'], $allowed, true)) {
+            sendResponse(['error' => 'Geçersiz durum'], 400);
+        }
+        $stmt = $db->prepare("UPDATE consultant_leads SET status = ? WHERE id = ?");
+        $stmt->execute([$data['status'], $id]);
+        sendResponse(['success' => true]);
+    }
+    if ($method === 'DELETE' && !empty($id)) {
+        $stmt = $db->prepare("DELETE FROM consultant_leads WHERE id = ?");
+        $stmt->execute([$id]);
+        if ($stmt->rowCount() === 0) sendResponse(['error' => 'Lead not found'], 404);
+        sendResponse(['success' => true]);
+    }
+}
+
 // --- Consultants (admin) ---
 if ($action === 'consultants') {
     if ($method === 'GET' && empty($id)) {

@@ -34,7 +34,12 @@ function buildIcsInvite(array $opts): string
         return date('Ymd\THis', $ts);
     };
     $esc = function ($s) {
-        return preg_replace('/([,;\\\\])/', '\\\\$1', str_replace("\n", '\\n', (string)$s));
+        // RFC 5545 sırası: önce backslash, sonra ; ve , sonra newline → \n
+        $s = (string)$s;
+        $s = str_replace('\\', '\\\\', $s);
+        $s = str_replace([';', ','], ['\\;', '\\,'], $s);
+        $s = str_replace(["\r\n", "\n", "\r"], '\\n', $s);
+        return $s;
     };
     $now = gmdate('Ymd\THis\Z');
     $lines = [
@@ -635,6 +640,23 @@ if ($method === 'POST') {
                 $adminEmail = (string)getSetting($db, 'contact_email', '');
                 if ($adminEmail !== '' && strcasecmp($adminEmail, (string)($consultant['email'] ?? '')) !== 0) {
                     sendTransactionalEmail($db, $adminEmail, '[Khilonfast] Yeni Danışmanlık Başvurusu — ' . $name, $html);
+                }
+                // Başvurana onay maili
+                if (!empty($email)) {
+                    $userHtml = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;margin:0;color:#102a43">'
+                        . '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                        . '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px">'
+                        . '<h2 style="margin:0;font-size:1.15rem">Başvurunuz Alındı</h2></div>'
+                        . '<div style="padding:24px;line-height:1.7">'
+                        . '<p>Sayın ' . $safe($name) . ',</p>'
+                        . '<p><strong>' . $safe($svcTitle ?: 'Fractional CMO Programı') . '</strong> başvurunuz bize ulaştı. Ekibimiz en kısa sürede sizinle iletişime geçecektir.</p>'
+                        . '<p style="margin-top:14px;color:#486581;font-size:0.92rem"><strong>Başvuru özeti</strong><br>'
+                        . 'Program: ' . $safe($svcTitle ?: 'Fractional CMO') . '<br>'
+                        . 'Şirket: ' . $safe($company ?: '-') . '<br>'
+                        . 'E-posta: ' . $safe($email) . ' — Telefon: ' . $safe($phone ?: '-') . '</p>'
+                        . '<p style="margin-top:18px">Teşekkürler,<br><strong>KhilonFast</strong></p>'
+                        . '</div></div></body></html>';
+                    sendTransactionalEmail($db, $email, '[Khilonfast] Başvurunuz Alındı — ' . ($svcTitle ?: 'Danışmanlık Programı'), $userHtml);
                 }
             }
         } catch (Throwable $e) {

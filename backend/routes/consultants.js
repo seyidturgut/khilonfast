@@ -515,6 +515,19 @@ router.post('/leads', async (req, res) => {
             if (adminEmail && adminEmail.toLowerCase() !== consultantEmail.toLowerCase()) {
                 await sendCustomMail({ to: adminEmail, subject: `[Khilonfast] Yeni Danışmanlık Başvurusu — ${name}`, html });
             }
+            // Başvurana onay maili
+            if (email) {
+                const userHtml = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;margin:0;color:#102a43">'
+                    + '<div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                    + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px"><h2 style="margin:0;font-size:1.15rem">Başvurunuz Alındı</h2></div>'
+                    + '<div style="padding:24px;line-height:1.7">'
+                    + `<p>Sayın ${escapeHtml(name)},</p>`
+                    + `<p><strong>${escapeHtml(svcTitle || 'Fractional CMO Programı')}</strong> başvurunuz bize ulaştı. Ekibimiz en kısa sürede sizinle iletişime geçecektir.</p>`
+                    + `<p style="margin-top:14px;color:#486581;font-size:0.92rem"><strong>Başvuru özeti</strong><br>Program: ${escapeHtml(svcTitle || 'Fractional CMO')}<br>Şirket: ${escapeHtml(company || '-')}<br>E-posta: ${escapeHtml(email)} — Telefon: ${escapeHtml(phone || '-')}</p>`
+                    + '<p style="margin-top:18px">Teşekkürler,<br><strong>KhilonFast</strong></p>'
+                    + '</div></div></body></html>';
+                await sendCustomMail({ to: email, subject: `[Khilonfast] Başvurunuz Alındı — ${svcTitle || 'Danışmanlık Programı'}`, html: userHtml });
+            }
         } catch (e) { console.error('lead notify failed:', e.message); }
 
         res.json({ lead_id: leadId, message: 'Başvurunuz alınmıştır. Ekibimiz sizinle iletişime geçecektir.' });

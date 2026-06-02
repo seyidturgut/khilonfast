@@ -1396,6 +1396,56 @@ router.delete('/bookings/:id', authMiddleware, adminMiddleware, async (req, res)
     }
 });
 
+// ── Consultant Leads (Fractional CMO başvuruları) ────────────────────────────
+
+// GET /api/admin/consultant-leads
+router.get('/consultant-leads', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const { status, consultant_id } = req.query;
+        let sql = `SELECT cl.*, c.name AS consultant_name, cs.title AS service_title
+                   FROM consultant_leads cl
+                   LEFT JOIN consultants c ON cl.consultant_id = c.id
+                   LEFT JOIN consultant_services cs ON cl.service_id = cs.id
+                   WHERE 1=1`;
+        const params = [];
+        if (status) { sql += ' AND cl.status = ?'; params.push(status); }
+        if (consultant_id) { sql += ' AND cl.consultant_id = ?'; params.push(consultant_id); }
+        sql += ' ORDER BY cl.created_at DESC';
+        const [rows] = await db.query(sql, params);
+        res.json({ leads: rows });
+    } catch (err) {
+        // tablo yoksa boş liste
+        res.json({ leads: [] });
+    }
+});
+
+// PATCH /api/admin/consultant-leads/:id
+router.patch('/consultant-leads/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const { status } = req.body;
+    if (!['new', 'contacted', 'converted', 'closed'].includes(status)) {
+        return res.status(400).json({ error: 'Geçersiz durum' });
+    }
+    try {
+        await db.query('UPDATE consultant_leads SET status=? WHERE id=?', [status, req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin update lead error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /api/admin/consultant-leads/:id
+router.delete('/consultant-leads/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM consultant_leads WHERE id=?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Lead not found' });
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Admin delete lead error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // ── Coupons ─────────────────────────────────────────────────────────────────
 
 router.get('/coupons', async (req, res) => {
