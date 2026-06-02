@@ -897,7 +897,7 @@ export default function TrainingProgramPage() {
                     description: isEn
                         ? 'Stand out in the market and leave the competition behind with smart strategies.'
                         : 'Pazarda öne çıkın, akıllı stratejilerle rekabeti geride bırakın.',
-                    price: isEn ? '$149' : '5000TL',
+                    price: isEn ? '$149' : '5.000 TL',
                     period: '',
                     features: heroPriceFeatures
                 }

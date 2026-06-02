@@ -434,7 +434,8 @@ export default function B2BEmailMarketing() {
             { question: t('serviceB2BEmail.faqs.q7.q'), answer: t('serviceB2BEmail.faqs.q7.a') },
             { question: t('serviceB2BEmail.faqs.q8.q'), answer: t('serviceB2BEmail.faqs.q8.a') },
             { question: t('serviceB2BEmail.faqs.q9.q'), answer: t('serviceB2BEmail.faqs.q9.a') }
-        ]
+        ],
+        comparisonTable: trConfig.comparisonTable
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-email" disableApiHeroTextOverride={true} />

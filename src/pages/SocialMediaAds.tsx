@@ -550,7 +550,8 @@ export default function SocialMediaAds() {
             { question: t('serviceSocialAds.faqs.q12.q'), answer: t('serviceSocialAds.faqs.q12.a') },
             { question: t('serviceSocialAds.faqs.q13.q'), answer: t('serviceSocialAds.faqs.q13.a') },
             { question: t('serviceSocialAds.faqs.q14.q'), answer: t('serviceSocialAds.faqs.q14.a') }
-        ]
+        ],
+        comparisonTable: trConfig.comparisonTable
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-social-ads" disableApiHeroTextOverride={true} />

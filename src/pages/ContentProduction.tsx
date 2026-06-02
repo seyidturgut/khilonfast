@@ -369,7 +369,8 @@ export default function ContentProduction() {
             { question: t('serviceContentProduction.faqs.q9.q'), answer: t('serviceContentProduction.faqs.q9.a') },
             { question: t('serviceContentProduction.faqs.q10.q'), answer: t('serviceContentProduction.faqs.q10.a') },
             { question: t('serviceContentProduction.faqs.q11.q'), answer: t('serviceContentProduction.faqs.q11.a') }
-        ]
+        ],
+        comparisonTable: trConfig.comparisonTable
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-production" disableApiHeroTextOverride={true} />

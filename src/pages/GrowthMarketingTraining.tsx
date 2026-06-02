@@ -81,7 +81,7 @@ export default function GrowthMarketingTraining() {
                 {
                     id: 'training-buyume-odakli-pazarlama',
                     name: 'B2B Pazarlama Eğitimi',
-                    price: '5000TL',
+                    price: '5.000 TL',
                     period: 'Tek Seferlik',
                     description: 'Tüm modüllere ömür boyu erişim ve uygulamalı egzersizler.',
                     icon: <HiAcademicCap />,
@@ -178,7 +178,7 @@ export default function GrowthMarketingTraining() {
                 {
                     id: 'training-buyume-odakli-pazarlama',
                     name: 'B2B Marketing Training',
-                    price: '5000TL',
+                    price: '$149',
                     period: 'One-Time',
                     description: 'Lifetime access to all modules with practical exercises.',
                     icon: <HiAcademicCap />,

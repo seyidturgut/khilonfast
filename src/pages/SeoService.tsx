@@ -400,7 +400,8 @@ export default function SeoService() {
             { question: t('serviceSeo.faqs.q8.q'), answer: t('serviceSeo.faqs.q8.a') },
             { question: t('serviceSeo.faqs.q9.q'), answer: t('serviceSeo.faqs.q9.a') },
             { question: t('serviceSeo.faqs.q10.q'), answer: t('serviceSeo.faqs.q10.a') }
-        ]
+        ],
+        comparisonTable: trConfig.comparisonTable
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-seo" disableApiHeroTextOverride={true} />

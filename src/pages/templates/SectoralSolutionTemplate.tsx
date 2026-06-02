@@ -752,12 +752,16 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
             <section className="sectoral-process-video-section">
                 <div className="container">
                     <div className="sectoral-process-video-wrapper">
-                        <iframe
-                            src={displayProcessVideoUrl}
-                            allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-                            allowFullScreen
-                            title="Process Video"
-                        ></iframe>
+                        <EditableMedia pageSlug={cmsSlug} fieldKey="processVideoUrl" type="video" src={displayProcessVideoUrl} currentLang={currentLang}>
+                            {(src: string) => (
+                                <iframe
+                                    src={src}
+                                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                                    allowFullScreen
+                                    title="Process Video"
+                                ></iframe>
+                            )}
+                        </EditableMedia>
                     </div>
                 </div>
             </section>

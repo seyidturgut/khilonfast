@@ -242,7 +242,7 @@ export default function ContactPage() {
             <div className="contact-side-card highlight">
               <h3>{tx('contact.side.meeting.title')}</h3>
               <p>{tx('contact.side.meeting.description')}</p>
-              <a className="btn btn-secondary" href="mailto:info@khilon.com">{tx('contact.side.meeting.button')}</a>
+              <a className="btn btn-secondary contact-meeting-btn" href="mailto:info@khilonfast.com">{tx('contact.side.meeting.button')}</a>
             </div>
           </div>
         </div>

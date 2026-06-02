@@ -123,6 +123,15 @@ export async function normalizeProductToTry(product) {
  */
 export async function normalizeProductToUsd(product) {
     if (!product || product.currency !== 'TRY') return product;
+    // Manuel sabit USD fiyatı: DB'de display_price_usd > 0 ise otomatik kur yerine onu kullan.
+    // (örn. eğitim ürünleri için sabit $149 — admin/migration ile set edilir)
+    if (product.display_price_usd != null && Number(product.display_price_usd) > 0) {
+        return {
+            ...product,
+            display_price_usd: Number(Number(product.display_price_usd).toFixed(2)),
+            display_currency_usd: 'USD'
+        };
+    }
     const { rate } = await getCurrentUsdTryRate();
     if (!Number.isFinite(rate) || rate <= 0) return product;
     return {

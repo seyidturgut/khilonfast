@@ -148,6 +148,13 @@ function normalizeProductToUsd(PDO $db, array $product): array
     if (!isset($product['currency']) || $product['currency'] !== 'TRY') {
         return $product;
     }
+    // Manuel sabit USD fiyatı: DB'de display_price_usd > 0 ise otomatik kur yerine onu kullan.
+    // (örn. eğitim ürünleri için sabit $149 — admin/migration ile set edilir)
+    if (isset($product['display_price_usd']) && (float)$product['display_price_usd'] > 0) {
+        $product['display_price_usd'] = round((float)$product['display_price_usd'], 2);
+        $product['display_currency_usd'] = 'USD';
+        return $product;
+    }
     $info = getCurrentUsdTryRate($db);
     $rate = (float)$info['rate'];
     if ($rate <= 0) return $product;

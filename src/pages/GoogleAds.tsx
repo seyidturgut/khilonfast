@@ -362,7 +362,8 @@ export default function GoogleAds() {
             { question: t('serviceGoogleAds.faqs.q10.q'), answer: t('serviceGoogleAds.faqs.q10.a') },
             { question: t('serviceGoogleAds.faqs.q11.q'), answer: t('serviceGoogleAds.faqs.q11.a') },
             { question: t('serviceGoogleAds.faqs.q12.q'), answer: t('serviceGoogleAds.faqs.q12.a') }
-        ]
+        ],
+        comparisonTable: trConfig.comparisonTable
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-google-ads" disableApiHeroTextOverride={true} />

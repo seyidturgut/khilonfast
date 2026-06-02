@@ -13,7 +13,7 @@ import { useCart } from '../../context/CartContext'
 import Cart from '../../components/Cart'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
-import { parseLocalizedPrice } from '../../utils/price'
+import { parseLocalizedPrice, pickLocalizedPriceAndCurrency, formatLocalizedPrice } from '../../utils/price'
 import './ServicePageTemplate.css'
 import trCommon from '../../locales/tr/common.json'
 import enCommon from '../../locales/en/common.json'
@@ -586,7 +586,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                     productKey: pkg.product_key,
                                     fullName: localizedPkg.name || localPkg.name,
                                     name: localPkg.name || (localizedPkg.name?.includes('-') ? localizedPkg.name.split('-').pop()?.trim() : localizedPkg.name),
-                                    price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: pkg.currency, maximumFractionDigits: 0 }).format(pkg.price) + '*',
+                                    price: (() => {
+                                        const { price, currency } = pickLocalizedPriceAndCurrency(pkg as any, currentLang as 'tr' | 'en');
+                                        return formatLocalizedPrice(price, currency, currentLang as 'tr' | 'en') + '*';
+                                    })(),
                                     period: pkg.duration_days
                                         ? (pkg.duration_days === 30 ? (currentLang === 'tr' ? 'Ay' : 'Month') : (currentLang === 'tr' ? `${pkg.duration_days} Gün` : `${pkg.duration_days} Days`))
                                         : (localPkg.period || t('pricing.monthly')),
@@ -606,11 +609,10 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                                 id: priceProduct.product_key || props.heroPriceCard?.packageId || 'single',
                                 productKey: priceProduct.product_key || undefined,
                                 name: localPkg.name || textProduct.name || 'Package',
-                                price: new Intl.NumberFormat(currentLang === 'tr' ? 'tr-TR' : 'en-US', {
-                                    style: 'currency',
-                                    currency: priceProduct.currency || 'TRY',
-                                    maximumFractionDigits: 0
-                                }).format(Number(priceProduct.price)) + '*',
+                                price: (() => {
+                                    const { price, currency } = pickLocalizedPriceAndCurrency(priceProduct as any, currentLang as 'tr' | 'en');
+                                    return formatLocalizedPrice(price, currency, currentLang as 'tr' | 'en') + '*';
+                                })(),
                                 period: priceProduct.duration_days
                                     ? (priceProduct.duration_days === 30
                                         ? (currentLang === 'tr' ? 'Ay' : 'Month')

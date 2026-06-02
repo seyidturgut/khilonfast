@@ -275,7 +275,7 @@ export default function InteriorDesignMarketing() {
             role: "Kurucu Ortak, Aura İç Mimarlık"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1128822985"
+            vimeoUrl: "https://player.vimeo.com/video/1133021859"
         },
         faqs: [
             {

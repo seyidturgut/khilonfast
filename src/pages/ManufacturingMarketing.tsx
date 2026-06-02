@@ -275,7 +275,7 @@ export default function ManufacturingMarketing() {
             role: "Dış Ticaret Müdürü, MegaIndustrial"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1128822985"
+            vimeoUrl: "https://player.vimeo.com/video/1133021859"
         },
         faqs: [
             {

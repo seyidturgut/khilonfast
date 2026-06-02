@@ -403,10 +403,37 @@ export default function ConsultantEditor() {
         setSlotTimes(t => t.map((s, j) => j === i ? { ...s, [field]: val } : s));
     };
 
+    // Geniş aralıkları (09:00-17:00 gibi) 60 dakikalık dilimlere böler.
+    // Böylece her dilim ayrı slot kaydı olur ve booking modal'da kullanıcı
+    // tek tek 60dk seans seçebilir. 60dk'dan kısa aralık tek slot kalır.
+    const splitInto60 = (start: string, end: string): { start: string; end: string }[] => {
+        const out: { start: string; end: string }[] = [];
+        const [sh, sm] = start.split(':').map(Number);
+        const [eh, em] = end.split(':').map(Number);
+        const startMin = sh * 60 + sm;
+        const endMin = eh * 60 + em;
+        if (!Number.isFinite(startMin) || !Number.isFinite(endMin) || endMin <= startMin) {
+            return [{ start, end }];
+        }
+        let cur = startMin;
+        while (cur + 60 <= endMin) {
+            const s = `${String(Math.floor(cur / 60)).padStart(2, '0')}:${String(cur % 60).padStart(2, '0')}`;
+            const next = cur + 60;
+            const e = `${String(Math.floor(next / 60)).padStart(2, '0')}:${String(next % 60).padStart(2, '0')}`;
+            out.push({ start: s, end: e });
+            cur = next;
+        }
+        // Tam 60'a bölünmeyen artık (örn. 09:00-09:45) varsa, hiç dilim oluşmadıysa orijinali koru
+        if (out.length === 0) return [{ start, end }];
+        return out;
+    };
+
     const addSlots = async () => {
         if (!slotDate) return;
         setAddingSlots(true);
-        const slotsPayload = slotTimes.map(t => ({ available_date: slotDate, start_time: t.start, end_time: t.end }));
+        const slotsPayload = slotTimes.flatMap(t =>
+            splitInto60(t.start, t.end).map(seg => ({ available_date: slotDate, start_time: seg.start, end_time: seg.end }))
+        );
         await fetch(`${ADMIN_API_BASE}/admin/consultants/${id}/availability`, {
             method: 'POST', headers: authHeaders(), body: JSON.stringify({ slots: slotsPayload })
         });

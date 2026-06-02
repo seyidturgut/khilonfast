@@ -275,7 +275,7 @@ export default function GiftCardMarketing() {
             role: "CMO, GiftCorp"
         },
         processVideo: {
-            vimeoUrl: "https://player.vimeo.com/video/1128822985"
+            vimeoUrl: "https://player.vimeo.com/video/1133021859"
         },
         faqs: [
             {

@@ -18,7 +18,7 @@ import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
 export default function ContentStrategy() {
-    const { t } = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
     const isEn = currentLang === 'en'
 
@@ -147,15 +147,20 @@ export default function ContentStrategy() {
         },
         comparisonTable: {
             headers: [
-                { title: 'İçerik Stratejisi Paketi', icon: <HiCheckBadge /> }
+                { title: i18n.language === 'en' ? 'Content Strategy Package' : 'İçerik Stratejisi Paketi', icon: <HiCheckBadge /> }
             ],
-            rows: [
+            rows: i18n.language === 'en' ? [
+                { feature: 'Document Content', values: ['A single comprehensive content strategy document'] },
+                { feature: 'Strategy Scope', values: ['Audience analysis, content planning, and SEO-aligned content recommendations'] },
+                { feature: 'Target Audience Definition', values: [true] },
+                { feature: 'Content Topics & Frequency', values: [true] }
+            ] : [
                 { feature: 'Doküman İçeriği', values: ['Tek bir kapsamlı içerik stratejisi belgesi'] },
                 { feature: 'Strateji Kapsamı', values: ['Hedef kitle analizi, içerik planlama, SEO uyumlu içerik önerileri'] },
                 { feature: 'Hedef Kitle Tanımlaması', values: [true] },
                 { feature: 'İçerik Konuları ve Frekansı', values: [true] }
             ],
-            note: '(*) KDV hariçtir.'
+            note: i18n.language === 'en' ? '(*) Prices exclude VAT.' : '(*) KDV hariçtir.'
         },
         testimonial: {
             quote: "İçerik stratejisi dökümanı sayesinde içerik üretim sürecimiz rayına oturdu. Artık neyi, neden ve kime ürettiğimizi çok daha iyi biliyoruz.",
@@ -297,7 +302,8 @@ export default function ContentStrategy() {
             { question: t('serviceContentStrategy.faqs.q9.q'), answer: t('serviceContentStrategy.faqs.q9.a') },
             { question: t('serviceContentStrategy.faqs.q10.q'), answer: t('serviceContentStrategy.faqs.q10.a') },
             { question: t('serviceContentStrategy.faqs.q11.q'), answer: t('serviceContentStrategy.faqs.q11.a') }
-        ]
+        ],
+        comparisonTable: trConfig.comparisonTable
     }
 
     return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-strategy" disableApiHeroTextOverride />

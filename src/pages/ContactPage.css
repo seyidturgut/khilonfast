@@ -222,6 +222,28 @@
     color: #475569;
 }
 
+/* Toplantı Talep Et butonu — açık zeminde okunur (navy zemin, beyaz yazı) */
+.contact-side-card.highlight .contact-meeting-btn,
+.contact-side-card.highlight .btn-secondary {
+    display: inline-block;
+    margin-top: 14px;
+    background: #1e3a5f;
+    color: #ffffff;
+    border: 1px solid #1e3a5f;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: none;
+    transition: background 0.2s ease;
+}
+
+.contact-side-card.highlight .contact-meeting-btn:hover,
+.contact-side-card.highlight .btn-secondary:hover {
+    background: #16304d;
+    color: #ffffff;
+}
+
 .btn-full {
     width: 100%;
 }
