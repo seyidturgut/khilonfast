@@ -42,7 +42,7 @@ function formatMonth(year: number, month: number): string {
     return `${year}-${String(month).padStart(2, '0')}`
 }
 
-function formatDateDisplay(dateStr: string): string {
+function formatDateDisplay(dateStr: string, isEn = false): string {
     if (!dateStr) return '';
     // dateStr: YYYY-MM-DD or ISO
     const cleanDate = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr
@@ -50,7 +50,7 @@ function formatDateDisplay(dateStr: string): string {
     if (parts.length < 3 || parts.some(isNaN)) return dateStr;
     const [y, m, d] = parts
     const date = new Date(y, m - 1, d)
-    return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+    return date.toLocaleDateString(isEn ? 'en-US' : 'tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 function formatTimeRange(start: string, end: string): string {
@@ -58,14 +58,14 @@ function formatTimeRange(start: string, end: string): string {
     return `${String(start).slice(0, 5)} – ${String(end).slice(0, 5)}`
 }
 
-function getMonthLabel(year: number, month: number): string {
+function getMonthLabel(year: number, month: number, isEn = false): string {
     const date = new Date(year, month - 1, 1)
-    return date.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })
+    return date.toLocaleDateString(isEn ? 'en-US' : 'tr-TR', { month: 'long', year: 'numeric' })
 }
 
-function formatPrice(price: number, currency: string, plusVat: boolean): string {
+function formatPrice(price: number, currency: string, plusVat: boolean, isEn = false): string {
     if (typeof price !== 'number') return '';
-    return `${price.toLocaleString('tr-TR')} ${currency || ''}${plusVat ? ' + KDV' : ''}`
+    return `${price.toLocaleString(isEn ? 'en-US' : 'tr-TR')} ${currency || ''}${plusVat ? (isEn ? ' + VAT' : ' + KDV') : ''}`
 }
 
 // Group slots by date
@@ -84,7 +84,8 @@ function groupSlotsByDate(slots: AvailabilitySlot[]): Record<string, Availabilit
 
 // ─── Step Indicator ───────────────────────────────────────────────────────────
 
-function StepIndicator({ current }: { current: Step }) {
+function StepIndicator({ current, isEn = false }: { current: Step; isEn?: boolean }) {
+    const labels = isEn ? { 1: 'Date', 2: 'Details', 3: 'Confirm' } : { 1: 'Tarih', 2: 'Bilgiler', 3: 'Onay' }
     return (
         <div className="booking-steps">
             {([1, 2, 3] as Step[]).map((n) => (
@@ -94,7 +95,7 @@ function StepIndicator({ current }: { current: Step }) {
                 >
                     <span className="step-circle">{current > n ? '✓' : n}</span>
                     <span className="step-label">
-                        {n === 1 ? 'Tarih' : n === 2 ? 'Bilgiler' : 'Onay'}
+                        {labels[n]}
                     </span>
                 </div>
             ))}
@@ -153,6 +154,8 @@ export default function ConsultantBookingModal({
     const navigate = useNavigate()
     const { addToCart } = useCart()
     const currentLang = useRouteLocale()
+    const isEn = currentLang === 'en'
+    const tt = (tr: string, en: string) => (isEn ? en : tr)
     const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout')
 
     // Reset when modal opens
@@ -197,7 +200,7 @@ export default function ConsultantBookingModal({
                 setSlots(data.slots ?? [])
             })
             .catch(() => {
-                setSlotsError('Müsaitlik bilgisi alınamadı.')
+                setSlotsError(tt('Müsaitlik bilgisi alınamadı.', 'Could not load availability.'))
             })
             .finally(() => setSlotsLoading(false))
     }, [isOpen, step, consultant.slug, service.id, year, month])
@@ -261,7 +264,7 @@ export default function ConsultantBookingModal({
         setFormError(null)
 
         if (!name.trim() || !email.trim()) {
-            setFormError('Ad Soyad ve E-posta alanları zorunludur.')
+            setFormError(tt('Ad Soyad ve E-posta alanları zorunludur.', 'Full name and email are required.'))
             return
         }
 
@@ -303,7 +306,7 @@ export default function ConsultantBookingModal({
             setFormError(
                 err instanceof Error
                     ? err.message
-                    : 'Rezervasyon gönderilemedi. Lütfen tekrar deneyin.'
+                    : tt('Rezervasyon gönderilemedi. Lütfen tekrar deneyin.', 'Could not submit booking. Please try again.')
             )
         } finally {
             setSubmitting(false)
@@ -315,11 +318,11 @@ export default function ConsultantBookingModal({
         e.preventDefault()
         setFormError(null)
         if (!name.trim() || !email.trim()) {
-            setFormError('Ad Soyad ve E-posta alanları zorunludur.')
+            setFormError(tt('Ad Soyad ve E-posta alanları zorunludur.', 'Full name and email are required.'))
             return
         }
         if (!leadKvkk) {
-            setFormError('Devam etmek için KVKK onayı gereklidir.')
+            setFormError(tt('Devam etmek için KVKK onayı gereklidir.', 'You must accept the privacy consent to continue.'))
             return
         }
         setSubmitting(true)
@@ -346,7 +349,7 @@ export default function ConsultantBookingModal({
             }
             setLeadDone(true)
         } catch (err) {
-            setFormError(err instanceof Error ? err.message : 'Başvuru gönderilemedi. Lütfen tekrar deneyin.')
+            setFormError(err instanceof Error ? err.message : tt('Başvuru gönderilemedi. Lütfen tekrar deneyin.', 'Could not submit application. Please try again.'))
         } finally {
             setSubmitting(false)
         }
@@ -366,12 +369,12 @@ export default function ConsultantBookingModal({
                 {/* Header */}
                 <div className="booking-modal-header">
                     <h3 className="booking-modal-title">
-                        {isLeadForm ? service.title : (step === 3 ? 'Rezervasyon Onayı' : service.title)}
+                        {isLeadForm ? service.title : (step === 3 ? tt('Rezervasyon Onayı', 'Booking Confirmation') : service.title)}
                     </h3>
                     <button
                         className="booking-modal-close"
                         onClick={onClose}
-                        aria-label="Kapat"
+                        aria-label={tt('Kapat', 'Close')}
                     >
                         ✕
                     </button>
@@ -383,75 +386,78 @@ export default function ConsultantBookingModal({
                         {leadDone ? (
                             <div className="booking-confirmation" style={{ textAlign: 'center', padding: '12px 4px' }}>
                                 <div style={{ fontSize: '2.4rem', marginBottom: 8 }}>✅</div>
-                                <h4 style={{ margin: '0 0 8px' }}>Başvurunuz Alındı</h4>
+                                <h4 style={{ margin: '0 0 8px' }}>{tt('Başvurunuz Alındı', 'Application Received')}</h4>
                                 <p style={{ color: '#475569', lineHeight: 1.6 }}>
-                                    <strong>{service.title}</strong> başvurunuz/satın alma talebiniz alınmıştır.
-                                    Ekibimiz en kısa sürede sizinle iletişime geçecektir.
+                                    {isEn ? (
+                                        <><strong>{service.title}</strong> application has been received. Our team will contact you shortly.</>
+                                    ) : (
+                                        <><strong>{service.title}</strong> başvurunuz/satın alma talebiniz alınmıştır. Ekibimiz en kısa sürede sizinle iletişime geçecektir.</>
+                                    )}
                                 </p>
                                 <button type="button" className="booking-btn-primary" style={{ marginTop: 16 }} onClick={onClose}>
-                                    Kapat
+                                    {tt('Kapat', 'Close')}
                                 </button>
                             </div>
                         ) : (
                             <form onSubmit={handleLeadSubmit} className="booking-form">
                                 <p className="slots-message" style={{ margin: '0 0 6px' }}>
-                                    Bu program aylık olarak yürütülür. Başvuru formunu doldurun, ekibimiz sizinle iletişime geçsin.
+                                    {tt('Bu program aylık olarak yürütülür. Başvuru formunu doldurun, ekibimiz sizinle iletişime geçsin.', 'This program runs on a monthly basis. Fill out the form and our team will get in touch with you.')}
                                 </p>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
                                     <div className="form-group">
-                                        <label htmlFor="lf-name">Ad Soyad <span className="required">*</span></label>
+                                        <label htmlFor="lf-name">{tt('Ad Soyad', 'Full Name')} <span className="required">*</span></label>
                                         <input id="lf-name" type="text" value={name} onChange={e => setName(e.target.value)} required />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="lf-company">Şirket</label>
+                                        <label htmlFor="lf-company">{tt('Şirket', 'Company')}</label>
                                         <input id="lf-company" type="text" value={company} onChange={e => setCompany(e.target.value)} />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="lf-position">Pozisyon</label>
+                                        <label htmlFor="lf-position">{tt('Pozisyon', 'Position')}</label>
                                         <input id="lf-position" type="text" value={leadPosition} onChange={e => setLeadPosition(e.target.value)} />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="lf-website">Şirket Web Sitesi</label>
+                                        <label htmlFor="lf-website">{tt('Şirket Web Sitesi', 'Company Website')}</label>
                                         <input id="lf-website" type="text" value={leadWebsite} onChange={e => setLeadWebsite(e.target.value)} placeholder="ornek.com" />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="lf-email">E-posta <span className="required">*</span></label>
+                                        <label htmlFor="lf-email">{tt('E-posta', 'Email')} <span className="required">*</span></label>
                                         <input id="lf-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="lf-phone">Telefon</label>
+                                        <label htmlFor="lf-phone">{tt('Telefon', 'Phone')}</label>
                                         <input id="lf-phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="lf-needs">İhtiyaç / Beklenti</label>
-                                    <textarea id="lf-needs" rows={3} value={leadNeeds} onChange={e => setLeadNeeds(e.target.value)} placeholder="Aradığınız desteği kısaca anlatın..." />
+                                    <label htmlFor="lf-needs">{tt('İhtiyaç / Beklenti', 'Needs / Expectations')}</label>
+                                    <textarea id="lf-needs" rows={3} value={leadNeeds} onChange={e => setLeadNeeds(e.target.value)} placeholder={tt('Aradığınız desteği kısaca anlatın...', 'Briefly describe the support you are looking for...')} />
                                 </div>
                                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.85rem', color: '#374151', cursor: 'pointer' }}>
                                     <input type="checkbox" checked={leadKvkk} onChange={e => setLeadKvkk(e.target.checked)} style={{ marginTop: 3, flexShrink: 0 }} />
-                                    <span>Kişisel verilerimin KVKK kapsamında işlenmesini onaylıyorum. <span className="required">*</span></span>
+                                    <span>{tt('Kişisel verilerimin KVKK kapsamında işlenmesini onaylıyorum.', 'I consent to the processing of my personal data under the privacy policy.')} <span className="required">*</span></span>
                                 </label>
                                 {formError && <p className="form-error">{formError}</p>}
                                 <button type="submit" className="booking-btn-primary" disabled={submitting} style={{ marginTop: 6, width: '100%' }}>
-                                    {submitting ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
+                                    {submitting ? tt('Gönderiliyor...', 'Submitting...') : tt('Başvuruyu Gönder', 'Submit Application')}
                                 </button>
                             </form>
                         )}
                     </div>
                 )}
 
-                {!isLeadForm && <StepIndicator current={step} />}
+                {!isLeadForm && <StepIndicator current={step} isEn={isEn} />}
 
                 {/* ── Step 1: Calendar ──────────────────────────────────── */}
                 {!isLeadForm && step === 1 && (
                     <div className="booking-step-content" key="step-1">
                         <div className="calendar-nav">
-                            <button type="button" className="cal-nav-btn" onClick={handlePrevMonth} aria-label="Önceki ay">‹</button>
-                            <span className="calendar-month-label">{getMonthLabel(year, month)}</span>
-                            <button type="button" className="cal-nav-btn" onClick={handleNextMonth} aria-label="Sonraki ay">›</button>
+                            <button type="button" className="cal-nav-btn" onClick={handlePrevMonth} aria-label={tt('Önceki ay', 'Previous month')}>‹</button>
+                            <span className="calendar-month-label">{getMonthLabel(year, month, isEn)}</span>
+                            <button type="button" className="cal-nav-btn" onClick={handleNextMonth} aria-label={tt('Sonraki ay', 'Next month')}>›</button>
                         </div>
 
-                        {slotsLoading && <p className="slots-message">Müsaitlik durumu yükleniyor...</p>}
+                        {slotsLoading && <p className="slots-message">{tt('Müsaitlik durumu yükleniyor...', 'Loading availability...')}</p>}
                         {slotsError && <p className="slots-message error">{slotsError}</p>}
 
                         {!slotsLoading && !slotsError && (
@@ -459,7 +465,7 @@ export default function ConsultantBookingModal({
                                 {availableDates.length > 0 ? (
                                     <div className="calendar-container">
                                         <div className="calendar-weekdays">
-                                            {['Pt', 'Sa', 'Çr', 'Pr', 'Cu', 'Ct', 'Pz'].map(d => <span key={d}>{d}</span>)}
+                                            {(isEn ? ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'] : ['Pt', 'Sa', 'Çr', 'Pr', 'Cu', 'Ct', 'Pz']).map((d, i) => <span key={i}>{d}</span>)}
                                         </div>
                                         <div className="calendar-grid">
                                             {(() => {
@@ -491,14 +497,14 @@ export default function ConsultantBookingModal({
                                     </div>
                                 ) : (
                                     <div className="slots-empty">
-                                        <p>Seçili ay için uygun randevu bulunamadı.</p>
-                                        <button type="button" className="booking-btn-secondary" onClick={handleContinueToForm}>Tarih Seçmeden Devam Et</button>
+                                        <p>{tt('Seçili ay için uygun randevu bulunamadı.', 'No available appointments for the selected month.')}</p>
+                                        <button type="button" className="booking-btn-secondary" onClick={handleContinueToForm}>{tt('Tarih Seçmeden Devam Et', 'Continue Without Selecting a Date')}</button>
                                     </div>
                                 )}
 
                                 {selectedDate && slotsByDate[selectedDate] && (
                                     <div className="time-slots-section animate-fade-in">
-                                        <p className="time-slots-label">{formatDateDisplay(selectedDate)} — {bookingType === 'fixed_day' ? 'Blok Seçin' : 'Saat Seçin'}:</p>
+                                        <p className="time-slots-label">{formatDateDisplay(selectedDate, isEn)} — {bookingType === 'fixed_day' ? tt('Blok Seçin', 'Select Block') : tt('Saat Seçin', 'Select Time')}:</p>
                                         <div className="time-slots">
                                             {slotsByDate[selectedDate].map((slot) => {
                                                 const slotKey = `${slot.available_date}_${slot.start_time}`
@@ -525,7 +531,7 @@ export default function ConsultantBookingModal({
                                         onClick={handleContinueToForm}
                                         disabled={!selectedDate || (slotsByDate[selectedDate] && !selectedSlot)}
                                     >
-                                        {!selectedDate ? 'Lütfen Tarih Seçin' : (slotsByDate[selectedDate] && !selectedSlot) ? 'Lütfen Saat Seçin' : 'Devam Et'}
+                                        {!selectedDate ? tt('Lütfen Tarih Seçin', 'Please Select a Date') : (slotsByDate[selectedDate] && !selectedSlot) ? tt('Lütfen Saat Seçin', 'Please Select a Time') : tt('Devam Et', 'Continue')}
                                     </button>
                                 </div>
                             </>
@@ -539,15 +545,15 @@ export default function ConsultantBookingModal({
                         {/* Summary */}
                         <div className="booking-summary">
                             <div className="booking-summary-service">
-                                <span className="booking-summary-label">Hizmet</span>
+                                <span className="booking-summary-label">{tt('Hizmet', 'Service')}</span>
                                 <span className="booking-summary-value">{service.title}</span>
                             </div>
                             <div className="booking-summary-price">
-                                {formatPrice(service.price, service.currency, service.plus_vat)}
+                                {formatPrice(service.price, service.currency, service.plus_vat, isEn)}
                             </div>
                             {selectedSlot && selectedDate && (
                                 <div className="booking-summary-slot">
-                                    <span>📅 {formatDateDisplay(selectedDate)}</span>
+                                    <span>📅 {formatDateDisplay(selectedDate, isEn)}</span>
                                     <span>
                                         🕐{' '}
                                         {formatTimeRange(
@@ -562,20 +568,20 @@ export default function ConsultantBookingModal({
                         <form className="booking-form" onSubmit={handleSubmit} noValidate>
                             <div className="form-group">
                                 <label htmlFor="bm-name">
-                                    Ad Soyad <span className="required">*</span>
+                                    {tt('Ad Soyad', 'Full Name')} <span className="required">*</span>
                                 </label>
                                 <input
                                     id="bm-name"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Adınız Soyadınız"
+                                    placeholder={tt('Adınız Soyadınız', 'Your Full Name')}
                                     required
                                 />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="bm-email">
-                                    E-posta <span className="required">*</span>
+                                    {tt('E-posta', 'Email')} <span className="required">*</span>
                                 </label>
                                 <input
                                     id="bm-email"
@@ -587,7 +593,7 @@ export default function ConsultantBookingModal({
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="bm-phone">Telefon</label>
+                                <label htmlFor="bm-phone">{tt('Telefon', 'Phone')}</label>
                                 <input
                                     id="bm-phone"
                                     type="tel"
@@ -597,22 +603,22 @@ export default function ConsultantBookingModal({
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="bm-company">Şirket</label>
+                                <label htmlFor="bm-company">{tt('Şirket', 'Company')}</label>
                                 <input
                                     id="bm-company"
                                     type="text"
                                     value={company}
                                     onChange={(e) => setCompany(e.target.value)}
-                                    placeholder="Şirket adı"
+                                    placeholder={tt('Şirket adı', 'Company name')}
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="bm-topic">Danışmanlık Konusu</label>
+                                <label htmlFor="bm-topic">{tt('Danışmanlık Konusu', 'Consulting Topic')}</label>
                                 <textarea
                                     id="bm-topic"
                                     value={topic}
                                     onChange={(e) => setTopic(e.target.value)}
-                                    placeholder="Danışmanlık almak istediğiniz konuyu kısaca açıklayın..."
+                                    placeholder={tt('Danışmanlık almak istediğiniz konuyu kısaca açıklayın...', 'Briefly describe the topic you would like consulting on...')}
                                     rows={4}
                                 />
                             </div>
@@ -643,14 +649,14 @@ export default function ConsultantBookingModal({
                                     onClick={() => setStep(1)}
                                     disabled={submitting}
                                 >
-                                    ← Geri
+                                    ← {tt('Geri', 'Back')}
                                 </button>
                                 <button
                                     type="submit"
                                     className="booking-btn-primary"
                                     disabled={submitting || !allPoliciesOk}
                                 >
-                                    {submitting ? 'Gönderiliyor...' : 'Rezervasyon Talebi Gönder'}
+                                    {submitting ? tt('Gönderiliyor...', 'Submitting...') : tt('Rezervasyon Talebi Gönder', 'Submit Booking Request')}
                                 </button>
                             </div>
                         </form>
@@ -663,29 +669,29 @@ export default function ConsultantBookingModal({
                         <div className="confirmation-icon">✅</div>
                         <h4 className="confirmation-title">
                             {bookingType === 'fixed_day'
-                                ? 'Executive Strategy Day Rezervasyonunuz Oluşturuldu!'
-                                : 'Randevunuz Oluşturuldu!'}
+                                ? tt('Executive Strategy Day Rezervasyonunuz Oluşturuldu!', 'Your Executive Strategy Day Booking Is Created!')
+                                : tt('Randevunuz Oluşturuldu!', 'Your Appointment Is Created!')}
                         </h4>
                         {bookingId && (
                             <p className="confirmation-id">
-                                Rezervasyon No: #{bookingId}
+                                {tt('Rezervasyon No', 'Booking No')}: #{bookingId}
                             </p>
                         )}
                         <div className="confirmation-summary">
                             <div className="confirmation-row">
-                                <span className="conf-label">Hizmet</span>
+                                <span className="conf-label">{tt('Hizmet', 'Service')}</span>
                                 <span className="conf-value">{service.title}</span>
                             </div>
                             {selectedSlot && selectedDate && (
                                 <>
                                     <div className="confirmation-row">
-                                        <span className="conf-label">Tarih</span>
+                                        <span className="conf-label">{tt('Tarih', 'Date')}</span>
                                         <span className="conf-value">
-                                            {formatDateDisplay(selectedDate)}
+                                            {formatDateDisplay(selectedDate, isEn)}
                                         </span>
                                     </div>
                                     <div className="confirmation-row">
-                                        <span className="conf-label">Saat</span>
+                                        <span className="conf-label">{tt('Saat', 'Time')}</span>
                                         <span className="conf-value">
                                             {formatTimeRange(
                                                 selectedSlot.start_time,
@@ -697,26 +703,26 @@ export default function ConsultantBookingModal({
                             )}
                             {name && (
                                 <div className="confirmation-row">
-                                    <span className="conf-label">İsim</span>
+                                    <span className="conf-label">{tt('İsim', 'Name')}</span>
                                     <span className="conf-value">{name}</span>
                                 </div>
                             )}
                             {email && (
                                 <div className="confirmation-row">
-                                    <span className="conf-label">E-posta</span>
+                                    <span className="conf-label">{tt('E-posta', 'Email')}</span>
                                     <span className="conf-value">{email}</span>
                                 </div>
                             )}
                         </div>
                         <div className="confirmation-price-box">
-                            <span className="conf-price-label">Ödenecek Tutar</span>
+                            <span className="conf-price-label">{tt('Ödenecek Tutar', 'Amount Due')}</span>
                             <span className="conf-price-value">
-                                {service.price.toLocaleString('tr-TR')} {service.currency}
-                                {service.plus_vat && <small> + KDV</small>}
+                                {service.price.toLocaleString(isEn ? 'en-US' : 'tr-TR')} {service.currency}
+                                {service.plus_vat && <small> {tt('+ KDV', '+ VAT')}</small>}
                             </span>
                         </div>
                         <p className="confirmation-message">
-                            Ödemeyi tamamlamak için aşağıdaki butona tıklayın.
+                            {tt('Ödemeyi tamamlamak için aşağıdaki butona tıklayın.', 'Click the button below to complete your payment.')}
                         </p>
                         <button className="booking-btn-primary" onClick={() => {
                             addToCart({
@@ -737,7 +743,7 @@ export default function ConsultantBookingModal({
                                 }
                             })
                         }}>
-                            💳 Ödeme ile Tamamla
+                            💳 {tt('Ödeme ile Tamamla', 'Complete with Payment')}
                         </button>
                         <button className="booking-btn-secondary" style={{ marginTop: 8 }} onClick={() => {
                             // "Daha Sonra Öde" → ödeme son-adım maili tetiklenir
@@ -749,7 +755,7 @@ export default function ConsultantBookingModal({
                             }
                             onClose()
                         }}>
-                            Daha Sonra Öde
+                            {tt('Daha Sonra Öde', 'Pay Later')}
                         </button>
                     </div>
                 )}
