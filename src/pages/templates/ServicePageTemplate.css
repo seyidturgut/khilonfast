@@ -81,6 +81,8 @@
 .hero-main-img {
     display: block;
     width: 100%;
+    aspect-ratio: 1200 / 800;
+    object-fit: cover;
     background: transparent;
     border-radius: var(--radius-xl);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
