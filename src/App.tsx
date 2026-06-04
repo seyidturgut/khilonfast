@@ -12,46 +12,47 @@ import CookieConsent from './components/CookieConsent'
 import ScrollToTop from './components/ScrollToTop'
 import SeoHead from './components/SeoHead'
 import CurrencyConflictModal from './components/CurrencyConflictModal'
-import Home from './pages/Home'
-import GoToMarket from './pages/GoToMarket'
-import ContentStrategy from './pages/ContentStrategy'
-import IntegratedDigitalMarketing from './pages/IntegratedDigitalMarketing'
-import B2BIntegratedMarketing from './pages/B2BIntegratedMarketing'
-import FintechIntegratedMarketing from './pages/FintechIntegratedMarketing'
-import ManufacturingIntegratedMarketing from './pages/ManufacturingIntegratedMarketing'
-import EnergyIntegratedMarketing from './pages/EnergyIntegratedMarketing'
-import FleetRentalIntegratedMarketing from './pages/FleetRentalIntegratedMarketing'
-import InteriorDesignIntegratedMarketing from './pages/InteriorDesignIntegratedMarketing'
-import SoftwareIntegratedMarketing from './pages/SoftwareIntegratedMarketing'
-import IndustrialFoodIntegratedMarketing from './pages/IndustrialFoodIntegratedMarketing'
-import PaymentSystemsIntegratedMarketing from './pages/PaymentSystemsIntegratedMarketing'
-import GiftCardMarketing from './pages/GiftCardMarketing'
-import FuelMarketing from './pages/FuelMarketing'
-import GiftCardIntegratedMarketing from './pages/GiftCardIntegratedMarketing'
-import FuelIntegratedMarketing from './pages/FuelIntegratedMarketing'
-import GoogleAds from './pages/GoogleAds'
-import SocialMediaAds from './pages/SocialMediaAds'
-import SeoService from './pages/SeoService'
-import ContentProduction from './pages/ContentProduction'
-import B2BEmailMarketing from './pages/B2BEmailMarketing'
-import B2BThreeSixtyMarketing from './pages/B2BThreeSixtyMarketing'
-import PaymentSystemsMarketing from './pages/PaymentSystemsMarketing'
-import IndustrialFoodMarketing from './pages/IndustrialFoodMarketing'
-import FintechMarketing from './pages/FintechMarketing'
-import SoftwareMarketing from './pages/SoftwareMarketing'
-import EnergyMarketing from './pages/EnergyMarketing'
-import InteriorDesignMarketing from './pages/InteriorDesignMarketing'
-import FleetRentalMarketing from './pages/FleetRentalMarketing'
-import ManufacturingMarketing from './pages/ManufacturingMarketing'
-import About from './pages/About'
-import HowItWorks from './pages/HowItWorks'
-import MaestroAI from './pages/MaestroAI'
-import MaestroAISector from './pages/MaestroAISector'
-import EyeTracking from './pages/EyeTracking'
-import SearchConsoleSetup from './pages/SearchConsoleSetup'
-import SetupFlowPage from './pages/SetupFlowPage'
-import IntegratedMarketingSetupFlow from './pages/IntegratedMarketingSetupFlow'
-import ContactPage from './pages/ContactPage'
+// Public sayfalar — lazy (route-bazlı code splitting; prerender puppeteer+2sn ile içerik korunur)
+const Home = lazy(() => import('./pages/Home'))
+const GoToMarket = lazy(() => import('./pages/GoToMarket'))
+const ContentStrategy = lazy(() => import('./pages/ContentStrategy'))
+const IntegratedDigitalMarketing = lazy(() => import('./pages/IntegratedDigitalMarketing'))
+const B2BIntegratedMarketing = lazy(() => import('./pages/B2BIntegratedMarketing'))
+const FintechIntegratedMarketing = lazy(() => import('./pages/FintechIntegratedMarketing'))
+const ManufacturingIntegratedMarketing = lazy(() => import('./pages/ManufacturingIntegratedMarketing'))
+const EnergyIntegratedMarketing = lazy(() => import('./pages/EnergyIntegratedMarketing'))
+const FleetRentalIntegratedMarketing = lazy(() => import('./pages/FleetRentalIntegratedMarketing'))
+const InteriorDesignIntegratedMarketing = lazy(() => import('./pages/InteriorDesignIntegratedMarketing'))
+const SoftwareIntegratedMarketing = lazy(() => import('./pages/SoftwareIntegratedMarketing'))
+const IndustrialFoodIntegratedMarketing = lazy(() => import('./pages/IndustrialFoodIntegratedMarketing'))
+const PaymentSystemsIntegratedMarketing = lazy(() => import('./pages/PaymentSystemsIntegratedMarketing'))
+const GiftCardMarketing = lazy(() => import('./pages/GiftCardMarketing'))
+const FuelMarketing = lazy(() => import('./pages/FuelMarketing'))
+const GiftCardIntegratedMarketing = lazy(() => import('./pages/GiftCardIntegratedMarketing'))
+const FuelIntegratedMarketing = lazy(() => import('./pages/FuelIntegratedMarketing'))
+const GoogleAds = lazy(() => import('./pages/GoogleAds'))
+const SocialMediaAds = lazy(() => import('./pages/SocialMediaAds'))
+const SeoService = lazy(() => import('./pages/SeoService'))
+const ContentProduction = lazy(() => import('./pages/ContentProduction'))
+const B2BEmailMarketing = lazy(() => import('./pages/B2BEmailMarketing'))
+const B2BThreeSixtyMarketing = lazy(() => import('./pages/B2BThreeSixtyMarketing'))
+const PaymentSystemsMarketing = lazy(() => import('./pages/PaymentSystemsMarketing'))
+const IndustrialFoodMarketing = lazy(() => import('./pages/IndustrialFoodMarketing'))
+const FintechMarketing = lazy(() => import('./pages/FintechMarketing'))
+const SoftwareMarketing = lazy(() => import('./pages/SoftwareMarketing'))
+const EnergyMarketing = lazy(() => import('./pages/EnergyMarketing'))
+const InteriorDesignMarketing = lazy(() => import('./pages/InteriorDesignMarketing'))
+const FleetRentalMarketing = lazy(() => import('./pages/FleetRentalMarketing'))
+const ManufacturingMarketing = lazy(() => import('./pages/ManufacturingMarketing'))
+const About = lazy(() => import('./pages/About'))
+const HowItWorks = lazy(() => import('./pages/HowItWorks'))
+const MaestroAI = lazy(() => import('./pages/MaestroAI'))
+const MaestroAISector = lazy(() => import('./pages/MaestroAISector'))
+const EyeTracking = lazy(() => import('./pages/EyeTracking'))
+const SearchConsoleSetup = lazy(() => import('./pages/SearchConsoleSetup'))
+const SetupFlowPage = lazy(() => import('./pages/SetupFlowPage'))
+const IntegratedMarketingSetupFlow = lazy(() => import('./pages/IntegratedMarketingSetupFlow'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
 // Auth/checkout/dashboard — lazy (not prerendered)
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
@@ -63,15 +64,15 @@ const DanismanlikRandevu = lazy(() => import('./pages/DanismanlikRandevu'))
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'))
 const PaymentCallback = lazy(() => import('./pages/PaymentCallback'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
-import Trainings from './pages/Trainings'
-import TrainingProgramPage from './pages/TrainingProgramPage'
-import Consulting from './pages/Consulting'
-import ConsultingProgramPage from './pages/ConsultingProgramPage'
-import Consultants from './pages/Consultants'
-import ConsultantDetail from './pages/ConsultantDetail'
-import LegacyWordpressPage from './pages/LegacyWordpressPage'
-import ProductSlugResolver from './pages/ProductSlugResolver'
-import LegalPage from './pages/LegalPage'
+const Trainings = lazy(() => import('./pages/Trainings'))
+const TrainingProgramPage = lazy(() => import('./pages/TrainingProgramPage'))
+const Consulting = lazy(() => import('./pages/Consulting'))
+const ConsultingProgramPage = lazy(() => import('./pages/ConsultingProgramPage'))
+const Consultants = lazy(() => import('./pages/Consultants'))
+const ConsultantDetail = lazy(() => import('./pages/ConsultantDetail'))
+const LegacyWordpressPage = lazy(() => import('./pages/LegacyWordpressPage'))
+const ProductSlugResolver = lazy(() => import('./pages/ProductSlugResolver'))
+const LegalPage = lazy(() => import('./pages/LegalPage'))
 import { trainingPrograms } from './data/trainingPrograms'
 import { consultingPrograms } from './data/consultingPrograms'
 import { productPrograms } from './data/productPrograms'
