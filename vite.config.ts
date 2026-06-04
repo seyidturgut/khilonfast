@@ -51,6 +51,9 @@ export default defineConfig(({ mode, command }) => {
                         // React + react-dom + scheduler + react-router stay together to avoid circular deps
                         if (id.includes('react-icons') || id.includes('@heroicons')) return 'icons'
                         if (id.includes('react-i18next') || id.includes('i18next')) return 'i18n'
+                        if (id.includes('/three/') || id.includes('three-') || id.includes('@react-three')) return 'three'
+                        if (id.includes('react-pdf') || id.includes('pdfjs-dist')) return 'pdf'
+                        if (id.includes('react-email-editor') || id.includes('embed/embed')) return 'email-editor'
                         if (id.includes('framer-motion') || id.includes('gsap') || id.includes('lottie')) return 'animation'
                         if (id.includes('chart') || id.includes('recharts') || id.includes('d3-')) return 'charts'
                         if (id.includes('swiper') || id.includes('embla')) return 'carousel'
