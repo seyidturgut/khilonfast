@@ -773,7 +773,7 @@ export default function TrainingProgramPage() {
             description: trainingSummary,
             buttonText: isEn ? 'Join Program' : 'Programa Katıl',
             buttonLink: '#pricing',
-            image: '/hero-image.png',
+            image: '/hero-image.webp',
             badgeText: isEn ? '10+1 Module Training' : '10+1 Modül Eğitim',
             badgeIcon: <HiAcademicCap />
         },
@@ -984,7 +984,7 @@ export default function TrainingProgramPage() {
                         description: isEn
                             ? "Marketing doesn't start with the product or the channel — it starts with people. You'll grasp why it's critical to start marketing with audience insight."
                             : 'Pazarlama ürünle ya da kanalla değil, insanla başlar. Pazarlamayı hedef kitle içgörüsüyle başlatmanın neden kritik olduğunu kavrarsınız.',
-                        image: isFleetRentalTraining ? '/fleet-rental-hero.png' : isB2BTraining ? '/b2b2.avif' : isIndustrialFoodTraining ? '/industrial-food-hero.png' : isFintechTraining ? '/fintech-hero.png' : isSoftwareTraining ? '/software-hero.png' : isEnergyTraining ? '/energy-hero.png' : isInteriorDesignTraining ? '/interior-design-hero.png' : '/growth_strategies_handshake.png',
+                        image: isFleetRentalTraining ? '/fleet-rental-hero.webp' : isB2BTraining ? '/b2b2.avif' : isIndustrialFoodTraining ? '/industrial-food-hero.webp' : isFintechTraining ? '/fintech-hero.webp' : isSoftwareTraining ? '/software-hero.webp' : isEnergyTraining ? '/energy-hero.webp' : isInteriorDesignTraining ? '/interior-design-hero.webp' : '/growth_strategies_handshake.webp',
                         buttonText: isEn ? 'Buy Now' : 'Satın Al',
                         buttonLink: '#pricing'
                     },
@@ -992,7 +992,7 @@ export default function TrainingProgramPage() {
                         title: isEn ? 'Strategy, Audience,\nand Value Proposition' : 'Strateji, Hedef Kitle Ve\nDeğer Önerisi',
                         subtitle: '',
                         description: isEn ? 'Build stronger messaging and learn how to reach each audience with a clearer value proposition.' : 'Doğru mesajları oluşturmayı ve hedef kitleye net bir değer önerisiyle ulaşmayı keşfedersiniz.',
-                        image: isFleetRentalTraining ? '/innovation_difference.png' : isB2BTraining ? '/innovation_difference.png' : isIndustrialFoodTraining ? '/about-hero.png' : isFintechTraining ? '/innovation_difference.png' : isSoftwareTraining ? '/innovation_difference.png' : isEnergyTraining ? '/about-hero.png' : isInteriorDesignTraining ? '/about-hero.png' : isManufacturingTraining ? '/manufacturing-hero.png' : '/data_driven_marketing.png',
+                        image: isFleetRentalTraining ? '/innovation_difference.webp' : isB2BTraining ? '/innovation_difference.webp' : isIndustrialFoodTraining ? '/about-hero.webp' : isFintechTraining ? '/innovation_difference.webp' : isSoftwareTraining ? '/innovation_difference.webp' : isEnergyTraining ? '/about-hero.webp' : isInteriorDesignTraining ? '/about-hero.webp' : isManufacturingTraining ? '/manufacturing-hero.webp' : '/data_driven_marketing.webp',
                         buttonText: isEn ? 'Buy Now' : 'Satın Al',
                         buttonLink: '#pricing'
                     },
@@ -1000,7 +1000,7 @@ export default function TrainingProgramPage() {
                         title: isEn ? 'Measurement\nand Goals' : 'Ölçüm Ve\nHedefler',
                         subtitle: '',
                         description: isEn ? 'Understand the metrics that define success and use them to shape more effective growth decisions.' : 'Başarıyı belirleyen metrikleri analiz ederek, büyüme odaklı pazarlama stratejilerini şekillendirmeyi öğrenirsiniz.',
-                        image: isFleetRentalTraining ? '/data_driven_marketing.png' : isB2BTraining ? '/data_driven_marketing.png' : isIndustrialFoodTraining ? '/why-khilon.png' : isFintechTraining ? '/data_driven_marketing.png' : isSoftwareTraining ? '/data_driven_marketing.png' : isEnergyTraining ? '/why-khilon.png' : isInteriorDesignTraining ? '/why-khilon.png' : '/potential-cta.webp',
+                        image: isFleetRentalTraining ? '/data_driven_marketing.webp' : isB2BTraining ? '/data_driven_marketing.webp' : isIndustrialFoodTraining ? '/why-khilon.webp' : isFintechTraining ? '/data_driven_marketing.webp' : isSoftwareTraining ? '/data_driven_marketing.webp' : isEnergyTraining ? '/why-khilon.webp' : isInteriorDesignTraining ? '/why-khilon.webp' : '/potential-cta.webp',
                         buttonText: isEn ? 'Buy Now' : 'Satın Al',
                         buttonLink: '#pricing'
                     },
@@ -1008,7 +1008,7 @@ export default function TrainingProgramPage() {
                         title: isEn ? 'Digital Infrastructure\nand Sales' : 'Dijital Altyapı\nVe Satış',
                         subtitle: '',
                         description: isEn ? 'See how digital infrastructure, lead capture, and sales execution connect into one integrated revenue system.' : 'Dijital altyapıdan lead toplamaya ve satışa kadar tüm süreci uçtan uca pazarlama-satış entegrasyonuyla görürsünüz.',
-                        image: isFleetRentalTraining ? '/service-model.png' : isB2BTraining ? '/service-model.png' : isIndustrialFoodTraining ? '/service-model.png' : isFintechTraining ? '/service-model.png' : isSoftwareTraining ? '/service-model.png' : isEnergyTraining ? '/service-model.png' : isInteriorDesignTraining ? '/service-model.png' : isManufacturingTraining ? '/service-model.png' : '/hero-image.png',
+                        image: isFleetRentalTraining ? '/service-model.webp' : isB2BTraining ? '/service-model.webp' : isIndustrialFoodTraining ? '/service-model.webp' : isFintechTraining ? '/service-model.webp' : isSoftwareTraining ? '/service-model.webp' : isEnergyTraining ? '/service-model.webp' : isInteriorDesignTraining ? '/service-model.webp' : isManufacturingTraining ? '/service-model.webp' : '/hero-image.webp',
                         buttonText: isEn ? 'Buy Now' : 'Satın Al',
                         buttonLink: '#pricing'
                     }

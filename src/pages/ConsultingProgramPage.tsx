@@ -364,7 +364,7 @@ export default function ConsultingProgramPage() {
             description: consultingSummary,
             buttonText: isEn ? 'Start Consulting' : 'Danışmanlığı Başlat',
             buttonLink: '#pricing',
-            image: '/hero-image.png',
+            image: '/hero-image.webp',
             badgeText: isEn ? 'On-Site Consulting' : 'Şirketinizde Danışmanlık',
             badgeIcon: <HiBriefcase />
         },
@@ -520,7 +520,7 @@ export default function ConsultingProgramPage() {
                     description: isEn
                         ? 'Learn the first steps of customer acquisition and the growth-minded go-to-market moves that create momentum.'
                         : 'Müşteri kazanımına giden ilk adımları keşfederek pazarlama ve büyüme odaklı giriş stratejilerini öğrenirsiniz.',
-                    image: '/growth_strategies_handshake.png',
+                    image: '/growth_strategies_handshake.webp',
                     buttonText: isEn ? 'Get Started' : 'Başlayın',
                     buttonLink: '#pricing'
                 },
@@ -530,7 +530,7 @@ export default function ConsultingProgramPage() {
                     description: isEn
                         ? 'Build stronger messaging and learn how to reach each audience with a clearer value proposition.'
                         : 'Doğru mesajları oluşturmayı ve hedef kitleye net bir değer önerisiyle ulaşmayı keşfedersiniz.',
-                    image: '/data_driven_marketing.png',
+                    image: '/data_driven_marketing.webp',
                     buttonText: isEn ? 'Get Started' : 'Başlayın',
                     buttonLink: '#pricing'
                 },
@@ -540,7 +540,7 @@ export default function ConsultingProgramPage() {
                     description: isEn
                         ? 'Understand the metrics that define success and use them to shape more effective growth decisions.'
                         : 'Başarıyı belirleyen metrikleri analiz ederek, büyüme odaklı pazarlama stratejilerini şekillendirmeyi öğrenirsiniz.',
-                    image: '/why-khilon.png',
+                    image: '/why-khilon.webp',
                     buttonText: isEn ? 'Get Started' : 'Başlayın',
                     buttonLink: '#pricing'
                 },
@@ -550,7 +550,7 @@ export default function ConsultingProgramPage() {
                     description: isEn
                         ? 'See how digital infrastructure, lead capture, and sales execution connect into one integrated revenue system.'
                         : 'Dijital altyapıdan lead toplamaya ve satışa kadar tüm süreci uçtan uca pazarlama-satış entegrasyonuyla görürsünüz.',
-                    image: '/service-model.png',
+                    image: '/service-model.webp',
                     buttonText: isEn ? 'Get Started' : 'Başlayın',
                     buttonLink: '#pricing'
                 }

@@ -530,7 +530,7 @@ export default function About() {
                                 pageSlug={cmsSlug}
                                 fieldKey="service_model_image"
                                 type="image"
-                                src="/service-model.png"
+                                src="/service-model.webp"
                                 currentLang={currentLang}
                             >
                                 {(src) => <img src={src} alt={staticCopy.modelImageAlt} width={800} height={600} loading="lazy" className="rounded-img" />}
@@ -651,7 +651,7 @@ export default function About() {
                                 pageSlug={cmsSlug}
                                 fieldKey="not_suitable_image"
                                 type="image"
-                                src="/not-suitable.png"
+                                src="/not-suitable.webp"
                                 currentLang={currentLang}
                             >
                                 {(src) => <img src={src} alt={staticCopy.notSuitableAlt} width={800} height={600} loading="lazy" className="rounded-img shadow-lg" />}

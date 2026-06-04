@@ -279,7 +279,7 @@ export default function SeoService() {
             description: 'With khilonfast SEO services, improve technical health, keyword relevance, and content quality to drive sustainable organic growth.',
             buttonText: 'Start Now',
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/seo-yonetimi/hero.png',
+            image: '/images/hizmetlerimiz/seo-yonetimi/hero.webp',
             hideBadge: true,
             badgeText: 'Higher Rankings. Stronger Organic Momentum.',
             badgeIcon: <HiGlobeAlt />,

@@ -45,7 +45,7 @@ export default function GoToMarket() {
             description: t('serviceGTM.hero.description'),
             buttonText: t('serviceGTM.hero.buttonText'),
             buttonLink: '#pricing',
-            image: '/images/hizmetlerimiz/go-to-market-stratejisi/hero.png',
+            image: '/images/hizmetlerimiz/go-to-market-stratejisi/hero.webp',
             hideBadge: true,
             badgeText: t('serviceGTM.hero.badgeText'),
             badgeIcon: <HiRocketLaunch />,
