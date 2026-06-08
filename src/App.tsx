@@ -1,4 +1,4 @@
-import { useLayoutEffect, lazy, Suspense } from 'react'
+import { useLayoutEffect, useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation, matchPath, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import type { ReactElement } from 'react'
@@ -317,6 +317,25 @@ function MainContent() {
         }
         document.documentElement.lang = routeLang;
     }, [routeLang, i18n]);
+
+    // SPA sayfa görüntüleme köprüsü — her route değişiminde GTM'e bildir.
+    // GA4, Meta Pixel ve LinkedIn Insight bu tek 'spa_page_view' event'ini
+    // ortak tetikleyici olarak kullanır (SPA geçişlerinde PageView ateşlenmesi için).
+    // Admin paneli analitiğe dahil edilmez.
+    useEffect(() => {
+        if (typeof window === 'undefined' || isAdminRoute) return;
+        // title'ın güncellenmesi için bir tik bekle (SeoHead route sonrası set ediyor)
+        const id = window.setTimeout(() => {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'spa_page_view',
+                page_path: location.pathname + location.search,
+                page_location: window.location.href,
+                page_title: document.title
+            });
+        }, 50);
+        return () => window.clearTimeout(id);
+    }, [location.pathname, location.search, isAdminRoute]);
 
     useLayoutEffect(() => {
         normalizeBrandTextNodes();
