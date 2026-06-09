@@ -1388,22 +1388,16 @@ if ($action === 'consultants') {
         $stmt = $db->prepare("INSERT INTO consultant_availability (consultant_id, service_id, available_date, start_time, end_time) VALUES (?,?,?,?,?)");
         $inserted = 0;
         foreach ($slots as $s) {
-            // 60 dakikadan uzun aralıkları 1'er saatlik dilimlere böl
-            // → kullanıcı geniş aralık yerine exact saat seçer (docx beklentisi).
+            // ÖNEMLİ: Aralığı OLDUĞU GİBİ tek satır sakla (1 saate BÖLME).
+            // generateSlotsForService() müsaitliği servis süresine göre dinamik dilimler:
+            //   - 1 saatlik (slot/60) → 10-11,11-12,...   - 3 saatlik (slot/180) → 10-13,11-14,...
+            //   - tam gün (fixed_day 10-16) → aralık 10-16'yı kapsadığı için tek blok.
+            // Eskiden 1'er saate bölünüyordu; bu 3 saatlik ve tam gün servisleri 0 slota düşürüyordu.
             $start = strtotime((string)($s['start_time'] ?? ''));
             $end   = strtotime((string)($s['end_time'] ?? ''));
-            if ($start === false || $end === false || $end <= $start) {
-                $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], $s['start_time'], $s['end_time']]);
-                $inserted++;
-                continue;
-            }
-            $cur = $start;
-            while ($cur < $end) {
-                $next = min($cur + 3600, $end);
-                $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], date('H:i:s', $cur), date('H:i:s', $next)]);
-                $inserted++;
-                $cur = $next;
-            }
+            if ($start === false || $end === false || $end <= $start) continue; // geçersiz aralık → atla
+            $stmt->execute([$id, $s['service_id'] ?? null, $s['available_date'], $s['start_time'], $s['end_time']]);
+            $inserted++;
         }
         sendResponse(['success' => true, 'count' => $inserted]);
     }

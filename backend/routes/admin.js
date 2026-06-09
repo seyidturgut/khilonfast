@@ -1312,27 +1312,21 @@ router.post('/consultants/:id/availability', authMiddleware, adminMiddleware, as
     const consultantId = req.params.id;
     if (!slots || !slots.length) return res.status(400).json({ error: 'slots array required' });
     try {
-        // 60 dakikadan uzun aralıkları 1'er saatlik dilimlere böl
-        // → kullanıcı geniş aralık yerine exact saat seçer (docx beklentisi).
+        // ÖNEMLİ: Aralığı OLDUĞU GİBİ tek satır sakla (1 saate BÖLME).
+        // generateSlotsForService() müsaitliği servis süresine göre dinamik dilimler
+        // (1sa→60dk slot, 3sa→180dk slot, tam gün→fixed_day bloğu). Eskiden 1'er saate
+        // bölünüyordu; bu 3 saatlik ve tam gün servisleri 0 slota düşürüyordu.
         const toSec = (t) => {
             const [h, m, s] = String(t || '').split(':').map(Number);
             return (h || 0) * 3600 + (m || 0) * 60 + (s || 0);
         };
-        const fmt = (sec) => {
-            const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
-            return [h, m, s].map(n => String(n).padStart(2, '0')).join(':');
-        };
         const values = [];
         for (const s of slots) {
             const start = toSec(s.start_time), end = toSec(s.end_time);
-            if (!end || end <= start) {
-                values.push([consultantId, s.service_id || null, s.available_date, s.start_time, s.end_time]);
-                continue;
-            }
-            for (let cur = start; cur < end; cur += 3600) {
-                values.push([consultantId, s.service_id || null, s.available_date, fmt(cur), fmt(Math.min(cur + 3600, end))]);
-            }
+            if (!end || end <= start) continue; // geçersiz aralık → atla
+            values.push([consultantId, s.service_id || null, s.available_date, s.start_time, s.end_time]);
         }
+        if (!values.length) return res.status(400).json({ error: 'geçerli slot yok' });
         await db.query(
             'INSERT INTO consultant_availability (consultant_id, service_id, available_date, start_time, end_time) VALUES ?',
             [values]

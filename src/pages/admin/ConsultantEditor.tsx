@@ -244,6 +244,8 @@ function ServiceFormPanel({
                                 <option value={45}>45 dakika</option>
                                 <option value={60}>60 dakika</option>
                                 <option value={90}>90 dakika</option>
+                                <option value={120}>120 dakika (2 saat)</option>
+                                <option value={180}>180 dakika (3 saat)</option>
                             </select>
                         </div>
                     )}
@@ -337,6 +339,15 @@ export default function ConsultantEditor() {
     const [slotDate, setSlotDate] = useState('');
     const [slotTimes, setSlotTimes] = useState([{ start: '09:00', end: '10:00' }]);
     const [addingSlots, setAddingSlots] = useState(false);
+
+    // ── Haftalık toplu müsaitlik (tarih aralığı + günler) ──
+    // weekday index: 0=Pazar ... 6=Cumartesi (JS Date.getDay ile uyumlu). Varsayılan Pzt/Sal/Çarş.
+    const [bulkStart, setBulkStart] = useState('');
+    const [bulkEnd, setBulkEnd] = useState('');
+    const [bulkDays, setBulkDays] = useState<number[]>([1, 2, 3]);
+    const [bulkTimeStart, setBulkTimeStart] = useState('10:00');
+    const [bulkTimeEnd, setBulkTimeEnd] = useState('17:00');
+    const [bulkAdding, setBulkAdding] = useState(false);
 
     const token = () => localStorage.getItem('token') || '';
     const authHeaders = () => ({ Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' });
@@ -524,6 +535,38 @@ export default function ConsultantEditor() {
         setSlotTimes([{ start: '09:00', end: '17:00' }]);
         setAddingSlots(false);
         fetchSlots();
+    };
+
+    // Tarih aralığı + seçili haftanın günleri için tek-parça müsaitlik üret ve toplu ekle.
+    // Örn. 2026-06-29 → 2026-07-29, Pzt/Sal/Çarş, 10:00-17:00 → 15 tek-parça kayıt.
+    const bulkAdd = async () => {
+        if (!bulkStart || !bulkEnd || !bulkDays.length) return;
+        if (bulkTimeEnd <= bulkTimeStart) { alert('Bitiş saati başlangıçtan sonra olmalı.'); return; }
+        const start = new Date(bulkStart + 'T00:00:00');
+        const end = new Date(bulkEnd + 'T00:00:00');
+        if (end < start) { alert('Bitiş tarihi başlangıçtan önce olamaz.'); return; }
+        const payload: { available_date: string; start_time: string; end_time: string }[] = [];
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            if (bulkDays.includes(d.getDay())) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                payload.push({ available_date: `${y}-${m}-${day}`, start_time: bulkTimeStart, end_time: bulkTimeEnd });
+            }
+        }
+        if (!payload.length) { alert('Seçilen aralıkta uygun gün bulunamadı.'); return; }
+        if (!confirm(`${payload.length} güne ${bulkTimeStart}-${bulkTimeEnd} müsaitlik eklenecek. Onaylıyor musunuz?`)) return;
+        setBulkAdding(true);
+        try {
+            await fetch(`${ADMIN_API_BASE}/admin/consultants/${id}/availability`, {
+                method: 'POST', headers: authHeaders(), body: JSON.stringify({ slots: payload })
+            });
+            fetchSlots();
+        } catch (e) {
+            console.error(e); alert('Toplu ekleme sırasında hata oluştu.');
+        } finally {
+            setBulkAdding(false);
+        }
     };
 
     const deleteSlot = async (sid: number, status: string) => {
@@ -986,6 +1029,61 @@ export default function ConsultantEditor() {
                                     {addingSlots ? '⏳ Ekleniyor...' : `📅 ${slotTimes.length} Müsaitlik Aralığı Ekle`}
                                 </button>
                             </div>
+                        </div>
+
+                        {/* Haftalık toplu müsaitlik — tarih aralığı + günler */}
+                        <div style={{ ...S.card, borderColor: '#c7d2fe', background: '#f8faff' }}>
+                            <h3 style={{ ...S.sectionTitle, color: '#4338ca' }}>🗓️ Haftalık Toplu Müsaitlik Ekle</h3>
+                            <p style={{ fontSize: '0.8rem', color: '#6b7280', margin: '0 0 12px' }}>
+                                Bir tarih aralığı + haftanın günlerini seçin; o günlere aynı saat aralığı tek seferde eklenir
+                                (örn. 29 Haz–29 Tem, Pzt/Sal/Çarş, 10:00–17:00).
+                            </p>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, alignItems: 'flex-end' }}>
+                                <div>
+                                    <label style={S.label}>Başlangıç Tarihi</label>
+                                    <input type="date" style={{ ...S.input, maxWidth: 180 }} value={bulkStart}
+                                        onChange={e => setBulkStart(e.target.value)} />
+                                </div>
+                                <div>
+                                    <label style={S.label}>Bitiş Tarihi</label>
+                                    <input type="date" style={{ ...S.input, maxWidth: 180 }} value={bulkEnd}
+                                        onChange={e => setBulkEnd(e.target.value)} />
+                                </div>
+                                <div>
+                                    <label style={S.label}>Saat Aralığı</label>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        <input type="time" style={{ ...S.input, width: 120 }} value={bulkTimeStart}
+                                            onChange={e => setBulkTimeStart(e.target.value)} />
+                                        <span style={{ color: '#9ca3af' }}>→</span>
+                                        <input type="time" style={{ ...S.input, width: 120 }} value={bulkTimeEnd}
+                                            onChange={e => setBulkTimeEnd(e.target.value)} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ marginTop: 14 }}>
+                                <label style={S.label}>Günler</label>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                    {[['Pzt', 1], ['Sal', 2], ['Çar', 3], ['Per', 4], ['Cum', 5], ['Cmt', 6], ['Paz', 0]].map(([lbl, dv]) => {
+                                        const dval = dv as number;
+                                        const on = bulkDays.includes(dval);
+                                        return (
+                                            <button key={dval} type="button"
+                                                onClick={() => setBulkDays(on ? bulkDays.filter(x => x !== dval) : [...bulkDays, dval])}
+                                                style={{
+                                                    padding: '6px 14px', borderRadius: 20, fontSize: '0.85rem', cursor: 'pointer',
+                                                    border: `1px solid ${on ? '#4338ca' : '#d1d5db'}`,
+                                                    background: on ? '#4338ca' : '#fff', color: on ? '#fff' : '#6b7280', fontWeight: on ? 600 : 400
+                                                }}>
+                                                {lbl as string}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                            <button onClick={bulkAdd} disabled={!bulkStart || !bulkEnd || !bulkDays.length || bulkAdding}
+                                style={{ ...S.btnPrimary, width: 'fit-content', marginTop: 16, opacity: (!bulkStart || !bulkEnd || !bulkDays.length) ? 0.5 : 1 }}>
+                                {bulkAdding ? '⏳ Ekleniyor...' : '🗓️ Toplu Müsaitlik Ekle'}
+                            </button>
                         </div>
 
                         {/* Existing slots grouped by date */}
