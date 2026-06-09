@@ -10,14 +10,18 @@ import './ConsultantDetail.css'
 interface SubPackage {
     id: number
     title: string
+    title_en?: string | null
     description: string
+    description_en?: string | null
     scope_items: string | string[]
+    scope_items_en?: string | string[] | null
     duration_text: string
     sessions_text: string | null
     price: number
     currency: string
     plus_vat: boolean
     cta_text: string
+    cta_text_en?: string | null
     badge_text: string | null
     booking_type?: 'slot' | 'fixed_day' | 'lead_form'
     duration_minutes?: number | null
@@ -29,14 +33,18 @@ interface Service {
     id: number
     category: string
     title: string
+    title_en?: string | null
     description: string
+    description_en?: string | null
     scope_items: string | string[]
+    scope_items_en?: string | string[] | null
     duration_text: string
     sessions_text: string | null
     price: number
     currency: string
     plus_vat: boolean
     cta_text: string
+    cta_text_en?: string | null
     badge_text: string | null
     sub_packages: SubPackage[]
     booking_type?: 'slot' | 'fixed_day' | 'lead_form'
@@ -125,7 +133,11 @@ interface ServiceCardProps {
 }
 
 function ServiceCard({ service, isSubPackage = false, isEn, onBook }: ServiceCardProps) {
-    const scopeItems = parseScopeItems(service.scope_items)
+    // EN locale → varsa _en alanını kullan, yoksa TR'ye düş (fallback).
+    const title = (isEn && service.title_en) ? service.title_en : service.title
+    const description = (isEn && service.description_en) ? service.description_en : service.description
+    const scopeItems = parseScopeItems((isEn && service.scope_items_en) ? service.scope_items_en : service.scope_items)
+    const ctaText = (isEn && service.cta_text_en) ? service.cta_text_en : service.cta_text
 
     return (
         <div className={`service-card${isSubPackage ? ' sub-package' : ''}`}>
@@ -133,9 +145,9 @@ function ServiceCard({ service, isSubPackage = false, isEn, onBook }: ServiceCar
                 {service.badge_text && (
                     <div className="badge-popular">{service.badge_text}</div>
                 )}
-                <h4 className="service-card-title">{service.title}</h4>
-                {service.description && (
-                    <p className="service-card-desc">{service.description}</p>
+                <h4 className="service-card-title">{title}</h4>
+                {description && (
+                    <p className="service-card-desc">{description}</p>
                 )}
                 {scopeItems.length > 0 && (
                     <ul className="scope-list">
@@ -165,18 +177,18 @@ function ServiceCard({ service, isSubPackage = false, isEn, onBook }: ServiceCar
                     className="service-cta-btn"
                     onClick={() => onBook({
                         id: service.id,
-                        title: service.title,
+                        title: title,
                         price: service.price,
                         currency: service.currency,
                         plus_vat: service.plus_vat,
-                        cta_text: service.cta_text,
+                        cta_text: ctaText,
                         booking_type: service.booking_type,
                         duration_minutes: service.duration_minutes,
                         fixed_start_time: service.fixed_start_time,
                         fixed_end_time: service.fixed_end_time
                     })}
                 >
-                    {service.cta_text || (isEn ? 'Book Now' : 'Rezervasyon Yap')}
+                    {ctaText || (isEn ? 'Book Now' : 'Rezervasyon Yap')}
                 </button>
             </div>
         </div>
@@ -383,7 +395,11 @@ export default function ConsultantDetail() {
                                 </h2>
                             </div>
                             {ustDuzeyServices.map((service) => {
-                                const scopeItems = parseScopeItems(service.scope_items)
+                                // EN locale → varsa _en, yoksa TR fallback.
+                                const sTitle = (isEn && service.title_en) ? service.title_en : service.title
+                                const sDesc = (isEn && service.description_en) ? service.description_en : service.description
+                                const sCta = (isEn && service.cta_text_en) ? service.cta_text_en : service.cta_text
+                                const scopeItems = parseScopeItems((isEn && service.scope_items_en) ? service.scope_items_en : service.scope_items)
                                 const hasSubPackages = service.sub_packages && service.sub_packages.length > 0
                                 return (
                                     <div key={service.id} className="ust-duzey-block">
@@ -391,9 +407,9 @@ export default function ConsultantDetail() {
                                             {service.badge_text && (
                                                 <div className="badge-popular">{service.badge_text}</div>
                                             )}
-                                            <h3 className="ust-duzey-title">{service.title}</h3>
-                                            {service.description && (
-                                                <p className="ust-duzey-desc">{service.description}</p>
+                                            <h3 className="ust-duzey-title">{sTitle}</h3>
+                                            {sDesc && (
+                                                <p className="ust-duzey-desc">{sDesc}</p>
                                             )}
                                             {scopeItems.length > 0 && (
                                                 <ul className="scope-list">
@@ -434,18 +450,18 @@ export default function ConsultantDetail() {
                                                     className="service-cta-btn"
                                                     onClick={() => handleBook({
                                                         id: service.id,
-                                                        title: service.title,
+                                                        title: sTitle,
                                                         price: service.price,
                                                         currency: service.currency,
                                                         plus_vat: service.plus_vat,
-                                                        cta_text: service.cta_text,
+                                                        cta_text: sCta,
                                                         booking_type: service.booking_type,
                                                         duration_minutes: service.duration_minutes,
                                                         fixed_start_time: service.fixed_start_time,
                                                         fixed_end_time: service.fixed_end_time
                                                     })}
                                                 >
-                                                    {service.cta_text || (isEn ? 'Book Now' : 'Rezervasyon Yap')}
+                                                    {sCta || (isEn ? 'Book Now' : 'Rezervasyon Yap')}
                                                 </button>
                                             </div>
                                         )}

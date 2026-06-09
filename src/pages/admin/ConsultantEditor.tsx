@@ -36,14 +36,18 @@ interface ServiceForm {
     category: string;
     parent_service_id: string;
     title: string;
+    title_en: string;
     description: string;
+    description_en: string;
     scope_items: string[];
+    scope_items_en: string[];
     duration_text: string;
     sessions_text: string;
     price: number;
     currency: string;
     plus_vat: boolean;
     cta_text: string;
+    cta_text_en: string;
     badge_text: string;
     sort_order: number;
     is_active: boolean;
@@ -55,10 +59,10 @@ interface ServiceForm {
 }
 
 const emptyService = (): ServiceForm => ({
-    category: 'hizli', parent_service_id: '', title: '', description: '',
-    scope_items: [], duration_text: '', sessions_text: '',
+    category: 'hizli', parent_service_id: '', title: '', title_en: '', description: '', description_en: '',
+    scope_items: [], scope_items_en: [], duration_text: '', sessions_text: '',
     price: 0, currency: 'TRY', plus_vat: true,
-    cta_text: '', badge_text: '', sort_order: 0, is_active: true,
+    cta_text: '', cta_text_en: '', badge_text: '', sort_order: 0, is_active: true,
     booking_type: 'slot', duration_minutes: 60, fixed_start_time: '10:00', fixed_end_time: '16:00', slot_interval_minutes: 60,
 });
 
@@ -169,8 +173,8 @@ function ServiceFormPanel({
             </div>
             <div style={S.grid2}>
                 <div>
-                    <label style={S.label}>Başlık *</label>
-                    <input style={S.input} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Strategy Mentoring Session" />
+                    <label style={S.label}>Başlık (TR) *</label>
+                    <input style={S.input} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Yönetim Kurulu Strateji Oturumu" />
                 </div>
                 <div>
                     <label style={S.label}>Rozet (opsiyonel)</label>
@@ -178,12 +182,24 @@ function ServiceFormPanel({
                 </div>
             </div>
             <div>
-                <label style={S.label}>Açıklama</label>
+                <label style={{ ...S.label, color: '#2563eb' }}>🇬🇧 Başlık (EN)</label>
+                <input style={S.input} value={form.title_en} onChange={e => setForm({ ...form, title_en: e.target.value })} placeholder="Board Strategy Session" />
+            </div>
+            <div>
+                <label style={S.label}>Açıklama (TR)</label>
                 <textarea rows={2} style={S.textarea} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="60 Dakikalık Strateji Mentorluk" />
             </div>
             <div>
-                <label style={S.label}>Kapsam Maddeleri</label>
+                <label style={{ ...S.label, color: '#2563eb' }}>🇬🇧 Açıklama (EN)</label>
+                <textarea rows={2} style={S.textarea} value={form.description_en} onChange={e => setForm({ ...form, description_en: e.target.value })} placeholder="A 60-minute strategy mentoring session" />
+            </div>
+            <div>
+                <label style={S.label}>Kapsam Maddeleri (TR)</label>
                 <ScopeEditor items={form.scope_items} onChange={v => setForm({ ...form, scope_items: v })} />
+            </div>
+            <div>
+                <label style={{ ...S.label, color: '#2563eb' }}>🇬🇧 Kapsam Maddeleri (EN)</label>
+                <ScopeEditor items={form.scope_items_en} onChange={v => setForm({ ...form, scope_items_en: v })} />
             </div>
             <div style={S.grid4}>
                 <div>
@@ -254,13 +270,20 @@ function ServiceFormPanel({
             </div>
             <div style={S.grid2}>
                 <div>
-                    <label style={S.label}>CTA Butonu</label>
+                    <label style={S.label}>CTA Butonu (TR)</label>
                     <input style={S.input} value={form.cta_text} onChange={e => setForm({ ...form, cta_text: e.target.value })} placeholder="Seans Planla" />
                 </div>
+                <div>
+                    <label style={{ ...S.label, color: '#2563eb' }}>🇬🇧 CTA Butonu (EN)</label>
+                    <input style={S.input} value={form.cta_text_en} onChange={e => setForm({ ...form, cta_text_en: e.target.value })} placeholder="Book Now" />
+                </div>
+            </div>
+            <div style={S.grid2}>
                 <div>
                     <label style={S.label}>Sıra</label>
                     <input type="number" style={S.input} value={form.sort_order} onChange={e => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} />
                 </div>
+                <div />
             </div>
             <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.88rem', cursor: 'pointer' }}>
@@ -432,10 +455,12 @@ export default function ConsultantEditor() {
         const scopeItems = parseScopeItems(s.scope_items);
         setServiceForm({
             id: s.id, category: s.category, parent_service_id: s.parent_service_id ? String(s.parent_service_id) : '',
-            title: s.title, description: s.description || '', scope_items: scopeItems,
+            title: s.title, title_en: s.title_en || '',
+            description: s.description || '', description_en: s.description_en || '',
+            scope_items: scopeItems, scope_items_en: parseScopeItems(s.scope_items_en),
             duration_text: s.duration_text || '', sessions_text: s.sessions_text || '',
             price: parseFloat(s.price) || 0, currency: s.currency || 'TRY',
-            plus_vat: Boolean(s.plus_vat), cta_text: s.cta_text || '',
+            plus_vat: Boolean(s.plus_vat), cta_text: s.cta_text || '', cta_text_en: s.cta_text_en || '',
             badge_text: s.badge_text || '', sort_order: s.sort_order || 0, is_active: Boolean(s.is_active),
             booking_type: (s.booking_type === 'fixed_day' || s.booking_type === 'lead_form') ? s.booking_type : 'slot',
             duration_minutes: s.duration_minutes != null ? Number(s.duration_minutes) : 60,
@@ -455,6 +480,7 @@ export default function ConsultantEditor() {
             // ÖNEMLİ: array olarak gönder — backend json_encode eder. Burada JSON.stringify
             // yaparsak backend tekrar sarar ve "double-encode" bug'ı oluşur (scope_items bozulur).
             scope_items: Array.isArray(serviceForm.scope_items) ? serviceForm.scope_items : [],
+            scope_items_en: Array.isArray(serviceForm.scope_items_en) ? serviceForm.scope_items_en : [],
         };
         if (editingServiceId) {
             await fetch(`${ADMIN_API_BASE}/admin/consultant-services/${editingServiceId}`, {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
-import { HiPlus, HiPencil, HiEye, HiEyeOff } from 'react-icons/hi';
+import { HiPlus, HiPencil, HiEye, HiEyeOff, HiTrash } from 'react-icons/hi';
 
 export default function ConsultantList() {
     const ADMIN_API_BASE = import.meta.env.VITE_API_URL || '/api';
@@ -37,6 +37,26 @@ export default function ConsultantList() {
             body: JSON.stringify({ ...consultant, sectors: consultant.sectors || [], is_active: current ? 0 : 1 })
         });
         fetchConsultants();
+    };
+
+    const deleteConsultant = async (id: number, name: string) => {
+        if (!window.confirm(`"${name}" danışmanını kalıcı olarak silmek istediğinize emin misiniz?\n\nDanışmanın hizmetleri, müsaitlikleri ve takvim kayıtları da silinir. Bu işlem geri alınamaz.\n(Aktif rezervasyonu varsa silinmez — önce pasife alın.)`)) return;
+        const token = localStorage.getItem('token');
+        try {
+            const res = await fetch(`${ADMIN_API_BASE}/admin/consultants/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || data.success === false) {
+                alert(data.error || 'Danışman silinemedi.');
+                return;
+            }
+            fetchConsultants();
+        } catch (err) {
+            console.error(err);
+            alert('Danışman silinirken bir hata oluştu.');
+        }
     };
 
     return (
@@ -94,6 +114,11 @@ export default function ConsultantList() {
                                                 style={{ background: '#1e3a5f', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.85rem' }}>
                                                 <HiPencil /> Düzenle
                                             </Link>
+                                            <button onClick={() => deleteConsultant(c.id, c.name)}
+                                                title="Sil"
+                                                style={{ background: 'none', border: '1px solid #f3c2c2', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', color: '#c62828' }}>
+                                                <HiTrash />
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

@@ -1339,7 +1339,30 @@ if ($action === 'consultants') {
         sendResponse(['success'=>true]);
     }
     if ($method === 'DELETE' && !empty($id) && empty($subAction)) {
-        $db->prepare("DELETE FROM consultant_services WHERE consultant_id=?")->execute([$id]);
+        // Güvenlik: aktif/onaylı (iptal edilmemiş) rezervasyonu olan danışman SİLİNEMEZ.
+        // Ödenmiş/planlı randevu kaydı kaybolmasın — admin önce pasife alıp randevuları kapatmalı.
+        try {
+            $chk = $db->prepare("SELECT COUNT(*) FROM consultant_bookings WHERE consultant_id=? AND status NOT IN ('cancelled','canceled')");
+            $chk->execute([$id]);
+            $activeBookings = (int)$chk->fetchColumn();
+        } catch (Throwable $e) {
+            $activeBookings = 0; // tablo yoksa engelleme
+        }
+        if ($activeBookings > 0) {
+            sendResponse([
+                'success' => false,
+                'error'   => "Bu danışmanın {$activeBookings} aktif rezervasyonu var. Önce randevuları iptal edin veya danışmanı pasife alın."
+            ], 409);
+        }
+        // İlişkili kayıtları temizle, sonra danışmanı sil (idempotent — tablo yoksa sessiz geç).
+        foreach ([
+            "DELETE FROM consultant_services WHERE consultant_id=?",
+            "DELETE FROM consultant_availability WHERE consultant_id=?",
+            "DELETE FROM consultant_ical_busy WHERE consultant_id=?",
+            "DELETE FROM consultant_bookings WHERE consultant_id=?",
+        ] as $sql) {
+            try { $db->prepare($sql)->execute([$id]); } catch (Throwable $e) { /* tablo yok — atla */ }
+        }
         $db->prepare("DELETE FROM consultants WHERE id=?")->execute([$id]);
         sendResponse(['success'=>true]);
     }

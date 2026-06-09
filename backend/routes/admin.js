@@ -1143,10 +1143,35 @@ router.put('/consultants/:id', authMiddleware, adminMiddleware, async (req, res)
     }
 });
 
-// DELETE /api/admin/consultants/:id (soft delete)
+// DELETE /api/admin/consultants/:id (hard delete — aktif rezervasyon varsa engelle)
 router.delete('/consultants/:id', authMiddleware, adminMiddleware, async (req, res) => {
+    const id = req.params.id;
     try {
-        await db.query('UPDATE consultants SET is_active=0 WHERE id=?', [req.params.id]);
+        // Güvenlik: aktif/onaylı (iptal edilmemiş) rezervasyonu olan danışman SİLİNEMEZ.
+        let activeBookings = 0;
+        try {
+            const [rows] = await db.query(
+                "SELECT COUNT(*) AS c FROM consultant_bookings WHERE consultant_id=? AND status NOT IN ('cancelled','canceled')",
+                [id]
+            );
+            activeBookings = Number(rows?.[0]?.c || 0);
+        } catch (e) { activeBookings = 0; /* tablo yoksa engelleme */ }
+        if (activeBookings > 0) {
+            return res.status(409).json({
+                success: false,
+                error: `Bu danışmanın ${activeBookings} aktif rezervasyonu var. Önce randevuları iptal edin veya danışmanı pasife alın.`
+            });
+        }
+        // İlişkili kayıtları temizle, sonra danışmanı sil (idempotent — tablo yoksa atla).
+        for (const sql of [
+            'DELETE FROM consultant_services WHERE consultant_id=?',
+            'DELETE FROM consultant_availability WHERE consultant_id=?',
+            'DELETE FROM consultant_ical_busy WHERE consultant_id=?',
+            'DELETE FROM consultant_bookings WHERE consultant_id=?',
+        ]) {
+            try { await db.query(sql, [id]); } catch (e) { /* tablo yok — atla */ }
+        }
+        await db.query('DELETE FROM consultants WHERE id=?', [id]);
         clearCache();
         res.json({ success: true });
     } catch (err) {
