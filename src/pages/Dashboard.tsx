@@ -274,7 +274,8 @@ export default function Dashboard() {
             fetchContents(),
             fetchProfile(),
             fetchCompany(),
-            fetchTrainingRoutes()
+            fetchTrainingRoutes(),
+            fetchBookings()
         ]);
         setLoading(false);
     };
@@ -313,6 +314,49 @@ export default function Dashboard() {
     };
 
     const [subBusyId, setSubBusyId] = useState<number | null>(null);
+
+    // ── Danışmanlık randevuları (müşteri kendi iptal eder) ──
+    const [bookings, setBookings] = useState<any[]>([]);
+    const [bookingBusyId, setBookingBusyId] = useState<number | null>(null);
+
+    const fetchBookings = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_BASE}/profile/consultant-bookings`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const d = await res.json();
+                setBookings(Array.isArray(d.bookings) ? d.bookings : []);
+            } else { setBookings([]); }
+        } catch { setBookings([]); }
+    };
+
+    const cancelBooking = async (bookingId: number) => {
+        const ok = window.confirm(isEn
+            ? 'Your consultation appointment will be cancelled and a refund request will be sent to our team. Continue?'
+            : 'Danışmanlık randevunuz iptal edilecek ve iade talebiniz ekibimize iletilecek. Onaylıyor musunuz?');
+        if (!ok) return;
+        setBookingBusyId(bookingId);
+        setError(''); setMessage('');
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_BASE}/profile/consultant-bookings/${bookingId}/cancel`, {
+                method: 'POST', headers: { Authorization: `Bearer ${token}` }
+            });
+            const d = await res.json().catch(() => ({}));
+            if (res.ok) {
+                setMessage(isEn ? 'Your appointment has been cancelled. Refund request sent.' : 'Randevunuz iptal edildi. İade talebiniz iletildi.');
+                await fetchBookings();
+            } else {
+                setError(d.error || (isEn ? 'Could not cancel.' : 'İptal edilemedi.'));
+            }
+        } catch {
+            setError(isEn ? 'Network error.' : 'Bağlantı hatası.');
+        } finally {
+            setBookingBusyId(null);
+        }
+    };
 
     const cancelSubscription = async (subscriptionId: number) => {
         const ok = window.confirm(isEn
@@ -1031,7 +1075,7 @@ export default function Dashboard() {
                                                             {isEn ? 'Upload Image' : 'Görsel Yükle'}
                                                         </button>
                                                     </div>
-                                                ) : embedUrl ? (
+                                                ) : isTraining && embedUrl ? (
                                                     <div className="content-video-frame">
                                                         <iframe
                                                             src={embedUrl}
@@ -1040,11 +1084,12 @@ export default function Dashboard() {
                                                             allowFullScreen
                                                         />
                                                     </div>
-                                                ) : (
+                                                ) : isTraining ? (
+                                                    // Eğitim ürünü ama video linki henüz yok
                                                     <div className="content-video-placeholder">
                                                         {copy.contents.missingVideo}
                                                     </div>
-                                                )}
+                                                ) : null /* Eğitim-dışı ürün (danışmanlık/GTM/Maestro): video bölümü gösterilmez */}
                                                 {/* Form gerekiyorsa content kartı içinde küçük CTA */}
                                                 {pendingFormByProduct[Number(content.product_id)] && (
                                                     <div style={{ marginTop: 12, padding: 10, background: '#fef3c7', border: '1px solid #fcd34d', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>

@@ -246,4 +246,132 @@ if ($method === 'POST' && $action === 'subscriptions' && !empty($id) && $subActi
     sendResponse(['success' => true, 'message' => 'Otomatik yenileme yeniden aktif edildi.']);
 }
 
+// ─────────────────────────────────────────────
+// GET /api/profile/consultant-bookings — kullanıcının danışmanlık randevuları
+//   (consultant_bookings'te user_id yok → kullanıcının email'i ile eşlenir)
+// ─────────────────────────────────────────────
+if ($method === 'GET' && $action === 'consultant-bookings') {
+    $uStmt = $db->prepare("SELECT email FROM users WHERE id = ? LIMIT 1");
+    $uStmt->execute([$payload['id']]);
+    $email = (string)($uStmt->fetchColumn() ?: '');
+    $rows = [];
+    if ($email !== '') {
+        try {
+            $st = $db->prepare(
+                "SELECT cb.id, cb.start_at, cb.end_at, cb.status, cb.booking_type, cb.created_at, cb.order_id,
+                        c.name AS consultant_name, cs.title AS service_title, cs.title_en AS service_title_en
+                 FROM consultant_bookings cb
+                 LEFT JOIN consultants c ON c.id = cb.consultant_id
+                 LEFT JOIN consultant_services cs ON cs.id = cb.service_id
+                 WHERE cb.email = ?
+                 ORDER BY cb.start_at DESC, cb.id DESC"
+            );
+            $st->execute([$email]);
+            foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $b) {
+                $startAt = $b['start_at'] ?? null;
+                $b['cancellable'] = in_array($b['status'], ['pending', 'confirmed'], true)
+                    && $startAt && strtotime($startAt) >= time() + 48 * 3600;
+                $rows[] = $b;
+            }
+        } catch (Throwable $e) { $rows = []; }
+    }
+    sendResponse(['bookings' => $rows]);
+}
+
+// ─────────────────────────────────────────────
+// POST /api/profile/consultant-bookings/:id/cancel — müşteri kendi randevusunu iptal eder
+//   48 saat kuralı + sahiplik(email) + slot serbest + abonelik iptal + admin'e iade talebi maili
+// ─────────────────────────────────────────────
+if ($method === 'POST' && $action === 'consultant-bookings' && !empty($id) && $subAction === 'cancel') {
+    $bid = (int)$id;
+    $uStmt = $db->prepare("SELECT email, first_name, last_name FROM users WHERE id = ? LIMIT 1");
+    $uStmt->execute([$payload['id']]);
+    $u = $uStmt->fetch();
+    $email = strtolower(trim((string)($u['email'] ?? '')));
+
+    $st = $db->prepare("SELECT * FROM consultant_bookings WHERE id = ? LIMIT 1");
+    $st->execute([$bid]);
+    $booking = $st->fetch();
+    if (!$booking) sendResponse(['error' => 'Randevu bulunamadı'], 404);
+
+    // Sahiplik: randevunun email'i kullanıcının email'i ile aynı olmalı
+    if ($email === '' || strtolower(trim((string)$booking['email'])) !== $email) {
+        sendResponse(['error' => 'Bu randevu size ait değil'], 403);
+    }
+    if (($booking['status'] ?? '') === 'cancelled') sendResponse(['success' => true, 'message' => 'Randevu zaten iptal edilmiş']);
+    if (($booking['status'] ?? '') === 'completed') sendResponse(['error' => 'Tamamlanmış randevu iptal edilemez.'], 409);
+
+    // 48 saat kuralı
+    $startAt = $booking['start_at'] ?? null;
+    if (!$startAt && !empty($booking['availability_id'])) {
+        $a = $db->prepare("SELECT TIMESTAMP(available_date, start_time) FROM consultant_availability WHERE id = ?");
+        $a->execute([$booking['availability_id']]);
+        $startAt = $a->fetchColumn();
+    }
+    if ($startAt && strtotime($startAt) < time() + 48 * 3600) {
+        sendResponse(['error' => 'Randevunuza 48 saatten az kaldığı için buradan iptal edilemez. Lütfen bizimle iletişime geçin.'], 409);
+    }
+
+    try {
+        $db->beginTransaction();
+        // Randevu iptal + iade-bekliyor notu
+        $db->prepare("UPDATE consultant_bookings
+                      SET status='cancelled',
+                          admin_notes = CONCAT(COALESCE(admin_notes,''), ' | Müşteri iptali (iade bekliyor) ', NOW())
+                      WHERE id=?")->execute([$bid]);
+        // Slot serbest (eski model availability_id varsa)
+        if (!empty($booking['availability_id'])) {
+            $db->prepare("UPDATE consultant_availability SET status='available', held_until=NULL WHERE id=?")
+               ->execute([(int)$booking['availability_id']]);
+        }
+        // Bağlı abonelik(ler)i iptal et
+        if (!empty($booking['order_id'])) {
+            try {
+                $db->prepare("UPDATE subscriptions SET status='cancelled', cancelled_at=NOW()
+                              WHERE order_id=? AND user_id=? AND status='active'")
+                   ->execute([(int)$booking['order_id'], (int)$payload['id']]);
+            } catch (Throwable $e) {}
+        }
+        $db->commit();
+    } catch (Throwable $e) {
+        if ($db->inTransaction()) $db->rollBack();
+        sendResponse(['error' => 'İptal sırasında hata: ' . $e->getMessage()], 500);
+    }
+
+    // Admin'e iade talebi maili (gerçek iade elle yapılır)
+    try {
+        if (function_exists('getSetting') && function_exists('sendTransactionalEmail')) {
+            $adminEmail = (string)getSetting($db, 'contact_email', '');
+            if ($adminEmail !== '') {
+                // Sipariş tutarı (varsa)
+                $amount = ''; $orderNo = '';
+                if (!empty($booking['order_id'])) {
+                    $o = $db->prepare("SELECT order_number, total_amount, currency FROM orders WHERE id=? LIMIT 1");
+                    $o->execute([(int)$booking['order_id']]);
+                    if ($or = $o->fetch()) {
+                        $orderNo = (string)($or['order_number'] ?? '');
+                        $amount = trim((string)($or['total_amount'] ?? '') . ' ' . (string)($or['currency'] ?? ''));
+                    }
+                }
+                $safe = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+                $cust = trim((string)($u['first_name'] ?? '') . ' ' . (string)($u['last_name'] ?? ''));
+                $html = '<div style="font-family:Arial,sans-serif;line-height:1.7;color:#102a43">'
+                    . '<h2 style="color:#b91c1c;margin:0 0 12px">Danışmanlık Randevusu İPTAL — İade Gerekiyor</h2>'
+                    . '<p>Müşteri kendi hesabından bir danışmanlık randevusunu iptal etti. Manuel iade işlemi gerekebilir.</p>'
+                    . '<table style="border-collapse:collapse;font-size:14px">'
+                    . '<tr><td style="padding:4px 10px;color:#627d98">Müşteri</td><td style="padding:4px 10px"><b>' . $safe($cust) . '</b> (' . $safe($email) . ')</td></tr>'
+                    . '<tr><td style="padding:4px 10px;color:#627d98">Randevu</td><td style="padding:4px 10px">#' . (int)$bid . ' · ' . $safe($booking['start_at'] ?? '') . '</td></tr>'
+                    . '<tr><td style="padding:4px 10px;color:#627d98">Sipariş</td><td style="padding:4px 10px">' . $safe($orderNo) . '</td></tr>'
+                    . '<tr><td style="padding:4px 10px;color:#627d98">Tutar</td><td style="padding:4px 10px"><b>' . $safe($amount) . '</b></td></tr>'
+                    . '</table>'
+                    . '<p style="margin-top:14px;color:#627d98;font-size:13px">Randevu iptal edildi, slot serbest bırakıldı, abonelik pasifleştirildi. İade Lidio/banka üzerinden elle yapılmalıdır.</p>'
+                    . '</div>';
+                sendTransactionalEmail($db, $adminEmail, 'Danışmanlık İptali — İade Gerekiyor (Randevu #' . (int)$bid . ')', $html);
+            }
+        }
+    } catch (Throwable $e) { error_log('[profile cancel-booking] admin mail: ' . $e->getMessage()); }
+
+    sendResponse(['success' => true, 'message' => 'Randevunuz iptal edildi. İade talebiniz ekibimize iletildi.']);
+}
+
 sendResponse(['error' => 'Action not found'], 404);
