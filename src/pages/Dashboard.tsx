@@ -1118,6 +1118,51 @@ export default function Dashboard() {
                     {/* Subscriptions Tab */}
                     {activeTab === 'subscriptions' && (
                         <div className="tab-content">
+                            {/* Danışmanlık Randevuları — müşteri kendi iptal edebilir */}
+                            {bookings.filter(b => b.status !== 'cancelled').length > 0 && (
+                                <div style={{ marginBottom: 28 }}>
+                                    <h2>{isEn ? 'My Consultation Appointments' : 'Danışmanlık Randevularım'}</h2>
+                                    <div style={{ display: 'grid', gap: 12 }}>
+                                        {bookings.filter(b => b.status !== 'cancelled').map((b: any) => {
+                                            const dt = b.start_at ? new Date(String(b.start_at).replace(' ', 'T')) : null;
+                                            const dateStr = dt ? dt.toLocaleString(isEn ? 'en-US' : 'tr-TR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                                            const title = isEn ? (b.service_title_en || b.service_title) : b.service_title;
+                                            const statusMap: Record<string, { label: string; bg: string; color: string }> = {
+                                                pending: { label: isEn ? 'Pending' : 'Onay Bekliyor', bg: '#fef9c3', color: '#854d0e' },
+                                                confirmed: { label: isEn ? 'Confirmed' : 'Onaylandı', bg: '#dcfce7', color: '#166534' },
+                                                completed: { label: isEn ? 'Completed' : 'Tamamlandı', bg: '#e0e7ff', color: '#3730a3' },
+                                            };
+                                            const stt = statusMap[b.status] || { label: b.status, bg: '#f3f4f6', color: '#6b7280' };
+                                            return (
+                                                <div key={b.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                                                    <div>
+                                                        <div style={{ fontWeight: 700, color: '#1f2937' }}>{title || (isEn ? 'Consultation' : 'Danışmanlık')}</div>
+                                                        <div style={{ fontSize: '0.88rem', color: '#6b7280', marginTop: 4 }}>
+                                                            {b.consultant_name ? `${b.consultant_name} · ` : ''}{dateStr}
+                                                        </div>
+                                                        <span style={{ display: 'inline-block', marginTop: 8, background: stt.bg, color: stt.color, padding: '2px 10px', borderRadius: 20, fontSize: '0.78rem' }}>{stt.label}</span>
+                                                    </div>
+                                                    <div style={{ textAlign: 'right' }}>
+                                                        {b.cancellable ? (
+                                                            <button
+                                                                onClick={() => cancelBooking(b.id)}
+                                                                disabled={bookingBusyId === b.id}
+                                                                style={{ background: '#fff', color: '#b91c1c', border: '1px solid #fca5a5', padding: '8px 16px', borderRadius: 8, fontWeight: 600, cursor: bookingBusyId === b.id ? 'wait' : 'pointer', fontSize: 13 }}
+                                                            >
+                                                                {bookingBusyId === b.id ? (isEn ? 'Cancelling...' : 'İptal ediliyor...') : (isEn ? 'Cancel' : 'İptal Et')}
+                                                            </button>
+                                                        ) : (
+                                                            <span style={{ fontSize: '0.78rem', color: '#9ca3af', maxWidth: 180, display: 'inline-block' }}>
+                                                                {isEn ? 'Cannot be cancelled within 48 hours of the appointment.' : 'Randevuya 48 saatten az kala iptal edilemez.'}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
                             <h2>{copy.tabs.subscriptions}</h2>
                             {(() => {
                                 const subs = contents.filter(c => c.is_subscription === true || c.type === 'subscription');
