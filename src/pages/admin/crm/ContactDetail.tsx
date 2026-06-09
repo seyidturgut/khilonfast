@@ -211,10 +211,6 @@ export default function CrmContactDetailPage() {
                                 </dl>
                             </section>
                         </div>
-
-                        <div className="next-phases-info">
-                            <strong>Sonraki Fazlar:</strong> Bu kişiye ait <em>Aktivite (Timeline)</em> akışı (e-posta, sipariş, onay, brief, web ziyaret), <em>Etiketler & Listeler</em> ve <em>Özel Alanlar</em> sırayla Faz 2-3'te aktifleşecek.
-                        </div>
                     </div>
                 )}
 
