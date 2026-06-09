@@ -263,19 +263,102 @@ if ($action === 'settings') {
 
 // Dashboard stats
 if ($action === 'stats' && $method === 'GET') {
-    $stmt = $db->query("SELECT COUNT(*) AS total_users FROM users");
-    $usersRow = $stmt->fetch();
+    // Baz-tarih: ayarlıysa Gelir+Sipariş bu tarihten itibaren sayılır (veri silinmez,
+    // sadece dashboard görünümü filtrelenir). Boşsa tüm-zaman (geriye uyumlu).
+    $since = trim((string) getSetting($db, 'dashboard_stats_since', ''));
+    $hasSince = $since !== '';
 
-    $stmt = $db->query("SELECT COUNT(*) AS total_orders FROM orders");
-    $ordersRow = $stmt->fetch();
+    // Toplam Kullanıcı — baz-tarihten ETKİLENMEZ (yaşam boyu).
+    $usersRow = $db->query("SELECT COUNT(*) AS total_users FROM users")->fetch();
 
-    $stmt = $db->query("SELECT COALESCE(SUM(total_amount), 0) AS total_revenue FROM orders WHERE status = 'completed'");
-    $revenueRow = $stmt->fetch();
+    // Toplam Sipariş — baz-tarih varsa filtrele.
+    if ($hasSince) {
+        $st = $db->prepare("SELECT COUNT(*) AS total_orders FROM orders WHERE created_at >= ?");
+        $st->execute([$since]);
+        $ordersRow = $st->fetch();
+        $st = $db->prepare("SELECT COALESCE(SUM(total_amount), 0) AS total_revenue FROM orders WHERE status = 'completed' AND created_at >= ?");
+        $st->execute([$since]);
+        $revenueRow = $st->fetch();
+    } else {
+        $ordersRow = $db->query("SELECT COUNT(*) AS total_orders FROM orders")->fetch();
+        $revenueRow = $db->query("SELECT COALESCE(SUM(total_amount), 0) AS total_revenue FROM orders WHERE status = 'completed'")->fetch();
+    }
+
+    // ── Ek kart verileri (her biri guard'lı: tablo yoksa/boşsa 0) ──
+    $tryQuery = function (string $sql) use ($db) {
+        try { $r = $db->query($sql); return $r ? $r->fetch(PDO::FETCH_ASSOC) : null; }
+        catch (Throwable $e) { return null; }
+    };
+    $tryAll = function (string $sql) use ($db) {
+        try { $r = $db->query($sql); return $r ? $r->fetchAll(PDO::FETCH_ASSOC) : []; }
+        catch (Throwable $e) { return []; }
+    };
+
+    // Son Satışlar (son 10 sipariş + müşteri)
+    $recentOrders = $tryAll(
+        "SELECT o.order_number, o.total_amount, o.currency, o.status, o.created_at,
+                TRIM(CONCAT(COALESCE(u.first_name,''),' ',COALESCE(u.last_name,''))) AS customer,
+                u.email AS customer_email
+         FROM orders o LEFT JOIN users u ON u.id = o.user_id
+         ORDER BY o.created_at DESC LIMIT 10"
+    );
+
+    // Başarısız ödemeler
+    $fp = $tryQuery("SELECT COUNT(*) AS cnt, COALESCE(SUM(amount),0) AS total FROM payments WHERE status = 'failed'");
+
+    // Bekleyen/başarısız faturalar (Paraşüt kuyruğu)
+    $inv = $tryQuery("SELECT SUM(status IN ('queued','processing')) AS pending, SUM(status='failed') AS failed FROM invoice_jobs");
+
+    // Danışmanlık randevuları
+    $cb = $tryQuery("SELECT SUM(status='pending') AS pending, SUM(status='confirmed' AND start_at >= NOW()) AS upcoming FROM consultant_bookings");
+
+    // Onboarding/Brief
+    $ob = $tryQuery("SELECT SUM(status='new') AS new, SUM(status='reviewed') AS reviewed, SUM(status='awaiting_user_response') AS awaiting, SUM(status='approved') AS approved FROM onboarding_forms");
+
+    // E-posta kampanya performansı
+    $ecCount = $tryQuery("SELECT COUNT(*) AS campaigns FROM crm_campaigns WHERE status = 'sent'");
+    $ec = $tryQuery("SELECT COUNT(*) AS recipients, SUM(status IN ('sent','opened','clicked')) AS sent, SUM(opened_at IS NOT NULL) AS opened, SUM(clicked_at IS NOT NULL) AS clicked FROM crm_campaign_recipients");
 
     sendResponse([
         'total_users' => (int) ($usersRow['total_users'] ?? 0),
         'total_orders' => (int) ($ordersRow['total_orders'] ?? 0),
-        'total_revenue' => (float) ($revenueRow['total_revenue'] ?? 0)
+        'total_revenue' => (float) ($revenueRow['total_revenue'] ?? 0),
+        'stats_since' => $hasSince ? $since : null,
+        'recent_orders' => array_map(function ($o) {
+            return [
+                'order_number' => $o['order_number'] ?? '',
+                'total_amount' => (float) ($o['total_amount'] ?? 0),
+                'currency' => $o['currency'] ?? 'TRY',
+                'status' => $o['status'] ?? '',
+                'created_at' => $o['created_at'] ?? null,
+                'customer' => $o['customer'] ?: ($o['customer_email'] ?? '—'),
+            ];
+        }, $recentOrders),
+        'failed_payments' => [
+            'count' => (int) ($fp['cnt'] ?? 0),
+            'total' => (float) ($fp['total'] ?? 0),
+        ],
+        'pending_invoices' => [
+            'pending' => (int) ($inv['pending'] ?? 0),
+            'failed' => (int) ($inv['failed'] ?? 0),
+        ],
+        'consultant_bookings' => [
+            'pending' => (int) ($cb['pending'] ?? 0),
+            'upcoming' => (int) ($cb['upcoming'] ?? 0),
+        ],
+        'onboarding' => [
+            'new' => (int) ($ob['new'] ?? 0),
+            'reviewed' => (int) ($ob['reviewed'] ?? 0),
+            'awaiting' => (int) ($ob['awaiting'] ?? 0),
+            'approved' => (int) ($ob['approved'] ?? 0),
+        ],
+        'email_campaigns' => [
+            'campaigns' => (int) ($ecCount['campaigns'] ?? 0),
+            'recipients' => (int) ($ec['recipients'] ?? 0),
+            'sent' => (int) ($ec['sent'] ?? 0),
+            'opened' => (int) ($ec['opened'] ?? 0),
+            'clicked' => (int) ($ec['clicked'] ?? 0),
+        ],
     ]);
 }
 

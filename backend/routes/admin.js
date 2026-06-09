@@ -290,25 +290,70 @@ router.use(authMiddleware, adminMiddleware);
 
 // GET /api/admin/stats
 router.get('/stats', async (req, res) => {
+    // Guard'lı tek-satır sorgu (tablo yoksa/boşsa null)
+    const q1 = async (sql, params = []) => {
+        try { const [rows] = await db.query(sql, params); return rows && rows[0] ? rows[0] : null; }
+        catch (e) { return null; }
+    };
+    const qAll = async (sql, params = []) => {
+        try { const [rows] = await db.query(sql, params); return rows || []; }
+        catch (e) { return []; }
+    };
     try {
-        const [[usersRow]] = await db.query(
-            'SELECT COUNT(*) AS total_users FROM users'
-        );
+        // Baz-tarih ayarı (Gelir+Sipariş filtresi). Boşsa tüm-zaman.
+        const sinceRow = await q1("SELECT setting_value FROM settings WHERE setting_key = 'dashboard_stats_since' LIMIT 1");
+        const since = sinceRow && sinceRow.setting_value ? String(sinceRow.setting_value).trim() : '';
+        const hasSince = since !== '';
 
-        const [[ordersRow]] = await db.query(
-            'SELECT COUNT(*) AS total_orders FROM orders'
-        );
+        const usersRow = await q1('SELECT COUNT(*) AS total_users FROM users');
 
-        const [[revenueRow]] = await db.query(
-            `SELECT COALESCE(SUM(total_amount), 0) AS total_revenue
-             FROM orders
-             WHERE status = 'completed'`
+        let ordersRow, revenueRow;
+        if (hasSince) {
+            ordersRow = await q1('SELECT COUNT(*) AS total_orders FROM orders WHERE created_at >= ?', [since]);
+            revenueRow = await q1("SELECT COALESCE(SUM(total_amount),0) AS total_revenue FROM orders WHERE status='completed' AND created_at >= ?", [since]);
+        } else {
+            ordersRow = await q1('SELECT COUNT(*) AS total_orders FROM orders');
+            revenueRow = await q1("SELECT COALESCE(SUM(total_amount),0) AS total_revenue FROM orders WHERE status='completed'");
+        }
+
+        const recentOrders = await qAll(
+            `SELECT o.order_number, o.total_amount, o.currency, o.status, o.created_at,
+                    TRIM(CONCAT(COALESCE(u.first_name,''),' ',COALESCE(u.last_name,''))) AS customer,
+                    u.email AS customer_email
+             FROM orders o LEFT JOIN users u ON u.id = o.user_id
+             ORDER BY o.created_at DESC LIMIT 10`
         );
+        const fp = await q1("SELECT COUNT(*) AS cnt, COALESCE(SUM(amount),0) AS total FROM payments WHERE status='failed'");
+        const inv = await q1("SELECT SUM(status IN ('queued','processing')) AS pending, SUM(status='failed') AS failed FROM invoice_jobs");
+        const cb = await q1("SELECT SUM(status='pending') AS pending, SUM(status='confirmed' AND start_at >= NOW()) AS upcoming FROM consultant_bookings");
+        const ob = await q1("SELECT SUM(status='new') AS new, SUM(status='reviewed') AS reviewed, SUM(status='awaiting_user_response') AS awaiting, SUM(status='approved') AS approved FROM onboarding_forms");
+        const ecCount = await q1("SELECT COUNT(*) AS campaigns FROM crm_campaigns WHERE status='sent'");
+        const ec = await q1("SELECT COUNT(*) AS recipients, SUM(status IN ('sent','opened','clicked')) AS sent, SUM(opened_at IS NOT NULL) AS opened, SUM(clicked_at IS NOT NULL) AS clicked FROM crm_campaign_recipients");
 
         res.json({
-            total_users: Number(usersRow.total_users || 0),
-            total_orders: Number(ordersRow.total_orders || 0),
-            total_revenue: Number(revenueRow.total_revenue || 0)
+            total_users: Number(usersRow?.total_users || 0),
+            total_orders: Number(ordersRow?.total_orders || 0),
+            total_revenue: Number(revenueRow?.total_revenue || 0),
+            stats_since: hasSince ? since : null,
+            recent_orders: recentOrders.map(o => ({
+                order_number: o.order_number || '',
+                total_amount: Number(o.total_amount || 0),
+                currency: o.currency || 'TRY',
+                status: o.status || '',
+                created_at: o.created_at || null,
+                customer: o.customer || o.customer_email || '—'
+            })),
+            failed_payments: { count: Number(fp?.cnt || 0), total: Number(fp?.total || 0) },
+            pending_invoices: { pending: Number(inv?.pending || 0), failed: Number(inv?.failed || 0) },
+            consultant_bookings: { pending: Number(cb?.pending || 0), upcoming: Number(cb?.upcoming || 0) },
+            onboarding: {
+                new: Number(ob?.new || 0), reviewed: Number(ob?.reviewed || 0),
+                awaiting: Number(ob?.awaiting || 0), approved: Number(ob?.approved || 0)
+            },
+            email_campaigns: {
+                campaigns: Number(ecCount?.campaigns || 0), recipients: Number(ec?.recipients || 0),
+                sent: Number(ec?.sent || 0), opened: Number(ec?.opened || 0), clicked: Number(ec?.clicked || 0)
+            }
         });
     } catch (error) {
         console.error('Admin stats error:', error);
