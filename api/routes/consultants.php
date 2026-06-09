@@ -251,6 +251,16 @@ function generateSlotsForService(PDO $db, int $consultantId, array $service): ar
         }
     }
 
+    // iCal meşgul aralıkları (B) — takvimden gelen etkinlikler o saatleri rezervasyona kapatır.
+    try {
+        $ib = $db->prepare("SELECT start_at, end_at FROM consultant_ical_busy WHERE consultant_id = ? AND end_at >= NOW()");
+        $ib->execute([$consultantId]);
+        foreach ($ib->fetchAll(PDO::FETCH_ASSOC) as $bz) {
+            $d = substr($bz['start_at'], 0, 10);
+            $busy[$d][] = [substr($bz['start_at'], 11, 8), substr($bz['end_at'], 11, 8)];
+        }
+    } catch (Throwable $e) { /* tablo henüz yoksa sessiz geç */ }
+
     $isFree = function (string $date, string $start, string $end) use ($busy): bool {
         foreach ($busy[$date] ?? [] as [$bs, $be]) {
             if (bookingsOverlap($start, $end, $bs, $be)) return false;
@@ -504,6 +514,17 @@ if ($method === 'POST') {
                     sendResponse(['error' => 'Bu saat artık dolu. Lütfen başka bir zaman seçin.'], 409);
                 }
             }
+
+            // iCal meşgul aralık çakışması (B) — takvimde dolu saate rezervasyon engellenir
+            try {
+                $ibStmt = $db->prepare("SELECT start_at, end_at FROM consultant_ical_busy WHERE consultant_id = ? AND DATE(start_at) = ?");
+                $ibStmt->execute([$consultantId, substr($start_at, 0, 10)]);
+                foreach ($ibStmt->fetchAll(PDO::FETCH_ASSOC) as $bz) {
+                    if (bookingsOverlap($start_at, $end_at, $bz['start_at'], $bz['end_at'])) {
+                        sendResponse(['error' => 'Bu saat takvimde meşgul. Lütfen başka bir zaman seçin.'], 409);
+                    }
+                }
+            } catch (Throwable $e) { /* tablo henüz yoksa sessiz geç */ }
         }
 
         // Eski model: availability_id hold et (geriye uyum)

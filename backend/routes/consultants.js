@@ -171,6 +171,17 @@ async function generateSlotsForService(consultantId, service) {
             (busy[bk.a_date] ||= []).push([bk.a_start, bk.a_end]);
         }
     }
+    // iCal meşgul aralıkları (B) — takvim etkinlikleri o saatleri rezervasyona kapatır
+    try {
+        const [icalBusy] = await db.query(
+            'SELECT start_at, end_at FROM consultant_ical_busy WHERE consultant_id = ? AND end_at >= NOW()',
+            [consultantId]
+        );
+        for (const bz of icalBusy) {
+            const d = String(bz.start_at).slice(0, 10);
+            (busy[d] ||= []).push([String(bz.start_at).slice(11, 19), String(bz.end_at).slice(11, 19)]);
+        }
+    } catch (e) { /* tablo henüz yoksa sessiz geç */ }
     const isFree = (date, start, end) => !(busy[date] || []).some(([bs, be]) => rangesOverlap(start, end, bs, be));
     const out = [];
 
@@ -381,6 +392,18 @@ router.post('/bookings/hold', async (req, res) => {
                     if (s1 < e2 && e1 > s2) { await connection.rollback(); return res.status(409).json({ error: 'Bu saat artık dolu. Lütfen başka bir zaman seçin.' }); }
                 }
             }
+            // iCal meşgul aralık çakışması (B)
+            try {
+                const [icalBusy] = await connection.query(
+                    'SELECT start_at, end_at FROM consultant_ical_busy WHERE consultant_id = ? AND DATE(start_at) = ?',
+                    [consultantId, start_at.slice(0, 10)]
+                );
+                for (const bz of icalBusy) {
+                    const s1 = new Date(start_at.replace(' ', 'T')).getTime(), e1 = new Date(endAt.replace(' ', 'T')).getTime();
+                    const s2 = new Date(String(bz.start_at).replace(' ', 'T')).getTime(), e2 = new Date(String(bz.end_at).replace(' ', 'T')).getTime();
+                    if (s1 < e2 && e1 > s2) { await connection.rollback(); return res.status(409).json({ error: 'Bu saat takvimde meşgul. Lütfen başka bir zaman seçin.' }); }
+                }
+            } catch (e) { /* tablo henüz yoksa sessiz geç */ }
         }
 
         // Eski model: availability_id hold (geriye uyum)

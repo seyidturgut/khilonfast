@@ -41,109 +41,97 @@ function icalSyncAll(PDO $db): void
 }
 
 /**
- * Tek bir danışmanı senkronize et
- * Admin panelinden manuel tetikleme için de kullanılır.
+ * consultant_ical_busy tablosunu garanti et (idempotent).
+ * iCal'den gelen MEŞGUL (busy) aralıklar burada tutulur — manuel müsaitlikten AYRI.
+ */
+function ensureIcalBusyTable(PDO $db): void
+{
+    $db->exec("CREATE TABLE IF NOT EXISTS consultant_ical_busy (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        consultant_id INT NOT NULL,
+        start_at DATETIME NOT NULL,
+        end_at DATETIME NOT NULL,
+        summary VARCHAR(255) DEFAULT NULL,
+        synced_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_consultant_start (consultant_id, start_at),
+        INDEX idx_end (end_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+/**
+ * Tek bir danışmanı senkronize et — GÜVENLİ MOD.
  *
- * @param int    $consultantId
- * @param PDO    $db
- * @param string|null $icalUrlOverride  — Yoksa DB'den alınır
- * @return array{added: int, removed: int, error?: string}
+ * DAVRANIŞ (A + B):
+ *  - (A) consultant_availability'e (manuel müsaitliklere) ASLA DOKUNMAZ — hiçbir slot silinmez/eklenmez.
+ *  - (B) iCal'deki etkinlikler MEŞGULIYET olarak consultant_ical_busy tablosuna yazılır.
+ *        Slot üretimi (generateSlotsForService) bu meşgul aralıklara denk gelen slotları gizler.
+ *  - iCal erişilemez/boş/hatalıysa HİÇBİR ŞEY değiştirmez (eski busy kayıtları korunur).
+ *
+ * @return array{added: int, removed: int, busy: int, error?: string, message?: string}
  */
 function syncConsultant(int $consultantId, PDO $db, ?string $icalUrlOverride = null): array
 {
-    // Danışmanı yükle
     $stmt = $db->prepare("SELECT id, name, ical_url FROM consultants WHERE id = ?");
     $stmt->execute([$consultantId]);
     $consultant = $stmt->fetch();
-
     if (!$consultant) {
-        return ['added' => 0, 'removed' => 0, 'error' => 'Consultant not found'];
+        return ['added' => 0, 'removed' => 0, 'busy' => 0, 'error' => 'Consultant not found'];
     }
 
     $icalUrl = $icalUrlOverride ?? $consultant['ical_url'];
     if (!$icalUrl) {
-        return ['added' => 0, 'removed' => 0, 'error' => 'iCal URL tanımlanmamış'];
+        return ['added' => 0, 'removed' => 0, 'busy' => 0, 'error' => 'iCal URL tanımlanmamış'];
     }
 
-    // .ics dosyasını çek — cURL önce, file_get_contents fallback
+    // .ics dosyasını çek — başarısızsa hiçbir şeyi değiştirme.
     $icsContent = fetchIcalUrl($icalUrl);
     if ($icsContent === false || trim($icsContent) === '') {
-        return ['added' => 0, 'removed' => 0, 'error' => 'iCal URL erişilemez veya boş. URL\'nin herkese açık (public) olduğundan emin olun.'];
+        return ['added' => 0, 'removed' => 0, 'busy' => 0,
+                'error' => 'iCal URL erişilemez veya boş. URL\'nin herkese açık (public) olduğundan emin olun. (Mevcut müsaitlikler ve meşgul kayıtları korundu.)'];
     }
 
-    // VEVENT listesini parse et
     $events = parseIcalEvents($icsContent);
 
-    // DB'deki mevcut available slotlarını al (held/booked'a dokunmayacağız)
-    $stmt = $db->prepare(
-        "SELECT id, available_date, start_time FROM consultant_availability
-         WHERE consultant_id = ? AND status = 'available'"
-    );
-    $stmt->execute([$consultantId]);
-    $existingSlots = $stmt->fetchAll();
-
-    // Mevcut slotları (tarih+saat) → id map'i oluştur
-    $existingMap = [];
-    foreach ($existingSlots as $slot) {
-        $key = $slot['available_date'] . '_' . $slot['start_time'];
-        $existingMap[$key] = (int)$slot['id'];
-    }
-
-    // iCal'den gelen event anahtarlarını topla
-    $icalKeys = [];
-    $added = 0;
-
+    // Gelecek (bugün ve sonrası biten) meşgul aralıkları topla
+    $today = new DateTime('today', new DateTimeZone('Europe/Istanbul'));
+    $busyRows = [];
     foreach ($events as $event) {
         if (!$event['start'] || !$event['end']) continue;
-
-        $dateStr  = $event['start']->format('Y-m-d');
-        $startStr = $event['start']->format('H:i:s');
-        $endStr   = $event['end']->format('H:i:s');
-        $key      = $dateStr . '_' . $startStr;
-
-        $icalKeys[$key] = true;
-
-        // Geçmiş slotları atla
-        $today = new DateTime('today', new DateTimeZone('Europe/Istanbul'));
-        if ($event['start'] < $today) continue;
-
-        // Zaten DB'de varsa ekleme
-        if (isset($existingMap[$key])) continue;
-
-        // Held/booked çakışması kontrolü (aynı danışman + tarih + saat)
-        $checkStmt = $db->prepare(
-            "SELECT id FROM consultant_availability
-             WHERE consultant_id = ? AND available_date = ? AND start_time = ?
-             AND status IN ('held','booked')"
-        );
-        $checkStmt->execute([$consultantId, $dateStr, $startStr]);
-        if ($checkStmt->fetch()) continue; // aktif rezervasyon var, atla
-
-        // Yeni slot ekle
-        $insertStmt = $db->prepare(
-            "INSERT INTO consultant_availability
-                (consultant_id, available_date, start_time, end_time, status)
-             VALUES (?, ?, ?, ?, 'available')"
-        );
-        $insertStmt->execute([$consultantId, $dateStr, $startStr, $endStr]);
-        $added++;
+        if ($event['end'] < $today) continue; // tamamen geçmiş — atla
+        $busyRows[] = [
+            $event['start']->format('Y-m-d H:i:s'),
+            $event['end']->format('Y-m-d H:i:s'),
+            substr((string)($event['summary'] ?? ''), 0, 255),
+        ];
     }
 
-    // iCal'den çıkan ama DB'de hâlâ available olan slotları sil
-    $removed = 0;
-    foreach ($existingMap as $key => $slotId) {
-        if (!isset($icalKeys[$key])) {
-            $db->prepare("DELETE FROM consultant_availability WHERE id = ? AND status = 'available'")
-               ->execute([$slotId]);
-            $removed++;
+    ensureIcalBusyTable($db);
+
+    // Sadece consultant_ical_busy tablosunu güncelle — consultant_availability'e DOKUNMA (A).
+    $db->beginTransaction();
+    try {
+        // Bu danışmanın gelecek meşgul kayıtlarını tazele (geçmişe dokunma)
+        $db->prepare("DELETE FROM consultant_ical_busy WHERE consultant_id = ? AND end_at >= NOW()")
+           ->execute([$consultantId]);
+        $ins = $db->prepare("INSERT INTO consultant_ical_busy (consultant_id, start_at, end_at, summary) VALUES (?, ?, ?, ?)");
+        foreach ($busyRows as $r) {
+            $ins->execute([$consultantId, $r[0], $r[1], $r[2]]);
         }
+        $db->commit();
+    } catch (Throwable $e) {
+        if ($db->inTransaction()) $db->rollBack();
+        return ['added' => 0, 'removed' => 0, 'busy' => 0, 'error' => 'Meşgul aralıklar kaydedilemedi: ' . $e->getMessage()];
     }
 
-    // Son senkronizasyon zamanını güncelle
-    $db->prepare("UPDATE consultants SET ical_last_sync = NOW() WHERE id = ?")
-       ->execute([$consultantId]);
+    $db->prepare("UPDATE consultants SET ical_last_sync = NOW() WHERE id = ?")->execute([$consultantId]);
 
-    return ['added' => $added, 'removed' => $removed];
+    $busyCount = count($busyRows);
+    return [
+        'added' => 0,
+        'removed' => 0,
+        'busy' => $busyCount,
+        'message' => $busyCount . ' meşgul aralık takvimden alındı. Bu saatler rezervasyona kapatıldı. Manuel müsaitlikleriniz korundu.'
+    ];
 }
 
 /**
@@ -165,7 +153,7 @@ function fetchIcalUrl(string $url): string|false
         ]);
         $body = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // curl_close PHP 8.0+ no-op (8.5'te deprecated) — çağrılmıyor
 
         if ($body !== false && $httpCode >= 200 && $httpCode < 300) {
             return $body;
