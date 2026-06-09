@@ -222,8 +222,13 @@ function ServiceFormPanel({
                     {form.booking_type === 'slot' && (
                         <div>
                             <label style={S.label}>Slot Süresi (dakika)</label>
-                            <input type="number" style={S.input} value={form.duration_minutes}
-                                onChange={e => setForm({ ...form, duration_minutes: parseInt(e.target.value) || 60 })} placeholder="60" />
+                            <select style={S.input} value={form.duration_minutes}
+                                onChange={e => setForm({ ...form, duration_minutes: parseInt(e.target.value) || 60 })}>
+                                <option value={30}>30 dakika</option>
+                                <option value={45}>45 dakika</option>
+                                <option value={60}>60 dakika</option>
+                                <option value={90}>90 dakika</option>
+                            </select>
                         </div>
                     )}
                     {form.booking_type === 'fixed_day' && (
