@@ -678,4 +678,50 @@ if ($action === 'unsubscribe' && $method === 'GET') {
     exit;
 }
 
+// ═══ POST /api/crm-public/unsubscribe ════════════════════════════════════════
+// Frontend "Abonelikten Çık" sayfası — sayfa açılınca ANINDA çıkış (JSON).
+if ($action === 'unsubscribe' && $method === 'POST') {
+    $body = getJsonBody();
+    $email = strtolower(trim((string)($body['email'] ?? '')));
+    $token = (string)($body['token'] ?? '');
+    if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$token) {
+        sendResponse(['error' => 'Geçersiz istek'], 400);
+    }
+    $secret = defined('JWT_SECRET') ? JWT_SECRET : '';
+    $expected = hash('sha256', $email . '|unsub|' . $secret);
+    if (!hash_equals($expected, $token)) {
+        sendResponse(['error' => 'Geçersiz onay'], 403);
+    }
+    $contactId = crmFindContactIdByEmail($db, $email);
+    if ($contactId) {
+        $db->prepare("UPDATE crm_contacts SET status = 'unsubscribed', unsubscribed_at = NOW() WHERE id = ?")
+           ->execute([$contactId]);
+        crmRecordActivity($db, $contactId, 'email_unsubscribed', 'Listeden çıkış (abonelikten çık sayfası)', [
+            'metadata' => ['self_service' => true]
+        ]);
+        crmApplyScore($db, $contactId, 'email_unsubscribed', ['reason' => 'Manual unsubscribe']);
+    }
+    sendResponse(['ok' => true]);
+}
+
+// ═══ POST /api/crm-public/unsubscribe-reason ═════════════════════════════════
+// Opsiyonel: kullanıcı çıkış sebebini paylaşırsa kaydet.
+if ($action === 'unsubscribe-reason' && $method === 'POST') {
+    $body = getJsonBody();
+    $email = strtolower(trim((string)($body['email'] ?? '')));
+    $token = (string)($body['token'] ?? '');
+    $reason = substr(trim((string)($body['reason'] ?? '')), 0, 60);
+    $detail = substr(trim((string)($body['detail'] ?? '')), 0, 2000);
+    if (!$email || !$token) sendResponse(['error' => 'Geçersiz istek'], 400);
+    $secret = defined('JWT_SECRET') ? JWT_SECRET : '';
+    $expected = hash('sha256', $email . '|unsub|' . $secret);
+    if (!hash_equals($expected, $token)) sendResponse(['error' => 'Geçersiz onay'], 403);
+    $contactId = crmFindContactIdByEmail($db, $email);
+    if ($contactId) {
+        $db->prepare("UPDATE crm_contacts SET unsubscribe_reason = ?, unsubscribe_detail = ? WHERE id = ?")
+           ->execute([$reason ?: null, $detail ?: null, $contactId]);
+    }
+    sendResponse(['ok' => true]);
+}
+
 sendResponse(['error' => 'CRM public endpoint not found'], 404);

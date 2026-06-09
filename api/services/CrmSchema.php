@@ -44,6 +44,16 @@ function ensureCrmContactsSchema(PDO $db): void
     if (!isset($cols['ltv_currency'])) {
         try { $db->exec("ALTER TABLE crm_contacts ADD COLUMN ltv_currency VARCHAR(8) NOT NULL DEFAULT 'TRY' AFTER ltv"); } catch (Throwable $e) {}
     }
+    // Abonelikten çıkış (unsubscribe) alanları
+    if (!isset($cols['unsubscribed_at'])) {
+        try { $db->exec("ALTER TABLE crm_contacts ADD COLUMN unsubscribed_at DATETIME NULL DEFAULT NULL"); } catch (Throwable $e) {}
+    }
+    if (!isset($cols['unsubscribe_reason'])) {
+        try { $db->exec("ALTER TABLE crm_contacts ADD COLUMN unsubscribe_reason VARCHAR(60) NULL DEFAULT NULL"); } catch (Throwable $e) {}
+    }
+    if (!isset($cols['unsubscribe_detail'])) {
+        try { $db->exec("ALTER TABLE crm_contacts ADD COLUMN unsubscribe_detail TEXT NULL DEFAULT NULL"); } catch (Throwable $e) {}
+    }
 
     $db->exec("CREATE TABLE IF NOT EXISTS crm_custom_fields (
         id INT AUTO_INCREMENT PRIMARY KEY,

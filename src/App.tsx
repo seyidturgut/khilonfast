@@ -63,6 +63,7 @@ const DanismanlikOdeme = lazy(() => import('./pages/DanismanlikOdeme'))
 const DanismanlikRandevu = lazy(() => import('./pages/DanismanlikRandevu'))
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'))
 const PaymentCallback = lazy(() => import('./pages/PaymentCallback'))
+const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Trainings = lazy(() => import('./pages/Trainings'))
 const TrainingProgramPage = lazy(() => import('./pages/TrainingProgramPage'))
@@ -257,6 +258,8 @@ function MainContent() {
         '/danismanlik/randevu/:bookingId',
         '/payment-success',
         '/payment-callback',
+        '/abonelikten-cik',
+        '/unsubscribe',
         '/dashboard',
         `/${slugsTr.onboardingForm}`,
         `/en/${slugsEn.onboardingForm}`,
@@ -426,6 +429,7 @@ function MainContent() {
                         <Route path={slugsEn.checkout} element={<Checkout />} />
                         <Route path={slugsEn.paymentSuccess} element={<PaymentSuccess />} />
                         <Route path={slugsEn.paymentCallback} element={<PaymentCallback />} />
+                        <Route path="unsubscribe" element={<UnsubscribePage />} />
                         <Route path="services/:slug" element={<ProductSlugResolver />} />
                         <Route path="sectoral-services/:slug" element={<ProductSlugResolver />} />
 
@@ -607,6 +611,7 @@ function MainContent() {
                     <Route path="/danismanlik/randevu/:bookingId" element={<DanismanlikRandevu />} />
                     <Route path={`/${slugsTr.paymentSuccess}`} element={<PaymentSuccess />} />
                     <Route path={`/${slugsTr.paymentCallback}`} element={<PaymentCallback />} />
+                    <Route path="/abonelikten-cik" element={<UnsubscribePage />} />
                     <Route path={`/${slugsTr.dashboard}`} element={<Dashboard />} />
                     {/* ASCII alias — mail/SMS gibi yerlerde Türkçe karakter URL-encode olunca 404 olmasın */}
                     <Route path="/hesabim" element={<Dashboard />} />

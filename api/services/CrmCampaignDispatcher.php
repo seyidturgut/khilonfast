@@ -123,6 +123,50 @@ function crmEnqueueCampaign(PDO $db, int $campaignId, bool $dryRun = false): arr
 }
 }
 
+if (!function_exists('crmStandardFooter')) {
+/**
+ * Tüm CRM kampanya maillerinin altına eklenen STANDART kurumsal footer.
+ * Logo + iletişim + sosyal medya + KVKK/ticari ileti metni + abonelikten çık + copyright.
+ * Abonelikten çık token'ı = crm-public/unsubscribe ile AYNI: sha256(email|unsub|JWT_SECRET).
+ */
+function crmStandardFooter(PDO $db, string $email): string
+{
+    $siteUrl = rtrim((string)getSetting($db, 'frontend_url', 'https://khilonfast.com'), '/');
+    $contactEmail = (string)getSetting($db, 'contact_email', 'info@khilonfast.com');
+    $secret = defined('JWT_SECRET') ? JWT_SECRET : '';
+    $normEmail = strtolower(trim($email));
+    $token = hash('sha256', $normEmail . '|unsub|' . $secret);
+    $unsubUrl  = $siteUrl . '/abonelikten-cik?e=' . urlencode($normEmail) . '&t=' . $token;
+    $privacyUrl = $siteUrl . '/gizlilik-politikasi';
+    $logoUrl = $siteUrl . '/email-logo.png';
+    $year = date('Y');
+    $safe = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+
+    return '
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:32px;border-top:1px solid #e2e8f0;background:#f8fafc">
+      <tr><td align="center" style="padding:28px 24px;text-align:center;font-family:Arial,Helvetica,sans-serif">
+        <img src="' . $logoUrl . '" alt="KhilonFast" width="150" style="display:inline-block;width:150px;height:auto;margin-bottom:14px" />
+        <p style="margin:0 0 10px;font-size:12px;color:#64748b">
+          <a href="mailto:' . $safe($contactEmail) . '" style="color:#1a3a52;text-decoration:none">' . $safe($contactEmail) . '</a>
+        </p>
+        <p style="margin:0 0 14px;font-size:12px;color:#64748b">
+          <a href="https://www.linkedin.com" style="color:#64748b;text-decoration:none">LinkedIn</a> &nbsp;&middot;&nbsp;
+          <a href="https://www.instagram.com" style="color:#64748b;text-decoration:none">Instagram</a> &nbsp;&middot;&nbsp;
+          <a href="https://www.facebook.com" style="color:#64748b;text-decoration:none">Facebook</a>
+        </p>
+        <p style="margin:0 0 12px;font-size:11px;line-height:1.6;color:#94a3b8">
+          Bu e-posta KhilonFast tarafından ticari elektronik ileti olarak gönderilmiştir.
+          Detaylar için <a href="' . $privacyUrl . '" style="color:#64748b">Gizlilik Politikamızı</a> inceleyebilirsiniz.
+        </p>
+        <p style="margin:0 0 12px;font-size:12px">
+          <a href="' . $unsubUrl . '" style="color:#94a3b8;text-decoration:underline">Bu e-postaları almak istemiyorsanız abonelikten çıkın</a>
+        </p>
+        <p style="margin:0;font-size:11px;color:#cbd5e1">&copy; ' . $year . ' KhilonFast. T&uuml;m haklar&#305; sakl&#305;d&#305;r.</p>
+      </td></tr>
+    </table>';
+}
+}
+
 if (!function_exists('crmDispatchCampaignBatch')) {
 /**
  * Kampanya recipient batch'ini gönder. Brevo HTTP API ile tek tek gönderir.
@@ -179,6 +223,9 @@ function crmDispatchCampaignBatch(PDO $db, int $campaignId, int $batchSize = 50)
             $subject = str_replace('{{' . $k . '}}', $v, $subject);
             $html = str_replace('{{' . $k . '}}', $v, $html);
         }
+
+        // Standart kurumsal footer (logo + iletişim + sosyal + KVKK + abonelikten çık + copyright)
+        $html .= crmStandardFooter($db, (string)$r['email']);
 
         try {
             if (!$apiKey || !function_exists('sendBrevoApiEmail')) {

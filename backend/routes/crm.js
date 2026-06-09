@@ -23,6 +23,9 @@ async function ensureCrmSchema() {
         score INT NOT NULL DEFAULT 0,
         ltv DECIMAL(12,2) NOT NULL DEFAULT 0.00,
         ltv_currency VARCHAR(8) NOT NULL DEFAULT 'TRY',
+        unsubscribed_at DATETIME NULL DEFAULT NULL,
+        unsubscribe_reason VARCHAR(60) NULL DEFAULT NULL,
+        unsubscribe_detail TEXT NULL DEFAULT NULL,
         custom_fields JSON NULL,
         last_activity_at TIMESTAMP NULL DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -34,6 +37,15 @@ async function ensureCrmSchema() {
         KEY idx_score (score),
         KEY idx_last_activity (last_activity_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
+
+    // Mevcut crm_contacts tablolarına unsubscribe kolonlarını idempotent ekle
+    for (const [col, def] of [
+        ['unsubscribed_at', 'DATETIME NULL DEFAULT NULL'],
+        ['unsubscribe_reason', 'VARCHAR(60) NULL DEFAULT NULL'],
+        ['unsubscribe_detail', 'TEXT NULL DEFAULT NULL'],
+    ]) {
+        try { await db.query(`ALTER TABLE crm_contacts ADD COLUMN ${col} ${def}`); } catch (e) { /* kolon zaten var */ }
+    }
 
     await db.query(`CREATE TABLE IF NOT EXISTS crm_custom_fields (
         id INT AUTO_INCREMENT PRIMARY KEY,

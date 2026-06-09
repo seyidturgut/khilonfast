@@ -515,4 +515,49 @@ router.get('/unsubscribe', async (req, res) => {
     } catch (e) { res.status(500).send('Hata: ' + e.message); }
 });
 
+// ─── POST /unsubscribe — Abonelikten Çık sayfası (anında çıkış, JSON) ──────────
+router.post('/unsubscribe', async (req, res) => {
+    try {
+        const email = String(req.body.email || '').toLowerCase().trim();
+        const token = String(req.body.token || '');
+        if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !token) {
+            return res.status(400).json({ error: 'Geçersiz istek' });
+        }
+        const secret = process.env.JWT_SECRET || '';
+        const expected = crypto.createHash('sha256').update(`${email}|unsub|${secret}`).digest('hex');
+        if (expected.length !== token.length || !crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(token))) {
+            return res.status(403).json({ error: 'Geçersiz onay' });
+        }
+        const contactId = await findOrCreateContactByEmail(email);
+        if (contactId) {
+            await db.query("UPDATE crm_contacts SET status = 'unsubscribed', unsubscribed_at = NOW() WHERE id = ?", [contactId]);
+            await recordActivity(contactId, 'email_unsubscribed', 'Listeden çıkış (abonelikten çık sayfası)', { metadata: { self_service: true } });
+            await applyScore(contactId, 'email_unsubscribed', { reason: 'Manual unsubscribe' });
+        }
+        res.json({ ok: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ─── POST /unsubscribe-reason — opsiyonel çıkış sebebi ────────────────────────
+router.post('/unsubscribe-reason', async (req, res) => {
+    try {
+        const email = String(req.body.email || '').toLowerCase().trim();
+        const token = String(req.body.token || '');
+        const reason = String(req.body.reason || '').trim().slice(0, 60);
+        const detail = String(req.body.detail || '').trim().slice(0, 2000);
+        if (!email || !token) return res.status(400).json({ error: 'Geçersiz istek' });
+        const secret = process.env.JWT_SECRET || '';
+        const expected = crypto.createHash('sha256').update(`${email}|unsub|${secret}`).digest('hex');
+        if (expected.length !== token.length || !crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(token))) {
+            return res.status(403).json({ error: 'Geçersiz onay' });
+        }
+        const contactId = await findOrCreateContactByEmail(email);
+        if (contactId) {
+            await db.query("UPDATE crm_contacts SET unsubscribe_reason = ?, unsubscribe_detail = ? WHERE id = ?",
+                [reason || null, detail || null, contactId]);
+        }
+        res.json({ ok: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 export default router;
