@@ -78,6 +78,24 @@ const SECTOR_LABELS: Record<string, string> = {
     'endustriyel-gida': 'Endüstriyel Gıda',
 }
 
+const SECTOR_LABELS_EN: Record<string, string> = {
+    'fintech': 'FinTech',
+    'odeme-sistemleri': 'Payment Systems',
+    'teknoloji-yazilim': 'Technology / Software',
+    'b2b': 'B2B',
+    'filo-kiralama': 'Fleet Leasing',
+    'enerji': 'Energy',
+    'uretim': 'Manufacturing',
+    'ic-tasarim': 'Interior Design',
+    'endustriyel-gida': 'Industrial Food',
+}
+
+// Locale'e göre sektör etiketi (yoksa TR'ye, o da yoksa slug'a düş).
+function sectorLabel(slug: string, isEn: boolean): string {
+    if (isEn) return SECTOR_LABELS_EN[slug] || SECTOR_LABELS[slug] || slug;
+    return SECTOR_LABELS[slug] || slug;
+}
+
 function parseScopeItems(raw: string | string[]): string[] {
     if (Array.isArray(raw)) return raw
     if (typeof raw === 'string') {
@@ -297,7 +315,7 @@ export default function ConsultantDetail() {
                                 <div className="consultant-hero-sectors">
                                     {sectors.map((s: string) => (
                                         <span key={s} className="sector-tag">
-                                            {SECTOR_LABELS[s] || s}
+                                            {sectorLabel(s, isEn)}
                                         </span>
                                     ))}
                                 </div>

@@ -105,13 +105,15 @@ export function translatePathnameToLocale(targetLocale: AppLocale, pathname: str
             [/^services\/?/, 'hizmetlerimiz/'],
             [/^sectoral-services\/?/, 'sektorel-hizmetler/'],
             [/^trainings\/?/, 'egitimler/'],
-            [/^products\/?/, 'urunler/']
+            [/^products\/?/, 'urunler/'],
+            [/^consultants\/?/, 'danismanlar/']
         ],
         en: [
             [/^hizmetlerimiz\/?/, 'services/'],
             [/^sektorel-hizmetler\/?/, 'sectoral-services/'],
             [/^egitimler\/?/, 'trainings/'],
-            [/^urunler\/?/, 'products/']
+            [/^urunler\/?/, 'products/'],
+            [/^danismanlar\/?/, 'consultants/']
         ]
     }
 
