@@ -106,6 +106,61 @@ export default function SettingsPage() {
         });
     };
 
+    // ── Veritabanı Bakımı (CRM log temizliği) ──
+    const [cleanupInfo, setCleanupInfo] = useState<any>(null);
+    const [cleanupBusy, setCleanupBusy] = useState(false);
+    const [cleanupResult, setCleanupResult] = useState<string | null>(null);
+
+    // days verilirse o değerle önizle (kaydetmeden anlık); yoksa kayıtlı ayar.
+    const fetchCleanupPreview = async (days?: string) => {
+        try {
+            const token = localStorage.getItem('token');
+            const q = days ? `?days=${encodeURIComponent(days)}` : '';
+            const res = await fetch(`${ADMIN_API_BASE}/admin/crm-cleanup${q}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) setCleanupInfo(await res.json());
+        } catch (err) { console.error(err); }
+    };
+
+    useEffect(() => { fetchCleanupPreview(settings.crm_cleanup_retention_days); }, []);
+
+    // Saklama kutusu değişince önizlemeyi o değerle tazele (debounce).
+    useEffect(() => {
+        const v = settings.crm_cleanup_retention_days;
+        if (!v) return;
+        const t = setTimeout(() => fetchCleanupPreview(v), 400);
+        return () => clearTimeout(t);
+    }, [settings.crm_cleanup_retention_days]);
+
+    const runCleanup = async () => {
+        const days = settings.crm_cleanup_retention_days || '90';
+        if (!window.confirm(`${days} günden ESKİ CRM log kayıtları (e-posta takibi, aktivite, skor geçmişi) silinecek ve disk geri kazanılacak.\n\nKişi listesine (crm_contacts) DOKUNULMAZ. Devam edilsin mi?`)) return;
+        setCleanupBusy(true);
+        setCleanupResult(null);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${ADMIN_API_BASE}/admin/crm-cleanup`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ retention_days: days })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                const d = data.deleted || {};
+                const total = Object.values(d).reduce((a: number, b: any) => a + (typeof b === 'number' ? b : 0), 0);
+                setCleanupResult(`✅ ${total.toLocaleString('tr-TR')} kayıt silindi, disk geri kazanıldı.`);
+                setCleanupInfo(data.preview_after || null);
+            } else {
+                setCleanupResult('❌ Temizlik başarısız: ' + (data.error || 'bilinmeyen hata'));
+            }
+        } catch (err) {
+            setCleanupResult('❌ Temizlik sırasında hata oluştu.');
+        } finally {
+            setCleanupBusy(false);
+        }
+    };
+
     const handleSave = async () => {
         setSaving(true);
         setMessage(null);
@@ -683,6 +738,77 @@ export default function SettingsPage() {
                             <option value="pro">Pro (api.deepl.com)</option>
                         </select>
                     </div>
+                </div>
+
+                {/* Veritabanı Bakımı — CRM log temizliği */}
+                <div className="card" style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+                    <h2 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+                        🧹 Veritabanı Bakımı (CRM Log Temizliği)
+                    </h2>
+                    <p style={{ fontSize: '0.85rem', color: '#6b7280', margin: '0 0 1rem' }}>
+                        Eski <strong>e-posta takip / aktivite / skor geçmişi</strong> kayıtlarını budar ve disk alanını geri kazanır.
+                        <strong> Kişi listenize (crm_contacts) ve operasyonel verilere DOKUNMAZ</strong> — sistemi bozmaz.
+                    </p>
+
+                    {/* DB durumu */}
+                    {cleanupInfo && (
+                        <div style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 10, padding: '1rem', marginBottom: '1rem' }}>
+                            <div style={{ fontSize: '0.9rem', marginBottom: 8 }}>
+                                Toplam DB boyutu: <strong>{cleanupInfo.db_size_mb} MB</strong> ·
+                                Budanabilir kayıt (≥{cleanupInfo.retention_days} gün): <strong>{Number(cleanupInfo.total_old || 0).toLocaleString('tr-TR')}</strong>
+                            </div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: '0.8rem', color: '#6b7280' }}>
+                                {(cleanupInfo.tables || []).map((t: any) => (
+                                    <span key={t.table}>
+                                        {t.table}: <strong>{t.size_mb} MB</strong> ({Number(t.old_rows || 0).toLocaleString('tr-TR')} eski)
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+                        <div className="form-group">
+                            <label>Saklama Süresi (gün)</label>
+                            <input
+                                type="number" min={7}
+                                value={settings.crm_cleanup_retention_days || '90'}
+                                onChange={e => handleChange('crm_cleanup_retention_days', e.target.value)}
+                                className="form-control"
+                            />
+                            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Bu günden eski log kayıtları silinir (en az 7).</span>
+                        </div>
+                        <div className="form-group">
+                            <label>Otomatik Temizlik</label>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 400, cursor: 'pointer' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={settings.crm_cleanup_enabled === '1'}
+                                    onChange={e => handleChange('crm_cleanup_enabled', e.target.checked ? '1' : '0')}
+                                />
+                                Sistem günde 1 kez otomatik temizlesin
+                            </label>
+                            {settings.crm_cleanup_last_run && (
+                                <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Son çalışma: {settings.crm_cleanup_last_run}</span>
+                            )}
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                        <button
+                            onClick={runCleanup}
+                            disabled={cleanupBusy}
+                            className="btn"
+                            style={{ background: '#0369a1', color: '#fff', padding: '0.6rem 1.2rem', borderRadius: 8, border: 'none', cursor: 'pointer' }}
+                        >
+                            {cleanupBusy ? '⏳ Temizleniyor...' : '🧹 Şimdi Temizle (manuel)'}
+                        </button>
+                        {cleanupResult && <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>{cleanupResult}</span>}
+                    </div>
+                    <p style={{ fontSize: '0.75rem', color: '#9ca3af', margin: '0.75rem 0 0' }}>
+                        ⚠️ Saklama süresi + Otomatik ayarını değiştirince üstteki <strong>“Değişiklikleri Kaydet”</strong> ile kaydetmeyi unutmayın.
+                        Manuel “Şimdi Temizle” kayıtlı saklama süresini kullanır.
+                    </p>
                 </div>
             </div>
 

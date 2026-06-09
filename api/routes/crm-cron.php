@@ -91,4 +91,20 @@ try {
     error_log('[crm-cron] sending lookup: ' . $e->getMessage());
 }
 
+// 3) CRM log otomatik temizlik (ayar açıksa, günde 1 kez). crm_contacts'a DOKUNMAZ.
+try {
+    require_once __DIR__ . '/../services/CrmCleanup.php';
+    crmCleanupEnsureSettings($db);
+    if ((string) getSetting($db, 'crm_cleanup_enabled', '0') === '1') {
+        $last = (string) getSetting($db, 'crm_cleanup_last_run', '');
+        if ($last === '' || strtotime($last) < strtotime('-24 hours')) {
+            $days = crmCleanupSafeDays(getSetting($db, 'crm_cleanup_retention_days', '90'));
+            $cl = crmCleanupRun($db, $days, false); // cron'da OPTIMIZE YOK (kilit riski) — disk ayda bir manuel OPTIMIZE ile alınır
+            $result['cleanup'] = $cl['deleted'];
+        }
+    }
+} catch (Throwable $e) {
+    error_log('[crm-cron] cleanup: ' . $e->getMessage());
+}
+
 sendResponse(['ok' => true] + $result);

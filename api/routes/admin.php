@@ -362,6 +362,25 @@ if ($action === 'stats' && $method === 'GET') {
     ]);
 }
 
+// CRM log/geçmiş temizliği (Veritabanı Bakımı) — sadece log tabloları, contacts'a DOKUNMAZ
+if ($action === 'crm-cleanup') {
+    require_once __DIR__ . '/../services/CrmCleanup.php';
+    crmCleanupEnsureSettings($db);
+    $settingDays = crmCleanupSafeDays(getSetting($db, 'crm_cleanup_retention_days', '90'));
+    if ($method === 'GET') {
+        // Önizleme: query ?days verildiyse onu kullan (kaydetmeden anlık önizleme), yoksa kayıtlı ayar.
+        $days = (isset($_GET['days']) && $_GET['days'] !== '') ? crmCleanupSafeDays($_GET['days']) : $settingDays;
+        sendResponse(crmCleanupPreview($db, $days));
+    } elseif ($method === 'POST') {
+        // Manuel çalıştır: body retention_days verildiyse ONU kullan (kaydetmeye gerek yok), yoksa kayıtlı ayar.
+        $body = json_decode(file_get_contents('php://input'), true) ?: [];
+        $days = (isset($body['retention_days']) && $body['retention_days'] !== '') ? crmCleanupSafeDays($body['retention_days']) : $settingDays;
+        $res = crmCleanupRun($db, $days, true);
+        $res['preview_after'] = crmCleanupPreview($db, $days);
+        sendResponse($res);
+    }
+}
+
 // Users (Admin)
 if ($action === 'users' && $method === 'POST' && empty($id)) {
     $data = getJsonBody();
