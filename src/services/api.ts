@@ -331,6 +331,10 @@ export const crmAPI = {
         api.post(`/crm/campaigns/${id}/schedule`, { scheduled_at: scheduledAt }),
     cancelCampaignSchedule: (id: IdParam) =>
         api.post(`/crm/campaigns/${id}/cancel-schedule`, {}),
+    pauseCampaign: (id: IdParam) =>
+        api.post(`/crm/campaigns/${id}/pause`, {}),
+    resumeCampaign: (id: IdParam) =>
+        api.post(`/crm/campaigns/${id}/resume`, {}),
 
     // Otomasyon test simülatörü
     listAutomationScenarios: () => api.get('/automation/scenarios'),

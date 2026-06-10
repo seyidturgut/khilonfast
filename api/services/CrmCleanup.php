@@ -30,7 +30,9 @@ function crmCleanupEnsureSettings(PDO $db): void
             "INSERT INTO settings (setting_key, setting_value, setting_group, description) VALUES
              ('crm_cleanup_enabled', '0', 'maintenance', 'CRM log otomatik temizlik aç/kapa'),
              ('crm_cleanup_retention_days', '90', 'maintenance', 'CRM log saklama süresi (gün)'),
-             ('crm_cleanup_last_run', '', 'maintenance', 'Son CRM temizlik zamanı')
+             ('crm_cleanup_last_run', '', 'maintenance', 'Son CRM temizlik zamanı'),
+             ('crm_hourly_send_limit', '2000', 'maintenance', 'CRM kampanya saatlik gönderim limiti (0=limitsiz)'),
+             ('crm_cron_batch_size', '50', 'maintenance', 'CRM kampanya dakikalık gönderim adedi (cron batch)')
              ON DUPLICATE KEY UPDATE setting_key = setting_key"
         );
     } catch (Throwable $e) { /* settings tablosu yoksa sessiz geç */ }

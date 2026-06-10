@@ -810,6 +810,60 @@ export default function SettingsPage() {
                         Manuel “Şimdi Temizle” kayıtlı saklama süresini kullanır.
                     </p>
                 </div>
+
+                {/* CRM Kampanya Gönderim Hızı */}
+                <div className="card" style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+                    <h2 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+                        🚀 CRM Kampanya Gönderim Hızı
+                    </h2>
+                    <p style={{ fontSize: '0.85rem', color: '#6b7280', margin: '0 0 1rem' }}>
+                        Büyük listelerde gönderim hızını ve sunucu korumasını buradan ayarlayın.
+                        Kampanya gönderimi cron ile <strong>her dakika</strong> bir grup (batch) halinde yapılır.
+                    </p>
+                    <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+                        <div className="form-group">
+                            <label>Dakikalık Gönderim (batch)</label>
+                            <input
+                                type="number" min={1} max={500}
+                                value={settings.crm_cron_batch_size || '50'}
+                                onChange={e => handleChange('crm_cron_batch_size', e.target.value)}
+                                className="form-control"
+                            />
+                            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Her dakika gönderilecek e-posta adedi (1-500).</span>
+                        </div>
+                        <div className="form-group">
+                            <label>Saatlik Üst Limit (güvenlik)</label>
+                            <input
+                                type="number" min={0}
+                                value={settings.crm_hourly_send_limit || '2000'}
+                                onChange={e => handleChange('crm_hourly_send_limit', e.target.value)}
+                                className="form-control"
+                            />
+                            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Son 1 saatte bu sayı aşılırsa gönderim bekler. 0 = limitsiz.</span>
+                        </div>
+                    </div>
+                    {(() => {
+                        const batch = Math.max(1, Math.min(500, parseInt(settings.crm_cron_batch_size || '50') || 50));
+                        const limit = Math.max(0, parseInt(settings.crm_hourly_send_limit || '2000') || 0);
+                        const rawRate = batch * 60;
+                        const effRate = limit > 0 ? Math.min(rawRate, limit) : rawRate;
+                        const h30k = Math.ceil((30000 / effRate) * 10) / 10;
+                        const capped = limit > 0 && limit < rawRate;
+                        return (
+                            <div style={{ marginTop: 12, background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 10, padding: '12px 14px', fontSize: '0.85rem', color: '#075985' }}>
+                                Etkin hız: <strong>~{effRate.toLocaleString('tr-TR')} e-posta/saat</strong>
+                                {capped && <span style={{ color: '#b45309' }}> (saatlik limit kısıyor — batch×60={rawRate.toLocaleString('tr-TR')})</span>}
+                                <br />Örnek: <strong>30.000 kişilik liste ≈ {h30k} saat</strong>.
+                                Öğleden önce bitmesi için kampanyayı sabah erken saate <strong>“Zamanla”</strong> ile kurun
+                                (örn. 07:00 başlangıç + 6.000/saat → ~12:00'de biter: batch 100, limit 6000).
+                            </div>
+                        );
+                    })()}
+                    <p style={{ fontSize: '0.75rem', color: '#9ca3af', margin: '0.75rem 0 0' }}>
+                        ⚠️ Değişiklikler üstteki <strong>“Değişiklikleri Kaydet”</strong> ile kaydedilince bir sonraki cron turundan itibaren geçerli olur.
+                        Çok yüksek değerler (300+/dk) sunucuyu ve mail sağlayıcı limitlerini zorlayabilir.
+                    </p>
+                </div>
             </div>
 
             <style>{`

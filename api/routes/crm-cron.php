@@ -35,7 +35,44 @@ if ($validKey === '' || !hash_equals($validKey, $keyHeader)) {
     sendResponse(['error' => 'Unauthorized'], 401);
 }
 
-$batchSize = isset($_GET['batch']) ? max(1, min(500, (int)$_GET['batch'])) : 50;
+// Dakikalık batch boyutu: ayardan (crm_cron_batch_size, varsayılan 50), ?batch= ile geçersiz kılınabilir.
+// Saatlik hız ≈ batch × 60 (cron her dakika). Örn. 100/dk → 6.000/saat → 30K liste ~5 saat.
+$settingBatch = 50;
+try {
+    $db->exec("INSERT INTO settings (setting_key, setting_value, setting_group, description)
+               VALUES ('crm_cron_batch_size', '50', 'maintenance', 'CRM kampanya dakikalık gönderim adedi (cron batch)')
+               ON DUPLICATE KEY UPDATE setting_key = setting_key");
+    $settingBatch = max(1, min(500, (int) getSetting($db, 'crm_cron_batch_size', '50')));
+} catch (Throwable $e) {}
+$batchSize = isset($_GET['batch']) ? max(1, min(500, (int)$_GET['batch'])) : $settingBatch;
+
+// ÇAKIŞMA KİLİDİ: önceki cron turu hâlâ çalışıyorsa (Brevo yavaş vb.) yenisi BAŞLAMAZ.
+// Süreç birikmesi (her dakika üst üste binen istekler) sunucuyu zorlamasın.
+try {
+    $gotLock = (int)$db->query("SELECT GET_LOCK('khilon_crm_cron', 0)")->fetchColumn();
+    if ($gotLock !== 1) {
+        sendResponse(['ok' => true, 'skipped' => 'previous run still in progress', 'time' => date('c')]);
+    }
+} catch (Throwable $e) { /* kilit alınamadıysa bile devam etme riskine girme — ama sorgu hatasında normal akış */ }
+
+// SAATLİK GÖNDERİM LİMİTİ: son 1 saatte gönderilen toplam, limiti aştıysa bu tur gönderim yok.
+// Ayar: crm_hourly_send_limit (settings, varsayılan 2000). 0 = limitsiz.
+$hourlyLimit = 2000;
+try {
+    $db->exec("INSERT INTO settings (setting_key, setting_value, setting_group, description)
+               VALUES ('crm_hourly_send_limit', '2000', 'maintenance', 'CRM kampanya saatlik gönderim limiti (0=limitsiz)')
+               ON DUPLICATE KEY UPDATE setting_key = setting_key");
+    $hourlyLimit = (int) getSetting($db, 'crm_hourly_send_limit', '2000');
+} catch (Throwable $e) {}
+$hourlyAllowance = PHP_INT_MAX;
+if ($hourlyLimit > 0) {
+    try {
+        $sentLastHour = (int)$db->query(
+            "SELECT COUNT(*) FROM crm_campaign_recipients WHERE sent_at >= NOW() - INTERVAL 1 HOUR"
+        )->fetchColumn();
+        $hourlyAllowance = max(0, $hourlyLimit - $sentLastHour);
+    } catch (Throwable $e) {}
+}
 
 $result = [
     'started_scheduled' => 0,
@@ -43,6 +80,7 @@ $result = [
     'campaigns_completed' => 0,
     'sent' => 0,
     'failed' => 0,
+    'hourly_allowance' => ($hourlyLimit > 0 ? $hourlyAllowance : 'unlimited'),
     'time' => date('c'),
 ];
 
@@ -75,11 +113,15 @@ try {
     foreach ($stmt as $row) $sendingIds[] = (int)$row['id'];
 
     foreach ($sendingIds as $cid) {
+        // Saatlik limit doldu → bu tur başka gönderim yapma (kuyruk bekler, sonraki saatte devam).
+        if ($hourlyAllowance <= 0) { $result['hourly_limit_reached'] = true; break; }
+        $effBatch = (int) min($batchSize, $hourlyAllowance);
         try {
-            $r = crmDispatchCampaignBatch($db, $cid, $batchSize);
+            $r = crmDispatchCampaignBatch($db, $cid, $effBatch);
             $result['dispatched_batches']++;
             $result['sent'] += (int)($r['sent'] ?? 0);
             $result['failed'] += (int)($r['failed'] ?? 0);
+            $hourlyAllowance -= (int)($r['sent'] ?? 0);
             if ((int)($r['remaining'] ?? 0) === 0) {
                 $result['campaigns_completed']++;
             }
@@ -106,5 +148,8 @@ try {
 } catch (Throwable $e) {
     error_log('[crm-cron] cleanup: ' . $e->getMessage());
 }
+
+// Çakışma kilidini bırak (sendResponse exit etmeden önce)
+try { $db->query("SELECT RELEASE_LOCK('khilon_crm_cron')"); } catch (Throwable $e) {}
 
 sendResponse(['ok' => true] + $result);

@@ -774,6 +774,28 @@ if ($action === 'campaigns') {
         sendResponse(['ok' => true, 'status' => 'draft']);
     }
 
+    // /api/crm/campaigns/:id/pause — gönderimi DURAKLAT (kuyruk korunur, cron dokunmaz)
+    if ($method === 'POST' && !empty($id) && $subAction === 'pause') {
+        $stmt = $db->prepare("SELECT status FROM crm_campaigns WHERE id = ?");
+        $stmt->execute([(int)$id]);
+        $cur = $stmt->fetchColumn();
+        if (!$cur) sendResponse(['error' => 'Not found'], 404);
+        if ($cur !== 'sending') sendResponse(['error' => 'Sadece gönderimdeki (sending) kampanya duraklatılabilir'], 400);
+        $db->prepare("UPDATE crm_campaigns SET status = 'paused' WHERE id = ?")->execute([(int)$id]);
+        sendResponse(['ok' => true, 'status' => 'paused']);
+    }
+
+    // /api/crm/campaigns/:id/resume — kaldığı yerden DEVAM (queued alıcılar; gönderilenler tekrarlanmaz)
+    if ($method === 'POST' && !empty($id) && $subAction === 'resume') {
+        $stmt = $db->prepare("SELECT status FROM crm_campaigns WHERE id = ?");
+        $stmt->execute([(int)$id]);
+        $cur = $stmt->fetchColumn();
+        if (!$cur) sendResponse(['error' => 'Not found'], 404);
+        if ($cur !== 'paused') sendResponse(['error' => 'Sadece duraklatılmış (paused) kampanya devam ettirilebilir'], 400);
+        $db->prepare("UPDATE crm_campaigns SET status = 'sending' WHERE id = ?")->execute([(int)$id]);
+        sendResponse(['ok' => true, 'status' => 'sending']);
+    }
+
     // /api/crm/campaigns/:id/send — enqueue
     if ($method === 'POST' && !empty($id) && $subAction === 'send') {
         $data = getJsonBody();

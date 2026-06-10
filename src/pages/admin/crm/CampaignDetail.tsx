@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../../layouts/AdminLayout';
-import { crmAPI, type CrmCampaign, type CrmCampaignReport } from '../../../services/api';
+import api, { crmAPI, type CrmCampaign, type CrmCampaignReport } from '../../../services/api';
 import { HiArrowLeft, HiPaperAirplane, HiPlay, HiTrash, HiUsers, HiEye, HiCursorClick, HiX, HiPencil, HiClock } from 'react-icons/hi';
 import { useRef as useRefHook } from 'react';
 import UnlayerEmailEditor, { type UnlayerEditorHandle } from '../../../components/admin/UnlayerEmailEditor';
@@ -59,14 +59,55 @@ export default function CrmCampaignDetailPage() {
         try {
             setSending(true);
             setActionMsg('');
+            // Büyük liste koruması: gerçek gönderimden önce hedef kitleyi dry-run ile say,
+            // 10.000+ kişiyse admin'e tahmini süreyle birlikte onay sor.
+            if (!dryRun) {
+                const preview = await crmAPI.sendCampaign(id, true);
+                const count = Number(preview.data?.audience_count || 0);
+                if (count >= 10000) {
+                    // Gerçek hızı ayarlardan oku (batch×60, saatlik limitle kısıtlı)
+                    let rate = 2000;
+                    try {
+                        const s = await api.get('/admin/settings');
+                        const batch = Math.max(1, Math.min(500, parseInt(s.data?.crm_cron_batch_size || '50') || 50));
+                        const limit = Math.max(0, parseInt(s.data?.crm_hourly_send_limit || '2000') || 0);
+                        rate = limit > 0 ? Math.min(batch * 60, limit) : batch * 60;
+                    } catch { /* ayar okunamazsa varsayılan */ }
+                    const hours = Math.ceil((count / rate) * 10) / 10;
+                    const ok = window.confirm(
+                        `⚠️ BÜYÜK LİSTE: Bu kampanya ${count.toLocaleString('tr-TR')} kişiye gönderilecek.\n\n` +
+                        `Mevcut hız ~${rate.toLocaleString('tr-TR')} e-posta/saat → tahmini süre ~${hours} saat.\n` +
+                        `(Hızı Ayarlar → CRM Kampanya Gönderim Hızı'ndan değiştirebilirsiniz.)\n\n` +
+                        `İstediğiniz an "Duraklat" ile durdurabilirsiniz. Devam edilsin mi?`
+                    );
+                    if (!ok) { setSending(false); return; }
+                }
+            }
             const res = await crmAPI.sendCampaign(id, dryRun);
             const r = res.data;
             if (dryRun) {
                 setActionMsg(`Önizleme: ${r.audience_count || 0} kişi hedeflenecek (gerçek gönderim yapılmadı).`);
             } else {
-                setActionMsg(`Kampanya kuyruğa eklendi: ${r.queued || 0} kişi. Gönderimi başlatmak için aşağıdaki "Batch gönder" butonunu kullanın.`);
+                setActionMsg(`Kampanya kuyruğa eklendi: ${r.queued || 0} kişi. Gönderim cron ile saatlik limit dahilinde otomatik akar.`);
                 await load();
             }
+        } catch (e: any) {
+            setActionMsg('Hata: ' + (e?.response?.data?.error || e.message));
+        } finally {
+            setSending(false);
+        }
+    };
+
+    const handlePauseResume = async (action: 'pause' | 'resume') => {
+        if (!id) return;
+        if (action === 'pause' && !confirm('Gönderim duraklatılacak. Kuyrukta bekleyenler korunur; "Devam Et" deyince kaldığı yerden sürer (gönderilenlere tekrar gitmez). Onaylıyor musunuz?')) return;
+        try {
+            setSending(true);
+            setActionMsg('');
+            const res = action === 'pause' ? await crmAPI.pauseCampaign(id) : await crmAPI.resumeCampaign(id);
+            setActionMsg(action === 'pause' ? '⏸ Gönderim duraklatıldı.' : '▶️ Gönderim kaldığı yerden devam ediyor (saatlik limit dahilinde).');
+            void res;
+            await load();
         } catch (e: any) {
             setActionMsg('Hata: ' + (e?.response?.data?.error || e.message));
         } finally {
@@ -202,8 +243,28 @@ export default function CrmCampaignDetailPage() {
                             </>
                         )}
                         {isSending && (
-                            <button className="btn btn-primary" onClick={handleDispatch} disabled={sending}>
-                                <HiPlay /> Batch Gönder (50)
+                            <>
+                                <button className="btn btn-primary" onClick={handleDispatch} disabled={sending}>
+                                    <HiPlay /> Batch Gönder (50)
+                                </button>
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={() => handlePauseResume('pause')}
+                                    disabled={sending}
+                                    style={{ background: '#fef3c7', color: '#a16207', border: '1px solid #fcd34d' }}
+                                >
+                                    ⏸ Duraklat
+                                </button>
+                            </>
+                        )}
+                        {campaign.status === 'paused' && (
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => handlePauseResume('resume')}
+                                disabled={sending}
+                                style={{ background: '#16a34a' }}
+                            >
+                                ▶️ Devam Et
                             </button>
                         )}
                         <button className="btn btn-danger" onClick={handleDelete}><HiTrash /> Sil</button>
