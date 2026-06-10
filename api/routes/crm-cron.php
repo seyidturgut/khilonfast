@@ -151,6 +151,10 @@ try {
                 crmCleanupOptimize($db);
                 $result['cleanup_optimized'] = true;
             }
+            // Günlük bot-tıklama temizliği: son kampanyaların clicked_at damgaları
+            // İNSAN tıklamalarıyla yeniden kurulur (rapor sayıları kendini düzeltir).
+            try { $result['bot_scrub'] = crmScrubBotClicks($db, 9); }
+            catch (Throwable $e) { error_log('[crm-cron] bot scrub: ' . $e->getMessage()); }
         }
     }
 } catch (Throwable $e) {

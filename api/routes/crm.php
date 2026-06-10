@@ -878,10 +878,12 @@ if ($action === 'campaigns') {
     }
 
     // /api/crm/campaigns/:id/top-links — en çok tıklanan linkler (İNSAN tıklamaları)
-    // KESİN atama: message_id eşleşmesi. BOT FİLTRESİ:
-    //  (a) bot user-agent (python-requests/curl/scanner...) hariç
-    //  (b) aynı kişi aynı mailde ≤30 sn içinde 3+ FARKLI link "tıklamışsa" = kurumsal
-    //      e-posta güvenlik tarayıcısı (maildeki her linki otomatik açar) → hepsi hariç.
+    // KESİN atama: message_id eşleşmesi. BOT FİLTRESİ (3 kural):
+    //  R1) bot user-agent (python-requests/curl/scanner...)
+    //  R2) aynı kişi aynı mailde ≤30 sn içinde 3+ FARKLI link (hız patlaması)
+    //  R3) teslimattan ≤120 sn sonra 2+ FARKLI link tıklanmış mail = teslimat-anı
+    //      tarayıcısı (kurumsal güvenlik sistemleri maili alır almaz tüm linkleri açar;
+    //      tek linke hızlı tıklayan İNSAN sayılmaya devam eder).
     if ($method === 'GET' && !empty($id) && $subAction === 'top-links') {
         $cid = (int)$id;
         $rows = [];
@@ -899,9 +901,21 @@ if ($action === 'campaigns') {
                      HAVING COUNT(DISTINCT link_url) >= 3
                         AND TIMESTAMPDIFF(SECOND, MIN(occurred_at), MAX(occurred_at)) <= 30
                  ) bot ON bot.email = t.email AND bot.message_id = t.message_id
+                 LEFT JOIN (
+                     SELECT email, message_id, MIN(occurred_at) AS delivered_at
+                     FROM crm_email_tracking WHERE event = 'delivered'
+                     GROUP BY email, message_id
+                 ) d ON d.email = t.email AND d.message_id = t.message_id
+                 LEFT JOIN (
+                     SELECT email, message_id, COUNT(DISTINCT link_url) AS nlinks, MIN(occurred_at) AS first_click
+                     FROM crm_email_tracking WHERE event = 'clicked'
+                     GROUP BY email, message_id
+                 ) g ON g.email = t.email AND g.message_id = t.message_id
                  WHERE t.event = 'clicked' AND t.link_url IS NOT NULL AND t.link_url <> ''
                    AND bot.email IS NULL
                    AND (t.user_agent IS NULL OR t.user_agent NOT REGEXP 'python|curl|wget|bot|crawler|spider|scan|headless|phantom|monitor')
+                   AND NOT (g.nlinks >= 2 AND d.delivered_at IS NOT NULL
+                            AND TIMESTAMPDIFF(SECOND, d.delivered_at, g.first_click) <= 120)
                  GROUP BY t.link_url
                  ORDER BY clicks DESC
                  LIMIT 10"

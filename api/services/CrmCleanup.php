@@ -78,6 +78,73 @@ function crmCleanupPreview(PDO $db, int $retentionDays): array
     return $out;
 }
 
+/**
+ * BOT TIKLAMA TEMİZLİĞİ (scrub) — son $days günde başlayan kampanyaların
+ * clicked_at damgalarını tracking'ten İNSAN tıklamalarıyla yeniden kurar.
+ * Bot tanımı (3 kural):
+ *   R1) bot user-agent (python-requests/curl/scanner...)
+ *   R2) aynı kişi aynı mailde ≤30 sn içinde 3+ FARKLI link (hız patlaması)
+ *   R3) teslimattan ≤120 sn sonra 2+ FARKLI link tıklanmış mail (teslimat-anı tarayıcısı)
+ * opened_at'a DOKUNMAZ (open zaten sektörde yaklaşık metrik; sadece tıklama netleştirilir).
+ * Webhook anlık olarak sadece R1'i uygulayabilir; R2/R3 geçmişe bakmayı gerektirir —
+ * bu yüzden günlük cron'da çağrılır (kampanya raporu ertesi gün kesinleşir).
+ */
+function crmScrubBotClicks(PDO $db, int $days = 9): array
+{
+    $days = max(1, min(30, $days));
+    $reset = 0; $set = 0;
+    try {
+        // 1) Kapsamdaki kampanyaların tıklama damgalarını sıfırla
+        $st = $db->prepare(
+            "UPDATE crm_campaign_recipients r
+             JOIN crm_campaigns c ON c.id = r.campaign_id
+             SET r.clicked_at = NULL
+             WHERE c.started_at >= NOW() - INTERVAL {$days} DAY AND r.clicked_at IS NOT NULL"
+        );
+        $st->execute();
+        $reset = $st->rowCount();
+
+        // 2) İNSAN tıklamalarından yeniden kur (ilk insan tıklaması)
+        $st = $db->prepare(
+            "UPDATE crm_campaign_recipients r
+             JOIN crm_campaigns c ON c.id = r.campaign_id AND c.started_at >= NOW() - INTERVAL {$days} DAY
+             JOIN (
+                 SELECT REPLACE(REPLACE(t.message_id,'<',''),'>','') AS mid, MIN(t.occurred_at) AS t
+                 FROM crm_email_tracking t
+                 LEFT JOIN (
+                     SELECT email, message_id FROM crm_email_tracking
+                     WHERE event = 'clicked'
+                     GROUP BY email, message_id
+                     HAVING COUNT(DISTINCT link_url) >= 3
+                        AND TIMESTAMPDIFF(SECOND, MIN(occurred_at), MAX(occurred_at)) <= 30
+                 ) bot ON bot.email = t.email AND bot.message_id = t.message_id
+                 LEFT JOIN (
+                     SELECT email, message_id, MIN(occurred_at) AS delivered_at
+                     FROM crm_email_tracking WHERE event = 'delivered'
+                     GROUP BY email, message_id
+                 ) d ON d.email = t.email AND d.message_id = t.message_id
+                 LEFT JOIN (
+                     SELECT email, message_id, COUNT(DISTINCT link_url) AS nlinks, MIN(occurred_at) AS first_click
+                     FROM crm_email_tracking WHERE event = 'clicked'
+                     GROUP BY email, message_id
+                 ) g ON g.email = t.email AND g.message_id = t.message_id
+                 WHERE t.event = 'clicked' AND t.message_id IS NOT NULL AND t.message_id <> ''
+                   AND bot.email IS NULL
+                   AND (t.user_agent IS NULL OR t.user_agent NOT REGEXP 'python|curl|wget|bot|crawler|spider|scan|headless|phantom|monitor')
+                   AND NOT (g.nlinks >= 2 AND d.delivered_at IS NOT NULL
+                            AND TIMESTAMPDIFF(SECOND, d.delivered_at, g.first_click) <= 120)
+                 GROUP BY mid
+             ) k ON k.mid = REPLACE(REPLACE(r.message_id,'<',''),'>','')
+             SET r.clicked_at = k.t, r.opened_at = COALESCE(r.opened_at, k.t)"
+        );
+        $st->execute();
+        $set = $st->rowCount();
+    } catch (Throwable $e) {
+        return ['error' => $e->getMessage(), 'reset' => $reset, 'set' => $set];
+    }
+    return ['reset' => $reset, 'human_clicks' => $set];
+}
+
 /** Log tablolarında OPTIMIZE çalıştır — silinen satırların diski geri verilsin.
  *  OPTIMIZE TABLE sonuç kümesi döner → fetchAll+closeCursor ile tüketilmeli,
  *  yoksa sonraki sorgular "unbuffered query" hatası verir. */
