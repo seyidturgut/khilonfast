@@ -109,16 +109,23 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
 
     useEffect(() => {
+        // 1) Consent Mode v2 varsayılanını GTM'den ÖNCE ayarla (hepsi denied).
         ensureGoogleConsentDefaults()
+
+        // 2) Kayıtlı tercih varsa uygula (kullanıcı daha önce kabul/red etmişse).
         const stored = parseStoredConsent()
         if (stored) {
             setPreferences(stored)
             setHasStoredConsent(true)
             applyConsent(stored)
-            if (stored.analytics || stored.marketing) {
-                loadGtmIfNeeded()
-            }
         }
+
+        // 3) GTM'i HER ZAMAN yükle (consent'e bağlı DEĞİL). Google Consent Mode v2:
+        //    izin yokken GA4 çerezsiz "modellenmiş" ping gönderir (çerez koymaz, trafiği sayar);
+        //    kullanıcı kabul edince consent 'update' ile tam veriye geçer.
+        //    Eskiden GTM yalnızca consent verilince yükleniyordu → reddeden/banner'ı
+        //    görmezden gelen ziyaretçiler GA'da HİÇ sayılmıyordu.
+        loadGtmIfNeeded()
 
         setIsReady(true)
     }, [])
