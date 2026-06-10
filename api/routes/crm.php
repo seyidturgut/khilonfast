@@ -877,8 +877,11 @@ if ($action === 'campaigns') {
         sendResponse(['lists' => $rows]);
     }
 
-    // /api/crm/campaigns/:id/top-links — en çok tıklanan linkler
-    // NOT: tracking.message_id Brevo webhook formatıyla eşleşmiyor → email + sent_at sonrası eşleme.
+    // /api/crm/campaigns/:id/top-links — en çok tıklanan linkler (İNSAN tıklamaları)
+    // KESİN atama: message_id eşleşmesi. BOT FİLTRESİ:
+    //  (a) bot user-agent (python-requests/curl/scanner...) hariç
+    //  (b) aynı kişi aynı mailde ≤30 sn içinde 3+ FARKLI link "tıklamışsa" = kurumsal
+    //      e-posta güvenlik tarayıcısı (maildeki her linki otomatik açar) → hepsi hariç.
     if ($method === 'GET' && !empty($id) && $subAction === 'top-links') {
         $cid = (int)$id;
         $rows = [];
@@ -886,9 +889,19 @@ if ($action === 'campaigns') {
             $st = $db->prepare(
                 "SELECT t.link_url, COUNT(*) AS clicks, COUNT(DISTINCT t.email) AS unique_clicks
                  FROM crm_email_tracking t
-                 JOIN crm_campaign_recipients r ON r.email = t.email AND r.campaign_id = ?
+                 JOIN crm_campaign_recipients r
+                   ON r.campaign_id = ?
+                  AND REPLACE(REPLACE(r.message_id,'<',''),'>','') = REPLACE(REPLACE(t.message_id,'<',''),'>','')
+                 LEFT JOIN (
+                     SELECT email, message_id FROM crm_email_tracking
+                     WHERE event = 'clicked'
+                     GROUP BY email, message_id
+                     HAVING COUNT(DISTINCT link_url) >= 3
+                        AND TIMESTAMPDIFF(SECOND, MIN(occurred_at), MAX(occurred_at)) <= 30
+                 ) bot ON bot.email = t.email AND bot.message_id = t.message_id
                  WHERE t.event = 'clicked' AND t.link_url IS NOT NULL AND t.link_url <> ''
-                   AND (r.sent_at IS NULL OR t.occurred_at >= r.sent_at)
+                   AND bot.email IS NULL
+                   AND (t.user_agent IS NULL OR t.user_agent NOT REGEXP 'python|curl|wget|bot|crawler|spider|scan|headless|phantom|monitor')
                  GROUP BY t.link_url
                  ORDER BY clicks DESC
                  LIMIT 10"

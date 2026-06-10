@@ -72,25 +72,34 @@ if ($action === 'webhook' && $id === 'brevo' && $method === 'POST') {
             } catch (Throwable $ex) {}
         }
 
-        // Tracking insert
-        try {
-            $stmt = $db->prepare("INSERT INTO crm_email_tracking
-                (contact_id, email, event, message_id, link_url, reason, ip, user_agent, provider, raw_payload, occurred_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'brevo', ?, ?)");
-            $occurredAt = isset($e['date']) ? date('Y-m-d H:i:s', strtotime((string)$e['date'])) : date('Y-m-d H:i:s');
-            $stmt->execute([
-                $contactId,
-                $email,
-                $normalized,
-                (string)($e['message-id'] ?? $e['messageId'] ?? '') ?: null,
-                (string)($e['link'] ?? $e['url'] ?? '') ?: null,
-                (string)($e['reason'] ?? '') ?: null,
-                (string)($e['ip'] ?? '') ?: null,
-                substr((string)($e['user_agent'] ?? $e['ua'] ?? ''), 0, 500) ?: null,
-                json_encode($e),
-                $occurredAt
-            ]);
-        } catch (Throwable $ex) { error_log('[brevo-webhook] insert: ' . $ex->getMessage()); }
+        // Tracking insert — DB ŞİŞME ÖNLEMİ:
+        //  - 'request' eventi HİÇ saklanmaz (satırların ~1/3'ü, analitik değeri yok; gönderim
+        //    bilgisi zaten crm_campaign_recipients.sent_at'ta).
+        //  - raw_payload (ham webhook JSON, ~600B/satır = boyutun yarısı) sadece SORUN-TEŞHİS
+        //    eventlerinde saklanır (bounce/blocked/complaint/deferred). Open/click/delivered
+        //    için gereksiz — tüm analitik alanlar ayrı kolonlarda zaten var.
+        if ($normalized !== 'request') {
+            try {
+                $diagnosticEvents = ['hard_bounce', 'soft_bounce', 'bounced', 'blocked', 'complaint', 'deferred', 'error', 'invalid'];
+                $storePayload = in_array($normalized, $diagnosticEvents, true) ? json_encode($e) : null;
+                $stmt = $db->prepare("INSERT INTO crm_email_tracking
+                    (contact_id, email, event, message_id, link_url, reason, ip, user_agent, provider, raw_payload, occurred_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'brevo', ?, ?)");
+                $occurredAt = isset($e['date']) ? date('Y-m-d H:i:s', strtotime((string)$e['date'])) : date('Y-m-d H:i:s');
+                $stmt->execute([
+                    $contactId,
+                    $email,
+                    $normalized,
+                    (string)($e['message-id'] ?? $e['messageId'] ?? '') ?: null,
+                    (string)($e['link'] ?? $e['url'] ?? '') ?: null,
+                    (string)($e['reason'] ?? '') ?: null,
+                    (string)($e['ip'] ?? '') ?: null,
+                    substr((string)($e['user_agent'] ?? $e['ua'] ?? ''), 0, 500) ?: null,
+                    $storePayload,
+                    $occurredAt
+                ]);
+            } catch (Throwable $ex) { error_log('[brevo-webhook] insert: ' . $ex->getMessage()); }
+        }
 
         // Status side-effect (bounce/complaint/unsubscribe → contact status update)
         if ($contactId) {
@@ -105,28 +114,38 @@ if ($action === 'webhook' && $id === 'brevo' && $method === 'POST') {
             } catch (Throwable $ex) {}
         }
 
-        // Faz 6: campaign_recipients durumu güncelle (message_id ile eşleşirse)
+        // Faz 6: campaign_recipients durumu güncelle — SADECE message_id eşleşmesiyle.
+        // ÖNEMLİ: Eski "OR contact_id" fallback'i KALDIRILDI — kişinin BAŞKA maillerdeki
+        // (otomasyon/hatırlatma) açma/tıklamaları kampanyaya YANLIŞ sayılıyordu.
+        // recipients.message_id (Brevo API yanıtı) ile webhook message-id formatı aynı
+        // (<...@smtp-relay.mailin.fr>); güvenlik için açılı parantezli/parantezsiz iki varyant denenir.
         try {
-            $msgId = (string)($e['message-id'] ?? $e['messageId'] ?? '');
-            if ($msgId && $contactId) {
+            $msgId = trim((string)($e['message-id'] ?? $e['messageId'] ?? ''));
+            if ($msgId !== '') {
+                $bare = trim($msgId, '<>');
+                $mids = array_values(array_unique([$msgId, $bare, '<' . $bare . '>']));
+                $ph = implode(',', array_fill(0, count($mids), '?'));
                 if ($normalized === 'opened') {
                     $db->prepare("UPDATE crm_campaign_recipients
                                   SET opened_at = COALESCE(opened_at, NOW())
-                                  WHERE message_id = ? OR (contact_id = ? AND status = 'sent')")
-                       ->execute([$msgId, $contactId]);
+                                  WHERE message_id IN ($ph)")->execute($mids);
                 } elseif ($normalized === 'clicked') {
-                    $db->prepare("UPDATE crm_campaign_recipients
-                                  SET clicked_at = COALESCE(clicked_at, NOW()), opened_at = COALESCE(opened_at, NOW())
-                                  WHERE message_id = ? OR (contact_id = ? AND status = 'sent')")
-                       ->execute([$msgId, $contactId]);
+                    // BOT FİLTRESİ: güvenlik tarayıcısı user-agent'ları (python-requests, curl,
+                    // scanner botları) kampanyayı "tıklandı" olarak İŞARETLEMEZ. Tracking satırı
+                    // yine yazılır (analitik sorguları ayrıca hız-bazlı filtre uygular).
+                    $clickUa = strtolower((string)($e['user_agent'] ?? $e['ua'] ?? ''));
+                    $isBotUa = $clickUa !== '' && preg_match('/python|curl|wget|bot|crawler|spider|scan|headless|phantom|monitor/', $clickUa);
+                    if (!$isBotUa) {
+                        $db->prepare("UPDATE crm_campaign_recipients
+                                      SET clicked_at = COALESCE(clicked_at, NOW()), opened_at = COALESCE(opened_at, NOW())
+                                      WHERE message_id IN ($ph)")->execute($mids);
+                    }
                 } elseif (in_array($normalized, ['bounced', 'hard_bounce'], true)) {
                     $db->prepare("UPDATE crm_campaign_recipients SET status = 'bounced'
-                                  WHERE message_id = ? OR (contact_id = ? AND status = 'sent')")
-                       ->execute([$msgId, $contactId]);
+                                  WHERE message_id IN ($ph)")->execute($mids);
                 } elseif ($normalized === 'unsubscribed') {
                     $db->prepare("UPDATE crm_campaign_recipients SET status = 'unsubscribed'
-                                  WHERE message_id = ? OR (contact_id = ? AND status = 'sent')")
-                       ->execute([$msgId, $contactId]);
+                                  WHERE message_id IN ($ph)")->execute($mids);
                 }
             }
         } catch (Throwable $e2) {}

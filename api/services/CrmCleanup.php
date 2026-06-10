@@ -78,6 +78,19 @@ function crmCleanupPreview(PDO $db, int $retentionDays): array
     return $out;
 }
 
+/** Log tablolarında OPTIMIZE çalıştır — silinen satırların diski geri verilsin.
+ *  OPTIMIZE TABLE sonuç kümesi döner → fetchAll+closeCursor ile tüketilmeli,
+ *  yoksa sonraki sorgular "unbuffered query" hatası verir. */
+function crmCleanupOptimize(PDO $db): void
+{
+    foreach (crmCleanupTables() as $t) {
+        try {
+            $opt = $db->query("OPTIMIZE TABLE `{$t['table']}`");
+            if ($opt) { $opt->fetchAll(); $opt->closeCursor(); }
+        } catch (Throwable $e) { /* OPTIMIZE başarısız → veri zaten silindi, kritik değil */ }
+    }
+}
+
 /** Temizliği çalıştır: eski log kayıtlarını sil. $optimize=true ise diski geri kazan (OPTIMIZE). */
 function crmCleanupRun(PDO $db, int $retentionDays, bool $optimize = false): array
 {
@@ -92,15 +105,9 @@ function crmCleanupRun(PDO $db, int $retentionDays, bool $optimize = false): arr
             $deleted[$t['table']] = 'hata: ' . $e->getMessage();
         }
     }
-    // OPTIMIZE'ı TÜM silmelerden SONRA yap. OPTIMIZE TABLE bir sonuç kümesi döner →
-    // closeCursor ile tüketilmeli, yoksa sonraki sorgular "unbuffered" hatası verir.
+    // OPTIMIZE'ı TÜM silmelerden SONRA yap.
     if ($optimize) {
-        foreach (crmCleanupTables() as $t) {
-            try {
-                $opt = $db->query("OPTIMIZE TABLE `{$t['table']}`");
-                if ($opt) { $opt->fetchAll(); $opt->closeCursor(); }
-            } catch (Throwable $e) { /* OPTIMIZE başarısız → veri zaten silindi, kritik değil */ }
-        }
+        crmCleanupOptimize($db);
     }
     crmCleanupEnsureSettings($db);
     try {

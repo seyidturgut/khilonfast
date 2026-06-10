@@ -141,8 +141,16 @@ try {
         $last = (string) getSetting($db, 'crm_cleanup_last_run', '');
         if ($last === '' || strtotime($last) < strtotime('-24 hours')) {
             $days = crmCleanupSafeDays(getSetting($db, 'crm_cleanup_retention_days', '90'));
-            $cl = crmCleanupRun($db, $days, false); // cron'da OPTIMIZE YOK (kilit riski) — disk ayda bir manuel OPTIMIZE ile alınır
+            $cl = crmCleanupRun($db, $days, false);
             $result['cleanup'] = $cl['deleted'];
+            // Büyük silme olduysa diski geri kazan (OPTIMIZE) — aksi halde DELETE boşluğu
+            // tabloda kalır ve tablo raporlanan boyutuyla "şişmiş" görünmeye devam eder.
+            $totalDeleted = 0;
+            foreach ((array)$cl['deleted'] as $n) { if (is_numeric($n)) $totalDeleted += (int)$n; }
+            if ($totalDeleted > 5000) {
+                crmCleanupOptimize($db);
+                $result['cleanup_optimized'] = true;
+            }
         }
     }
 } catch (Throwable $e) {
