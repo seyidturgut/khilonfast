@@ -131,6 +131,7 @@ const CrmFormDetailPage = lazy(() => import('./pages/admin/crm/FormDetail'))
 const CrmImportPage = lazy(() => import('./pages/admin/crm/Import'))
 const CrmDashboardPage = lazy(() => import('./pages/admin/crm/Dashboard'))
 const CrmFunnelsPage = lazy(() => import('./pages/admin/crm/Funnels'))
+const CrmCampaignAnalyticsPage = lazy(() => import('./pages/admin/crm/CampaignAnalytics'))
 const AutomationTestPage = lazy(() => import('./pages/admin/AutomationTest'))
 
 const slugsTr = trCommon.slugs as Record<string, string>
@@ -668,6 +669,7 @@ function MainContent() {
                     <Route path="/admin/crm/smart-links" element={<RequireAdmin><CrmSmartLinksPage /></RequireAdmin>} />
                     <Route path="/admin/crm/campaigns" element={<RequireAdmin><CrmCampaignsPage /></RequireAdmin>} />
                     <Route path="/admin/crm/campaigns/:id" element={<RequireAdmin><CrmCampaignDetailPage /></RequireAdmin>} />
+                    <Route path="/admin/crm/analytics" element={<RequireAdmin><CrmCampaignAnalyticsPage /></RequireAdmin>} />
                     <Route path="/admin/crm/forms" element={<RequireAdmin><CrmFormsPage /></RequireAdmin>} />
                     <Route path="/admin/crm/forms/:id" element={<RequireAdmin><CrmFormDetailPage /></RequireAdmin>} />
                     <Route path="/admin/crm/import" element={<RequireAdmin><CrmImportPage /></RequireAdmin>} />

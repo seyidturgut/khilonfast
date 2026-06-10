@@ -33,6 +33,10 @@ export default function CrmCampaignDetailPage() {
     const [scheduleModal, setScheduleModal] = useState(false);
     const [scheduleAt, setScheduleAt] = useState('');
     const [scheduleSubmitting, setScheduleSubmitting] = useState(false);
+    // Analitik: liste kırılımı + top linkler + saat/gün dağılımı
+    const [listBreakdown, setListBreakdown] = useState<any[]>([]);
+    const [topLinks, setTopLinks] = useState<any[]>([]);
+    const [timeAnalysis, setTimeAnalysis] = useState<{ by_hour: number[]; by_day: number[] } | null>(null);
 
     const load = async () => {
         if (!id) return;
@@ -46,6 +50,20 @@ export default function CrmCampaignDetailPage() {
             setCampaign(cr.data?.campaign || null);
             setReport(rp.data?.report || null);
             setRecipients(rs.data?.recipients || []);
+            // Analitik (gönderimi başlamış kampanyalarda) — hata olsa da sayfayı bozmasın
+            const st = cr.data?.campaign?.status;
+            if (st && ['sending', 'paused', 'sent'].includes(st)) {
+                try {
+                    const [lb, tl, ta] = await Promise.all([
+                        crmAPI.getCampaignListBreakdown(id),
+                        crmAPI.getCampaignTopLinks(id),
+                        crmAPI.getCampaignTimeAnalysis(id)
+                    ]);
+                    setListBreakdown(lb.data?.lists || []);
+                    setTopLinks(tl.data?.links || []);
+                    setTimeAnalysis(ta.data || null);
+                } catch { /* analitik opsiyonel */ }
+            }
         } catch (e: any) {
             setError(e?.response?.data?.error || 'Yükleme hatası');
         } finally {
@@ -435,6 +453,89 @@ export default function CrmCampaignDetailPage() {
                         )}
                     </div>
                 )}
+
+                {/* Liste Performansı — hangi liste daha başarılı */}
+                {listBreakdown.length > 0 && (() => {
+                    const best = [...listBreakdown].filter(l => l.sent > 0).sort((a, b) => b.open_rate - a.open_rate)[0];
+                    return (
+                        <div className="card-block">
+                            <h3>📊 Liste Performansı</h3>
+                            <div className="table-wrapper">
+                                <table className="data-table">
+                                    <thead>
+                                        <tr><th>Liste</th><th>Gönderildi</th><th>Açıldı</th><th>Tıklandı</th><th>Bounce</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {listBreakdown.map((l: any) => (
+                                            <tr key={l.list_id} style={best && l.list_id === best.list_id ? { background: 'rgba(22,163,74,0.08)' } : undefined}>
+                                                <td>{best && l.list_id === best.list_id ? '🏆 ' : ''}{l.name}</td>
+                                                <td>{l.sent}</td>
+                                                <td>{l.opened} <span className="rate-pill">%{l.open_rate}</span></td>
+                                                <td>{l.clicked} <span className="rate-pill">%{l.click_rate}</span></td>
+                                                <td>{l.bounced}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '8px 0 0' }}>
+                                💡 Bir kişi birden fazla listedeyse her listesinde sayılır; 🏆 = en yüksek açılma oranı.
+                            </p>
+                        </div>
+                    );
+                })()}
+
+                {/* En çok tıklanan linkler */}
+                {topLinks.length > 0 && (
+                    <div className="card-block">
+                        <h3>🔗 En Çok Tıklanan Linkler</h3>
+                        <div className="table-wrapper">
+                            <table className="data-table">
+                                <thead><tr><th>Link</th><th>Tıklama</th><th>Tekil Kişi</th></tr></thead>
+                                <tbody>
+                                    {topLinks.map((l: any, i: number) => (
+                                        <tr key={i}>
+                                            <td style={{ maxWidth: 420, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={l.link_url}>
+                                                <a href={l.link_url} target="_blank" rel="noreferrer">{l.link_url}</a>
+                                            </td>
+                                            <td>{l.clicks}</td>
+                                            <td>{l.unique_clicks}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* Saat/gün açılma dağılımı */}
+                {timeAnalysis && timeAnalysis.by_hour.some(v => v > 0) && (() => {
+                    const maxH = Math.max(...timeAnalysis.by_hour, 1);
+                    const dayLabels = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+                    const maxD = Math.max(...timeAnalysis.by_day, 1);
+                    const bestHour = timeAnalysis.by_hour.indexOf(Math.max(...timeAnalysis.by_hour));
+                    return (
+                        <div className="card-block">
+                            <h3>🕐 Açılma Zamanları <span style={{ fontSize: '0.8rem', fontWeight: 400, color: '#94a3b8' }}>(en iyi saat: {String(bestHour).padStart(2, '0')}:00)</span></h3>
+                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 90, marginTop: 10 }}>
+                                {timeAnalysis.by_hour.map((v, h) => (
+                                    <div key={h} style={{ flex: 1, textAlign: 'center' }} title={`${String(h).padStart(2, '0')}:00 — ${v} açılma`}>
+                                        <div style={{ height: Math.round((v / maxH) * 70), minHeight: v > 0 ? 4 : 1, background: h === bestHour ? '#16a34a' : '#3b82f6', borderRadius: 3 }} />
+                                        {h % 3 === 0 && <div style={{ fontSize: 9, color: '#94a3b8', marginTop: 3 }}>{String(h).padStart(2, '0')}</div>}
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                                {timeAnalysis.by_day.map((v, i) => (
+                                    <div key={i} style={{ flex: 1, textAlign: 'center' }} title={`${dayLabels[i]} — ${v} açılma`}>
+                                        <div style={{ height: Math.max(Math.round((v / maxD) * 40), v > 0 ? 4 : 1), background: '#9333ea', borderRadius: 3 }} />
+                                        <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 3 }}>{dayLabels[i]}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                })()}
 
                 {/* Recipients table */}
                 <div className="card-block">

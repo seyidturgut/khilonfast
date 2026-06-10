@@ -826,6 +826,97 @@ if ($action === 'campaigns') {
         sendResponse(['report' => $report]);
     }
 
+    // /api/crm/campaigns/:id/list-breakdown — LİSTE bazlı performans (hangi liste daha başarılı)
+    if ($method === 'GET' && !empty($id) && $subAction === 'list-breakdown') {
+        $cid = (int)$id;
+        // Kampanyanın hedef listeleri (varsa onlarla sınırla — kişi başka listelerde de olabilir)
+        $tStmt = $db->prepare("SELECT target_list_ids FROM crm_campaigns WHERE id = ?");
+        $tStmt->execute([$cid]);
+        $targetIds = json_decode((string)($tStmt->fetchColumn() ?: '[]'), true);
+        $targetIds = is_array($targetIds) ? array_values(array_filter(array_map('intval', $targetIds))) : [];
+
+        $where = "r.campaign_id = ?";
+        $params = [$cid];
+        if (!empty($targetIds)) {
+            $ph = implode(',', array_fill(0, count($targetIds), '?'));
+            $where .= " AND l.id IN ($ph)";
+            $params = array_merge($params, $targetIds);
+        }
+        $rows = [];
+        try {
+            $st = $db->prepare(
+                "SELECT l.id, l.name,
+                        COUNT(DISTINCT r.id) AS total,
+                        SUM(r.status IN ('sent','opened','clicked')) AS sent,
+                        SUM(r.opened_at IS NOT NULL) AS opened,
+                        SUM(r.clicked_at IS NOT NULL) AS clicked,
+                        SUM(r.status = 'bounced') AS bounced
+                 FROM crm_campaign_recipients r
+                 JOIN crm_list_contacts lc ON lc.contact_id = r.contact_id
+                 JOIN crm_lists l ON l.id = lc.list_id
+                 WHERE $where
+                 GROUP BY l.id, l.name
+                 ORDER BY opened DESC, total DESC"
+            );
+            $st->execute($params);
+            foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
+                $sent = (int)$r['sent'];
+                $rows[] = [
+                    'list_id' => (int)$r['id'],
+                    'name' => $r['name'],
+                    'total' => (int)$r['total'],
+                    'sent' => $sent,
+                    'opened' => (int)$r['opened'],
+                    'clicked' => (int)$r['clicked'],
+                    'bounced' => (int)$r['bounced'],
+                    'open_rate' => $sent > 0 ? round(((int)$r['opened'] / $sent) * 100, 1) : 0,
+                    'click_rate' => $sent > 0 ? round(((int)$r['clicked'] / $sent) * 100, 1) : 0,
+                ];
+            }
+        } catch (Throwable $e) { /* tablo yoksa boş */ }
+        sendResponse(['lists' => $rows]);
+    }
+
+    // /api/crm/campaigns/:id/top-links — en çok tıklanan linkler
+    // NOT: tracking.message_id Brevo webhook formatıyla eşleşmiyor → email + sent_at sonrası eşleme.
+    if ($method === 'GET' && !empty($id) && $subAction === 'top-links') {
+        $cid = (int)$id;
+        $rows = [];
+        try {
+            $st = $db->prepare(
+                "SELECT t.link_url, COUNT(*) AS clicks, COUNT(DISTINCT t.email) AS unique_clicks
+                 FROM crm_email_tracking t
+                 JOIN crm_campaign_recipients r ON r.email = t.email AND r.campaign_id = ?
+                 WHERE t.event = 'clicked' AND t.link_url IS NOT NULL AND t.link_url <> ''
+                   AND (r.sent_at IS NULL OR t.occurred_at >= r.sent_at)
+                 GROUP BY t.link_url
+                 ORDER BY clicks DESC
+                 LIMIT 10"
+            );
+            $st->execute([$cid]);
+            $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {}
+        sendResponse(['links' => $rows]);
+    }
+
+    // /api/crm/campaigns/:id/time-analysis — açılmaların saat + gün dağılımı (en iyi gönderim zamanı)
+    if ($method === 'GET' && !empty($id) && $subAction === 'time-analysis') {
+        $cid = (int)$id;
+        $byHour = array_fill(0, 24, 0);
+        $byDay = array_fill(1, 7, 0); // 1=Pazar ... 7=Cumartesi (MySQL DAYOFWEEK)
+        try {
+            $st = $db->prepare("SELECT HOUR(opened_at) h, COUNT(*) c FROM crm_campaign_recipients
+                                WHERE campaign_id = ? AND opened_at IS NOT NULL GROUP BY h");
+            $st->execute([$cid]);
+            foreach ($st as $r) $byHour[(int)$r['h']] = (int)$r['c'];
+            $st = $db->prepare("SELECT DAYOFWEEK(opened_at) d, COUNT(*) c FROM crm_campaign_recipients
+                                WHERE campaign_id = ? AND opened_at IS NOT NULL GROUP BY d");
+            $st->execute([$cid]);
+            foreach ($st as $r) $byDay[(int)$r['d']] = (int)$r['c'];
+        } catch (Throwable $e) {}
+        sendResponse(['by_hour' => $byHour, 'by_day' => array_values($byDay)]);
+    }
+
     // /api/crm/campaigns/:id/recipients
     if ($method === 'GET' && !empty($id) && $subAction === 'recipients') {
         $stmt = $db->prepare("SELECT r.*, c.first_name, c.last_name FROM crm_campaign_recipients r
@@ -1152,6 +1243,45 @@ if ($action === 'email-tracking' && $method === 'GET') {
 }
 
 // ═══ /api/crm/stats ══════════════════════════════════════════════════════════
+// /api/crm/campaign-analytics — tüm kampanyaların karşılaştırmalı performansı
+if ($action === 'campaign-analytics' && $method === 'GET') {
+    $rows = [];
+    try {
+        $st = $db->query(
+            "SELECT c.id, c.name, c.subject, c.status, c.started_at, c.completed_at,
+                    COUNT(r.id) AS total,
+                    SUM(r.status IN ('sent','opened','clicked')) AS sent,
+                    SUM(r.opened_at IS NOT NULL) AS opened,
+                    SUM(r.clicked_at IS NOT NULL) AS clicked,
+                    SUM(r.status = 'bounced') AS bounced
+             FROM crm_campaigns c
+             LEFT JOIN crm_campaign_recipients r ON r.campaign_id = c.id
+             WHERE c.status IN ('sent','sending','paused')
+             GROUP BY c.id
+             ORDER BY COALESCE(c.started_at, c.created_at) DESC
+             LIMIT 100"
+        );
+        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $sent = (int)$r['sent'];
+            $rows[] = [
+                'id' => (int)$r['id'],
+                'name' => $r['name'],
+                'subject' => $r['subject'],
+                'status' => $r['status'],
+                'started_at' => $r['started_at'],
+                'total' => (int)$r['total'],
+                'sent' => $sent,
+                'opened' => (int)$r['opened'],
+                'clicked' => (int)$r['clicked'],
+                'bounced' => (int)$r['bounced'],
+                'open_rate' => $sent > 0 ? round(((int)$r['opened'] / $sent) * 100, 1) : 0,
+                'click_rate' => $sent > 0 ? round(((int)$r['clicked'] / $sent) * 100, 1) : 0,
+            ];
+        }
+    } catch (Throwable $e) {}
+    sendResponse(['campaigns' => $rows]);
+}
+
 if ($action === 'stats' && $method === 'GET') {
     $stats = [
         'total' => 0,

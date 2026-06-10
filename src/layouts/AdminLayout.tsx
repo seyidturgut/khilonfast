@@ -92,6 +92,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 { icon: HiChartBar, label: 'Skor Kuralları', path: '/admin/crm/scoring-rules' },
                 { icon: HiPlay, label: 'Smart Linkler', path: '/admin/crm/smart-links' },
                 { icon: HiMail, label: 'Kampanyalar', path: '/admin/crm/campaigns' },
+                { icon: HiChartBar, label: 'Kampanya Analitiği', path: '/admin/crm/analytics' },
                 { icon: HiDocumentText, label: 'Formlar', path: '/admin/crm/forms' },
                 { icon: HiUsers, label: 'CSV Import / Export', path: '/admin/crm/import' },
                 { icon: HiChartBar, label: 'Funnels', path: '/admin/crm/funnels' },

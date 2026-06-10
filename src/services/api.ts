@@ -344,6 +344,10 @@ export const crmAPI = {
         api.post(`/crm/campaigns/${id}/dispatch-batch`, { batch_size: batchSize }),
     getCampaignReport: (id: IdParam) => api.get(`/crm/campaigns/${id}/report`),
     getCampaignRecipients: (id: IdParam) => api.get(`/crm/campaigns/${id}/recipients`),
+    getCampaignListBreakdown: (id: IdParam) => api.get(`/crm/campaigns/${id}/list-breakdown`),
+    getCampaignTopLinks: (id: IdParam) => api.get(`/crm/campaigns/${id}/top-links`),
+    getCampaignTimeAnalysis: (id: IdParam) => api.get(`/crm/campaigns/${id}/time-analysis`),
+    getCampaignAnalytics: () => api.get('/crm/campaign-analytics'),
 
     // Faz 7: Forms
     listForms: () => api.get('/crm/forms'),
