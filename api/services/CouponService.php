@@ -66,6 +66,14 @@ function ensureCouponSchema(PDO $db)
     couponEnsureOrderColumn($db, 'subtotal_amount', "ALTER TABLE orders ADD COLUMN subtotal_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER order_number");
     couponEnsureOrderColumn($db, 'coupon_discount_amount', "ALTER TABLE orders ADD COLUMN coupon_discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER subtotal_amount");
     couponEnsureOrderColumn($db, 'shipping_amount', "ALTER TABLE orders ADD COLUMN shipping_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER coupon_discount_amount");
+    // Kupon TR/EN: ad + açıklama dile göre (kod tek kalır). Idempotent.
+    if (!columnExists($db, 'coupons', 'name_en')) {
+        $db->exec("ALTER TABLE coupons ADD COLUMN name_en VARCHAR(255) NULL AFTER name");
+    }
+    if (!columnExists($db, 'coupons', 'description_en')) {
+        $db->exec("ALTER TABLE coupons ADD COLUMN description_en TEXT NULL AFTER description");
+    }
+
     couponEnsureOrderColumn($db, 'tax_amount', "ALTER TABLE orders ADD COLUMN tax_amount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER shipping_amount");
     couponEnsureOrderColumn($db, 'coupon_id', "ALTER TABLE orders ADD COLUMN coupon_id INT NULL DEFAULT NULL AFTER total_amount");
     couponEnsureOrderColumn($db, 'coupon_code', "ALTER TABLE orders ADD COLUMN coupon_code VARCHAR(100) NULL DEFAULT NULL AFTER coupon_id");
