@@ -31,6 +31,7 @@ declare global {
         dataLayer?: Array<unknown>
         gtag?: (...args: unknown[]) => void
         __khilonfastGtmLoaded?: boolean
+        __khilonfastGa4Loaded?: boolean
     }
 }
 
@@ -81,6 +82,30 @@ function loadGtmIfNeeded() {
     window.__khilonfastGtmLoaded = true
 }
 
+// GA4 ID — GTM container'daki "Google etiketi" canlıda güvenilir ateşlenmediği için
+// (Preview'da çalışıyor, Live'da gtag config çalışmıyor) GA4'ü DOĞRUDAN yüklüyoruz.
+// Consent Mode aynen geçerli (default denied + update granted dataLayer'da).
+// send_page_view=false → ilk page_view'i App.tsx köprüsü (spa_page_view) gönderir,
+// her route'ta tam 1 page_view (initial + SPA geçişleri). GTM Meta/LinkedIn değişmez.
+const GA4_MEASUREMENT_ID = 'G-16FR1976GE'
+
+function loadGa4DirectIfNeeded() {
+    if (typeof document === 'undefined' || window.__khilonfastGa4Loaded) return
+    window.__khilonfastGa4Loaded = true
+
+    window.dataLayer = window.dataLayer || []
+    window.gtag = window.gtag || function gtag(...args: unknown[]) { window.dataLayer?.push(args) }
+
+    const script = document.createElement('script')
+    script.id = 'khilonfast-ga4-loader'
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`
+    document.head.appendChild(script)
+
+    window.gtag('js', new Date())
+    window.gtag('config', GA4_MEASUREMENT_ID, { send_page_view: false })
+}
+
 function parseStoredConsent(): ConsentPreferences | null {
     if (typeof window === 'undefined') return null
 
@@ -126,6 +151,8 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
         //    Eskiden GTM yalnızca consent verilince yükleniyordu → reddeden/banner'ı
         //    görmezden gelen ziyaretçiler GA'da HİÇ sayılmıyordu.
         loadGtmIfNeeded()
+        // 4) GA4'ü doğrudan yükle (GTM'deki Google etiketi canlıda ateşlenmiyor — bkz. yorum).
+        loadGa4DirectIfNeeded()
 
         setIsReady(true)
     }, [])

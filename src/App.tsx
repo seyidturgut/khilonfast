@@ -330,13 +330,24 @@ function MainContent() {
         if (typeof window === 'undefined' || isAdminRoute) return;
         // title'ın güncellenmesi için bir tik bekle (SeoHead route sonrası set ediyor)
         const id = window.setTimeout(() => {
+            const pagePath = location.pathname + location.search;
             window.dataLayer = window.dataLayer || [];
+            // GTM köprüsü (Meta Pixel + LinkedIn bunu kullanır)
             window.dataLayer.push({
                 event: 'spa_page_view',
-                page_path: location.pathname + location.search,
+                page_path: pagePath,
                 page_location: window.location.href,
                 page_title: document.title
             });
+            // GA4 DOĞRUDAN page_view (GTM'deki Google etiketi canlıda ateşlenmediği için
+            // GA4 site kodundan yüklenir — ConsentContext. Her route'ta tam 1 page_view).
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', 'page_view', {
+                    page_path: pagePath,
+                    page_location: window.location.href,
+                    page_title: document.title
+                });
+            }
         }, 50);
         return () => window.clearTimeout(id);
     }, [location.pathname, location.search, isAdminRoute]);
