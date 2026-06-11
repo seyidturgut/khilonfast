@@ -39,8 +39,12 @@ function ensureGoogleConsentDefaults() {
     if (typeof window === 'undefined') return
 
     window.dataLayer = window.dataLayer || []
-    window.gtag = window.gtag || function gtag(...args: unknown[]) {
-        window.dataLayer?.push(args)
+    // ÖNEMLİ: gtag/js dataLayer'da GERÇEK `arguments` objesi bekler — dizi (...args) DEĞİL.
+    // Dizi push edilirse gtag komutları (consent/config/event) SESSİZCE YOK SAYILIR.
+    // Resmi snippet ile birebir aynı olmalı: function gtag(){ dataLayer.push(arguments) }.
+    window.gtag = window.gtag || function gtag() {
+        // eslint-disable-next-line prefer-rest-params
+        window.dataLayer!.push(arguments)
     }
 
     window.gtag('consent', 'default', {
@@ -94,16 +98,32 @@ function loadGa4DirectIfNeeded() {
     window.__khilonfastGa4Loaded = true
 
     window.dataLayer = window.dataLayer || []
-    window.gtag = window.gtag || function gtag(...args: unknown[]) { window.dataLayer?.push(args) }
+    // gtag stub: GERÇEK arguments objesi push edilmeli (dizi değil) — yoksa gtag/js komutları yok sayar.
+    // eslint-disable-next-line prefer-rest-params
+    window.gtag = window.gtag || function gtag() { window.dataLayer!.push(arguments) }
+
+    // gtag config'i ÖNCE dataLayer'a koy (gtag/js yüklenince işlenir).
+    window.gtag('js', new Date())
+    window.gtag('config', GA4_MEASUREMENT_ID, { send_page_view: false })
 
     const script = document.createElement('script')
     script.id = 'khilonfast-ga4-loader'
     script.async = true
     script.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`
-    document.head.appendChild(script)
 
-    window.gtag('js', new Date())
-    window.gtag('config', GA4_MEASUREMENT_ID, { send_page_view: false })
+    // KRİTİK SIRA: GTM'i, GA4 kütüphanesi yüklenip ilk hit'i gönderdikten SONRA yükle.
+    // GTM erken yüklenirse gtag çalışma-zamanını ele geçirip GA4 iletimini engelliyor.
+    let gtmTriggered = false
+    const triggerGtm = () => {
+        if (gtmTriggered) return
+        gtmTriggered = true
+        loadGtmIfNeeded()
+    }
+    script.onload = () => window.setTimeout(triggerGtm, 400)
+    script.onerror = triggerGtm
+    document.head.appendChild(script)
+    // Emniyet: gtag/js hiç yüklenmezse bile GTM (Meta/LinkedIn) en geç 3 sn'de yüklensin.
+    window.setTimeout(triggerGtm, 3000)
 }
 
 function parseStoredConsent(): ConsentPreferences | null {
@@ -150,8 +170,13 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
         //    kullanıcı kabul edince consent 'update' ile tam veriye geçer.
         //    Eskiden GTM yalnızca consent verilince yükleniyordu → reddeden/banner'ı
         //    görmezden gelen ziyaretçiler GA'da HİÇ sayılmıyordu.
-        loadGtmIfNeeded()
-        // 4) GA4'ü doğrudan yükle (GTM'deki Google etiketi canlıda ateşlenmiyor — bkz. yorum).
+        //
+        // SIRA KRİTİK: GA4'ü GTM'den ÖNCE yükle. GTM yüklendiğinde gtag çalışma-zamanını
+        // (google_tag_data) ele geçirip site-tarafı doğrudan GA4 config'inin iletimini
+        // ENGELLİYOR (GTM'de GA4 tag'i olmasa bile). GA4 önce init olup ilk hit'i gönderirse,
+        // GTM sonradan gelse de GA4 çalışmaya devam ediyor (canlı testle doğrulandı).
+        // GA4'ü doğrudan yükle. GTM, GA4 kütüphanesi yüklendikten SONRA (onload) tetiklenir
+        // (loadGa4DirectIfNeeded içinde) — böylece GTM, GA4'ün gtag runtime'ını bozamaz.
         loadGa4DirectIfNeeded()
 
         setIsReady(true)
