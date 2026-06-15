@@ -4,7 +4,7 @@ import { HiPlus, HiX } from 'react-icons/hi';
 interface FieldDef {
     key: string;
     label: string;
-    kind: 'text' | 'number' | 'date' | 'tag' | 'list' | 'select';
+    kind: 'text' | 'number' | 'date' | 'tag' | 'list' | 'select' | 'campaign';
     options?: string[];
 }
 
@@ -22,6 +22,8 @@ const FIELDS: FieldDef[] = [
     { key: 'last_activity_at', label: 'Son Aktivite', kind: 'date' },
     { key: 'has_tag', label: 'Etiket Var', kind: 'tag' },
     { key: 'in_list', label: 'Liste Üyesi', kind: 'list' },
+    { key: 'opened_campaign', label: 'Kampanya Açtı', kind: 'campaign' },
+    { key: 'clicked_campaign', label: 'Kampanyada Tıkladı', kind: 'campaign' },
 ];
 
 const OPS_BY_KIND: Record<FieldDef['kind'], { value: string; label: string; needsValue?: boolean }[]> = {
@@ -61,6 +63,11 @@ const OPS_BY_KIND: Record<FieldDef['kind'], { value: string; label: string; need
         { value: 'equals', label: '=' },
         { value: 'not_equals', label: '≠' },
     ],
+    campaign: [
+        { value: 'equals', label: 'açtı' },
+        { value: 'not_equals', label: 'açmadı' },
+        { value: 'any', label: 'herhangi birini açtı', needsValue: false },
+    ],
 };
 
 interface Props {
@@ -68,9 +75,10 @@ interface Props {
     onChange: (rules: CrmListRules) => void;
     availableTags?: { slug: string; name: string }[];
     availableLists?: { id: number; name: string }[];
+    availableCampaigns?: { id: number; name: string }[];
 }
 
-export default function SmartListRuleBuilder({ value, onChange, availableTags = [], availableLists = [] }: Props) {
+export default function SmartListRuleBuilder({ value, onChange, availableTags = [], availableLists = [], availableCampaigns = [] }: Props) {
     const updateRule = (idx: number, patch: Partial<CrmListRule>) => {
         const next = [...value.rules];
         next[idx] = { ...next[idx], ...patch };
@@ -129,6 +137,7 @@ export default function SmartListRuleBuilder({ value, onChange, availableTags = 
                                     onChange={(v) => updateRule(idx, { value: v })}
                                     availableTags={availableTags}
                                     availableLists={availableLists}
+                                    availableCampaigns={availableCampaigns}
                                 />
                             )}
 
@@ -163,14 +172,23 @@ export default function SmartListRuleBuilder({ value, onChange, availableTags = 
     );
 }
 
-function ValueInput({ field, op, value, onChange, availableTags, availableLists }: {
+function ValueInput({ field, op, value, onChange, availableTags, availableLists, availableCampaigns }: {
     field: FieldDef;
     op: string;
     value: unknown;
     onChange: (v: unknown) => void;
     availableTags: { slug: string; name: string }[];
     availableLists: { id: number; name: string }[];
+    availableCampaigns: { id: number; name: string }[];
 }) {
+    if (field.kind === 'campaign') {
+        return (
+            <select className="rule-value" value={String(value || '')} onChange={(e) => onChange(Number(e.target.value))}>
+                <option value="">— Kampanya seç —</option>
+                {availableCampaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+        );
+    }
     if (field.kind === 'tag') {
         return (
             <select className="rule-value" value={String(value || '')} onChange={(e) => onChange(e.target.value)}>

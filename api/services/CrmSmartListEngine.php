@@ -58,6 +58,28 @@ function crmBuildSmartListSql($rulesJson): array
             continue;
         }
 
+        // ─── Kampanya etkileşimi (mail açtı / tıkladı) ───
+        // opened_campaign:  belirli/herhangi bir kampanyayı AÇMIŞ kişiler
+        // clicked_campaign: belirli/herhangi bir kampanyada TIKLAMIŞ kişiler
+        // Kaynak: crm_campaign_recipients (contact_id bazlı, kampanya başına tekil — açılma=opened_at).
+        // op 'equals'      → o kampanyayı açtı/tıkladı (value=campaign_id)
+        // op 'not_equals'  → o kampanyayı açmadı/tıklamadı
+        // op 'any'         → herhangi bir kampanyayı açtı/tıkladı (value gerekmez)
+        if ($field === 'opened_campaign' || $field === 'clicked_campaign') {
+            $col = $field === 'clicked_campaign' ? 'clicked_at' : 'opened_at';
+            $sub = "EXISTS (SELECT 1 FROM crm_campaign_recipients r
+                    WHERE r.contact_id = c.id AND r.$col IS NOT NULL";
+            $needsId = ($op === 'equals' || $op === 'not_equals');
+            if ($needsId) {
+                $sub .= " AND r.campaign_id = ?";
+            }
+            $sub .= ")";
+            if ($op === 'not_equals') $sub = "NOT $sub";
+            $clauses[] = $sub;
+            if ($needsId) $params[] = (int)$val;
+            continue;
+        }
+
         // ─── Liste üyeliği ───
         if ($field === 'in_list') {
             $sub = "EXISTS (SELECT 1 FROM crm_list_contacts lc WHERE lc.contact_id = c.id AND lc.list_id = ?)";

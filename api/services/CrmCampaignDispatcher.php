@@ -119,7 +119,55 @@ function crmEnqueueCampaign(PDO $db, int $campaignId, bool $dryRun = false): arr
            $campaignId
        ]);
 
+    // Bu kampanyayı AÇANLAR için otomatik canlı akıllı liste oluştur ("{ad}_opened").
+    // Gönderim başlar başlamaz boş oluşur, açılmalar geldikçe kendini doldurur (canlı kural).
+    // Sonraki kampanyalar bu listeyi hedef seçerek yalnızca açanlara gönderebilir.
+    try { crmEnsureOpenersList($db, $campaignId, (string)($campaign['name'] ?? '')); }
+    catch (Throwable $e) { error_log('[crm] openers list: ' . $e->getMessage()); }
+
     return ['audience_count' => $count, 'queued' => $count, 'variants' => $variantStats];
+}
+}
+
+if (!function_exists('crmEnsureOpenersList')) {
+/**
+ * Kampanya başına "{kampanya_adı}_opened" CANLI akıllı listesini idempotent oluşturur.
+ * Tip: smart, kural: opened_campaign = $campaignId (gönderim anında değil, her kullanımda
+ * canlı çözülür → geç açanlar dahil, bakım yok). Slug = campaign-{id}-opened (kampanya başına tekil).
+ * Var olan listeyi tekrar oluşturmaz; adı kampanya adına göre günceller (yeniden adlandırma senkron).
+ */
+function crmEnsureOpenersList(PDO $db, int $campaignId, string $campaignName): int
+{
+    $slug = 'campaign-' . $campaignId . '-opened';
+    $baseName = trim($campaignName) !== '' ? trim($campaignName) : ('Kampanya #' . $campaignId);
+    $listName = mb_substr($baseName, 0, 150) . '_opened';
+    $rules = json_encode([
+        'match' => 'all',
+        'rules' => [['field' => 'opened_campaign', 'op' => 'equals', 'value' => $campaignId]],
+    ]);
+
+    // Zaten var mı?
+    $stmt = $db->prepare("SELECT id FROM crm_lists WHERE slug = ? LIMIT 1");
+    $stmt->execute([$slug]);
+    $existingId = (int)($stmt->fetchColumn() ?: 0);
+
+    if ($existingId > 0) {
+        // Kampanya adı değişmiş olabilir → liste adını + kuralı güncel tut.
+        $db->prepare("UPDATE crm_lists SET name = ?, rules_json = ? WHERE id = ?")
+           ->execute([$listName, $rules, $existingId]);
+        return $existingId;
+    }
+
+    $db->prepare(
+        "INSERT INTO crm_lists (slug, name, description, type, rules_json)
+         VALUES (?, ?, ?, 'smart', ?)"
+    )->execute([
+        $slug,
+        $listName,
+        'Otomatik: \"' . $baseName . '\" kampanyasını açan kişiler (canlı).',
+        $rules,
+    ]);
+    return (int)$db->lastInsertId();
 }
 }
 

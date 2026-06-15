@@ -401,6 +401,17 @@ function buildSmartListSql(rules) {
             clauses.push(`EXISTS (SELECT 1 FROM crm_contact_tags ct JOIN crm_tags t ON t.id = ct.tag_id WHERE ct.contact_id = c.id AND t.slug IN (${ph}))`);
             params.push(...tags); continue;
         }
+        // Kampanya etkileşimi (mail açtı / tıkladı) — crm_campaign_recipients bazlı.
+        // op equals → o kampanyayı açtı/tıkladı (value=campaign_id), not_equals → açmadı, any → herhangi biri.
+        if (field === 'opened_campaign' || field === 'clicked_campaign') {
+            const col = field === 'clicked_campaign' ? 'clicked_at' : 'opened_at';
+            const needsId = (op === 'equals' || op === 'not_equals');
+            let sub = `EXISTS (SELECT 1 FROM crm_campaign_recipients r WHERE r.contact_id = c.id AND r.${col} IS NOT NULL${needsId ? ' AND r.campaign_id = ?' : ''})`;
+            if (op === 'not_equals') sub = `NOT ${sub}`;
+            clauses.push(sub);
+            if (needsId) params.push(Number(val));
+            continue;
+        }
         if (field === 'in_list') {
             let sub = "EXISTS (SELECT 1 FROM crm_list_contacts lc WHERE lc.contact_id = c.id AND lc.list_id = ?)";
             if (op === 'not_equals') sub = `NOT ${sub}`;

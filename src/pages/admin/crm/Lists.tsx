@@ -18,14 +18,16 @@ export default function CrmListsPage() {
         rules: { match: 'all', rules: [] }
     });
     const [tags, setTags] = useState<CrmTag[]>([]);
+    const [campaigns, setCampaigns] = useState<{ id: number; name: string }[]>([]);
     const [previewCount, setPreviewCount] = useState<number | null>(null);
 
     const load = async () => {
         try {
             setLoading(true); setError('');
-            const [lr, tr] = await Promise.all([crmAPI.listLists(), crmAPI.listTags()]);
+            const [lr, tr, cr] = await Promise.all([crmAPI.listLists(), crmAPI.listTags(), crmAPI.listCampaigns()]);
             setLists(lr.data?.lists || []);
             setTags(tr.data?.tags || []);
+            setCampaigns((cr.data?.campaigns || []).map((c: any) => ({ id: c.id, name: c.name })));
         } catch (e: any) {
             setError(e?.response?.data?.error || 'Yükleme hatası');
         } finally {
@@ -156,6 +158,7 @@ export default function CrmListsPage() {
                                             onChange={(rules) => { setForm({ ...form, rules }); setPreviewCount(null); }}
                                             availableTags={tags}
                                             availableLists={lists.map(l => ({ id: l.id, name: l.name }))}
+                                            availableCampaigns={campaigns}
                                         />
                                         <div className="preview-bar">
                                             <button type="button" className="btn btn-secondary btn-sm" onClick={handlePreview}>
@@ -199,17 +202,19 @@ export function CrmListDetailPage() {
     const [rules, setRules] = useState<CrmListRules>({ match: 'all', rules: [] });
     const [tags, setTags] = useState<CrmTag[]>([]);
     const [lists, setLists] = useState<CrmList[]>([]);
+    const [campaigns, setCampaigns] = useState<{ id: number; name: string }[]>([]);
     const [savingRules, setSavingRules] = useState(false);
 
     const load = async () => {
         if (!id) return;
         try {
             setLoading(true); setError('');
-            const [lr, cr, tr, all] = await Promise.all([
+            const [lr, cr, tr, all, camps] = await Promise.all([
                 crmAPI.getList(id),
                 crmAPI.getListContacts(id, { page, per_page: 50 }),
                 crmAPI.listTags(),
-                crmAPI.listLists()
+                crmAPI.listLists(),
+                crmAPI.listCampaigns()
             ]);
             const l = lr.data?.list as CrmList;
             setList(l);
@@ -219,6 +224,7 @@ export function CrmListDetailPage() {
             setPages(Number(cr.data?.pages || 0));
             setTags(tr.data?.tags || []);
             setLists(all.data?.lists || []);
+            setCampaigns((camps.data?.campaigns || []).map((c: any) => ({ id: c.id, name: c.name })));
         } catch (e: any) {
             setError(e?.response?.data?.error || 'Yükleme hatası');
         } finally {
@@ -288,6 +294,7 @@ export function CrmListDetailPage() {
                                 onChange={setRules}
                                 availableTags={tags}
                                 availableLists={lists.filter(l => l.id !== Number(id))}
+                                availableCampaigns={campaigns}
                             />
                         ) : (
                             <div className="rules-readonly">
