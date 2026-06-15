@@ -151,22 +151,19 @@ function crmEnsureOpenersList(PDO $db, int $campaignId, string $campaignName): i
     $stmt->execute([$slug]);
     $existingId = (int)($stmt->fetchColumn() ?: 0);
 
+    $desc = 'Otomatik: "' . $baseName . '" kampanyasını açan kişiler (canlı).';
+
     if ($existingId > 0) {
-        // Kampanya adı değişmiş olabilir → liste adını + kuralı güncel tut.
-        $db->prepare("UPDATE crm_lists SET name = ?, rules_json = ? WHERE id = ?")
-           ->execute([$listName, $rules, $existingId]);
+        // Kampanya adı değişmiş olabilir → liste adını + açıklamayı + kuralı güncel tut.
+        $db->prepare("UPDATE crm_lists SET name = ?, description = ?, rules_json = ? WHERE id = ?")
+           ->execute([$listName, $desc, $rules, $existingId]);
         return $existingId;
     }
 
     $db->prepare(
         "INSERT INTO crm_lists (slug, name, description, type, rules_json)
          VALUES (?, ?, ?, 'smart', ?)"
-    )->execute([
-        $slug,
-        $listName,
-        'Otomatik: \"' . $baseName . '\" kampanyasını açan kişiler (canlı).',
-        $rules,
-    ]);
+    )->execute([$slug, $listName, $desc, $rules]);
     return (int)$db->lastInsertId();
 }
 }

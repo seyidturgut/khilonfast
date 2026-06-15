@@ -342,6 +342,8 @@ export const crmAPI = {
         api.post('/automation/run', data),
     dispatchCampaignBatch: (id: IdParam, batchSize = 50) =>
         api.post(`/crm/campaigns/${id}/dispatch-batch`, { batch_size: batchSize }),
+    createOpenersList: (id: IdParam) =>
+        api.post(`/crm/campaigns/${id}/openers-list`, {}),
     getCampaignReport: (id: IdParam) => api.get(`/crm/campaigns/${id}/report`),
     getCampaignRecipients: (id: IdParam) => api.get(`/crm/campaigns/${id}/recipients`),
     getCampaignListBreakdown: (id: IdParam) => api.get(`/crm/campaigns/${id}/list-breakdown`),

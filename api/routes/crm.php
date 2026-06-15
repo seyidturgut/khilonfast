@@ -808,6 +808,41 @@ if ($action === 'campaigns') {
         }
     }
 
+    // /api/crm/campaigns/:id/openers-list — bu kampanyayı AÇANLAR için canlı akıllı liste
+    // oluştur (geçmiş/gönderilmiş kampanyalar için tek tık). Yeni gönderimlerde otomatik
+    // oluşan listenin AYNISI (idempotent — tekrar basılırsa aynı listeyi döner/günceller).
+    if ($method === 'POST' && !empty($id) && $subAction === 'openers-list') {
+        try {
+            $cStmt = $db->prepare("SELECT id, name FROM crm_campaigns WHERE id = ?");
+            $cStmt->execute([(int)$id]);
+            $camp = $cStmt->fetch();
+            if (!$camp) sendResponse(['error' => 'Kampanya bulunamadı'], 404);
+
+            $listId = crmEnsureOpenersList($db, (int)$id, (string)($camp['name'] ?? ''));
+            // Oluşan/güncellenen listenin canlı açan sayısını da dön (admin görsün)
+            $row = $db->query("SELECT slug, name, type FROM crm_lists WHERE id = " . (int)$listId)->fetch();
+            $opened = 0;
+            try {
+                $oStmt = $db->prepare("SELECT COUNT(*) FROM crm_campaign_recipients WHERE campaign_id = ? AND opened_at IS NOT NULL");
+                $oStmt->execute([(int)$id]);
+                $opened = (int)$oStmt->fetchColumn();
+            } catch (Throwable $e) {}
+
+            sendResponse([
+                'ok' => true,
+                'list' => [
+                    'id' => (int)$listId,
+                    'slug' => $row['slug'] ?? '',
+                    'name' => $row['name'] ?? '',
+                    'type' => $row['type'] ?? 'smart',
+                ],
+                'opened_count' => $opened,
+            ]);
+        } catch (Throwable $e) {
+            sendResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
     // /api/crm/campaigns/:id/dispatch-batch — Brevo'ya bir grup gönder
     if ($method === 'POST' && !empty($id) && $subAction === 'dispatch-batch') {
         $data = getJsonBody();
@@ -1444,15 +1479,27 @@ if ($action === 'tags') {
 if ($action === 'lists') {
     if ($method === 'GET' && empty($id)) {
         $rows = $db->query("SELECT * FROM crm_lists ORDER BY created_at DESC")->fetchAll();
-        sendResponse(['lists' => array_map(function ($r) {
+        sendResponse(['lists' => array_map(function ($r) use ($db) {
             $rules = null;
             if (!empty($r['rules_json'])) {
                 try { $rules = json_decode((string)$r['rules_json'], true); } catch (Throwable $e) {}
             }
+            // Smart list ise sayıyı CANLI hesapla (saklı contact_count smart listelerde güncellenmez,
+            // 0 görünür). Static ise saklı sayı doğrudur.
+            $count = (int)$r['contact_count'];
+            if ($r['type'] === 'smart' && $rules) {
+                try {
+                    $built = crmBuildSmartListSql($rules);
+                    $w = $built['where'] ? "WHERE " . $built['where'] : '';
+                    $cs = $db->prepare("SELECT COUNT(*) FROM crm_contacts c $w");
+                    $cs->execute($built['params']);
+                    $count = (int)$cs->fetchColumn();
+                } catch (Throwable $e) {}
+            }
             return [
                 'id' => (int)$r['id'], 'slug' => $r['slug'], 'name' => $r['name'],
                 'description' => $r['description'], 'type' => $r['type'],
-                'rules' => $rules, 'contact_count' => (int)$r['contact_count'],
+                'rules' => $rules, 'contact_count' => $count,
                 'created_at' => $r['created_at'], 'updated_at' => $r['updated_at'],
             ];
         }, $rows)]);

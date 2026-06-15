@@ -1060,15 +1060,27 @@ router.post('/contacts/bulk-tag', async (req, res) => {
 router.get('/lists', async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM crm_lists ORDER BY created_at DESC');
-        res.json({ lists: rows.map(r => {
+        const lists = [];
+        for (const r of rows) {
             let rules = null;
             if (r.rules_json) { try { rules = typeof r.rules_json === 'string' ? JSON.parse(r.rules_json) : r.rules_json; } catch {} }
-            return {
+            // Smart list ise sayıyı CANLI hesapla (saklı contact_count smart'ta güncellenmez → 0 görünür).
+            let count = Number(r.contact_count);
+            if (r.type === 'smart' && rules) {
+                try {
+                    const built = buildSmartListSql(rules);
+                    const w = built.where ? `WHERE ${built.where}` : '';
+                    const [[{ c }]] = await db.query(`SELECT COUNT(*) AS c FROM crm_contacts c ${w}`, built.params);
+                    count = Number(c);
+                } catch {}
+            }
+            lists.push({
                 id: Number(r.id), slug: r.slug, name: r.name, description: r.description,
-                type: r.type, rules, contact_count: Number(r.contact_count),
+                type: r.type, rules, contact_count: count,
                 created_at: r.created_at, updated_at: r.updated_at
-            };
-        }) });
+            });
+        }
+        res.json({ lists });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -1631,6 +1643,39 @@ router.get('/campaigns/:id/report', async (req, res) => {
 // ve `/api/crm/campaigns/:id/dispatch-batch` PHP backend'ine gider.
 router.post('/campaigns/:id/send', async (req, res) => {
     res.status(501).json({ error: 'Dispatch PHP backend üzerinden çalışır. PHP API\'yi kullanın.' });
+});
+
+// /campaigns/:id/openers-list — bu kampanyayı AÇANLAR için canlı akıllı liste oluştur
+// (geçmiş kampanyalar için tek tık). Saf DB işlemi (Brevo yok) → Node'da inline çalışır.
+// Idempotent: slug campaign-{id}-opened. Yeni gönderimlerde PHP'nin otomatik kurduğu listenin AYNISI.
+router.post('/campaigns/:id/openers-list', async (req, res) => {
+    try {
+        const cid = Number(req.params.id);
+        if (!cid) return res.status(400).json({ error: 'Geçersiz kampanya' });
+        const [crows] = await db.query('SELECT id, name FROM crm_campaigns WHERE id = ?', [cid]);
+        if (!crows.length) return res.status(404).json({ error: 'Kampanya bulunamadı' });
+
+        const baseName = String(crows[0].name || '').trim() || `Kampanya #${cid}`;
+        const listName = baseName.slice(0, 150) + '_opened';
+        const slug = `campaign-${cid}-opened`;
+        const rules = JSON.stringify({ match: 'all', rules: [{ field: 'opened_campaign', op: 'equals', value: cid }] });
+
+        const desc = `Otomatik: "${baseName}" kampanyasını açan kişiler (canlı).`;
+        const [exist] = await db.query('SELECT id FROM crm_lists WHERE slug = ? LIMIT 1', [slug]);
+        let listId;
+        if (exist.length) {
+            listId = Number(exist[0].id);
+            await db.query('UPDATE crm_lists SET name = ?, description = ?, rules_json = ? WHERE id = ?', [listName, desc, rules, listId]);
+        } else {
+            const [r] = await db.query(
+                "INSERT INTO crm_lists (slug, name, description, type, rules_json) VALUES (?, ?, ?, 'smart', ?)",
+                [slug, listName, desc, rules]
+            );
+            listId = Number(r.insertId);
+        }
+        const [oc] = await db.query('SELECT COUNT(*) AS n FROM crm_campaign_recipients WHERE campaign_id = ? AND opened_at IS NOT NULL', [cid]);
+        res.json({ ok: true, list: { id: listId, slug, name: listName, type: 'smart' }, opened_count: Number(oc[0]?.n || 0) });
+    } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // Otomasyon test simülatörü PHP-only (AutomationEngine PHP'de yaşıyor)

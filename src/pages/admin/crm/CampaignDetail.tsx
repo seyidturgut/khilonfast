@@ -149,6 +149,21 @@ export default function CrmCampaignDetailPage() {
         }
     };
 
+    const handleCreateOpenersList = async () => {
+        if (!id) return;
+        try {
+            setSending(true);
+            setActionMsg('');
+            const res = await crmAPI.createOpenersList(id);
+            const r = res.data;
+            setActionMsg(`✓ Açanlar listesi hazır: "${r.list?.name}" (şu an ${r.opened_count ?? 0} açan). Yeni kampanyada hedef olarak seçebilirsiniz. Liste canlı — yeni açılmalar otomatik eklenir.`);
+        } catch (e: any) {
+            setActionMsg('Hata: ' + (e?.response?.data?.error || e.message));
+        } finally {
+            setSending(false);
+        }
+    };
+
     const handleDelete = async () => {
         if (!id || !campaign) return;
         if (!confirm(`"${campaign.name}" silinsin mi? Geri alınamaz.`)) return;
@@ -283,6 +298,16 @@ export default function CrmCampaignDetailPage() {
                                 style={{ background: '#16a34a' }}
                             >
                                 ▶️ Devam Et
+                            </button>
+                        )}
+                        {(campaign.status === 'sent' || campaign.status === 'sending' || campaign.status === 'paused') && (
+                            <button
+                                className="btn btn-secondary"
+                                onClick={handleCreateOpenersList}
+                                disabled={sending}
+                                title="Bu kampanyayı açanlardan canlı bir akıllı liste oluşturur. Sonraki kampanyalarda hedef olarak seçebilirsiniz."
+                            >
+                                <HiUsers /> Açanlardan Liste Oluştur
                             </button>
                         )}
                         <button className="btn btn-danger" onClick={handleDelete}><HiTrash /> Sil</button>
