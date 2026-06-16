@@ -254,6 +254,7 @@ export interface CrmList {
 export const crmAPI = {
     listContacts: (params?: CrmContactListParams) => api.get('/crm/contacts', { params }),
     getContact: (id: IdParam) => api.get(`/crm/contacts/${id}`),
+    getContactListMemberships: (id: IdParam) => api.get(`/crm/contacts/${id}/list-memberships`),
     createContact: (data: Partial<CrmContact>) => api.post('/crm/contacts', data),
     updateContact: (id: IdParam, data: Partial<CrmContact>) => api.put(`/crm/contacts/${id}`, data),
     deleteContact: (id: IdParam) => api.delete(`/crm/contacts/${id}`),

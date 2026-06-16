@@ -278,16 +278,11 @@ function ContactTagsListsTab({ contactId }: { contactId: number }) {
             setAllTags(tagsRes.data?.tags || []);
             const lists: CrmList[] = listsRes.data?.lists || [];
             setAllLists(lists);
-            // Static listelerde üyelik kontrolü
-            const memb = new Set<number>();
-            for (const l of lists) {
-                if (l.type === 'static') {
-                    const r = await crmAPI.getListContacts(l.id, { per_page: 200 });
-                    const ids = (r.data?.contacts || []).map((c: any) => c.id);
-                    if (ids.includes(contactId)) memb.add(l.id);
-                }
-            }
-            setMemberships(memb);
+            // Üyelik: backend hem static (crm_list_contacts) hem smart (kural bu kişiye karşı
+            // değerlendirilir) listeleri döner. Smart listeler için kuralı karşılamayan kişi
+            // üye sayılmaz (aksi halde her kişi tüm smart listelerde görünüyordu).
+            const mr = await crmAPI.getContactListMemberships(contactId);
+            setMemberships(new Set<number>((mr.data?.list_ids || []).map(Number)));
         } catch (e: any) {
             // sessiz
         } finally {
@@ -372,7 +367,11 @@ function ContactTagsListsTab({ contactId }: { contactId: number }) {
                             <div className="muted-tip">Henüz liste yok. <Link to="/admin/crm/lists">Listeler sayfasında</Link> oluşturabilirsiniz.</div>
                         ) : (
                             <div className="lists-toggle">
-                                {allLists.map(l => {
+                                {allLists
+                                    // Smart listeleri yalnız kişi GERÇEKTEN üyeyse göster (kuralı karşılıyorsa).
+                                    // Static listeler her zaman görünür (manuel ekle/çıkar için checkbox).
+                                    .filter(l => l.type === 'static' || memberships.has(l.id))
+                                    .map(l => {
                                     const isStatic = l.type === 'static';
                                     const checked = memberships.has(l.id);
                                     return (

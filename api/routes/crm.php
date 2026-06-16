@@ -376,6 +376,33 @@ if ($action === 'contacts') {
         sendResponse(['error' => 'Method not supported'], 405);
     }
 
+    // /api/crm/contacts/:id/list-memberships — kişinin GERÇEKTEN üye olduğu liste id'leri.
+    // Static: crm_list_contacts. Smart: her listenin kuralı bu kişiye karşı değerlendirilir
+    // (AND c.id = contactId). Böylece kişi-detayı yalnızca eşleşen smart listeleri gösterir
+    // (aksi halde her kişi tüm smart listelerde görünüyordu — display bug).
+    if (!empty($id) && $subAction === 'list-memberships' && $method === 'GET' && ctype_digit((string)$id)) {
+        $contactId = (int)$id;
+        $listIds = [];
+        try {
+            // Static üyelikler
+            $st = $db->prepare("SELECT list_id FROM crm_list_contacts WHERE contact_id = ?");
+            $st->execute([$contactId]);
+            foreach ($st as $r) $listIds[] = (int)$r['list_id'];
+
+            // Smart listeler: kuralı bu kişiye karşı test et
+            $smart = $db->query("SELECT id, rules_json FROM crm_lists WHERE type = 'smart'")->fetchAll();
+            foreach ($smart as $l) {
+                $rules = json_decode((string)$l['rules_json'], true) ?: [];
+                $built = crmBuildSmartListSql($rules);
+                $w = $built['where'] ? "AND (" . $built['where'] . ")" : '';
+                $cs = $db->prepare("SELECT 1 FROM crm_contacts c WHERE c.id = ? $w LIMIT 1");
+                $cs->execute(array_merge([$contactId], $built['params']));
+                if ($cs->fetchColumn()) $listIds[] = (int)$l['id'];
+            }
+        } catch (Throwable $e) {}
+        sendResponse(['list_ids' => array_values(array_unique($listIds))]);
+    }
+
     // /api/crm/contacts/bulk-tag
     if ($id === 'bulk-tag' && $method === 'POST') {
         $data = getJsonBody();

@@ -1025,6 +1025,28 @@ router.delete('/contacts/:id/tags', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// /api/crm/contacts/:id/list-memberships — kişinin GERÇEKTEN üye olduğu liste id'leri.
+// Static: crm_list_contacts. Smart: kural bu kişiye karşı değerlendirilir (AND c.id=?).
+// Kişi-detayı yalnız eşleşen smart listeleri göstersin diye (display bug fix).
+router.get('/contacts/:id/list-memberships', async (req, res) => {
+    try {
+        const contactId = Number(req.params.id);
+        const ids = new Set();
+        const [sl] = await db.query('SELECT list_id FROM crm_list_contacts WHERE contact_id = ?', [contactId]);
+        for (const r of sl) ids.add(Number(r.list_id));
+        const [smart] = await db.query("SELECT id, rules_json FROM crm_lists WHERE type = 'smart'");
+        for (const l of smart) {
+            let rules = {};
+            try { rules = typeof l.rules_json === 'string' ? JSON.parse(l.rules_json) : (l.rules_json || {}); } catch {}
+            const built = buildSmartListSql(rules);
+            const w = built.where ? `AND (${built.where})` : '';
+            const [rows] = await db.query(`SELECT 1 FROM crm_contacts c WHERE c.id = ? ${w} LIMIT 1`, [contactId, ...built.params]);
+            if (rows.length) ids.add(Number(l.id));
+        }
+        res.json({ list_ids: [...ids] });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ─── /api/crm/contacts/bulk-tag ──────────────────────────────────────────────
 router.post('/contacts/bulk-tag', async (req, res) => {
     try {
