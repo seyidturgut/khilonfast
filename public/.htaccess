@@ -31,6 +31,13 @@ Options -MultiViews
   <FilesMatch "\.(pdf|png|jpg|jpeg|svg|webp|gif|ico|css|js|mjs|woff|woff2|ttf|eot)$">
     Header set X-Robots-Tag "noindex, nofollow"
   </FilesMatch>
+
+  # ÖNEMLİ: Favicon noindex'ten MUAF olmalı — aksi halde Google arama sonucunda
+  # site favicon'unu GÖSTERMEZ (yukarıdaki png/ico kuralı favicon'u da kapsıyordu).
+  # Bu blok sonra geldiği için X-Robots-Tag'i favicon için "all" (kısıt yok) ile geçersiz kılar.
+  <FilesMatch "^(favicon-300x300\.png|favicon\.png|favicon\.ico|apple-touch-icon\.png)$">
+    Header set X-Robots-Tag "all"
+  </FilesMatch>
 </IfModule>
 
 # Apache mod_dir'in otomatik trailing slash eklemesini kapat (canonical = no-slash)
