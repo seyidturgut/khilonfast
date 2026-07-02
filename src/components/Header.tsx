@@ -23,7 +23,8 @@ import {
     HiTruck,
     HiWrench,
     HiOutlineEye,
-    HiAcademicCap
+    HiAcademicCap,
+    HiFire
 } from 'react-icons/hi2'
 import './Header.css'
 import trCommon from '../locales/tr/common.json'
@@ -63,7 +64,8 @@ export default function Header() {
         { icon: HiBolt, title: sectoralMenuCopy.energy.title, desc: sectoralMenuCopy.energy.desc, path: toLocalized('sectoralEnergy') },
         { icon: HiPaintBrush, title: sectoralMenuCopy.design.title, desc: sectoralMenuCopy.design.desc, path: toLocalized('sectoralDesign') },
         { icon: HiTruck, title: sectoralMenuCopy.fleet.title, desc: sectoralMenuCopy.fleet.desc, path: toLocalized('sectoralFleet') },
-        { icon: HiWrench, title: sectoralMenuCopy.manufacturing.title, desc: sectoralMenuCopy.manufacturing.desc, path: toLocalized('sectoralManufacturing') }
+        { icon: HiWrench, title: sectoralMenuCopy.manufacturing.title, desc: sectoralMenuCopy.manufacturing.desc, path: toLocalized('sectoralManufacturing') },
+        { icon: HiFire, title: sectoralMenuCopy.fuel.title, desc: sectoralMenuCopy.fuel.desc, path: toLocalized('sectoralFuel') }
     ]
 
     const trainingMenuItems = [
