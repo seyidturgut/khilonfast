@@ -5,7 +5,46 @@ import { useTranslation } from 'react-i18next'
 import Breadcrumbs from '../components/Breadcrumbs'
 import { useRouteLocale } from '../utils/locale'
 import { API_BASE_URL } from '../config/api'
+import FAQ from '../components/FAQ'
 import './Consultants.css'
+
+const CONSULTANTS_FAQS_TR = [
+    {
+        question: 'khilonfast danışmanları kimlerdir?',
+        answer: 'Sektör deneyimi olan, B2B pazarlama ve büyüme stratejisi konusunda uzmanlaşmış danışmanlardan oluşur. Her danışmanın profilinde sektör odağı, uzmanlık alanı ve müşteri değerlendirmeleri yer alır.'
+    },
+    {
+        question: 'Danışmanlık seansı nasıl planlanır?',
+        answer: 'İlgilendiğiniz danışmanın profilinden uygun bir zaman dilimi seçip online olarak randevu oluşturabilirsiniz. Onay sonrası takvim daveti ve görüşme detayları e-posta ile iletilir.'
+    },
+    {
+        question: 'Danışmanlık seansları online mu yapılıyor?',
+        answer: 'Evet, tüm danışmanlık görüşmeleri video konferans üzerinden online olarak gerçekleştirilir; coğrafi kısıtlama olmadan istediğiniz danışmanla çalışabilirsiniz.'
+    },
+    {
+        question: 'Hangi danışmanı seçeceğimi nasıl bilirim?',
+        answer: 'Danışman profillerinde belirtilen sektör uzmanlığı ve deneyim alanına göre seçim yapabilir, ihtiyacınıza en uygun eşleşme için bizimle iletişime geçebilirsiniz.'
+    }
+]
+
+const CONSULTANTS_FAQS_EN = [
+    {
+        question: 'Who are khilonfast consultants?',
+        answer: 'Our consultants have real industry experience and specialize in B2B marketing and growth strategy. Each profile lists their sector focus, expertise areas, and client reviews.'
+    },
+    {
+        question: 'How do I schedule a consulting session?',
+        answer: "Pick an available time slot from the consultant's profile and book online. After confirmation, you'll receive a calendar invite and meeting details by email."
+    },
+    {
+        question: 'Are consulting sessions held online?',
+        answer: 'Yes, all consulting sessions are conducted online via video call, so you can work with any consultant regardless of location.'
+    },
+    {
+        question: 'How do I know which consultant to choose?',
+        answer: "You can choose based on the sector expertise and experience listed on each profile, or contact us for help finding the best match for your needs."
+    }
+]
 
 interface Consultant {
     id: number
@@ -222,6 +261,8 @@ export default function Consultants() {
                     )}
                 </div>
             </section>
+
+            <FAQ items={isEn ? CONSULTANTS_FAQS_EN : CONSULTANTS_FAQS_TR} />
         </div>
     )
 }

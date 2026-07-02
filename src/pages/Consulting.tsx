@@ -4,6 +4,45 @@ import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import './Trainings.css';
 import { getConsultingPrograms } from '../data/consultingPrograms';
+import FAQ from '../components/FAQ';
+
+const CONSULTING_FAQS_TR = [
+    {
+        question: 'Danışmanlık programları nasıl işliyor?',
+        answer: 'Sektörünüze özel bir büyüme odaklı pazarlama danışmanı ile birebir online seanslar üzerinden çalışırsınız. Program süresi ve seans sayısı sektöre göre değişir, detaylar her program sayfasında yer alır.'
+    },
+    {
+        question: 'Danışmanlık ile eğitim programları arasındaki fark nedir?',
+        answer: 'Eğitim programları genel bilgi ve strateji aktarımı sağlarken, danışmanlık programları sizin firmanıza özel, birebir uygulanabilir çözümler üretmeye odaklanır.'
+    },
+    {
+        question: 'Hangi sektörler için danışmanlık programı var?',
+        answer: 'B2B, ödeme sistemleri, fintech, teknoloji, üretim, enerji, ofis & kurumsal iç tasarım, filo kiralama ve endüstriyel gıda sektörlerine özel danışmanlık programları sunuyoruz.'
+    },
+    {
+        question: 'Danışmanlık programına nasıl kayıt olurum?',
+        answer: 'İlgilendiğiniz sektörün danışmanlık sayfasına girip programı inceleyebilir, doğrudan satın alma veya bizimle iletişime geçerek kayıt sürecini başlatabilirsiniz.'
+    }
+];
+
+const CONSULTING_FAQS_EN = [
+    {
+        question: 'How do the consulting programs work?',
+        answer: "You work one-on-one with a growth-focused marketing consultant specialized in your industry through online sessions. Program duration and session count vary by sector — details are listed on each program's page."
+    },
+    {
+        question: 'What is the difference between consulting and training programs?',
+        answer: 'Training programs deliver general knowledge and strategy, while consulting programs focus on producing actionable solutions tailored specifically to your company.'
+    },
+    {
+        question: 'Which industries have a consulting program?',
+        answer: 'We offer dedicated consulting programs for B2B, payment systems, fintech, technology, manufacturing, energy, office & corporate interior design, fleet rental, and industrial food sectors.'
+    },
+    {
+        question: 'How do I sign up for a consulting program?',
+        answer: 'Visit the consulting page for your industry to review the program, then purchase directly or contact us to start the enrollment process.'
+    }
+];
 
 const CARD_IMAGES = [
     '/images/TR_Odeme_Sistemleri-2.avif',
@@ -67,6 +106,8 @@ export default function Consulting() {
                     </div>
                 </div>
             </section>
+
+            <FAQ items={currentLang === 'en' ? CONSULTING_FAQS_EN : CONSULTING_FAQS_TR} />
         </div>
     );
 }

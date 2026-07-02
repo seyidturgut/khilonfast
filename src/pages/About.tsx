@@ -8,7 +8,46 @@ import { resolveLocalizedText } from '../utils/localizedContent'
 import { API_BASE_URL } from '../config/api'
 import EditableMedia from '../components/cms/EditableMedia'
 import { usePageSlug } from '../hooks/usePageSlug'
+import FAQ from '../components/FAQ'
 import './About.css'
+
+const ABOUT_FAQS_TR = [
+    {
+        question: 'khilonfast kimdir, hangi hizmetleri sunar?',
+        answer: 'khilonfast, B2B firmalar için strateji, içerik, performans pazarlaması, marka yönetimi ve CRM süreçlerini tek noktadan yöneten bir dijital pazarlama ajansıdır. Sektörel uzmanlık ve ölçülebilir sonuçlar odaklı çalışırız.'
+    },
+    {
+        question: 'khilonfast hangi sektörlerde tecrübe sahibidir?',
+        answer: 'Fintech, ödeme sistemleri, üretim, enerji, teknoloji/SaaS, filo kiralama, kurumsal iç tasarım, endüstriyel gıda, hediye kartı ve kurumsal akaryakıt gibi B2B ağırlıklı sektörlerde çalışıyoruz.'
+    },
+    {
+        question: 'khilonfast ile çalışmaya nasıl başlarım?',
+        answer: 'İletişim formunu doldurarak veya doğrudan bize ulaşarak başlayabilirsiniz. İlk görüşmede ihtiyaçlarınızı anlayıp size en uygun hizmet ve iş birliği modelini birlikte belirleriz.'
+    },
+    {
+        question: 'khilonfast diğer ajanslardan farkı nedir?',
+        answer: 'Genel geçer pazarlama şablonları yerine sektörünüze özel strateji kurarız; ölçülebilir sonuçlar, şeffaf raporlama ve esnek çalışma modelleriyle uzun vadeli büyüme ortaklığı hedefleriz.'
+    }
+]
+
+const ABOUT_FAQS_EN = [
+    {
+        question: 'Who is khilonfast and what services does it offer?',
+        answer: 'khilonfast is a digital marketing agency that manages strategy, content, performance marketing, brand management, and CRM processes for B2B companies from a single point, with a focus on sector expertise and measurable results.'
+    },
+    {
+        question: 'Which industries does khilonfast have experience in?',
+        answer: 'We work primarily in B2B-focused industries such as fintech, payment systems, manufacturing, energy, technology/SaaS, fleet rental, corporate interior design, industrial food, gift cards, and corporate fuel solutions.'
+    },
+    {
+        question: 'How do I get started working with khilonfast?',
+        answer: 'You can start by filling out our contact form or reaching out directly. In our first call, we understand your needs and jointly define the service and collaboration model that fits you best.'
+    },
+    {
+        question: 'What makes khilonfast different from other agencies?',
+        answer: 'Instead of generic marketing templates, we build strategy tailored to your industry, with measurable outcomes, transparent reporting, and flexible collaboration models aimed at long-term growth partnership.'
+    }
+]
 
 const ABOUT_TEXT_KEYS = [
     'header.about',
@@ -682,6 +721,9 @@ export default function About() {
                     </div>
                 </div>
             </section>
+
+            <FAQ items={currentLang === 'en' ? ABOUT_FAQS_EN : ABOUT_FAQS_TR} />
+
             {canShowCms && !cmsOpen && (
                 <button
                     onClick={() => setCmsOpen(true)}

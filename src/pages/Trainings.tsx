@@ -6,6 +6,45 @@ import './Trainings.css';
 import trCommon from '../locales/tr/common.json';
 import enCommon from '../locales/en/common.json';
 import { getTrainingPrograms } from '../data/trainingPrograms';
+import FAQ from '../components/FAQ';
+
+const TRAININGS_FAQS_TR = [
+    {
+        question: 'khilonfast Academy eğitim programları kimler içindir?',
+        answer: 'Pazarlama, satış ve büyüme süreçlerinden sorumlu ekiplere, işletme sahiplerine ve kariyerinde ilerlemek isteyen pazarlama profesyonellerine yöneliktir. Her program belirli bir sektöre özel olarak tasarlanmıştır.'
+    },
+    {
+        question: 'Eğitimler online mu, canlı mı yapılıyor?',
+        answer: 'Eğitimlere satın alma sonrası dijital platform üzerinden istediğiniz zaman erişebilir, kendi hızınızda ilerleyebilirsiniz.'
+    },
+    {
+        question: 'Eğitim içeriğine ne kadar süre erişimim olur?',
+        answer: 'Erişim süresi programa göre değişir; satın alma sonrası hesabınızdan içeriklere erişim ve süre bilgisine ulaşabilirsiniz.'
+    },
+    {
+        question: 'Hangi sektörlere özel eğitim programı var?',
+        answer: 'Ödeme sistemleri, B2B, fintech, teknoloji, üretim, enerji, ofis & kurumsal iç tasarım, filo kiralama ve endüstriyel gıda sektörlerine özel programlarımız bulunuyor.'
+    }
+];
+
+const TRAININGS_FAQS_EN = [
+    {
+        question: 'Who are khilonfast Academy training programs for?',
+        answer: 'They are designed for teams responsible for marketing, sales, and growth, business owners, and marketing professionals looking to advance their careers. Each program is tailored to a specific industry.'
+    },
+    {
+        question: 'Are the trainings live or self-paced online?',
+        answer: 'After purchase, you can access the training on our digital platform anytime and progress at your own pace.'
+    },
+    {
+        question: 'How long do I have access to the training content?',
+        answer: 'Access duration varies by program; you can check content access and duration details from your account after purchase.'
+    },
+    {
+        question: 'Which industries have dedicated training programs?',
+        answer: 'We offer dedicated programs for payment systems, B2B, fintech, technology, manufacturing, energy, office & corporate interior design, fleet rental, and industrial food sectors.'
+    }
+];
 
 export default function Trainings() {
     const { t } = useTranslation('common');
@@ -72,6 +111,8 @@ export default function Trainings() {
                     </div>
                 </div>
             </section>
+
+            <FAQ items={currentLang === 'en' ? TRAININGS_FAQS_EN : TRAININGS_FAQS_TR} />
         </div>
     );
 }

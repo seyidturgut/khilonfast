@@ -4,7 +4,46 @@ import { useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { API_BASE_URL } from '../config/api'
 import ConsentCheckboxes, { type ConsentState } from '../components/ConsentCheckboxes'
+import FAQ from '../components/FAQ'
 import './ContactPage.css'
+
+const CONTACT_FAQS_TR = [
+  {
+    question: 'khilonfast ile en hızlı nasıl iletişime geçebilirim?',
+    answer: 'Bu sayfadaki iletişim formunu doldurarak veya info@khilonfast.com adresine e-posta göndererek bize ulaşabilirsiniz. Talebinizi ilettikten sonra ekibimiz genellikle 1 iş günü içinde dönüş yapar.'
+  },
+  {
+    question: 'İlk görüşmede neler konuşulur?',
+    answer: 'İlk görüşmede işletmenizin mevcut pazarlama durumunu, hedeflerinizi ve ihtiyaçlarınızı anlayıp size uygun hizmet ve iş birliği modelini birlikte belirleriz. Bu görüşme herhangi bir taahhüt gerektirmez.'
+  },
+  {
+    question: 'Teklif almak ücretli mi?',
+    answer: 'Hayır, ilk görüşme ve teklif süreci tamamen ücretsizdir. Sadece ihtiyaçlarınızı anladıktan sonra size özel bir öneri sunarız.'
+  },
+  {
+    question: 'Hangi şehirlerdeki firmalarla çalışıyorsunuz?',
+    answer: 'Çalışmalarımızı dijital süreçler üzerinden yürüttüğümüz için Türkiye genelinde ve yurt dışındaki B2B firmalarla uzaktan çalışabiliyoruz; yüz yüze toplantı şart değildir.'
+  }
+]
+
+const CONTACT_FAQS_EN = [
+  {
+    question: 'What is the fastest way to reach khilonfast?',
+    answer: 'You can reach us by filling out the contact form on this page or emailing info@khilonfast.com. Our team typically responds within 1 business day.'
+  },
+  {
+    question: 'What do we discuss in the first call?',
+    answer: "In the first call, we understand your business's current marketing situation, goals, and needs, then jointly define the service and collaboration model that fits you best. This call carries no commitment."
+  },
+  {
+    question: 'Is getting a proposal free of charge?',
+    answer: 'Yes, the first call and proposal process are completely free. We only present a tailored recommendation after understanding your needs.'
+  },
+  {
+    question: 'Which locations do you work with?',
+    answer: 'Since we run our engagements digitally, we work remotely with B2B companies across Turkey and internationally — an in-person meeting is not required.'
+  }
+]
 
 const CONTACT_TEXT_KEYS = [
   'contact.hero.eyebrow', 'contact.hero.title', 'contact.hero.lead', 'contact.hero.badge1', 'contact.hero.badge2',
@@ -247,6 +286,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      <FAQ items={currentLang === 'en' ? CONTACT_FAQS_EN : CONTACT_FAQS_TR} />
     </div>
   )
 }

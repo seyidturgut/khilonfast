@@ -278,7 +278,29 @@ export default function PaymentSystemsMarketing() {
         },
         processVideo: {
             vimeoUrl: "https://player.vimeo.com/video/1133021859"
-        }
+        },
+        faqs: [
+            {
+                question: 'Ödeme sistemleri firmaları için pazarlama neden farklı bir yaklaşım gerektirir?',
+                answer: "Ödeme sistemleri (fintech, POS, dijital cüzdan, ödeme altyapısı) B2B satın alma süreci uzun, karar vericiler çoktur ve güven en kritik faktördür. khilonfast, uyumluluk gereksinimlerini (KVKK, BDDK, PCI-DSS) gözeten, teknik doğruluğu koruyan içerik ve performans stratejileri kurar."
+            },
+            {
+                question: 'Hangi pazarlama kanallarında çalışıyorsunuz?',
+                answer: 'SEO, içerik pazarlaması, LinkedIn ve Google Ads, e-posta pazarlama ve marka güvenilirliğini artıran vaka çalışmaları ile entegre bir 360° yönetim sunuyoruz. Kanal seçimi, hedef kitlenizin (finans yöneticileri, işletme sahipleri, geliştirici ekipleri) davranışına göre şekillenir.'
+            },
+            {
+                question: 'Regülasyon ve uyumluluk konularında hassasiyetiniz var mı?',
+                answer: 'Evet. Fintech ve ödeme sistemleri içerikleri hazırlarken KVKK, BDDK düzenlemeleri ve sektörel güven standartlarını göz önünde bulunduruyoruz; iddialı veya yanıltıcı pazarlama dilinden kaçınıyoruz.'
+            },
+            {
+                question: 'Sonuçları ne kadar sürede görebilirim?',
+                answer: 'B2B fintech satış döngüsü uzun olduğu için ilk somut sonuçlar (nitelikli lead artışı, marka bilinirliği) genellikle 60-90 gün içinde görülür; ölçülebilir gelir etkisi için 3-6 aylık bir çalışma dönemi önerilir.'
+            },
+            {
+                question: 'Hem B2B hem B2C ödeme sistemleri firmalarıyla çalışıyor musunuz?',
+                answer: 'Ağırlıklı odağımız B2B ödeme sistemleri ve fintech altyapı sağlayıcılarıdır; kurumsal müşteri kazanımı, ortaklık geliştirme ve karar-verici odaklı içerik stratejileri kurarız.'
+            }
+        ]
     }
 
     
@@ -495,9 +517,18 @@ export default function PaymentSystemsMarketing() {
             role: 'Commercial Director'
         },
         faqs: [
-            { question: t('faq.item1.question'), answer: t('faq.item1.answer') },
-            { question: t('faq.item2.question'), answer: t('faq.item2.answer') },
-            { question: t('faq.item3.question'), answer: t('faq.item3.answer') }
+            {
+                question: 'Why does payment systems marketing require a different approach?',
+                answer: 'Payment systems companies (fintech, POS, digital wallets, payment infrastructure) have long B2B buying cycles, multiple decision-makers, and trust is the deciding factor. khilonfast builds content and performance strategies that respect compliance requirements while keeping technical accuracy front and center.'
+            },
+            {
+                question: 'Which marketing channels do you work with?',
+                answer: 'We run an integrated 360° program across SEO, content marketing, LinkedIn and Google Ads, email marketing, and credibility-building case studies. Channel mix is shaped by your audience — finance leaders, business owners, or developer teams.'
+            },
+            {
+                question: 'How soon can I expect results?',
+                answer: 'B2B fintech sales cycles are long, so initial measurable results (qualified lead growth, brand visibility) typically appear within 60-90 days; a 3-6 month engagement is recommended for measurable revenue impact.'
+            }
         ],
         ...((trConfig as any).growthCTA ? {
             growthCTA: {

@@ -67,6 +67,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {
             label: 'Ödeme',
             items: [
+                { icon: HiCreditCard, label: 'Tüm Siparişler', path: '/admin/orders' },
                 { icon: HiLibrary, label: 'Banka Hesapları (Lidio)', path: '/admin/bank-accounts' },
                 { icon: HiLibrary, label: 'Manuel Havale Hesapları', path: '/admin/manual-bank-accounts' },
                 { icon: HiTicket, label: 'Manuel Havale Siparişleri', path: '/admin/manual-orders' },

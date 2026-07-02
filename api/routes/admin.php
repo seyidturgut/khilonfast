@@ -3088,6 +3088,137 @@ if ($action === 'seed-automation-v2' && $method === 'POST') {
     }
 }
 
+// GET /api/admin/orders — TÜM siparişler (kart + havale), müşteri/ürün/ödeme yöntemi ile.
+// Filtreler: status, payment_method, q (müşteri ad/e-posta/sipariş no), date_from, date_to. Sayfalı.
+if ($action === 'orders' && $method === 'GET' && empty($id)) {
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $perPage = max(1, min(100, (int)($_GET['per_page'] ?? 25)));
+    $offset = ($page - 1) * $perPage;
+
+    $where = ['1=1'];
+    $params = [];
+
+    $statusFilter = (string)($_GET['status'] ?? '');
+    if ($statusFilter !== '' && $statusFilter !== 'all') {
+        $where[] = 'o.status = ?';
+        $params[] = $statusFilter;
+    }
+
+    $methodFilter = (string)($_GET['payment_method'] ?? '');
+    if ($methodFilter !== '' && $methodFilter !== 'all') {
+        $where[] = 'p.payment_method = ?';
+        $params[] = $methodFilter;
+    }
+
+    $q = trim((string)($_GET['q'] ?? ''));
+    if ($q !== '') {
+        $where[] = '(o.order_number LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)';
+        $like = '%' . $q . '%';
+        array_push($params, $like, $like, $like, $like);
+    }
+
+    $dateFrom = (string)($_GET['date_from'] ?? '');
+    if ($dateFrom !== '') {
+        $where[] = 'o.created_at >= ?';
+        $params[] = $dateFrom . ' 00:00:00';
+    }
+    $dateTo = (string)($_GET['date_to'] ?? '');
+    if ($dateTo !== '') {
+        $where[] = 'o.created_at <= ?';
+        $params[] = $dateTo . ' 23:59:59';
+    }
+
+    $whereSql = implode(' AND ', $where);
+
+    // payment_method filtresi/görüntülemesi için LEFT JOIN (bir siparişte tek payment satırı olur — ürün başına değil)
+    $countStmt = $db->prepare(
+        "SELECT COUNT(DISTINCT o.id) FROM orders o
+         LEFT JOIN users u ON u.id = o.user_id
+         LEFT JOIN payments p ON p.order_id = o.id
+         WHERE $whereSql"
+    );
+    $countStmt->execute($params);
+    $total = (int)$countStmt->fetchColumn();
+
+    $sql = "SELECT
+                o.id, o.order_number, o.status AS order_status, o.total_amount, o.currency,
+                o.subtotal_amount, o.coupon_discount_amount, o.coupon_code, o.created_at,
+                u.id AS user_id, u.email, u.first_name, u.last_name, u.phone,
+                p.payment_method, p.status AS payment_status,
+                (SELECT COUNT(*) FROM order_items WHERE order_id = o.id) AS items_count
+            FROM orders o
+            LEFT JOIN users u ON u.id = o.user_id
+            LEFT JOIN payments p ON p.order_id = o.id
+            WHERE $whereSql
+            GROUP BY o.id
+            ORDER BY o.created_at DESC
+            LIMIT $perPage OFFSET $offset";
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll();
+
+    if ($rows) {
+        $orderIds = array_map(fn($r) => (int)$r['id'], $rows);
+        $ph = implode(',', array_fill(0, count($orderIds), '?'));
+        $itemsStmt = $db->prepare(
+            "SELECT oi.order_id, oi.quantity, oi.unit_price, oi.total_price, p.name AS product_name
+             FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id
+             WHERE oi.order_id IN ($ph) ORDER BY oi.id ASC"
+        );
+        $itemsStmt->execute($orderIds);
+        $itemsByOrder = [];
+        foreach ($itemsStmt->fetchAll() as $item) {
+            $itemsByOrder[(int)$item['order_id']][] = [
+                'product_name' => $item['product_name'],
+                'quantity' => (int)$item['quantity'],
+                'unit_price' => (float)$item['unit_price'],
+                'total_price' => (float)$item['total_price']
+            ];
+        }
+        foreach ($rows as &$r) {
+            $r['id'] = (int)$r['id'];
+            $r['total_amount'] = (float)$r['total_amount'];
+            $r['subtotal_amount'] = (float)$r['subtotal_amount'];
+            $r['coupon_discount_amount'] = (float)$r['coupon_discount_amount'];
+            $r['items_count'] = (int)$r['items_count'];
+            $r['items'] = $itemsByOrder[$r['id']] ?? [];
+        }
+        unset($r);
+    }
+
+    sendResponse(['orders' => $rows, 'total' => $total, 'page' => $page, 'per_page' => $perPage, 'pages' => (int)ceil($total / $perPage)]);
+}
+
+// GET /api/admin/orders/:id — tek sipariş tam detay (fatura/adres/ödeme detayı dahil)
+if ($action === 'orders' && !empty($id) && ctype_digit((string)$id) && $method === 'GET' && empty($subAction)) {
+    $orderId = (int)$id;
+    $stmt = $db->prepare(
+        "SELECT o.*, u.email, u.first_name, u.last_name, u.phone, u.address
+         FROM orders o LEFT JOIN users u ON u.id = o.user_id
+         WHERE o.id = ?"
+    );
+    $stmt->execute([$orderId]);
+    $order = $stmt->fetch();
+    if (!$order) sendResponse(['error' => 'Sipariş bulunamadı'], 404);
+
+    $itemsStmt = $db->prepare(
+        "SELECT oi.*, p.name AS product_name, p.product_key
+         FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id
+         WHERE oi.order_id = ? ORDER BY oi.id ASC"
+    );
+    $itemsStmt->execute([$orderId]);
+    $order['items'] = $itemsStmt->fetchAll();
+
+    $paymentsStmt = $db->prepare(
+        "SELECT id, payment_method, lidio_transaction_id, amount, currency, status, lidio_response, created_at
+         FROM payments WHERE order_id = ? ORDER BY created_at DESC"
+    );
+    $paymentsStmt->execute([$orderId]);
+    $order['payments'] = $paymentsStmt->fetchAll();
+
+    sendResponse(['order' => $order]);
+}
+
 // GET /api/admin/manual-orders — manuel havale siparişleri listesi (filtre: status)
 if ($action === 'manual-orders' && $method === 'GET' && empty($id)) {
     $statusFilter = $_GET['status'] ?? 'all'; // all | pending | completed | cancelled

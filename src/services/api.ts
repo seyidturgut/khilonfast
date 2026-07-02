@@ -177,7 +177,11 @@ export const adminOrdersAPI = {
     confirmManualPayment: (orderId: IdParam) =>
         api.post(`/admin/orders/${orderId}/confirm-manual-payment`, {}),
     listManualOrders: (status: 'all' | 'pending' | 'completed' | 'cancelled' = 'pending') =>
-        api.get(`/admin/manual-orders?status=${status}`)
+        api.get(`/admin/manual-orders?status=${status}`),
+    listAllOrders: (params: { page?: number; per_page?: number; status?: string; payment_method?: string; q?: string; date_from?: string; date_to?: string } = {}) =>
+        api.get('/admin/orders', { params }),
+    getOrderDetail: (orderId: IdParam) =>
+        api.get(`/admin/orders/${orderId}`)
 };
 
 export const emailAutomationAPI = {

@@ -105,6 +105,7 @@ const CouponList = lazy(() => import('./pages/admin/CouponList'))
 const BankAccountsAdmin = lazy(() => import('./pages/admin/BankAccounts'))
 const ManualBankAccountsAdmin = lazy(() => import('./pages/admin/ManualBankAccounts'))
 const ManualOrdersAdmin = lazy(() => import('./pages/admin/ManualOrders'))
+const AllOrdersAdmin = lazy(() => import('./pages/admin/AllOrders'))
 const OnboardingFormsList = lazy(() => import('./pages/admin/OnboardingFormsList'))
 const EyeTrackingUploadsList = lazy(() => import('./pages/admin/EyeTrackingUploadsList'))
 const AdminSubscriptions = lazy(() => import('./pages/admin/Subscriptions'))
@@ -655,6 +656,7 @@ function MainContent() {
                     <Route path="/admin/bank-accounts" element={<RequireAdmin><BankAccountsAdmin /></RequireAdmin>} />
                     <Route path="/admin/manual-bank-accounts" element={<RequireAdmin><ManualBankAccountsAdmin /></RequireAdmin>} />
                     <Route path="/admin/manual-orders" element={<RequireAdmin><ManualOrdersAdmin /></RequireAdmin>} />
+                    <Route path="/admin/orders" element={<RequireAdmin><AllOrdersAdmin /></RequireAdmin>} />
                     <Route path="/admin/onboarding-forms" element={<RequireAdmin><OnboardingFormsList /></RequireAdmin>} />
                     <Route path="/admin/eye-tracking-uploads" element={<RequireAdmin><EyeTrackingUploadsList /></RequireAdmin>} />
                     <Route path="/admin/subscriptions" element={<RequireAdmin><AdminSubscriptions /></RequireAdmin>} />

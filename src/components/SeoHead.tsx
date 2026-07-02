@@ -1302,25 +1302,37 @@ export default function SeoHead() {
         ensureMeta('twitter:description').content = seoState.description
         ensureMeta('twitter:image').content = DEFAULT_IMAGE
 
-        const baseGraph = buildSchema({
-            entry: seoState.entry,
-            kind: seoState.kind,
-            title: seoState.title,
-            description: seoState.description,
-            canonicalUrl: seoState.canonicalUrl,
-            inLanguage: seoState.inLanguage
-        })
-        const domFaqGraph = extractFaqSchema(seoState.canonicalUrl)
-        const domVideoGraph = extractVideoSchema(seoState.canonicalUrl, seoState.title, seoState.description)
+        const writeJsonLd = () => {
+            const baseGraph = buildSchema({
+                entry: seoState.entry,
+                kind: seoState.kind,
+                title: seoState.title,
+                description: seoState.description,
+                canonicalUrl: seoState.canonicalUrl,
+                inLanguage: seoState.inLanguage
+            })
+            const domFaqGraph = extractFaqSchema(seoState.canonicalUrl)
+            const domVideoGraph = extractVideoSchema(seoState.canonicalUrl, seoState.title, seoState.description)
 
-        ensureJsonLd().textContent = JSON.stringify(
-            {
-                '@context': 'https://schema.org',
-                '@graph': [...baseGraph, ...domFaqGraph, ...domVideoGraph]
-            },
-            null,
-            2
-        )
+            ensureJsonLd().textContent = JSON.stringify(
+                {
+                    '@context': 'https://schema.org',
+                    '@graph': [...baseGraph, ...domFaqGraph, ...domVideoGraph]
+                },
+                null,
+                2
+            )
+        }
+
+        // FAQ/Video şeması DOM'dan (.faq-item, iframe) okunuyor. Sayfa içeriği lazy-loaded
+        // route chunk'ı içinde bu effect'ten BİR SÜRE SONRA (chunk indirme/parse süresi,
+        // tek bir rAF'tan çok daha uzun olabilir) mount oluyor — hemen okursak FAQPage
+        // şeması boş çıkar. Birkaç kademeli retry, DOM'un ne zaman hazır olduğundan
+        // bağımsız olarak JSON-LD'yi tazeler; son çağrı en güncel DOM'u yakalar.
+        // Tüm gecikmeler prerender'ın renderAfterTime (2000ms) penceresi içinde kalır;
+        // canlı kullanıcıda görünmez (JSON-LD script'i sayfa görünümünü etkilemez).
+        writeJsonLd()
+        const retryTimers = [50, 200, 600, 1500].map((delay) => setTimeout(writeJsonLd, delay))
 
         if (import.meta.env.DEV && seoState.shouldIndex) {
             const h1Count = document.querySelectorAll('main h1').length
@@ -1331,6 +1343,8 @@ export default function SeoHead() {
                 })
             }
         }
+
+        return () => retryTimers.forEach(clearTimeout)
     }, [location.pathname, seoState])
 
     return null
