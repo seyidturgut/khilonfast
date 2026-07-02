@@ -436,6 +436,12 @@ if ($action === 'initiate' && $method === 'POST') {
                 invoiceQueueForOrder($db, (int)$orderId);
             } catch (Throwable $e) { error_log('[invoice queue cc] ' . $e->getMessage()); }
 
+            // Admin'e satış bildirimi — Paraşüt aktif/pasif durumundan bağımsız
+            try {
+                require_once __DIR__ . '/../services/InvoiceService.php';
+                invoiceSendAdminSaleNotification($db, (int)$orderId, 'credit_card');
+            } catch (Throwable $e) { error_log('[admin sale notify cc] ' . $e->getMessage()); }
+
             // Misafir checkout welcome email — yalnızca ödeme onaylanınca (bug fix)
             try {
                 sendGuestWelcomeEmailIfNeeded($db, (int)$user['id']);
@@ -874,6 +880,12 @@ if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
                 require_once __DIR__ . '/../services/InvoiceService.php';
                 invoiceQueueForOrder($db, (int)$order['id']);
             } catch (Throwable $e) { error_log('[invoice queue 3ds] ' . $e->getMessage()); }
+
+            // Admin'e satış bildirimi — Paraşüt aktif/pasif durumundan bağımsız
+            try {
+                require_once __DIR__ . '/../services/InvoiceService.php';
+                invoiceSendAdminSaleNotification($db, (int)$order['id'], 'credit_card');
+            } catch (Throwable $e) { error_log('[admin sale notify 3ds] ' . $e->getMessage()); }
 
             // Misafir checkout welcome e-postası — yalnızca ödeme onaylanınca gönder.
             // (Daha önce orders.php'de pending durumdayken gidiyordu — bug fix)

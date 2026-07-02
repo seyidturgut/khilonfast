@@ -3306,6 +3306,12 @@ if ($action === 'orders' && !empty($id) && ($routes[3] ?? '') === 'confirm-manua
             invoiceQueueForOrder($db, (int)$orderId);
         } catch (Throwable $e) { error_log('[invoice queue manual] ' . $e->getMessage()); }
 
+        // Admin'e satış bildirimi — Paraşüt aktif/pasif durumundan bağımsız
+        try {
+            require_once __DIR__ . '/../services/InvoiceService.php';
+            invoiceSendAdminSaleNotification($db, (int)$orderId, 'manual_transfer');
+        } catch (Throwable $e) { error_log('[admin sale notify manual] ' . $e->getMessage()); }
+
         // Email automation event + müşteri mailleri
         try {
             $userStmt = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
