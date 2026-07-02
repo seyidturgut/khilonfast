@@ -11,7 +11,16 @@ export default defineConfig(({ mode, command }) => {
     // Hızlı dev build için: PRERENDER=false npm run build
     const enablePrerender = isBuild && env.PRERENDER !== 'false'
 
+    // Build anında SABİT bir tarih (her `npm run build` çalıştığında bir kez hesaplanır,
+    // koda literal olarak gömülür). schema.org dateModified için kullanılır — client'ta
+    // her ziyaretçide "new Date()" ile yeniden hesaplanırsa yanlış/tutarsız "son güncelleme"
+    // tarihi gösterir; bu sabit değer prerender + hydration'da hep aynı kalır.
+    const buildDate = new Date().toISOString()
+
     return {
+        define: {
+            __BUILD_DATE__: JSON.stringify(buildDate)
+        },
         plugins: [
             react(),
             ...(enablePrerender ? [prerender({

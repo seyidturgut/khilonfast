@@ -954,7 +954,10 @@ function buildSchema({
         description,
         inLanguage,
         isPartOf: { '@id': `${SITE_URL}/#website` },
-        about: { '@id': `${SITE_URL}/#organization` }
+        about: { '@id': `${SITE_URL}/#organization` },
+        // AI arama motorları (Google AI Overviews, Perplexity) "güncellik" sinyaline önem verir.
+        // __BUILD_DATE__ vite.config.ts'te build anında sabitlenir (her deploy'da güncellenir).
+        dateModified: __BUILD_DATE__
     }
     const breadcrumbList = {
         '@type': 'BreadcrumbList',
