@@ -3104,9 +3104,12 @@ if ($action === 'orders' && $method === 'GET' && empty($id)) {
         $params[] = $statusFilter;
     }
 
+    // Bir siparişte birden fazla payment kaydı olabilir (retry/refund) — en son kaydı
+    // korelasyonlu subquery ile çekiyoruz (LEFT JOIN + GROUP BY yerine, MySQL
+    // only_full_group_by modunda agregat-olmayan kolon hatası vermesin diye).
     $methodFilter = (string)($_GET['payment_method'] ?? '');
     if ($methodFilter !== '' && $methodFilter !== 'all') {
-        $where[] = 'p.payment_method = ?';
+        $where[] = "(SELECT p2.payment_method FROM payments p2 WHERE p2.order_id = o.id ORDER BY p2.created_at DESC LIMIT 1) = ?";
         $params[] = $methodFilter;
     }
 
@@ -3130,11 +3133,9 @@ if ($action === 'orders' && $method === 'GET' && empty($id)) {
 
     $whereSql = implode(' AND ', $where);
 
-    // payment_method filtresi/görüntülemesi için LEFT JOIN (bir siparişte tek payment satırı olur — ürün başına değil)
     $countStmt = $db->prepare(
-        "SELECT COUNT(DISTINCT o.id) FROM orders o
+        "SELECT COUNT(*) FROM orders o
          LEFT JOIN users u ON u.id = o.user_id
-         LEFT JOIN payments p ON p.order_id = o.id
          WHERE $whereSql"
     );
     $countStmt->execute($params);
@@ -3144,13 +3145,12 @@ if ($action === 'orders' && $method === 'GET' && empty($id)) {
                 o.id, o.order_number, o.status AS order_status, o.total_amount, o.currency,
                 o.subtotal_amount, o.coupon_discount_amount, o.coupon_code, o.created_at,
                 u.id AS user_id, u.email, u.first_name, u.last_name, u.phone,
-                p.payment_method, p.status AS payment_status,
+                (SELECT p2.payment_method FROM payments p2 WHERE p2.order_id = o.id ORDER BY p2.created_at DESC LIMIT 1) AS payment_method,
+                (SELECT p2.status FROM payments p2 WHERE p2.order_id = o.id ORDER BY p2.created_at DESC LIMIT 1) AS payment_status,
                 (SELECT COUNT(*) FROM order_items WHERE order_id = o.id) AS items_count
             FROM orders o
             LEFT JOIN users u ON u.id = o.user_id
-            LEFT JOIN payments p ON p.order_id = o.id
             WHERE $whereSql
-            GROUP BY o.id
             ORDER BY o.created_at DESC
             LIMIT $perPage OFFSET $offset";
     $stmt = $db->prepare($sql);
@@ -3200,6 +3200,8 @@ if ($action === 'orders' && !empty($id) && ctype_digit((string)$id) && $method =
     $stmt->execute([$orderId]);
     $order = $stmt->fetch();
     if (!$order) sendResponse(['error' => 'Sipariş bulunamadı'], 404);
+    // Liste endpoint'iyle tutarlı alan adı (frontend order_status bekliyor)
+    $order['order_status'] = $order['status'];
 
     $itemsStmt = $db->prepare(
         "SELECT oi.*, p.name AS product_name, p.product_key
@@ -3208,6 +3210,12 @@ if ($action === 'orders' && !empty($id) && ctype_digit((string)$id) && $method =
     );
     $itemsStmt->execute([$orderId]);
     $order['items'] = $itemsStmt->fetchAll();
+    foreach ($order['items'] as &$item) {
+        $item['quantity'] = (int)$item['quantity'];
+        $item['unit_price'] = (float)$item['unit_price'];
+        $item['total_price'] = (float)$item['total_price'];
+    }
+    unset($item);
 
     $paymentsStmt = $db->prepare(
         "SELECT id, payment_method, lidio_transaction_id, amount, currency, status, lidio_response, created_at
@@ -3215,6 +3223,15 @@ if ($action === 'orders' && !empty($id) && ctype_digit((string)$id) && $method =
     );
     $paymentsStmt->execute([$orderId]);
     $order['payments'] = $paymentsStmt->fetchAll();
+    foreach ($order['payments'] as &$p) {
+        $p['id'] = (int)$p['id'];
+        $p['amount'] = (float)$p['amount'];
+    }
+    unset($p);
+
+    $order['total_amount'] = (float)$order['total_amount'];
+    $order['subtotal_amount'] = (float)$order['subtotal_amount'];
+    $order['coupon_discount_amount'] = (float)$order['coupon_discount_amount'];
 
     sendResponse(['order' => $order]);
 }

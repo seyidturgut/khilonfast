@@ -45,19 +45,21 @@ interface OrderDetail extends OrderRow {
 }
 
 const PAYMENT_METHOD_LABELS: Record<string, string> = {
+    credit_card: 'Kredi/Banka Kartı',
     manual_transfer: 'Banka Havalesi',
-    lidio: 'Kredi/Banka Kartı',
-    card: 'Kredi/Banka Kartı'
+    coupon_free: 'Kupon (Ücretsiz)',
+    manual_admin_gift: 'Admin Hediyesi'
 };
 
 const paymentMethodLabel = (method: string | null) => {
-    if (!method) return '—';
+    if (!method) return 'Ödeme yok';
     return PAYMENT_METHOD_LABELS[method] || method;
 };
 
 const paymentMethodIcon = (method: string | null) => {
     if (method === 'manual_transfer') return <HiBanknotes />;
-    return <HiCreditCard />;
+    if (method === 'credit_card') return <HiCreditCard />;
+    return <HiCreditCard style={{ opacity: 0.5 }} />;
 };
 
 export default function AllOrders() {
@@ -144,8 +146,10 @@ export default function AllOrders() {
             pending:    { bg: '#f1f5f9', color: '#475569', icon: <HiClock />, label: 'Bekliyor' },
             processing: { bg: '#fef3c7', color: '#92400e', icon: <HiClock />, label: 'İşlemde' },
             completed:  { bg: '#dcfce7', color: '#166534', icon: <HiCheckCircle />, label: 'Tamamlandı' },
+            success:    { bg: '#dcfce7', color: '#166534', icon: <HiCheckCircle />, label: 'Başarılı' },
             cancelled:  { bg: '#fee2e2', color: '#991b1b', icon: <HiXCircle />, label: 'İptal' },
-            failed:     { bg: '#fee2e2', color: '#991b1b', icon: <HiXCircle />, label: 'Başarısız' }
+            failed:     { bg: '#fee2e2', color: '#991b1b', icon: <HiXCircle />, label: 'Başarısız' },
+            refunded:   { bg: '#e0e7ff', color: '#3730a3', icon: <HiArrowPath />, label: 'İade Edildi' }
         };
         const s2 = styles[s] || styles.pending;
         return <span style={{ background: s2.bg, color: s2.color, padding: '4px 10px', borderRadius: 12, fontSize: 12, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>{s2.icon} {s2.label}</span>;
@@ -194,8 +198,10 @@ export default function AllOrders() {
 
                     <select value={methodFilter} onChange={(e) => { setPage(1); setMethodFilter(e.target.value); }} style={{ padding: '9px 12px', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: 13 }}>
                         <option value="all">Tüm Ödeme Yöntemleri</option>
-                        <option value="lidio">Kredi/Banka Kartı</option>
+                        <option value="credit_card">Kredi/Banka Kartı</option>
                         <option value="manual_transfer">Banka Havalesi</option>
+                        <option value="coupon_free">Kupon (Ücretsiz)</option>
+                        <option value="manual_admin_gift">Admin Hediyesi</option>
                     </select>
 
                     <input type="date" value={dateFrom} onChange={(e) => { setPage(1); setDateFrom(e.target.value); }} style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: 13 }} />
