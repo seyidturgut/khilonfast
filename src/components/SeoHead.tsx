@@ -922,7 +922,12 @@ function buildSchema({
         '@id': `${SITE_URL}/#organization`,
         name: SITE_NAME,
         url: SITE_URL,
-        logo: `${SITE_URL}/fast-logo-big.svg`
+        logo: `${SITE_URL}/fast-logo-big.svg`,
+        // AI/arama motorlarının markayı doğru entity olarak tanıması için gerçek sosyal profiller.
+        sameAs: [
+            'https://www.linkedin.com/company/khilon/',
+            'https://www.instagram.com/khilonagency'
+        ]
     }
 
     const website = {

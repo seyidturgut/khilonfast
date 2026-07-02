@@ -28,7 +28,7 @@ export default function Footer() {
                         </p>
 
                         <div className="footer-social">
-                            <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="social-link" aria-label="LinkedIn">
+                            <a href="https://www.linkedin.com/company/khilon/" target="_blank" rel="noreferrer" className="social-link" aria-label="LinkedIn">
                                 <FaLinkedinIn />
                             </a>
                             <a href="https://www.facebook.com" target="_blank" rel="noreferrer" className="social-link" aria-label="Facebook">
@@ -37,7 +37,7 @@ export default function Footer() {
                             <a href="https://x.com" target="_blank" rel="noreferrer" className="social-link" aria-label="Twitter">
                                 <FaTwitter />
                             </a>
-                            <a href="https://www.instagram.com" target="_blank" rel="noreferrer" className="social-link" aria-label="Instagram">
+                            <a href="https://www.instagram.com/khilonagency" target="_blank" rel="noreferrer" className="social-link" aria-label="Instagram">
                                 <FaInstagram />
                             </a>
                         </div>
