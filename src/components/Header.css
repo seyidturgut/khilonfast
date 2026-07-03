@@ -502,6 +502,11 @@ body.mobile-menu-open {
     padding: 0 1.25rem 1.5rem;
     /* Content starts directly below header */
     overflow-y: auto;
+    /* Bazı Android WebView/Chrome sürümlerinde nested absolute+overflow-auto
+       container'larda touch-scroll'un yön algısı belirsiz kalıp swipe'ı
+       yanlış yorumlayabiliyor — dikey pan'i açıkça belirtiyoruz. */
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
     background: #0a1622;
@@ -511,6 +516,15 @@ body.mobile-menu-open {
     pointer-events: none;
     transform: translateX(6%);
     transition: opacity 0.2s ease, transform 0.25s ease;
+}
+
+/* Alt menüler (Hizmetler/Sektörel/Eğitimler/Ürünler) uzun liste olabilir —
+   içerik ekranın altına taştığında kaydırılabilir olduğunu belli eden hafif
+   bir soluklaşma (fade) ekliyoruz, aksi halde kullanıcı listenin bittiğini
+   sanabiliyor. */
+.mobile-menu-page.sub {
+    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent 100%);
 }
 
 .mobile-menu-viewport.main .mobile-menu-page:nth-child(1),
