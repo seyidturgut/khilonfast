@@ -21,6 +21,15 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'Google Ads (Search Ads) Yönetimi nedir?',
+    answer: 'khilonfast\'ın doğru anahtar kelime stratejileri, hedefleme ve sürekli optimizasyonla marka görünürlüğünü ve dönüşüm oranlarını artırdığı Google reklamcılığı yönetim hizmetidir. Core, Growth ve Ultimate paketleriyle reklam bütçenizi verimli şekilde yönetir.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Google Ads (Search Ads) Management?',
+    answer: 'khilonfast\'s Google advertising management service that improves brand visibility and conversion rates through high-intent keyword strategy, precise targeting and continuous optimization. Delivered via Core, Growth and Ultimate packages to manage your ad spend efficiently.'
+};
+
 export default function GoogleAds() {
     const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -366,5 +375,5 @@ export default function GoogleAds() {
         comparisonTable: trConfig.comparisonTable
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-google-ads" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-google-ads" disableApiHeroTextOverride={true} />
 }

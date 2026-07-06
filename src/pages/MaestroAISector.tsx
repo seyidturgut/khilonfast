@@ -100,6 +100,7 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
     const videoTitle = sectorText('videoShowcase.title', t('maestroAI.videoShowcase.title'))
     const [videoTitleBefore, videoTitleAfter = ''] = videoTitle.split('Maestro AI')
     const faqs = sectorObjects<any[]>('faqs', t('maestroAI.faqs', { returnObjects: true }) as any[])
+    const aiAnswer = sectorObjects<{ question: string; answer: string } | undefined>('aiAnswer', undefined)
 
     const maestroConfig = {
         hero: {
@@ -273,7 +274,8 @@ export default function MaestroAISector({ sectorKey }: MaestroAISectorProps) {
             author: sectorText('testimonial.author', t('maestroAI.testimonial.author')),
             role: sectorText('testimonial.role', t('maestroAI.testimonial.role'))
         },
-        faqs
+        faqs,
+        aiAnswer
     }
 
     return <ServicePageTemplate {...maestroConfig} />

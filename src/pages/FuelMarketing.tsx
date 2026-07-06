@@ -286,6 +286,10 @@ export default function FuelMarketing() {
         growthCTA: {
             title: "Kurumsal Akaryakıt Sektöründe Liderliğe Yükselin!",
             description: "Rekabetin yoğun olduğu kurumsal akaryakıt dünyasında fark yaratın. khilonfast'in uzman ekibiyle büyüme rakamlarınızı bir üst seviyeye taşıyın."
+        },
+        aiAnswer: {
+            question: 'Kurumsal Akaryakıt Çözümleri için 360° Pazarlama nedir?',
+            answer: 'khilonfast’ın kurumsal akaryakıt çözümü sunan firmalara özel geliştirdiği, filo yöneticileri ve satın alma kararı alanları hedefleyen bütünleşik pazarlama hizmetidir. Arama reklamları, SEO ve içerik üretimini Maestro AI destekli stratejiyle birleştirerek kurumsal müşteri kazanımını hızlandırır.'
         }
     }
 
@@ -506,7 +510,11 @@ export default function FuelMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing for Corporate Fuel Solutions?',
+            answer: 'It is khilonfast’s integrated marketing service built for corporate fuel providers, targeting fleet managers and procurement decision-makers. Search ads, SEO and content production combine with Maestro AI-driven strategy to accelerate corporate customer acquisition.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fuel-360" disableApiHeroTextOverride={true} disableApiPackages={true} />

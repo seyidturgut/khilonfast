@@ -1014,7 +1014,8 @@ export default function TrainingProgramPage() {
                     }
                 ]
             }
-            : undefined
+            : undefined,
+        aiAnswer: training.aiAnswer
     };
 
     const useOrFallback = (value: any, fallback: any) =>

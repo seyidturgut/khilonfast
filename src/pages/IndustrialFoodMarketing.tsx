@@ -289,6 +289,10 @@ export default function IndustrialFoodMarketing() {
         growthCTA: {
             title: "Google'da Görünür Olun!",
             description: "Potansiyel müşterileriniz sizi aradığında orada olun. khilonfast'in uzman SEO ekibiyle arama motorlarında yükselin, organik trafiğinizi ve satışlarınızı artırın."
+        },
+        aiAnswer: {
+            question: 'Endüstriyel Gıda & Şef Çözümleri için 360° Pazarlama nedir?',
+            answer: 'khilonfast’ın endüstriyel gıda üreticileri ve şef çözümü sunan firmalara özel sunduğu bütünleşik pazarlama hizmetidir. HORECA ve toplu tüketim kanallarına yönelik arama reklamları, SEO ve içerik üretimini Maestro AI destekli stratejiyle birleştirerek marka görünürlüğünü artırır.'
         }
     }
 
@@ -516,7 +520,11 @@ export default function IndustrialFoodMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing for Industrial Food & Chef Solutions?',
+            answer: 'It is khilonfast’s integrated marketing service for industrial food producers and chef solution providers. Search ads, SEO and content production targeting HORECA and bulk consumption channels combine with Maestro AI-driven strategy to build brand visibility.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-industrial-food" disableApiHeroTextOverride={true} disableApiPackages={true} />

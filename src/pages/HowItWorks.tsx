@@ -16,8 +16,19 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import FAQ from '../components/FAQ'
 import EditableMedia from '../components/cms/EditableMedia'
 import { usePageSlug } from '../hooks/usePageSlug'
+import AiAnswerBox from '../components/AiAnswerBox'
 import './HowItWorks.css'
 import { buildLocalizedPath, getLocalePrefix, useRouteLocale } from '../utils/locale'
+
+const HOW_IT_WORKS_AI_ANSWER_TR = {
+  question: 'khilonfast nasıl çalışır?',
+  answer: 'Sürecimiz analiz, hesap yetkilendirme, strateji kurgusu, uygulama ve sürekli optimizasyon adımlarından oluşur. Google, Meta ve LinkedIn gibi platformlarda gerekli yetkilendirmeleri tamamladıktan sonra sektörünüze özel stratejiyi hayata geçiririz.'
+};
+
+const HOW_IT_WORKS_AI_ANSWER_EN = {
+  question: 'How does khilonfast work?',
+  answer: 'Our process consists of analysis, account authorization, strategy design, execution, and continuous optimization. After completing the required authorizations on platforms like Google, Meta, and LinkedIn, we execute a sector-specific strategy for your business.'
+};
 
 export default function HowItWorks() {
   const { t } = useTranslation('common');
@@ -181,6 +192,8 @@ export default function HowItWorks() {
           </div>
         </div>
       </section>
+
+      <AiAnswerBox {...(currentLang === 'en' ? HOW_IT_WORKS_AI_ANSWER_EN : HOW_IT_WORKS_AI_ANSWER_TR)} />
 
       <section id="adimlar" className="how-steps">
         <div className="container">

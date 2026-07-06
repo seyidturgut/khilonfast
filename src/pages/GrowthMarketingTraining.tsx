@@ -19,6 +19,16 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'Bora Işık ile Büyüme Odaklı Pazarlama Eğitimi nedir?',
+    answer: 'İlk temastan satışa kadar tüm süreci 10+1 modülde anlatan, CMO Bora Işık perspektifiyle hazırlanmış bir video eğitim programıdır. Hedef kitle analizi, değer önerisi, satış hunisi ve metriklerle bütünleşik pazarlama stratejisi kurmayı öğretir.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What is the Growth-Focused Marketing Training with Bora Işık?',
+    answer: 'A video training program built around a 10+1 module framework covering the full journey from first customer touch to closed revenue, from the perspective of experienced CMO Bora Işık. It teaches audience mapping, value proposition design, funnel messaging and growth metrics.'
+};
+
 export default function GrowthMarketingTraining() {
     const { t } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -222,5 +232,5 @@ export default function GrowthMarketingTraining() {
         }
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="training-buyume-odakli-pazarlama" disableApiHeroTextOverride />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="training-buyume-odakli-pazarlama" disableApiHeroTextOverride />
 }

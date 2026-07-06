@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'SEO, arama/sosyal medya reklamları, içerik üretimi ve raporlamayı tek çatı altında birleştiren, bütçenizi doğru kanallara yönlendiren dijital pazarlama hizmetidir. khilonfast bu hizmeti tek pakette, tek ekip ve tek strateji ile yönetir.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing?',
+    answer: 'A digital marketing service that combines SEO, search/social media ads, content production and reporting under one roof, directing your budget to the right channels. khilonfast manages this as a single package with one team and one strategy.'
+};
+
 export default function IntegratedDigitalMarketing() {
     const { t, i18n } = useTranslation('common')
 
@@ -298,5 +307,5 @@ export default function IntegratedDigitalMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...idmConfig} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...idmConfig} aiAnswer={i18n.language === 'en' ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

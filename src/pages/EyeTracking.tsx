@@ -22,6 +22,15 @@ import { pickLocalizedPriceAndCurrency, formatLocalizedPrice } from '../utils/pr
 
 type RawProduct = { price?: number | string; currency?: string; display_price_try?: number; display_price_usd?: number }
 
+const AI_ANSWER_TR = {
+    question: 'Eye Tracking (Görsel Reklam Analizi) nedir?',
+    answer: 'Reklam görsellerinizi yapay zeka destekli göz izleme teknolojisiyle analiz ederek görsel netlik, zihinsel yük, ilgi potansiyeli ve hatırlanma gücünü skorlayan bir hizmettir. Heatmap ve benchmark çıktılarıyla kreatiflerinizi yayına almadan önce optimize etmenizi sağlar.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Eye Tracking (Visual Ad Analysis)?',
+    answer: 'A service that analyzes your ad creatives with AI-powered eye tracking technology, scoring visual clarity, mental load, interest potential and recall strength. Heatmap outputs and benchmark notes let you optimize creatives before they go live.'
+};
+
 export default function EyeTracking() {
     const { t } = useTranslation('common')
     const isEn = useRouteLocale() === 'en'
@@ -302,5 +311,5 @@ export default function EyeTracking() {
         faqs: t('eyeTracking.faqs', { returnObjects: true }) as any
     }
 
-    return <ServicePageTemplate {...eyeTrackingConfig} />
+    return <ServicePageTemplate {...eyeTrackingConfig} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} />
 }

@@ -286,6 +286,10 @@ export default function GiftCardMarketing() {
         growthCTA: {
             title: "Kurumsal Hediye Kartı Sektöründe Liderliğe Yükselin!",
             description: "Rekabetin yoğun olduğu kurumsal hediye kartı dünyasında fark yaratın. khilonfast'in uzman ekibiyle büyüme rakamlarınızı bir üst seviyeye taşıyın."
+        },
+        aiAnswer: {
+            question: 'Kurumsal Hediye Kartı için 360° Pazarlama nedir?',
+            answer: 'khilonfast’ın kurumsal hediye, teşvik ve ödüllendirme çözümü sunan firmalara özel geliştirdiği bütünleşik pazarlama hizmetidir. İK ve satın alma kararı alan kurumsal kitleye yönelik arama reklamları, SEO ve içerik üretimini Maestro AI destekli stratejiyle birleştirir.'
         }
     }
 
@@ -506,7 +510,11 @@ export default function GiftCardMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing for Corporate Gift Cards?',
+            answer: 'It is khilonfast’s integrated marketing service for corporate gift, incentive and rewards providers. Search ads, SEO and content production targeting HR and procurement audiences combine with Maestro AI-driven strategy to grow corporate demand.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-giftcard-360" disableApiHeroTextOverride={true} disableApiPackages={true} />

@@ -1464,7 +1464,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "What does Maestro AI do for the B2B sector?",
+                "answer": "Maestro AI builds marketing strategy around B2B firms' long sales cycles and multi-stakeholder decisions. It analyzes your CRM data to suggest messaging tailored to decision-makers and influencers, accelerating your funnel."
+            }
         },
         "odeme-sistemleri": {
             "sectorLabel": "Payment Systems",
@@ -1565,7 +1569,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "How is Maestro AI used in the payment systems sector?",
+                "answer": "Maestro AI accounts for payment companies' compliance requirements and diverse decision-makers (CFO, CTO, e-commerce lead) to generate campaign and content recommendations. Your team builds a fast, consistent, sector-fit strategy."
+            }
         },
         "endustriyel-gida": {
             "sectorLabel": "Industrial Food & Culinary",
@@ -1666,7 +1674,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "How does Maestro AI work for the industrial food sector?",
+                "answer": "Maestro AI analyzes industrial food companies' B2B sales channels and supply chain dynamics to deliver audience-specific marketing recommendations. Manage campaigns, content, and conversion optimization through one AI assistant."
+            }
         },
         "fintech": {
             "sectorLabel": "FinTech",
@@ -1766,7 +1778,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "What does Maestro AI provide for the fintech sector?",
+                "answer": "Maestro AI generates marketing strategies that balance fintech companies' fast growth and regulatory compliance needs. It gives product and growth teams data-driven campaign, message, and channel recommendations to accelerate conversion."
+            }
         },
         "teknoloji-yazilim": {
             "sectorLabel": "Technology & Software",
@@ -1867,7 +1883,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "What does Maestro AI offer for the tech and software sector?",
+                "answer": "Maestro AI strengthens SaaS and technology brands' product-market fit and demand generation with tailored strategies. It guides growth teams with recommendations focused on activation, trial conversion, and churn reduction."
+            }
         },
         "uretim": {
             "sectorLabel": "Manufacturing",
@@ -1968,7 +1988,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "How does Maestro AI work for the manufacturing sector?",
+                "answer": "Maestro AI analyzes manufacturers' long sales cycles and quote processes to recommend sustainable demand generation strategies. It boosts conversion rates through content and campaign planning aligned with the B2B buyer journey."
+            }
         },
         "enerji": {
             "sectorLabel": "Energy",
@@ -2068,7 +2092,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "What does Maestro AI provide for the energy sector?",
+                "answer": "Maestro AI analyzes energy companies' decision-maker-driven sales processes to produce strategic campaign and content recommendations. It accounts for complex B2B decision structures to accelerate marketing planning."
+            }
         },
         "ofis-tasarim": {
             "sectorLabel": "Office & Corporate Interior Design",
@@ -2169,7 +2197,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "How is Maestro AI used in the office and corporate interior design sector?",
+                "answer": "Maestro AI analyzes corporate interior design firms' portfolio-driven sales process and proposal stages to deliver marketing recommendations. It brings data-backed structure to referral management and project-based content strategy."
+            }
         },
         "filo-kiralama": {
             "sectorLabel": "Fleet Rental",
@@ -2269,7 +2301,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the forms required to configure the service properly. Once completed, the team activates your setup and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "What does Maestro AI do for the fleet rental sector?",
+                "answer": "Maestro AI analyzes fleet rental companies' corporate mobility quote processes and lead quality to generate conversion-focused marketing recommendations. It strengthens customer retention and quote optimization together."
+            }
         },
         "hediye-karti": {
             "sectorLabel": "Corporate Gift Card",
@@ -2353,7 +2389,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "How is Maestro AI used in the corporate gift card sector?",
+                "answer": "Maestro AI recommends campaign and content strategy targeted at corporate gift card companies' B2B buying centers. It delivers personalized marketing planning based on corporate customer needs."
+            }
         },
         "akaryakit": {
             "sectorLabel": "Corporate Fuel Solutions",
@@ -2437,7 +2477,11 @@
                     "question": "What happens after I purchase the service?",
                     "answer": "After purchase, you receive the required forms. Once completed, the team performs the necessary configurations, activates your service, and keeps you informed throughout the process via email."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "What does Maestro AI provide for the corporate fuel sector?",
+                "answer": "Maestro AI produces data-driven marketing strategies targeting fleet managers for corporate fuel companies. It optimizes content and performance planning based on sector-specific dynamics."
+            }
         }
     },
     "serviceContentStrategy": {

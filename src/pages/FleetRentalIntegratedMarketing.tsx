@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Filo Kiralama Sektörüne Özel Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Filo kiralama şirketlerinin SEO, arama reklamları, içerik ve sosyal medyayı tek stratejide birleştirerek bütçesini doğru kanallara yönlendirdiği dijital pazarlama hizmetidir. Sektöre özel Core, Growth ve Ultimate paketleriyle sunulur.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for the Fleet Rental Sector?',
+    answer: 'A digital marketing service that combines SEO, search ads, content and social media into a single strategy so fleet rental companies direct their budget to the right channels. Offered through sector-specific Core, Growth and Ultimate packages.'
+};
+
 export default function FleetRentalIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +303,5 @@ export default function FleetRentalIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

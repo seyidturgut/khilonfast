@@ -18,6 +18,15 @@ import { useTranslation } from 'react-i18next'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'Go-to-Market (GTM) Stratejisi nedir?',
+    answer: 'Bir ürün veya hizmetin pazara doğru zamanda, doğru kanallardan ve doğru mesajla sunulmasını sağlayan uçtan uca pazarlama planıdır. khilonfast\'ın GTM hizmeti; pazar analizi, dijital strateji, satış senaryosu ve marka tasarımını tek pakette birleştirir.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is a Go-to-Market (GTM) Strategy?',
+    answer: 'It is an end-to-end marketing plan that ensures a product or service reaches the market at the right time, through the right channels, with the right message. khilonfast\'s GTM service combines market analysis, digital strategy, sales scripting and brand design in one package.'
+};
+
 export default function GoToMarket() {
     const { t } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -244,5 +253,5 @@ export default function GoToMarket() {
         ]
     }
 
-    return <ServicePageTemplate {...gtmConfig} serviceKey="service-gtm" disableApiHeroTextOverride />
+    return <ServicePageTemplate {...gtmConfig} aiAnswer={currentLang === 'en' ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-gtm" disableApiHeroTextOverride />
 }

@@ -286,6 +286,10 @@ export default function EnergyMarketing() {
         growthCTA: {
             title: "Enerji Dünyasında Gücünüzü Gösterin!",
             description: "Markanızı doğru kitleyle buluşturun. khilonfast'in enerji pazarlaması uzmanlığıyla geleceği birlikte kurgulayalım."
+        },
+        aiAnswer: {
+            question: 'Enerji Sektörü için 360° Pazarlama Yönetimi nedir?',
+            answer: 'khilonfast’ın enerji firmalarına özel sunduğu, uzun satış döngülerini ve teknik karar vericileri hedef alan bütünleşik pazarlama hizmetidir. Arama reklamları, sektörel SEO, teknik içerik üretimi ve Maestro AI destekli strateji ile enerji markalarının pazar otoritesini güçlendirir.'
         }
     }
 
@@ -513,7 +517,11 @@ export default function EnergyMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing Management for Energy Companies?',
+            answer: 'It is khilonfast’s integrated marketing service built for the energy sector’s long sales cycles and technical decision-makers. Search ads, sector-specific SEO, technical content production and Maestro AI-driven strategy work together to strengthen energy brands’ market authority.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-energy" disableApiHeroTextOverride={true} disableApiPackages={true} />

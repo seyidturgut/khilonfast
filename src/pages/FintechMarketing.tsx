@@ -286,6 +286,10 @@ export default function FintechMarketing() {
         growthCTA: {
             title: "FinTech'te Liderliğe Yükselin!",
             description: "Rekabetin en hararetli olduğu FinTech dünyasında fark yaratın. khilonfast'in uzman ekibiyle büyüme rakamlarınızı bir üst seviyeye taşıyın."
+        },
+        aiAnswer: {
+            question: 'FinTech için 360° Pazarlama Yönetimi nedir?',
+            answer: 'khilonfast’ın finansal teknoloji şirketlerine özel sunduğu, güven ve regülasyon hassasiyetini gözeten uçtan uca pazarlama hizmetidir. Düşük maliyetli müşteri kazanımı için arama reklamları, SEO ve içerik üretimini Maestro AI destekli strateji ile birleştirerek CAC oranlarını düşürür.'
         }
     }
 
@@ -513,7 +517,11 @@ export default function FintechMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing Management for FinTech Companies?',
+            answer: 'It is khilonfast’s end-to-end marketing service built for fintech companies, balancing trust-building and regulatory sensitivity with growth. Search ads, SEO and content production combine with Maestro AI-driven strategy to lower customer acquisition cost and build category authority.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fintech-360" disableApiHeroTextOverride={true} disableApiPackages={true} />

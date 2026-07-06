@@ -1455,7 +1455,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI B2B sektörü için ne yapar?",
+                "answer": "Maestro AI, B2B firmalarının satış döngüsü uzun ve çok paydaşlı karar süreçlerine göre pazarlama stratejisi üretir. CRM verilerinizi analiz ederek karar verici ve etkileyici bazında mesaj önerileri sunar, huniyi hızlandırır."
+            }
         },
         "odeme-sistemleri": {
             "sectorLabel": "Ödeme Sistemleri",
@@ -1556,7 +1560,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI ödeme sistemleri sektöründe nasıl kullanılır?",
+                "answer": "Maestro AI, ödeme sistemleri firmalarının uyum gereksinimlerini ve karar verici çeşitliliğini (CFO, CTO, e-ticaret yöneticisi) dikkate alarak kampanya ve içerik önerileri üretir. Böylece pazarlama ekibi sektöre uygun, hızlı ve tutarlı strateji kurar."
+            }
         },
         "endustriyel-gida": {
             "sectorLabel": "Endüstriyel Gıda & Şef Çözümleri",
@@ -1657,7 +1665,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI endüstriyel gıda sektörü için nasıl çalışır?",
+                "answer": "Maestro AI, endüstriyel gıda firmalarının B2B satış kanallarını ve tedarik zinciri dinamiklerini analiz ederek hedef kitleye özel pazarlama önerileri sunar. Kampanya, içerik ve dönüşüm optimizasyonunu tek bir yapay zeka asistanıyla yönetirsiniz."
+            }
         },
         "fintech": {
             "sectorLabel": "FinTech",
@@ -1757,7 +1769,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI fintech sektöründe ne sağlar?",
+                "answer": "Maestro AI, fintech şirketlerinin hızlı büyüme ve düzenleyici uyum ihtiyaçlarını birlikte gözeten pazarlama stratejileri üretir. Ürün ve büyüme ekiplerine veri destekli kampanya, mesaj ve kanal önerileri sunarak dönüşümü hızlandırır."
+            }
         },
         "teknoloji-yazilim": {
             "sectorLabel": "Teknoloji & Yazılım",
@@ -1858,7 +1874,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI teknoloji ve yazılım sektörü için ne sunar?",
+                "answer": "Maestro AI, SaaS ve teknoloji markalarının ürün-pazar uyumunu ve talep yaratma süreçlerini güçlendiren pazarlama stratejileri üretir. Aktivasyon, deneme dönüşümü ve churn azaltma odaklı öneriler sunarak büyüme ekiplerine rehberlik eder."
+            }
         },
         "uretim": {
             "sectorLabel": "Üretim",
@@ -1959,7 +1979,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI üretim sektörü için nasıl çalışır?",
+                "answer": "Maestro AI, üretim firmalarının uzun satış döngülerini ve teklif süreçlerini analiz ederek sürdürülebilir talep yaratma stratejileri önerir. B2B alıcı yolculuğuna uygun içerik ve kampanya planlaması ile dönüşüm oranlarını artırır."
+            }
         },
         "enerji": {
             "sectorLabel": "Enerji",
@@ -2059,7 +2083,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI enerji sektörü için ne sağlar?",
+                "answer": "Maestro AI, enerji şirketlerinin karar verici odaklı satış süreçlerini analiz ederek stratejik kampanya ve içerik önerileri üretir. Karmaşık B2B karar mekanizmalarını göz önünde bulundurarak pazarlama planlamasını hızlandırır."
+            }
         },
         "ofis-tasarim": {
             "sectorLabel": "Ofis & Kurumsal İç Tasarım",
@@ -2160,7 +2188,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI ofis ve kurumsal iç tasarım sektöründe nasıl kullanılır?",
+                "answer": "Maestro AI, kurumsal iç tasarım firmalarının portföy odaklı satış sürecini ve teklif aşamalarını analiz ederek pazarlama önerileri sunar. Referans yönetimi ve proje bazlı içerik stratejisini veri destekli hale getirir."
+            }
         },
         "filo-kiralama": {
             "sectorLabel": "Filo Kiralama",
@@ -2260,7 +2292,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI filo kiralama sektörü için ne yapar?",
+                "answer": "Maestro AI, filo kiralama firmalarının kurumsal mobilite teklif süreçlerini ve lead kalitesini analiz ederek dönüşüm odaklı pazarlama önerileri üretir. Müşteri elde tutma ve teklif optimizasyonunu birlikte güçlendirir."
+            }
         },
         "hediye-karti": {
             "sectorLabel": "Kurumsal Hediye Kartı",
@@ -2344,7 +2380,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI kurumsal hediye kartı sektöründe nasıl kullanılır?",
+                "answer": "Maestro AI, kurumsal hediye kartı firmalarının B2B satın alma merkezlerine yönelik kampanya ve içerik stratejisi önerir. Kurumsal müşteri ihtiyaçlarına göre kişiselleştirilmiş pazarlama planlaması sunar."
+            }
         },
         "akaryakit": {
             "sectorLabel": "Kurumsal Akaryakıt Çözümü",
@@ -2428,7 +2468,11 @@
                     "question": "Hizmet satın alımdan sonra süreç nasıl ilerleyecek?",
                     "answer": "Satın alma sonrası size gerekli formlar iletilir. Formlar doldurulduktan sonra ekip gerekli tanımlamaları yapar, hizmetinizi aktif hale getirir ve tüm süreç boyunca sizi e-posta ile bilgilendirir."
                 }
-            ]
+            ],
+            "aiAnswer": {
+                "question": "Maestro AI kurumsal akaryakıt sektörü için ne sağlar?",
+                "answer": "Maestro AI, kurumsal akaryakıt firmalarının filo yöneticilerini hedefleyen pazarlama stratejilerini veri destekli şekilde üretir. İçerik ve performans planlamasını sektöre özel dinamiklere göre optimize eder."
+            }
         }
     },
     "serviceContentStrategy": {

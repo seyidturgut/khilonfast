@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'B2B için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'khilonfast\'in B2B Bütünleşik Dijital Pazarlama hizmeti; SEO, reklam yönetimi, içerik ve sosyal medyayı tek bir stratejide birleştirerek B2B firmaların bütçesini doğru kanallara yönlendirmesini sağlar. Kanallar arasında tutarlı, ölçülebilir bir büyüme yaklaşımı sunar.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for B2B?',
+    answer: 'khilonfast\'s Integrated Digital Marketing service for B2B combines SEO, paid ads, content, and social media into a single coordinated strategy, directing your budget to the right channels. It gives B2B companies a consistent, measurable growth approach across every channel.'
+};
+
 export default function B2BIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +303,5 @@ export default function B2BIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

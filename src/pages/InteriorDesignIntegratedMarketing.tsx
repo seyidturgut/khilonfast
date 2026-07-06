@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Ofis & Tasarım sektörü için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Ofis tasarımı ve iç mimarlık firmalarına özel; SEO, görsel ağırlıklı reklam kampanyaları, içerik ve sosyal medyayı tek stratejide birleştiren dijital pazarlama hizmetidir. Kurumsal müşterilere ve proje bazlı taleplere ulaşmayı hedefler.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for the Office Design sector?',
+    answer: 'A digital marketing service tailored for office design and interior architecture firms that combines SEO, visual-driven ad campaigns, content and social media into one strategy. It targets corporate clients and project-based demand.'
+};
+
 export default function InteriorDesignIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +303,5 @@ export default function InteriorDesignIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

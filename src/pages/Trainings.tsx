@@ -7,6 +7,17 @@ import trCommon from '../locales/tr/common.json';
 import enCommon from '../locales/en/common.json';
 import { getTrainingPrograms } from '../data/trainingPrograms';
 import FAQ from '../components/FAQ';
+import AiAnswerBox from '../components/AiAnswerBox';
+
+const TRAININGS_AI_ANSWER_TR = {
+    question: 'khilonfast Academy eğitimleri nedir?',
+    answer: 'khilonfast Academy, B2B, fintech, üretim, enerji gibi 9 sektöre özel tasarlanmış online pazarlama eğitim programlarıdır. Satın alma sonrası dijital platform üzerinden istediğiniz zaman erişip kendi hızınızda ilerleyebilirsiniz.'
+};
+
+const TRAININGS_AI_ANSWER_EN = {
+    question: 'What are khilonfast Academy training programs?',
+    answer: 'khilonfast Academy offers online marketing training programs designed specifically for 9 industries such as B2B, fintech, manufacturing, and energy. After purchase, you can access the content anytime on our digital platform and progress at your own pace.'
+};
 
 const TRAININGS_FAQS_TR = [
     {
@@ -84,6 +95,8 @@ export default function Trainings() {
                     <p>{t('trainingsPage.hero.description')}</p>
                 </div>
             </section>
+
+            <AiAnswerBox {...(currentLang === 'en' ? TRAININGS_AI_ANSWER_EN : TRAININGS_AI_ANSWER_TR)} />
 
             <section className="trainings-list">
                 <div className="container">

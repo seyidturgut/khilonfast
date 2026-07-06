@@ -3,7 +3,18 @@ import { HiBolt, HiArrowRight } from 'react-icons/hi2'
 import { useTranslation } from 'react-i18next'
 import Breadcrumbs from '../components/Breadcrumbs'
 import FAQ from '../components/FAQ'
+import AiAnswerBox from '../components/AiAnswerBox'
 import './MaestroAIHub.css'
+
+const MAESTRO_AI_ANSWER_TR = {
+    question: 'Maestro AI nedir?',
+    answer: 'Maestro AI, sektöre özel pazarlama bilgisiyle eğitilmiş bir yapay zeka pazarlama stratejistidir. B2B, fintech, üretim, enerji gibi 9 farklı sektör için ayrı versiyonları bulunur ve her biri o sektörün dinamiklerine göre strateji ve içerik önerir.'
+};
+
+const MAESTRO_AI_ANSWER_EN = {
+    question: 'What is Maestro AI?',
+    answer: 'Maestro AI is an AI marketing strategist trained with sector-specific marketing knowledge. It has 9 dedicated versions for industries like B2B, fintech, manufacturing, and energy, each recommending strategy and content tailored to that sector.'
+};
 
 const MAESTRO_FAQS_TR = [
     {
@@ -140,6 +151,8 @@ export default function MaestroAI() {
                     <p>{heroDesc}</p>
                 </div>
             </section>
+
+            <AiAnswerBox {...(currentLang === 'en' ? MAESTRO_AI_ANSWER_EN : MAESTRO_AI_ANSWER_TR)} />
 
             <section className="maestro-hub-list">
                 <div className="container">

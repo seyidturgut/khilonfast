@@ -286,6 +286,10 @@ export default function ManufacturingMarketing() {
         growthCTA: {
             title: "Üretim Gücünüzü Küresele Taşıyın!",
             description: "Endüstriyel pazarlamada fark yaratacak stratejiyi birlikte kuralım. khilonfast ile üretim sektöründe dijital dönüşümü başlatın."
+        },
+        aiAnswer: {
+            question: 'Üretim Sektörü için 360° Pazarlama nedir?',
+            answer: 'khilonfast’ın üretim ve endüstriyel firmalara özel sunduğu, teknik alım süreçlerini ve uzun karar döngülerini gözeten bütünleşik pazarlama hizmetidir. Arama reklamları, sektörel SEO ve teknik içerik üretimini Maestro AI destekli stratejiyle birleştirerek küresel pazarlarda görünürlük sağlar.'
         }
     }
 
@@ -513,7 +517,11 @@ export default function ManufacturingMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing for the Manufacturing Sector?',
+            answer: 'It is khilonfast’s integrated marketing service for manufacturing and industrial companies, built around technical procurement processes and long decision cycles. Search ads, sector-specific SEO and technical content production combine with Maestro AI-driven strategy to build visibility in global markets.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-manufacturing" disableApiHeroTextOverride={true} disableApiPackages={true} />

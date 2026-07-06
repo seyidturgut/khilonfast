@@ -555,7 +555,8 @@ export default function ConsultingProgramPage() {
                     buttonLink: '#pricing'
                 }
             ]
-        }
+        },
+        aiAnswer: consulting.aiAnswer
     };
 
     const useOrFallback = (value: any, fallback: any) =>

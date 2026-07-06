@@ -17,6 +17,16 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Üretim sektörü için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Üretim firmalarına özel SEO, reklam, içerik ve sosyal medyayı tek stratejide birleştiren pazarlama hizmetidir. khilonfast, üretim sektörünün uzun satış döngüsüne ve B2B karar süreçlerine uygun kanal karmasıyla bütçenizi doğru yönlendirir.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for Manufacturing?',
+    answer: 'A marketing service tailored to manufacturing companies that combines SEO, paid ads, content and social media into a single strategy. khilonfast aligns your budget with a channel mix suited to manufacturing’s long sales cycles and B2B decision processes.'
+};
+
 export default function ManufacturingIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +304,5 @@ export default function ManufacturingIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

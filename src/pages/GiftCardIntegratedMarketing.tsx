@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Kurumsal Hediye Kartı sektörü için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Kurumsal hediye kartı sağlayıcılarına özel; SEO, arama/sosyal medya reklamları, içerik ve raporlamayı tek stratejide birleştiren dijital pazarlama hizmetidir. İK departmanlarına ve kurumsal satın alma karar vericilerine ulaşmayı hedefler.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for the Corporate Gift Card sector?',
+    answer: 'A digital marketing service tailored for corporate gift card providers that combines SEO, search/social ads, content and reporting into one strategy. It targets HR departments and corporate purchasing decision-makers.'
+};
+
 export default function GiftCardIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -270,5 +279,5 @@ export default function GiftCardIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

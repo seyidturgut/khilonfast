@@ -19,6 +19,16 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'khilonfast SEO Yönetimi hizmeti nedir?',
+    answer: 'Doğru anahtar kelime stratejileri ve teknik SEO optimizasyonuyla markanızın organik arama sonuçlarında üst sıralara çıkmasını sağlayan hizmettir. Anahtar kelime araştırması, sayfa içi/dışı optimizasyon ve içerik stratejisini tek çatı altında yönetir.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What is khilonfast SEO Management?',
+    answer: 'A service that improves your organic search rankings through targeted keyword strategy and technical SEO optimization. It manages keyword research, on-page and off-page optimization, and content strategy under one roof to drive sustainable organic growth.'
+};
+
 export default function SeoService() {
     const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -404,5 +414,5 @@ export default function SeoService() {
         comparisonTable: trConfig.comparisonTable
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-seo" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-seo" disableApiHeroTextOverride={true} />
 }

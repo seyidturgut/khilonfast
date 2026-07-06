@@ -11,6 +11,7 @@ import './SectoralSolutionTemplate.css'
 import { resolveLocaleFromPath } from '../../utils/locale'
 import { API_BASE_URL } from '../../config/api'
 import EditableMedia from '../../components/cms/EditableMedia'
+import AiAnswerBox from '../../components/AiAnswerBox'
 
 const API_BASE = API_BASE_URL;
 
@@ -71,6 +72,7 @@ export interface SectoralSolutionProps {
     serviceKey?: string;
     disableApiHeroTextOverride?: boolean;
     disableApiPackages?: boolean;
+    aiAnswer?: { question: string; answer: string };
 }
 
 export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
@@ -630,6 +632,8 @@ export default function SectoralSolutionTemplate(props: SectoralSolutionProps) {
                     </div>
                 </div>
             </section>
+
+            {props.aiAnswer && <AiAnswerBox {...props.aiAnswer} />}
 
             <section className="video-showcase">
                 <div className="container">

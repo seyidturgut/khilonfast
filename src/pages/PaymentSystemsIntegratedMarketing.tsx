@@ -17,6 +17,16 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Ödeme Sistemleri için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Ödeme sistemleri sektörüne özel SEO, reklam, içerik ve sosyal medyayı tek bir stratejide birleştiren pazarlama hizmetidir. khilonfast bütçenizi doğru kanallara yönlendirerek sektöre özgü büyüme hedeflerine ulaşmanızı sağlar.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for Payment Systems?',
+    answer: 'A marketing service tailored to the payment systems industry that combines SEO, paid ads, content and social media into a single strategy. khilonfast directs your budget to the right channels to hit sector-specific growth targets.'
+};
+
 export default function PaymentSystemsIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +304,5 @@ export default function PaymentSystemsIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

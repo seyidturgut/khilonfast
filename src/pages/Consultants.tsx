@@ -6,7 +6,18 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import { useRouteLocale } from '../utils/locale'
 import { API_BASE_URL } from '../config/api'
 import FAQ from '../components/FAQ'
+import AiAnswerBox from '../components/AiAnswerBox'
 import './Consultants.css'
+
+const CONSULTANTS_AI_ANSWER_TR = {
+    question: 'khilonfast danışmanları kimlerdir?',
+    answer: 'B2B SaaS, fintech, üretim, enerji, ödeme sistemleri gibi sektörlerden gelen kıdemli pazarlama uzmanlarıdır. Her danışman, sektöre özel büyüme stratejisi kurmak ve uygulamak için işletmenizle birebir online çalışır.'
+};
+
+const CONSULTANTS_AI_ANSWER_EN = {
+    question: 'Who are khilonfast consultants?',
+    answer: 'They are senior marketing experts from sectors such as B2B SaaS, fintech, manufacturing, energy, and payment systems. Each consultant works one-on-one online with your business to build and execute a sector-specific growth strategy.'
+};
 
 const CONSULTANTS_FAQS_TR = [
     {
@@ -144,6 +155,8 @@ export default function Consultants() {
                     </p>
                 </div>
             </section>
+
+            <AiAnswerBox {...(isEn ? CONSULTANTS_AI_ANSWER_EN : CONSULTANTS_AI_ANSWER_TR)} />
 
             <section className="consultants-intro" style={{ padding: '32px 0 8px' }}>
                 <div className="container" style={{ maxWidth: 1080 }}>

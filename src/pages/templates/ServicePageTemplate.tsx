@@ -21,6 +21,7 @@ import { getLocalePrefix, resolveLocaleFromPath } from '../../utils/locale'
 import { API_BASE_URL } from '../../config/api'
 import EditableMedia from '../../components/cms/EditableMedia'
 import ComingSoonModal from '../../components/ComingSoonModal'
+import AiAnswerBox from '../../components/AiAnswerBox'
 
 export interface PricingPackage {
     id: string;
@@ -224,6 +225,7 @@ export interface ServicePageProps {
     serviceKey?: string;
     disableApiHeroTextOverride?: boolean;
     onCmsEditSection?: (section: 'hero' | 'video' | 'features' | 'faqs') => void;
+    aiAnswer?: { question: string; answer: string };
 }
 
 export default function ServicePageTemplate(props: ServicePageProps) {
@@ -1185,6 +1187,8 @@ export default function ServicePageTemplate(props: ServicePageProps) {
                     </div>
                 </div>
             </section>
+
+            {props.aiAnswer && <AiAnswerBox {...props.aiAnswer} />}
 
             <section className="video-showcase">
                 <div className="container">

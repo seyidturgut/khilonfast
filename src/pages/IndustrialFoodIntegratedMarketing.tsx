@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Endüstriyel Gıda sektörü için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Endüstriyel gıda üreticilerine özel; SEO, arama/sosyal medya reklamları, içerik ve raporlamayı tek stratejide birleştiren dijital pazarlama hizmetidir. B2B alıcılara ve distribütörlere ulaşmak için sektöre özel anahtar kelime ve kanal planlaması içerir.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for the Industrial Food sector?',
+    answer: 'A digital marketing service tailored for industrial food producers that combines SEO, search/social ads, content and reporting into one strategy. It includes sector-specific keyword and channel planning to reach B2B buyers and distributors.'
+};
+
 export default function IndustrialFoodIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +303,5 @@ export default function IndustrialFoodIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

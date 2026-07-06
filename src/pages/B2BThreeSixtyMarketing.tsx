@@ -300,6 +300,10 @@ export default function B2BThreeSixtyMarketing() {
         growthCTA: {
             title: "Google'da Görünür Olun!",
             description: "Potansiyel müşterileriniz sizi aradığında orada olun. khilonfast'in uzman SEO ekibiyle arama motorlarında yükselin, organik trafiğinizi ve satışlarınızı artırın."
+        },
+        aiAnswer: {
+            question: 'B2B için 360° Pazarlama Yönetimi nedir?',
+            answer: 'khilonfast’ın B2B firmalarına özel sunduğu, arama reklamları, sosyal medya, SEO ve içerik üretimini tek stratejide birleştiren uçtan uca pazarlama yönetimi hizmetidir. Uzun satış döngülü B2B pipeline’ını büyütmek için Maestro AI destekli karar alma ve danışmanlık desteğiyle birlikte sunulur.'
         }
     }
 
@@ -527,7 +531,11 @@ export default function B2BThreeSixtyMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing Management for B2B Companies?',
+            answer: 'It is khilonfast’s end-to-end marketing service for B2B companies, combining search ads, social advertising, SEO and content production into one strategy. It is built to grow long-cycle B2B pipeline, backed by Maestro AI decision support and dedicated advisory.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-360" disableApiHeroTextOverride={true} disableApiPackages={true} />

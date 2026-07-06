@@ -19,6 +19,16 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'khilonfast Sosyal Medya Reklamcılığı hizmeti nedir?',
+    answer: 'Doğru platform ve strateji seçimiyle sosyal medya bütçenizi verimli kullanmanızı sağlayan reklam yönetim hizmetidir. Meta, LinkedIn ve TikTok gibi kanallarda hedef kitlenize etkili içeriklerle ulaşarak etkileşim ve dönüşümü artırır.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What is khilonfast Social Media Advertising?',
+    answer: 'An ad management service that turns social advertising into predictable growth through sharp platform selection and audience-focused creative. It runs campaigns across channels like Meta, LinkedIn and TikTok to increase engagement and conversions.'
+};
+
 export default function SocialMediaAds() {
     const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -554,5 +564,5 @@ export default function SocialMediaAds() {
         comparisonTable: trConfig.comparisonTable
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-social-ads" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-social-ads" disableApiHeroTextOverride={true} />
 }

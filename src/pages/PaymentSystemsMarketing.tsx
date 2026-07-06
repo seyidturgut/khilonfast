@@ -300,7 +300,11 @@ export default function PaymentSystemsMarketing() {
                 question: 'Hem B2B hem B2C ödeme sistemleri firmalarıyla çalışıyor musunuz?',
                 answer: 'Ağırlıklı odağımız B2B ödeme sistemleri ve fintech altyapı sağlayıcılarıdır; kurumsal müşteri kazanımı, ortaklık geliştirme ve karar-verici odaklı içerik stratejileri kurarız.'
             }
-        ]
+        ],
+        aiAnswer: {
+            question: 'Ödeme Sistemleri için 360° Pazarlama Yönetimi nedir?',
+            answer: 'khilonfast’ın fintech, POS ve dijital cüzdan sağlayıcılarına özel sunduğu, KVKK/BDDK/PCI-DSS uyumluluğunu gözeten bütünleşik pazarlama hizmetidir. Güven inşa eden içerik, SEO ve Google Ads stratejilerini Maestro AI desteğiyle birleştirerek uzun B2B satış döngüsünde nitelikli lead üretir.'
+        }
     }
 
     
@@ -536,7 +540,11 @@ export default function PaymentSystemsMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing Management for Payment Systems Companies?',
+            answer: 'It is khilonfast’s integrated marketing service for fintech, POS and digital wallet providers, built around compliance-aware, trust-building content. SEO, Google Ads and credibility-focused strategy combine with Maestro AI support to generate qualified leads across long B2B sales cycles.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-payment-systems" disableApiHeroTextOverride={true} disableApiPackages={true} />

@@ -20,6 +20,15 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'İçerik Üretimi hizmeti nedir?',
+    answer: 'khilonfast İçerik Üretimi hizmeti, hedef kitlenize uygun ve SEO uyumlu blog yazıları ile görsel içerikleri düzenli olarak üreterek marka görünürlüğünüzü artıran bir aylık abonelik hizmetidir. Zaman ve kaynak kısıtlarını ortadan kaldırarak organik trafiğinizi büyütür.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Content Production?',
+    answer: 'khilonfast\'s Content Production service delivers SEO-first, conversion-ready blog posts and visuals on a recurring monthly basis, removing the time and resourcing bottlenecks that stall publishing. It builds category authority and drives organic traffic growth.'
+};
+
 export default function ContentProduction() {
     const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -373,5 +382,5 @@ export default function ContentProduction() {
         comparisonTable: trConfig.comparisonTable
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-production" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-content-production" disableApiHeroTextOverride={true} />
 }

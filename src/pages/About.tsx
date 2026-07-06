@@ -9,7 +9,18 @@ import { API_BASE_URL } from '../config/api'
 import EditableMedia from '../components/cms/EditableMedia'
 import { usePageSlug } from '../hooks/usePageSlug'
 import FAQ from '../components/FAQ'
+import AiAnswerBox from '../components/AiAnswerBox'
 import './About.css'
+
+const ABOUT_AI_ANSWER_TR = {
+    question: 'khilonfast nedir?',
+    answer: 'khilonfast, B2B firmalar için strateji, içerik, performans pazarlaması, marka yönetimi ve CRM süreçlerini üyelik temelli bir modelle tek noktadan yöneten bir dijital pazarlama ajansıdır. Ajans ve ekip yönetme yükü olmadan, sektöre özel strateji ve uygulama desteği sunar.'
+};
+
+const ABOUT_AI_ANSWER_EN = {
+    question: 'What is khilonfast?',
+    answer: 'khilonfast is a digital marketing agency that manages strategy, content, performance marketing, brand management, and CRM processes for B2B companies through a single membership-based model. It removes the burden of managing an agency or in-house team while delivering sector-specific strategy and execution support.'
+};
 
 const ABOUT_FAQS_TR = [
     {
@@ -445,6 +456,8 @@ export default function About() {
                 </div>
                 <div className="about-hero-bg-accent"></div>
             </section>
+
+            <AiAnswerBox {...(currentLang === 'en' ? ABOUT_AI_ANSWER_EN : ABOUT_AI_ANSWER_TR)} />
 
             {/* Who is khilonfast Section */}
             <section className="about-who">

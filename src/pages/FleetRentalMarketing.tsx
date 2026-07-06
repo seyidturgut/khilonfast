@@ -286,6 +286,10 @@ export default function FleetRentalMarketing() {
         growthCTA: {
             title: "Kurumsal Mobilitede Liderliğinizi İlan Edin!",
             description: "Filo kiralama markanız için en doğru stratejiyi kuralım. khilonfast ile dijital dünyada fark yaratın."
+        },
+        aiAnswer: {
+            question: 'Filo Kiralama için 360° Pazarlama Yönetimi nedir?',
+            answer: 'khilonfast’ın filo kiralama firmalarına özel sunduğu, kurumsal satın alma ve İK karar vericilerini hedefleyen bütünleşik pazarlama hizmetidir. TCO odaklı içerik üretimi, arama ve sosyal medya reklamlarını Maestro AI destekli stratejiyle birleştirerek lead kalitesini artırır.'
         }
     }
 
@@ -513,7 +517,11 @@ export default function FleetRentalMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing Management for Fleet Rental Companies?',
+            answer: 'It is khilonfast’s integrated marketing service designed for corporate procurement and HR decision-makers in fleet rental. TCO-focused content, search and social advertising combine with Maestro AI-driven strategy to raise lead quality and shorten B2B sales cycles.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-fleet-rental" disableApiHeroTextOverride={true} disableApiPackages={true} />

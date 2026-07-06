@@ -286,6 +286,10 @@ export default function InteriorDesignMarketing() {
         growthCTA: {
             title: "Tasarım Vizyonunuzu Tüm Dünyaya Duyurun!",
             description: "Ofis ve kurumsal projeleriniz için en doğru stratejiyi kuralım. khilonfast ile iç tasarım sektöründe dijital liderliği ele geçirin."
+        },
+        aiAnswer: {
+            question: 'Ofis & Kurumsal İç Tasarım için 360° Pazarlama nedir?',
+            answer: 'khilonfast’ın ofis ve kurumsal iç tasarım firmalarına özel sunduğu, proje portföyünü görsel olarak öne çıkaran bütünleşik pazarlama hizmetidir. Sosyal medya, SEO ve içerik üretimini Maestro AI destekli stratejiyle birleştirerek kurumsal proje taleplerini artırır.'
         }
     }
 
@@ -513,7 +517,11 @@ export default function InteriorDesignMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing for Office & Corporate Interior Design?',
+            answer: 'It is khilonfast’s integrated marketing service for office and corporate interior design firms, built to showcase project portfolios visually. Social advertising, SEO and content production combine with Maestro AI-driven strategy to grow corporate project inquiries.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-interior-design" disableApiHeroTextOverride={true} disableApiPackages={true} />

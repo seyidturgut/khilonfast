@@ -12,6 +12,18 @@ import FAQ from '../components/FAQ'
 import PotentialCTA from '../components/PotentialCTA'
 import { resolveLocalizedText } from '../utils/localizedContent'
 import { API_BASE_URL } from '../config/api'
+import AiAnswerBox from '../components/AiAnswerBox'
+
+const HOME_AI_ANSWER_TR = {
+  question: 'khilonfast nedir?',
+  answer: 'khilonfast, B2B firmalar için strateji, içerik, performans pazarlaması ve marka yönetimini üyelik temelli bir modelle tek noktadan yöneten bir dijital pazarlama ajansıdır. Sektöre özel çözümlerle işletmelerin ölçülebilir ve sürdürülebilir şekilde büyümesini sağlar.'
+}
+
+const HOME_AI_ANSWER_EN = {
+  question: 'What is khilonfast?',
+  answer: 'khilonfast is a digital marketing agency that manages strategy, content, performance marketing, and brand management for B2B companies through a single membership-based model. It helps businesses grow in a measurable and sustainable way with sector-specific solutions.'
+}
+
 
 const HOME_TEXT_KEYS = [
   'hero.subtitle', 'hero.title', 'hero.titleHighlight', 'hero.description',
@@ -154,6 +166,7 @@ export default function Home() {
   return (
     <>
       <Hero content={{ subtitle: tx('hero.subtitle'), title: tx('hero.title'), titleHighlight: tx('hero.titleHighlight'), description: tx('hero.description') }} />
+      <AiAnswerBox {...(currentLang === 'en' ? HOME_AI_ANSWER_EN : HOME_AI_ANSWER_TR)} />
       <About content={{ title: tx('about.title'), description: tx('about.description'), item1: tx('about.item1'), item2: tx('about.item2'), item3: tx('about.item3') }} />
       <Solutions tx={tx} />
       <PotentialCTA tx={tx} />

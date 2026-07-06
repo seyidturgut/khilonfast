@@ -17,6 +17,15 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'İçerik Stratejisi hizmeti nedir?',
+    answer: 'khilonfast İçerik Stratejisi hizmeti, hedef kitle analizi, içerik planlama ve SEO uyumlu önerilerle markanız için kapsamlı bir yol haritası sunan tek seferlik bir stratejik belgedir. Neyi, kime ve neden ürettiğinizi netleştirerek içerik üretim sürecinizi rayına oturtur.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is a Content Strategy service?',
+    answer: 'khilonfast\'s Content Strategy service delivers a one-time strategic document covering audience analysis, editorial planning, and SEO-aligned content recommendations. It gives your team a clear roadmap for what to produce, for whom, and why, aligned with your growth objectives.'
+};
+
 export default function ContentStrategy() {
     const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -306,5 +315,5 @@ export default function ContentStrategy() {
         comparisonTable: trConfig.comparisonTable
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-content-strategy" disableApiHeroTextOverride />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-content-strategy" disableApiHeroTextOverride />
 }

@@ -21,6 +21,15 @@ import {
 import ServicePageTemplate from './templates/ServicePageTemplate'
 import { useRouteLocale } from '../utils/locale'
 
+const AI_ANSWER_TR = {
+    question: 'B2B Email Pazarlama hizmeti nedir?',
+    answer: 'khilonfast\'in B2B Email Pazarlama hizmeti, hedef kitlenize özel kişiselleştirilmiş e-posta kampanyaları kurgulayarak açılma ve tıklama oranlarını artıran, doğru hedeflemeyle satış döngüsünü kısaltan bir dijital pazarlama çözümüdür.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is B2B Email Marketing?',
+    answer: 'khilonfast\'s B2B Email Marketing service builds personalized, precisely targeted email campaigns that improve open and click rates while shortening B2B sales cycles. It combines segmentation, deliverability, and conversion-focused copy into one measurable system.'
+};
+
 export default function B2BEmailMarketing() {
     const { t, i18n } = useTranslation('common')
     const currentLang = useRouteLocale()
@@ -438,5 +447,5 @@ export default function B2BEmailMarketing() {
         comparisonTable: trConfig.comparisonTable
     }
 
-    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-b2b-email" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...(isEn ? enConfig : trConfig)} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-b2b-email" disableApiHeroTextOverride={true} />
 }

@@ -17,6 +17,15 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'FinTech için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'khilonfast\'in FinTech Bütünleşik Dijital Pazarlama hizmeti; SEO, reklam yönetimi, içerik ve sosyal medyayı tek bir stratejide birleştirerek finans teknolojisi firmalarının bütçesini doğru kanallara yönlendirmesini sağlar. Sektöre özel uyum ve güven gerekliliklerini gözeten bir büyüme yaklaşımı sunar.'
+};
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for FinTech?',
+    answer: 'khilonfast\'s Integrated Digital Marketing service for FinTech combines SEO, paid ads, content, and social media into a single coordinated strategy, directing your budget to the right channels. It addresses the trust and compliance sensitivities unique to financial technology brands.'
+};
+
 export default function FintechIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +303,5 @@ export default function FintechIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }

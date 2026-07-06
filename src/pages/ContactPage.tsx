@@ -5,7 +5,18 @@ import { useAuth } from '../context/AuthContext'
 import { API_BASE_URL } from '../config/api'
 import ConsentCheckboxes, { type ConsentState } from '../components/ConsentCheckboxes'
 import FAQ from '../components/FAQ'
+import AiAnswerBox from '../components/AiAnswerBox'
 import './ContactPage.css'
+
+const CONTACT_AI_ANSWER_TR = {
+  question: 'khilonfast ile nasıl iletişime geçebilirim?',
+  answer: 'Bu sayfadaki formu doldurarak, info@khilonfast.com adresine yazarak veya telefonla ulaşabilirsiniz. Ekibimiz genellikle 1 iş günü içinde dönüş yapar ve ilk görüşme herhangi bir ücret veya taahhüt gerektirmez.'
+};
+
+const CONTACT_AI_ANSWER_EN = {
+  question: 'How can I contact khilonfast?',
+  answer: 'You can reach us by filling out the form on this page, emailing info@khilonfast.com, or calling us directly. Our team typically responds within 1 business day, and the first call carries no cost or commitment.'
+};
 
 const CONTACT_FAQS_TR = [
   {
@@ -202,6 +213,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      <AiAnswerBox {...(currentLang === 'en' ? CONTACT_AI_ANSWER_EN : CONTACT_AI_ANSWER_TR)} />
 
       {canShowCms && !cmsOpen && (
         <button

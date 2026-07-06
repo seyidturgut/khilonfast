@@ -286,6 +286,10 @@ export default function SoftwareMarketing() {
         growthCTA: {
             title: "Global Teknoloji Arenasında Yerinizi Alın!",
             description: "Ürününüzü doğru kitleyle buluşturun. khilonfast'in teknoloji pazarlaması uzmanlığıyla global ölçekte büyümeye başlayın."
+        },
+        aiAnswer: {
+            question: 'Teknoloji & Yazılım için 360° Pazarlama nedir?',
+            answer: 'khilonfast’ın SaaS ve yazılım şirketlerine özel sunduğu, kullanıcı kazanımı ve ürün büyümesini hedefleyen bütünleşik pazarlama hizmetidir. Arama reklamları, teknik SEO ve içerik üretimini Maestro AI destekli stratejiyle birleştirerek global ölçekte müşteri edinimini hızlandırır.'
         }
     }
 
@@ -513,7 +517,11 @@ export default function SoftwareMarketing() {
                 title: 'Grow with a Better Marketing Operating System',
                 description: 'Activate your strategy with khilonfast and scale your market impact with confidence.'
             }
-        } : {})
+        } : {}),
+        aiAnswer: {
+            question: 'What is 360° Marketing for Technology & Software Companies?',
+            answer: 'It is khilonfast’s integrated marketing service for SaaS and software companies, focused on user acquisition and product-led growth. Search ads, technical SEO and content production combine with Maestro AI-driven strategy to accelerate global customer acquisition.'
+        }
     }
 
     return <SectoralSolutionTemplate {...(isEn ? enConfig : trConfig)} serviceKey="service-tech-software" disableApiHeroTextOverride={true} disableApiPackages={true} />

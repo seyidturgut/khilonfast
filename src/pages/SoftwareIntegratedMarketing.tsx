@@ -17,6 +17,16 @@ import {
 } from 'react-icons/hi2'
 import ServicePageTemplate from './templates/ServicePageTemplate'
 
+const AI_ANSWER_TR = {
+    question: 'Teknoloji & Yazılım sektörü için Bütünleşik Dijital Pazarlama nedir?',
+    answer: 'Yazılım ve teknoloji firmalarına özel SEO, reklam, içerik ve sosyal medyayı tek stratejide birleştiren pazarlama hizmetidir. khilonfast, SaaS ve teknoloji ürünlerinin karmaşık satış sürecine uygun kanal ve mesaj kurgusuyla bütçenizi doğru yönlendirir.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What is Integrated Digital Marketing for Technology & Software?',
+    answer: 'A marketing service tailored to software and technology companies that combines SEO, paid ads, content and social media into a single strategy. khilonfast builds a channel and messaging mix suited to the complex sales process of SaaS and tech products.'
+};
+
 export default function SoftwareIntegratedMarketing() {
     const { t, i18n } = useTranslation('common')
     const isEn = i18n.language === 'en'
@@ -294,5 +304,5 @@ export default function SoftwareIntegratedMarketing() {
         ]
     }
 
-    return <ServicePageTemplate {...config} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
+    return <ServicePageTemplate {...config} aiAnswer={isEn ? AI_ANSWER_EN : AI_ANSWER_TR} serviceKey="service-integrated-marketing" disableApiHeroTextOverride={true} />
 }
