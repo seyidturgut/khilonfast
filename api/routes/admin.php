@@ -2855,6 +2855,69 @@ if ($action === 'automations' && $method === 'GET' && $id === 'analytics' && emp
     ]);
 }
 
+// GET /api/admin/live-activity — şu an gönderim/çalışma halinde olan kampanyalar + otomasyon akışları
+// (CRM kampanya "sending/paused" durumu + otomasyon "running" execution sayıları tek ekranda)
+if ($action === 'live-activity' && $method === 'GET' && empty($id) && empty($subAction)) {
+    $campaigns = [];
+    try {
+        $st = $db->query(
+            "SELECT c.id, c.name, c.subject, c.status, c.started_at,
+                    COUNT(r.id) AS total,
+                    SUM(r.status IN ('sent','opened','clicked')) AS sent
+             FROM crm_campaigns c
+             LEFT JOIN crm_campaign_recipients r ON r.campaign_id = c.id
+             WHERE c.status IN ('sending','paused')
+             GROUP BY c.id
+             ORDER BY c.started_at DESC"
+        );
+        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $total = (int)$r['total'];
+            $sent = (int)$r['sent'];
+            $campaigns[] = [
+                'id' => (int)$r['id'],
+                'name' => $r['name'],
+                'subject' => $r['subject'],
+                'status' => $r['status'],
+                'started_at' => $r['started_at'],
+                'total' => $total,
+                'sent' => $sent,
+                'progress_pct' => $total > 0 ? round(($sent / $total) * 100, 1) : 0,
+            ];
+        }
+    } catch (Throwable $e) {}
+
+    $runningTotal = 0;
+    $byAutomation = [];
+    try {
+        $runningTotal = (int)$db->query("SELECT COUNT(*) FROM automation_executions WHERE status = 'running'")->fetchColumn();
+        $perAuto = $db->query(
+            "SELECT a.id, a.name, COUNT(e.id) AS running, MIN(e.next_run_at) AS next_run_at
+             FROM automation_executions e
+             JOIN automations a ON a.id = e.automation_id
+             WHERE e.status = 'running'
+             GROUP BY a.id, a.name
+             ORDER BY running DESC"
+        )->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($perAuto as $r) {
+            $byAutomation[] = [
+                'id' => (int)$r['id'],
+                'name' => $r['name'],
+                'running' => (int)$r['running'],
+                'next_run_at' => $r['next_run_at'],
+            ];
+        }
+    } catch (Throwable $e) {}
+
+    sendResponse([
+        'campaigns' => $campaigns,
+        'automations' => [
+            'running_total' => $runningTotal,
+            'by_automation' => $byAutomation,
+        ],
+        'generated_at' => date('c'),
+    ]);
+}
+
 // ── EMAIL TEMPLATES CRUD ──────────────────────────────────────
 
 // GET /api/admin/automation-templates

@@ -109,6 +109,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {
             label: 'Otomasyon',
             items: [
+                { icon: HiChartBar, label: 'Canlı Aktivite', path: '/admin/live-activity' },
                 { icon: HiPlay, label: 'Otomasyon Akışları', path: '/admin/automations' },
                 { icon: HiMail, label: 'E-posta Şablonları', path: '/admin/email-templates' },
                 { icon: HiChartBar, label: 'Otomasyon Analizi', path: '/admin/automation-logs' },

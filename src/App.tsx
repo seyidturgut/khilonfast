@@ -116,6 +116,7 @@ const AutomationListPage = lazy(() => import('./automation/pages/AutomationListP
 const AutomationBuilderPage = lazy(() => import('./automation/pages/AutomationBuilderPage'))
 const EmailTemplatesPage = lazy(() => import('./automation/pages/EmailTemplatesPage'))
 const AutomationLogsPage = lazy(() => import('./automation/pages/AutomationLogsPage'))
+const LiveActivityPage = lazy(() => import('./automation/pages/LiveActivityPage'))
 const ExecutionsPage = lazy(() => import('./automation/pages/ExecutionsPage'))
 const CrmContactsPage = lazy(() => import('./pages/admin/crm/Contacts'))
 const CrmContactDetailPage = lazy(() => import('./pages/admin/crm/ContactDetail'))
@@ -666,6 +667,7 @@ function MainContent() {
                     <Route path="/admin/automations/:id" element={<RequireAdmin><AutomationBuilderPage /></RequireAdmin>} />
                     <Route path="/admin/email-templates" element={<RequireAdmin><EmailTemplatesPage /></RequireAdmin>} />
                     <Route path="/admin/automation-logs" element={<RequireAdmin><AutomationLogsPage /></RequireAdmin>} />
+                    <Route path="/admin/live-activity" element={<RequireAdmin><LiveActivityPage /></RequireAdmin>} />
                     <Route path="/admin/automation-test" element={<RequireAdmin><AutomationTestPage /></RequireAdmin>} />
 
                     {/* CRM (Faz 1-9) */}
