@@ -459,6 +459,24 @@ class AutomationEngine
         $to = (string)($contact['email'] ?? '');
         if ($to === '') return ['ok' => false, 'msg' => 'contact email empty'];
 
+        // Abonelikten çıkmış/bounced/complained kişiye mail ATMA. Akış tetiklendiğinde
+        // (örn. purchase_completed) kişi henüz subscribed olabilir ama akış günler
+        // sürdüğü için bu node işlenene kadar unsubscribe etmiş olabilir — o yüzden
+        // her gönderimde crm_contacts'tan TAZE status okunur (trigger anındaki
+        // $contact verisine güvenilmez). CRM kampanyalarındaki (crmResolveCampaignAudience)
+        // aynı 'subscribed' kontrolüyle tutarlı. 'ok'=>true dönülür ki akış hata sanıp
+        // retry döngüsüne girmesin, sadece bu adımı atlasın.
+        try {
+            $statusStmt = $this->db->prepare("SELECT status FROM crm_contacts WHERE email = ? LIMIT 1");
+            $statusStmt->execute([strtolower(trim($to))]);
+            $contactStatus = (string)($statusStmt->fetchColumn() ?: '');
+            if (in_array($contactStatus, ['unsubscribed', 'bounced', 'complained'], true)) {
+                return ['ok' => true, 'msg' => "skipped — contact status: $contactStatus"];
+            }
+        } catch (Throwable $e) {
+            error_log('[automation] unsubscribe check failed: ' . $e->getMessage());
+        }
+
         $subject = (string)($cfg['subject'] ?? '');
         $sender = trim((string)($cfg['sender_email'] ?? ''));
         $bodyHtml = '';
@@ -521,7 +539,14 @@ class AutomationEngine
         $email = (string)($contact['email'] ?? '');
         $orderId = (string)($contact['order_id'] ?? '');
         $cartToken = (string)($contact['cart_token'] ?? '');
-        $unsub = $this->frontendBase . '/email/unsubscribe?t=' . hash_hmac('sha256', $email, defined('JWT_SECRET') ? JWT_SECRET : 'khilonfast');
+        // KIRIK LİNK FIX: eskiden '/email/unsubscribe?t=...' — bu path hiçbir SPA route'una
+        // karşılık gelmiyordu (kullanıcı tıklayınca hiçbir şey olmuyordu, sessizce ana
+        // sayfaya düşüyordu). Gerçek endpoint api/routes/email-automation.php'deki
+        // GET /api/email-automation/unsubscribe?email=&token= — email parametresi de
+        // eksikti. Token algoritması (hash_hmac sha256, JWT_SECRET) makeUnsubscribeToken()
+        // ile birebir aynı olmalı (email lowercase+trim edilmiş halde).
+        $unsub = $this->frontendBase . '/api/email-automation/unsubscribe?email=' . urlencode($email)
+            . '&token=' . hash_hmac('sha256', strtolower(trim($email)), defined('JWT_SECRET') ? JWT_SECRET : 'khilonfast');
         $formLink = $orderId !== ''
             ? $this->frontendBase . '/onboarding-formu?order_id=' . urlencode($orderId)
             : $this->frontendBase . '/onboarding-formu';
