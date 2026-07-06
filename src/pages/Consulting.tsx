@@ -5,6 +5,17 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import './Trainings.css';
 import { getConsultingPrograms } from '../data/consultingPrograms';
 import FAQ from '../components/FAQ';
+import AiAnswerBox from '../components/AiAnswerBox';
+
+const AI_ANSWER_TR = {
+    question: 'KhilonFast Danışmanlık Programları nedir?',
+    answer: 'Sektörünüze özel bir pazarlama danışmanıyla birebir çalışarak büyüme stratejinizi hayata geçirdiğiniz online danışmanlık hizmetidir. B2B, fintech, üretim, enerji ve daha birçok sektöre özel programlar sunulur.'
+};
+
+const AI_ANSWER_EN = {
+    question: 'What are KhilonFast Consulting Programs?',
+    answer: 'An online consulting service where you work one-on-one with a marketing consultant specialized in your industry to execute your growth strategy. Dedicated programs are available for B2B, fintech, manufacturing, energy and many more sectors.'
+};
 
 const CONSULTING_FAQS_TR = [
     {
@@ -82,6 +93,8 @@ export default function Consulting() {
                     <p>{t('consultingPage.hero.description')}</p>
                 </div>
             </section>
+
+            <AiAnswerBox {...(currentLang === 'en' ? AI_ANSWER_EN : AI_ANSWER_TR)} />
 
             <section className="trainings-list">
                 <div className="container">

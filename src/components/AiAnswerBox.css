@@ -1,0 +1,39 @@
+.ai-answer-box {
+    background: rgba(197, 214, 61, 0.08);
+    border-left: 4px solid var(--color-secondary, #1a3a52);
+    border-radius: 0 var(--radius-md, 1rem) var(--radius-md, 1rem) 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem auto 2rem;
+    max-width: var(--container-max-width, 1440px);
+}
+
+.ai-answer-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-secondary, #1a3a52);
+    margin-bottom: 0.5rem;
+}
+
+.ai-answer-icon {
+    color: var(--color-primary-dark, #aab835);
+    font-size: 1rem;
+}
+
+.ai-answer-text {
+    margin: 0;
+    color: var(--color-text-secondary, #4a4a4a);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .ai-answer-box {
+        margin: 1rem 1rem 1.5rem;
+        padding: 1rem 1.1rem;
+    }
+}
