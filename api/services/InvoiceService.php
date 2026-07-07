@@ -242,6 +242,7 @@ function invoiceSendAdminSaleNotification(PDO $db, int $orderId, string $payment
 
     $paymentMethodLabels = [
         'credit_card' => 'Kredi/Banka Kartı',
+        'bank_transfer' => 'Anında Havale',
         'manual_transfer' => 'Banka Havalesi',
         'coupon_free' => 'Kupon (Ücretsiz)',
         'manual_admin_gift' => 'Admin Hediyesi',

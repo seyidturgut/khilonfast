@@ -718,15 +718,16 @@ if ($action === 'manual-transfer' && $method === 'POST') {
 
         $db->commit();
 
-        // Müşteri + admin bilgilendirme maili (sessiz başarısızlık)
-        try {
-            $userStmt = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
-            $userStmt->execute([$payload['id']]);
-            $user = $userStmt->fetch();
-            $contactEmail = (string)getSetting($db, 'contact_email', '');
-            $lang = (string)($order['customer_lang'] ?? 'tr');
+        // Müşteri + admin bilgilendirme maili — İKİ AYRI try/catch: müşteri maili
+        // (Brevo/şablon hatası vb.) atarsa admin bildirimi bloklanmasın diye ayrıldı
+        // (önceden aynı try içindeydi, müşteri maili atınca admin hiç haberdar olmuyordu).
+        $userStmt = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");
+        $userStmt->execute([$payload['id']]);
+        $user = $userStmt->fetch();
+        $lang = (string)($order['customer_lang'] ?? 'tr');
 
-            if ($user && function_exists('sendTransactionalEmail')) {
+        if ($user && function_exists('sendTransactionalEmail')) {
+            try {
                 // Müşteri: locale-aware "ödeme bekleniyor"
                 $custMail = buildManualTransferEmail('pending', $lang, [
                     'order_number' => $order['order_number'],
@@ -737,8 +738,13 @@ if ($action === 'manual-transfer' && $method === 'POST') {
                     'bank_info' => $bankInfo
                 ]);
                 sendTransactionalEmail($db, (string)$user['email'], $custMail['subject'], $custMail['html']);
+            } catch (Throwable $custMailErr) {
+                error_log('[manual-transfer] customer mail error: ' . $custMailErr->getMessage());
+            }
 
+            try {
                 // Admin: kısa Türkçe bildirim
+                $contactEmail = (string)getSetting($db, 'contact_email', '');
                 if ($contactEmail) {
                     $orderNo = htmlspecialchars((string)$order['order_number'], ENT_QUOTES, 'UTF-8');
                     $amountFmt = number_format((float)$order['total_amount'], 2, '.', ',') . ' ' . (string)($order['currency'] ?? 'TRY');
@@ -747,9 +753,9 @@ if ($action === 'manual-transfer' && $method === 'POST') {
                         Para hesaba ulaştığında admin panelinden onaylayın.</p>";
                     sendTransactionalEmail($db, $contactEmail, '[Khilonfast] Manual Transfer Pending — ' . (string)$order['order_number'], $adminHtml);
                 }
+            } catch (Throwable $adminMailErr) {
+                error_log('[manual-transfer] admin mail error: ' . $adminMailErr->getMessage());
             }
-        } catch (Throwable $mailErr) {
-            error_log('[manual-transfer] mail error: ' . $mailErr->getMessage());
         }
 
         sendResponse([
@@ -881,10 +887,17 @@ if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
                 invoiceQueueForOrder($db, (int)$order['id']);
             } catch (Throwable $e) { error_log('[invoice queue 3ds] ' . $e->getMessage()); }
 
-            // Admin'e satış bildirimi — Paraşüt aktif/pasif durumundan bağımsız
+            // Admin'e satış bildirimi — Paraşüt aktif/pasif durumundan bağımsız.
+            // Bu callback hem kart 3DS hem Anında Havale (bank_transfer) için ortak
+            // kullanıldığından ödeme yöntemi payments tablosundan taze okunuyor
+            // ('credit_card' hardcode etiket hatasıydı — havale siparişleri de
+            // yanlışlıkla "Kredi/Banka Kartı" görünüyordu).
             try {
                 require_once __DIR__ . '/../services/InvoiceService.php';
-                invoiceSendAdminSaleNotification($db, (int)$order['id'], 'credit_card');
+                $pmStmt = $db->prepare("SELECT payment_method FROM payments WHERE order_id = ? ORDER BY id DESC LIMIT 1");
+                $pmStmt->execute([(int)$order['id']]);
+                $resolvedPaymentMethod = (string)($pmStmt->fetchColumn() ?: 'credit_card');
+                invoiceSendAdminSaleNotification($db, (int)$order['id'], $resolvedPaymentMethod);
             } catch (Throwable $e) { error_log('[admin sale notify 3ds] ' . $e->getMessage()); }
 
             // Misafir checkout welcome e-postası — yalnızca ödeme onaylanınca gönder.
