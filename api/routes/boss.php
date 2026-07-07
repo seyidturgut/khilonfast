@@ -5,6 +5,9 @@
 // görüntüleme amaçlı (v1) ayrı bir mini panel. requireAuth()/requireAdmin()'e
 // dokunmuyor, kendi requireBoss() (api/utils.php) ile korunuyor.
 
+require_once __DIR__ . '/../config/db.php';
+$db = Database::getInstance();
+
 // POST /api/boss/login — {pin} → JWT (role=boss)
 if ($action === 'login' && $method === 'POST') {
     $data = getJsonBody();
@@ -159,4 +162,12 @@ if ($action === 'feed' && $method === 'GET') {
         'automation_alerts' => $automationAlerts,
         'generated_at' => date('c'),
     ]);
+}
+
+// POST /api/boss/test-notify — OneSignal kurulumunu doğrulamak için test bildirimi
+if ($action === 'test-notify' && $method === 'POST') {
+    requireBoss();
+    require_once __DIR__ . '/../services/BossNotifier.php';
+    $result = bossNotify($db, '✅ Test Bildirimi', 'OneSignal kurulumu çalışıyor.', ['type' => 'test']);
+    sendResponse($result);
 }

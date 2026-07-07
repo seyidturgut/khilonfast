@@ -169,6 +169,21 @@ $('#enable-push-btn').addEventListener('click', () => {
   });
 });
 
+$('#test-notify-btn').addEventListener('click', async (e) => {
+  const btn = e.target;
+  const original = btn.textContent;
+  btn.textContent = 'Gönderiliyor…';
+  btn.disabled = true;
+  try {
+    const result = await apiFetch('/boss/test-notify', { method: 'POST' });
+    btn.textContent = result.ok ? '✅ Gönderildi' : '❌ ' + (result.reason || 'Bilinmeyen hata');
+  } catch (err) {
+    btn.textContent = '❌ ' + err.message;
+  } finally {
+    setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 4000);
+  }
+});
+
 initOneSignal();
 if (getToken()) {
   showFeed();
