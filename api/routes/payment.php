@@ -442,6 +442,13 @@ if ($action === 'initiate' && $method === 'POST') {
                 invoiceSendAdminSaleNotification($db, (int)$orderId, 'credit_card');
             } catch (Throwable $e) { error_log('[admin sale notify cc] ' . $e->getMessage()); }
 
+            // Boss Panel push bildirimi — yeni satış
+            try {
+                require_once __DIR__ . '/../services/BossNotifier.php';
+                $amountFmt = number_format((float)$order['total_amount'], 2, ',', '.') . ' ' . (string)($order['currency'] ?? 'TRY');
+                bossNotify($db, '💳 Yeni Satış', $order['order_number'] . ' — ' . $amountFmt, ['type' => 'new_order', 'order_id' => $orderId]);
+            } catch (Throwable $e) { error_log('[boss-notify cc] ' . $e->getMessage()); }
+
             // Misafir checkout welcome email — yalnızca ödeme onaylanınca (bug fix)
             try {
                 sendGuestWelcomeEmailIfNeeded($db, (int)$user['id']);
@@ -756,6 +763,15 @@ if ($action === 'manual-transfer' && $method === 'POST') {
             } catch (Throwable $adminMailErr) {
                 error_log('[manual-transfer] admin mail error: ' . $adminMailErr->getMessage());
             }
+
+            // Boss Panel push bildirimi — havale onayı bekliyor, aksiyon gerekiyor
+            try {
+                require_once __DIR__ . '/../services/BossNotifier.php';
+                $bossAmountFmt = number_format((float)$order['total_amount'], 2, ',', '.') . ' ' . (string)($order['currency'] ?? 'TRY');
+                bossNotify($db, '🔔 Havale Onayı Bekliyor', $order['order_number'] . ' — ' . $bossAmountFmt, ['type' => 'pending_transfer', 'order_id' => (int)$order['id']]);
+            } catch (Throwable $bossErr) {
+                error_log('[manual-transfer] boss-notify error: ' . $bossErr->getMessage());
+            }
         }
 
         sendResponse([
@@ -899,6 +915,14 @@ if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
                 $resolvedPaymentMethod = (string)($pmStmt->fetchColumn() ?: 'credit_card');
                 invoiceSendAdminSaleNotification($db, (int)$order['id'], $resolvedPaymentMethod);
             } catch (Throwable $e) { error_log('[admin sale notify 3ds] ' . $e->getMessage()); }
+
+            // Boss Panel push bildirimi — yeni satış (kart 3DS veya Anında Havale)
+            try {
+                require_once __DIR__ . '/../services/BossNotifier.php';
+                $bossAmountFmt = number_format((float)$order['total_amount'], 2, ',', '.') . ' ' . (string)($order['currency'] ?? 'TRY');
+                $bossIcon = ($resolvedPaymentMethod ?? 'credit_card') === 'bank_transfer' ? '🏦' : '💳';
+                bossNotify($db, $bossIcon . ' Yeni Satış', $order['order_number'] . ' — ' . $bossAmountFmt, ['type' => 'new_order', 'order_id' => (int)$order['id']]);
+            } catch (Throwable $e) { error_log('[boss-notify 3ds] ' . $e->getMessage()); }
 
             // Misafir checkout welcome e-postası — yalnızca ödeme onaylanınca gönder.
             // (Daha önce orders.php'de pending durumdayken gidiyordu — bug fix)

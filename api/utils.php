@@ -92,6 +92,19 @@ function optionalAuth()
     return decodeJWT($token);
 }
 
+// Boss Panel — ana admin kullanıcı sisteminden bağımsız, tek PIN ile giren
+// ayrı bir JWT role'ü. Aynı encodeJWT/decodeJWT mekanizması, sadece payload'da
+// role=boss kontrolü ekleniyor (admin.php'deki requireAdmin deseniyle aynı fikir).
+function requireBoss()
+{
+    $token = getBearerToken();
+    $payload = decodeJWT($token);
+    if (!$payload || ($payload['role'] ?? '') !== 'boss') {
+        sendResponse(['error' => 'Unauthorized'], 401);
+    }
+    return $payload;
+}
+
 /**
  * Manuel havale akışı için locale-aware mail şablonları.
  * $type: pending | confirmed | reminder | cancelled | onboarding-link

@@ -51,8 +51,13 @@ $path = trim($path, '/');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Add CORS headers
-header("Access-Control-Allow-Origin: " . ALLOWED_ORIGIN);
+// Add CORS headers — Boss Panel (boss.khilonfast.com) ayrı bir subdomain'den bu
+// API'ye erişir, bu yüzden tek bir sabit origin yerine izinli origin listesine
+// karşı istek Origin'i kontrol edip eşleşeni yansıtıyoruz (klasik multi-origin CORS).
+$allowedOrigins = defined('ALLOWED_ORIGINS') ? ALLOWED_ORIGINS : [ALLOWED_ORIGIN];
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$corsOrigin = in_array($requestOrigin, $allowedOrigins, true) ? $requestOrigin : $allowedOrigins[0];
+header("Access-Control-Allow-Origin: " . $corsOrigin);
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
@@ -90,6 +95,10 @@ switch ($controller) {
         break;
     case 'pages':
         require_once __DIR__ . '/routes/pages.php';
+        break;
+    case 'boss':
+        // Boss Panel (boss.khilonfast.com) — ana admin sisteminden bağımsız, ayrı PIN auth
+        require_once __DIR__ . '/routes/boss.php';
         break;
     case 'admin':
         require_once __DIR__ . '/routes/admin.php';

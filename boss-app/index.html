@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Khilonfast Boss</title>
+<link rel="manifest" href="/manifest.json" />
+<link rel="apple-touch-icon" href="/icons/icon-192.png" />
+<meta name="theme-color" content="#1a3a52" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div id="app">
+
+  <section id="login-screen">
+    <div class="login-card">
+      <h1>Khilonfast Boss</h1>
+      <p>Devam etmek için PIN girin</p>
+      <input id="pin-input" type="password" maxlength="6" autocomplete="off" autocapitalize="characters" placeholder="••••••" />
+      <button id="login-btn">Giriş Yap</button>
+      <div id="login-error"></div>
+    </div>
+  </section>
+
+  <section id="feed-screen" class="hidden">
+    <div id="feed-header">
+      <h1><span class="status-dot"></span>Khilonfast Boss</h1>
+      <span id="feed-time" style="font-size:0.75rem;opacity:0.8;"></span>
+    </div>
+    <div id="feed-body">
+      <div id="push-banner" class="hidden">
+        <span>Bildirimleri aç, hiçbir satışı/olayı kaçırma.</span>
+        <button id="enable-push-btn">Aç</button>
+      </div>
+
+      <div class="section">
+        <h2>🔔 Havale Onayı Bekliyor</h2>
+        <div id="pending-transfers-list"><div class="empty">Yükleniyor…</div></div>
+      </div>
+
+      <div class="section">
+        <h2>💳 Son Satışlar</h2>
+        <div id="recent-orders-list"><div class="empty">Yükleniyor…</div></div>
+      </div>
+
+      <div class="section">
+        <h2>📨 Kampanyalar</h2>
+        <div id="campaigns-list"><div class="empty">Yükleniyor…</div></div>
+      </div>
+
+      <div class="section">
+        <h2>⚠️ Otomasyon Uyarıları</h2>
+        <div id="automation-alerts-list"><div class="empty">Yükleniyor…</div></div>
+      </div>
+
+      <a class="admin-link" href="https://khilonfast.com/admin/orders" target="_blank" rel="noopener">Tüm Siparişleri Admin Panelde Aç →</a>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="/app.js"></script>
+</body>
+</html>

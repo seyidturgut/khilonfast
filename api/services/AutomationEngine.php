@@ -598,6 +598,16 @@ class AutomationEngine
              SET status='failed', completed_at=NOW(), next_run_at=NULL, last_error=?
              WHERE id=? AND status='running'"
         )->execute([substr($reason, 0, 800), $execId]);
+
+        // Boss Panel push bildirimi — tüm otomasyon hata senaryoları buradan geçiyor
+        // (node bulunamadı, mail 5x başarısız, hop limit) — tek merkezi hook yeterli.
+        try {
+            require_once __DIR__ . '/BossNotifier.php';
+            $execStmt = $this->db->prepare("SELECT contact_email FROM automation_executions WHERE id = ?");
+            $execStmt->execute([$execId]);
+            $contactEmail = (string)($execStmt->fetchColumn() ?: '');
+            bossNotify($this->db, '⚠️ Otomasyon Hatası', $contactEmail . ' — ' . substr($reason, 0, 120), ['type' => 'automation_failed', 'execution_id' => $execId]);
+        } catch (Throwable $e) { error_log('[boss-notify automation-fail] ' . $e->getMessage()); }
     }
 
     private function logExecution(int $execId, string $nodeId, string $nodeType, string $status, string $message): void

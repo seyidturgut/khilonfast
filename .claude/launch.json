@@ -3,6 +3,7 @@
   "configurations": [
     { "name": "khilonfast-vite", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "5174", "--strictPort"], "port": 5174 },
     { "name": "khilonfast-php-api", "runtimeExecutable": "php", "runtimeArgs": ["-S", "127.0.0.1:8099", "-t", "."], "port": 8099 },
-    { "name": "khilonfast-node-backend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "cwd": "backend", "port": 3002 }
+    { "name": "khilonfast-node-backend", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "cwd": "backend", "port": 3002 },
+    { "name": "boss-app-static", "runtimeExecutable": "php", "runtimeArgs": ["-S", "127.0.0.1:5175", "-t", "boss-app"], "port": 5175 }
   ]
 }

@@ -1,0 +1,3 @@
+Header set X-Frame-Options "DENY"
+Header set X-Content-Type-Options "nosniff"
+Header set X-Robots-Tag "noindex, nofollow"

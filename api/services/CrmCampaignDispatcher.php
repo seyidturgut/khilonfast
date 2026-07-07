@@ -119,6 +119,12 @@ function crmEnqueueCampaign(PDO $db, int $campaignId, bool $dryRun = false): arr
            $campaignId
        ]);
 
+    // Boss Panel push bildirimi — kampanya gönderimi başladı
+    try {
+        require_once __DIR__ . '/BossNotifier.php';
+        bossNotify($db, '🚀 Kampanya Gönderimi Başladı', ($campaign['name'] ?? 'Kampanya') . ' — ' . $count . ' alıcı', ['type' => 'campaign_started', 'campaign_id' => $campaignId]);
+    } catch (Throwable $e) { error_log('[boss-notify campaign-start] ' . $e->getMessage()); }
+
     // Bu kampanyayı AÇANLAR için otomatik canlı akıllı liste oluştur ("{ad}_opened").
     // Gönderim başlar başlamaz boş oluşur, açılmalar geldikçe kendini doldurur (canlı kural).
     // Sonraki kampanyalar bu listeyi hedef seçerek yalnızca açanlara gönderebilir.
@@ -298,6 +304,15 @@ function crmDispatchCampaignBatch(PDO $db, int $campaignId, int $batchSize = 50)
     if ($remaining === 0) {
         $db->prepare("UPDATE crm_campaigns SET status = 'sent', completed_at = NOW() WHERE id = ?")
            ->execute([$campaignId]);
+
+        // Boss Panel push bildirimi — kampanya gönderimi tamamlandı
+        try {
+            require_once __DIR__ . '/BossNotifier.php';
+            $totalStmt = $db->prepare("SELECT COUNT(*) FROM crm_campaign_recipients WHERE campaign_id = ? AND status IN ('sent','opened','clicked')");
+            $totalStmt->execute([$campaignId]);
+            $totalSent = (int)$totalStmt->fetchColumn();
+            bossNotify($db, '✅ Kampanya Gönderimi Tamamlandı', ($campaign['name'] ?? 'Kampanya') . ' — ' . $totalSent . ' gönderildi', ['type' => 'campaign_completed', 'campaign_id' => $campaignId]);
+        } catch (Throwable $e) { error_log('[boss-notify campaign-done] ' . $e->getMessage()); }
     }
 
     return ['sent' => $sent, 'failed' => $failed, 'remaining' => $remaining];
