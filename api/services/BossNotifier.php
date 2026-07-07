@@ -22,7 +22,14 @@ function bossNotify(PDO $db, string $title, string $message, array $data = []): 
 
     $payload = [
         'app_id' => $appId,
-        'included_segments' => ['Subscribed Users'],
+        'target_channel' => 'push',
+        // "included_segments: Subscribed Users" bu hesapta API üzerinden hep
+        // "All included players are not subscribed" veriyordu (dashboard'dan manuel
+        // gönderim farklı bir mekanizma kullandığı için çalışıyordu). Filtre tabanlı
+        // hedefleme (tüm gerçek push subscription kayıtlarını doğrudan sorgular,
+        // önceden hesaplanmış segment'e bağımlı değildir) test edilip ÇALIŞTIĞI
+        // doğrulandı — kalıcı çözüm bu.
+        'filters' => [['field' => 'last_session', 'relation' => '>', 'value' => '0']],
         'headings' => ['en' => $title, 'tr' => $title],
         'contents' => ['en' => $message, 'tr' => $message],
     ];
@@ -30,7 +37,10 @@ function bossNotify(PDO $db, string $title, string $message, array $data = []): 
         $payload['data'] = $data;
     }
 
-    $ch = curl_init('https://onesignal.com/api/v1/notifications');
+    // Eski endpoint (onesignal.com/api/v1/notifications) yeni tip (v16 SDK) abonelikleri
+    // doğru tanımıyordu — dashboard'dan manuel gönderim çalışıyordu ama bu endpoint üzerinden
+    // "All included players are not subscribed" hatası alınıyordu. Güncel endpoint bu.
+    $ch = curl_init('https://api.onesignal.com/notifications');
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
@@ -55,9 +65,18 @@ function bossNotify(PDO $db, string $title, string $message, array $data = []): 
         error_log('[boss-notify] curl error: ' . $err);
         return ['ok' => false, 'reason' => 'curl error: ' . $err];
     }
+    $decoded = json_decode((string)$resp, true);
     if ($code >= 400) {
         error_log('[boss-notify] OneSignal HTTP ' . $code . ': ' . substr((string)$resp, 0, 300));
-        return ['ok' => false, 'reason' => 'OneSignal HTTP ' . $code, 'response' => json_decode($resp, true)];
+        return ['ok' => false, 'reason' => 'OneSignal HTTP ' . $code, 'response' => $decoded];
     }
-    return ['ok' => true, 'response' => json_decode($resp, true)];
+    // HTTP 200 dönse bile OneSignal "errors" alanında sorun bildirebilir — en yaygını
+    // hiçbir cihazın push'a abone olmaması ("All included players are not subscribed").
+    // Bunu da başarısız say ki test-notify butonunda görünür olsun.
+    if (!empty($decoded['errors'])) {
+        $reason = is_array($decoded['errors']) ? implode(', ', $decoded['errors']) : (string)$decoded['errors'];
+        error_log('[boss-notify] OneSignal errors: ' . $reason);
+        return ['ok' => false, 'reason' => $reason, 'response' => $decoded];
+    }
+    return ['ok' => true, 'response' => $decoded];
 }
