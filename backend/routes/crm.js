@@ -296,6 +296,16 @@ async function ensureCrmSchema() {
         KEY idx_email (email)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
 
+    // Idempotent ALTER — kampanya-bazlı unsubscribe takibi (PHP muadili ile aynı:
+    // `status`'a dokunmuyoruz, açılma/tıklama istatistiğini bozmasın diye ayrı kolon).
+    try {
+        const [rcols] = await db.query("SHOW COLUMNS FROM crm_campaign_recipients");
+        const rcolNames = new Set(rcols.map(c => c.Field.toLowerCase()));
+        if (!rcolNames.has('unsubscribed_at')) {
+            await db.query("ALTER TABLE crm_campaign_recipients ADD COLUMN unsubscribed_at TIMESTAMP NULL AFTER clicked_at");
+        }
+    } catch {}
+
     // Faz 5: Web Tracking + Smart Links
     await db.query(`CREATE TABLE IF NOT EXISTS crm_web_visits (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -1620,7 +1630,8 @@ router.get('/campaigns/:id/recipients', async (req, res) => {
             id: Number(r.id), contact_id: Number(r.contact_id), email: r.email,
             first_name: r.first_name || '', last_name: r.last_name || '',
             ab_variant: r.ab_variant, status: r.status, message_id: r.message_id,
-            sent_at: r.sent_at, opened_at: r.opened_at, clicked_at: r.clicked_at, error: r.error
+            sent_at: r.sent_at, opened_at: r.opened_at, clicked_at: r.clicked_at,
+            unsubscribed_at: r.unsubscribed_at || null, error: r.error
         })) });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1634,7 +1645,7 @@ router.get('/campaigns/:id/report', async (req, res) => {
             SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) AS opened,
             SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) AS clicked,
             SUM(CASE WHEN status='bounced' THEN 1 ELSE 0 END) AS bounced,
-            SUM(CASE WHEN status='unsubscribed' THEN 1 ELSE 0 END) AS unsubscribed,
+            SUM(CASE WHEN unsubscribed_at IS NOT NULL THEN 1 ELSE 0 END) AS unsubscribed,
             SUM(CASE WHEN ab_variant='A' THEN 1 ELSE 0 END) AS variant_a_count,
             SUM(CASE WHEN ab_variant='B' THEN 1 ELSE 0 END) AS variant_b_count,
             SUM(CASE WHEN ab_variant='A' AND opened_at IS NOT NULL THEN 1 ELSE 0 END) AS variant_a_opened,

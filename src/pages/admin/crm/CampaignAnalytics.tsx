@@ -13,7 +13,7 @@ const STATUS_LABELS: Record<string, { label: string; bg: string; fg: string }> =
 
 interface Row {
     id: number; name: string; subject: string; status: string; started_at: string | null;
-    total: number; sent: number; opened: number; clicked: number; bounced: number;
+    total: number; sent: number; opened: number; clicked: number; bounced: number; unsubscribed: number;
     open_rate: number; click_rate: number;
 }
 
@@ -89,12 +89,12 @@ export default function CrmCampaignAnalyticsPage() {
                                 <thead>
                                     <tr>
                                         <th>Kampanya</th><th>Durum</th><th>Gönderildi</th>
-                                        <th>Açılma</th><th>Tıklama</th><th>Bounce</th><th>Başlangıç</th>
+                                        <th>Açılma</th><th>Tıklama</th><th>Bounce</th><th>Ayrılan</th><th>Başlangıç</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {rows.length === 0 ? (
-                                        <tr><td colSpan={7} style={{ textAlign: 'center', color: '#64748b', padding: 24 }}>Gönderilmiş kampanya yok.</td></tr>
+                                        <tr><td colSpan={8} style={{ textAlign: 'center', color: '#64748b', padding: 24 }}>Gönderilmiş kampanya yok.</td></tr>
                                     ) : rows.map(r => {
                                         const st = STATUS_LABELS[r.status] || { label: r.status, bg: '#f1f5f9', fg: '#475569' };
                                         return (
@@ -109,6 +109,13 @@ export default function CrmCampaignAnalyticsPage() {
                                                 <td><RateBar value={r.open_rate} color="#16a34a" /></td>
                                                 <td><RateBar value={r.click_rate} color="#9333ea" /></td>
                                                 <td>{r.bounced}</td>
+                                                <td>
+                                                    {r.unsubscribed > 0 ? (
+                                                        <Link to={`/admin/crm/campaigns/${r.id}?filter=unsubscribed`} style={{ color: '#f87171', textDecoration: 'underline' }} title="Kimler ayrıldı — listeye git">
+                                                            {r.unsubscribed}
+                                                        </Link>
+                                                    ) : r.unsubscribed}
+                                                </td>
                                                 <td style={{ fontSize: 12, color: '#94a3b8' }}>{r.started_at ? new Date(String(r.started_at).replace(' ', 'T')).toLocaleDateString('tr-TR') : '—'}</td>
                                             </tr>
                                         );

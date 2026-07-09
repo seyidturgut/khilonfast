@@ -520,6 +520,7 @@ router.post('/unsubscribe', async (req, res) => {
     try {
         const email = String(req.body.email || '').toLowerCase().trim();
         const token = String(req.body.token || '');
+        const campaignId = Number(req.body.campaign_id || 0);
         if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !token) {
             return res.status(400).json({ error: 'Geçersiz istek' });
         }
@@ -531,8 +532,18 @@ router.post('/unsubscribe', async (req, res) => {
         const contactId = await findOrCreateContactByEmail(email);
         if (contactId) {
             await db.query("UPDATE crm_contacts SET status = 'unsubscribed', unsubscribed_at = NOW() WHERE id = ?", [contactId]);
-            await recordActivity(contactId, 'email_unsubscribed', 'Listeden çıkış (abonelikten çık sayfası)', { metadata: { self_service: true } });
+            await recordActivity(contactId, 'email_unsubscribed', 'Listeden çıkış (abonelikten çık sayfası)', { metadata: { self_service: true, campaign_id: campaignId || null } });
             await applyScore(contactId, 'email_unsubscribed', { reason: 'Manual unsubscribe' });
+
+            // Kampanya bazlı unsubscribe raporlaması — PHP muadili ile aynı, `status`'a dokunmuyoruz.
+            if (campaignId > 0) {
+                try {
+                    await db.query(
+                        "UPDATE crm_campaign_recipients SET unsubscribed_at = NOW() WHERE campaign_id = ? AND contact_id = ? AND unsubscribed_at IS NULL",
+                        [campaignId, contactId]
+                    );
+                } catch (e) { console.error('[unsubscribe] campaign recipient update:', e.message); }
+            }
         }
         res.json({ ok: true });
     } catch (e) { res.status(500).json({ error: e.message }); }

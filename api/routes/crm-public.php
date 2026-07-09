@@ -703,6 +703,7 @@ if ($action === 'unsubscribe' && $method === 'POST') {
     $body = getJsonBody();
     $email = strtolower(trim((string)($body['email'] ?? '')));
     $token = (string)($body['token'] ?? '');
+    $campaignId = (int)($body['campaign_id'] ?? 0);
     if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$token) {
         sendResponse(['error' => 'Geçersiz istek'], 400);
     }
@@ -716,9 +717,20 @@ if ($action === 'unsubscribe' && $method === 'POST') {
         $db->prepare("UPDATE crm_contacts SET status = 'unsubscribed', unsubscribed_at = NOW() WHERE id = ?")
            ->execute([$contactId]);
         crmRecordActivity($db, $contactId, 'email_unsubscribed', 'Listeden çıkış (abonelikten çık sayfası)', [
-            'metadata' => ['self_service' => true]
+            'metadata' => ['self_service' => true, 'campaign_id' => $campaignId ?: null]
         ]);
         crmApplyScore($db, $contactId, 'email_unsubscribed', ['reason' => 'Manual unsubscribe']);
+
+        // Kampanya bazlı unsubscribe raporlaması — `status`'a DOKUNMUYORUZ (o kolon
+        // sent/opened/clicked/bounced istatistiğini taşıyor, bunu bozmak istemiyoruz).
+        if ($campaignId > 0) {
+            try {
+                $db->prepare(
+                    "UPDATE crm_campaign_recipients SET unsubscribed_at = NOW()
+                     WHERE campaign_id = ? AND contact_id = ? AND unsubscribed_at IS NULL"
+                )->execute([$campaignId, $contactId]);
+            } catch (Throwable $e) { error_log('[unsubscribe] campaign recipient update: ' . $e->getMessage()); }
+        }
     }
     sendResponse(['ok' => true]);
 }

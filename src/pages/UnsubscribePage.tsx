@@ -22,6 +22,9 @@ export default function UnsubscribePage() {
 
     const email = (params.get('e') || params.get('email') || '').trim()
     const token = (params.get('t') || params.get('token') || '').trim()
+    // Hangi kampanyanın maili tıklandığını backend'e iletir — kampanya bazlı
+    // unsubscribe raporlaması için (crm_campaign_recipients.unsubscribed_at)
+    const campaignId = (params.get('c') || '').trim()
 
     const [phase, setPhase] = useState<Phase>('processing')
     const [reason, setReason] = useState('')
@@ -36,7 +39,7 @@ export default function UnsubscribePage() {
         fetch(`${API_BASE_URL}/crm-public/unsubscribe`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, token }),
+            body: JSON.stringify({ email, token, campaign_id: campaignId || undefined }),
         })
             .then(async (r) => {
                 if (!active) return
@@ -45,7 +48,7 @@ export default function UnsubscribePage() {
             })
             .catch(() => { if (active) setPhase('invalid') })
         return () => { active = false }
-    }, [email, token])
+    }, [email, token, campaignId])
 
     const submitReason = async () => {
         if (!reason || submitting) return

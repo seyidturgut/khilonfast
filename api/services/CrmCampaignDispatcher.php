@@ -180,14 +180,17 @@ if (!function_exists('crmStandardFooter')) {
  * Logo + iletişim + sosyal medya + KVKK/ticari ileti metni + abonelikten çık + copyright.
  * Abonelikten çık token'ı = crm-public/unsubscribe ile AYNI: sha256(email|unsub|JWT_SECRET).
  */
-function crmStandardFooter(PDO $db, string $email): string
+function crmStandardFooter(PDO $db, string $email, int $campaignId = 0): string
 {
     $siteUrl = rtrim((string)getSetting($db, 'frontend_url', 'https://khilonfast.com'), '/');
     $contactEmail = (string)getSetting($db, 'contact_email', 'info@khilonfast.com');
     $secret = defined('JWT_SECRET') ? JWT_SECRET : '';
     $normEmail = strtolower(trim($email));
     $token = hash('sha256', $normEmail . '|unsub|' . $secret);
-    $unsubUrl  = $siteUrl . '/abonelikten-cik?e=' . urlencode($normEmail) . '&t=' . $token;
+    // campaignId linke eklenir ki unsubscribe handler'ı HANGİ kampanyadan çıkıldığını
+    // crm_campaign_recipients.unsubscribed_at'e işleyebilsin (kampanya bazlı raporlama).
+    $unsubUrl  = $siteUrl . '/abonelikten-cik?e=' . urlencode($normEmail) . '&t=' . $token
+        . ($campaignId > 0 ? '&c=' . $campaignId : '');
     $privacyUrl = $siteUrl . '/gizlilik-politikasi';
     $logoUrl = $siteUrl . '/email-logo.png';
     $year = date('Y');
@@ -276,7 +279,7 @@ function crmDispatchCampaignBatch(PDO $db, int $campaignId, int $batchSize = 50)
         }
 
         // Standart kurumsal footer (logo + iletişim + sosyal + KVKK + abonelikten çık + copyright)
-        $html .= crmStandardFooter($db, (string)$r['email']);
+        $html .= crmStandardFooter($db, (string)$r['email'], $campaignId);
 
         try {
             if (!$apiKey || !function_exists('sendBrevoApiEmail')) {
@@ -332,7 +335,7 @@ function crmCampaignReport(PDO $db, int $campaignId): array
         SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) AS opened,
         SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) AS clicked,
         SUM(CASE WHEN status='bounced' THEN 1 ELSE 0 END) AS bounced,
-        SUM(CASE WHEN status='unsubscribed' THEN 1 ELSE 0 END) AS unsubscribed,
+        SUM(CASE WHEN unsubscribed_at IS NOT NULL THEN 1 ELSE 0 END) AS unsubscribed,
         SUM(CASE WHEN ab_variant='A' THEN 1 ELSE 0 END) AS variant_a_count,
         SUM(CASE WHEN ab_variant='B' THEN 1 ELSE 0 END) AS variant_b_count,
         SUM(CASE WHEN ab_variant='A' AND opened_at IS NOT NULL THEN 1 ELSE 0 END) AS variant_a_opened,

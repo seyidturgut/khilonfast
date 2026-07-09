@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import AdminLayout from '../../../layouts/AdminLayout';
 import api, { crmAPI, type CrmCampaign, type CrmCampaignReport } from '../../../services/api';
-import { HiArrowLeft, HiPaperAirplane, HiPlay, HiTrash, HiUsers, HiEye, HiCursorClick, HiX, HiPencil, HiClock } from 'react-icons/hi';
+import { HiArrowLeft, HiPaperAirplane, HiPlay, HiTrash, HiUsers, HiEye, HiCursorClick, HiX, HiPencil, HiClock, HiMinusCircle } from 'react-icons/hi';
 import { useRef as useRefHook } from 'react';
 import UnlayerEmailEditor, { type UnlayerEditorHandle } from '../../../components/admin/UnlayerEmailEditor';
 import { CrmPageStyles } from './Contacts';
@@ -19,6 +19,10 @@ const STATUS_LABELS: Record<string, { label: string; bg: string; fg: string }> =
 export default function CrmCampaignDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    // ?filter=unsubscribed ile gelince (Kampanya Analitiği'ndeki "Ayrılan" linkinden)
+    // alıcı tablosu doğrudan sadece abonelikten çıkanları göstersin.
+    const [showOnlyUnsub, setShowOnlyUnsub] = useState(searchParams.get('filter') === 'unsubscribed');
     const [campaign, setCampaign] = useState<CrmCampaign | null>(null);
     const [report, setReport] = useState<CrmCampaignReport | null>(null);
     const [recipients, setRecipients] = useState<any[]>([]);
@@ -442,6 +446,19 @@ export default function CrmCampaignDetailPage() {
                         <StatCard label="Açıldı" value={report.opened} icon={<HiEye />} accent="#2563eb" suffix={`%${report.open_rate}`} />
                         <StatCard label="Tıklandı" value={report.clicked} icon={<HiCursorClick />} accent="#9333ea" suffix={`%${report.click_rate}`} />
                         <StatCard label="Bounce" value={report.bounced} icon={<HiX />} accent="#dc2626" suffix={`%${report.bounce_rate}`} />
+                        <StatCard
+                            label="Abonelikten Çıktı"
+                            value={report.unsubscribed}
+                            icon={<HiMinusCircle />}
+                            accent="#94a3b8"
+                            suffix={showOnlyUnsub ? 'listeleniyor' : 'listelemek için tıkla'}
+                            onClick={() => {
+                                const next = !showOnlyUnsub;
+                                setShowOnlyUnsub(next);
+                                setSearchParams(next ? { filter: 'unsubscribed' } : {});
+                                document.getElementById('recipients-table')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }}
+                        />
                     </div>
                 )}
 
@@ -563,8 +580,20 @@ export default function CrmCampaignDetailPage() {
                 })()}
 
                 {/* Recipients table */}
-                <div className="card-block">
-                    <h3>Alıcılar (son 200)</h3>
+                <div className="card-block" id="recipients-table">
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                        <h3>Alıcılar (son 200){showOnlyUnsub && ' — sadece abonelikten çıkanlar'}</h3>
+                        {showOnlyUnsub && (
+                            <button
+                                type="button"
+                                className="btn-link"
+                                onClick={() => { setShowOnlyUnsub(false); setSearchParams({}); }}
+                                style={{ background: 'none', border: '1px solid #cbd5e1', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', color: '#334e68' }}
+                            >
+                                Filtreyi kaldır — tümünü göster
+                            </button>
+                        )}
+                    </div>
                     <div className="table-wrapper">
                         <table className="data-table">
                             <thead>
@@ -575,12 +604,16 @@ export default function CrmCampaignDetailPage() {
                                     <th>Gönderim</th>
                                     <th>Açılma</th>
                                     <th>Tıklama</th>
+                                    <th>Abonelikten Çıktı</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {recipients.length === 0 ? (
-                                    <tr><td colSpan={6} className="empty">Henüz alıcı yok. Kampanyayı kuyruğa alın.</td></tr>
-                                ) : recipients.map(r => (
+                                {(() => {
+                                    const displayed = showOnlyUnsub ? recipients.filter(r => r.unsubscribed_at) : recipients;
+                                    if (displayed.length === 0) {
+                                        return <tr><td colSpan={7} className="empty">{showOnlyUnsub ? 'Bu kampanyadan henüz kimse abonelikten çıkmadı.' : 'Henüz alıcı yok. Kampanyayı kuyruğa alın.'}</td></tr>;
+                                    }
+                                    return displayed.map(r => (
                                     <tr key={r.id}>
                                         <td><Link to={`/admin/crm/contacts/${r.contact_id}`} className="row-link">{r.email}</Link></td>
                                         <td>{r.ab_variant ? <span className="variant-pill">{r.ab_variant}</span> : '—'}</td>
@@ -590,8 +623,10 @@ export default function CrmCampaignDetailPage() {
                                         <td className="muted">{r.sent_at ? new Date(r.sent_at).toLocaleString('tr-TR') : '—'}</td>
                                         <td className="muted">{r.opened_at ? new Date(r.opened_at).toLocaleString('tr-TR') : '—'}</td>
                                         <td className="muted">{r.clicked_at ? new Date(r.clicked_at).toLocaleString('tr-TR') : '—'}</td>
+                                        <td className="muted">{r.unsubscribed_at ? new Date(r.unsubscribed_at).toLocaleString('tr-TR') : '—'}</td>
                                     </tr>
-                                ))}
+                                    ));
+                                })()}
                             </tbody>
                         </table>
                     </div>
@@ -680,9 +715,14 @@ export default function CrmCampaignDetailPage() {
     );
 }
 
-function StatCard({ label, value, icon, accent, suffix }: { label: string; value: number; icon: React.ReactNode; accent?: string; suffix?: string }) {
+function StatCard({ label, value, icon, accent, suffix, onClick }: { label: string; value: number; icon: React.ReactNode; accent?: string; suffix?: string; onClick?: () => void }) {
     return (
-        <div className="stat-card" style={accent ? { borderLeftColor: accent } : undefined}>
+        <div
+            className="stat-card"
+            style={{ ...(accent ? { borderLeftColor: accent } : undefined), ...(onClick ? { cursor: 'pointer' } : undefined) }}
+            onClick={onClick}
+            title={onClick ? 'Listeyi filtrelemek için tıkla' : undefined}
+        >
             <div className="stat-icon" style={accent ? { color: accent } : undefined}>{icon}</div>
             <div>
                 <div className="stat-num">{value.toLocaleString('tr-TR')}</div>

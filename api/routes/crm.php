@@ -1024,6 +1024,7 @@ if ($action === 'campaigns') {
                 'sent_at' => $r['sent_at'],
                 'opened_at' => $r['opened_at'],
                 'clicked_at' => $r['clicked_at'],
+                'unsubscribed_at' => $r['unsubscribed_at'] ?? null,
                 'error' => $r['error'],
             ];
         }, $stmt->fetchAll())]);
@@ -1342,7 +1343,8 @@ if ($action === 'campaign-analytics' && $method === 'GET') {
                     SUM(r.status IN ('sent','opened','clicked')) AS sent,
                     SUM(r.opened_at IS NOT NULL) AS opened,
                     SUM(r.clicked_at IS NOT NULL) AS clicked,
-                    SUM(r.status = 'bounced') AS bounced
+                    SUM(r.status = 'bounced') AS bounced,
+                    SUM(r.unsubscribed_at IS NOT NULL) AS unsubscribed
              FROM crm_campaigns c
              LEFT JOIN crm_campaign_recipients r ON r.campaign_id = c.id
              WHERE c.status IN ('sent','sending','paused')
@@ -1363,6 +1365,7 @@ if ($action === 'campaign-analytics' && $method === 'GET') {
                 'opened' => (int)$r['opened'],
                 'clicked' => (int)$r['clicked'],
                 'bounced' => (int)$r['bounced'],
+                'unsubscribed' => (int)$r['unsubscribed'],
                 'open_rate' => $sent > 0 ? round(((int)$r['opened'] / $sent) * 100, 1) : 0,
                 'click_rate' => $sent > 0 ? round(((int)$r['clicked'] / $sent) * 100, 1) : 0,
             ];

@@ -304,6 +304,17 @@ function ensureCrmContactsSchema(PDO $db): void
         KEY idx_email (email)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+    // Idempotent ALTER — kampanya-bazlı unsubscribe takibi. `status`'u 'unsubscribed'
+    // yapmıyoruz (açılma/tıklama istatistiklerini bozmasın diye) — ayrı bir zaman
+    // damgası kolonu: dolu ise bu kişi BU kampanyanın mailinden abonelikten çıkmış demek.
+    try {
+        $cols = [];
+        foreach ($db->query("SHOW COLUMNS FROM crm_campaign_recipients") as $r) $cols[strtolower($r['Field'])] = true;
+        if (!isset($cols['unsubscribed_at'])) {
+            $db->exec("ALTER TABLE crm_campaign_recipients ADD COLUMN unsubscribed_at TIMESTAMP NULL AFTER clicked_at");
+        }
+    } catch (Throwable $e) { /* ignore — table not created yet */ }
+
     // ─── Faz 5: Web Tracking + Smart Links ────────────────────────────────
     $db->exec("CREATE TABLE IF NOT EXISTS crm_web_visits (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
