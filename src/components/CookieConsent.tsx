@@ -6,9 +6,9 @@ import './CookieConsent.css'
 const copy = {
     tr: {
         title: 'Çerez tercihlerinizi yönetin',
-        description: 'Sitemizde zorunlu çerezlerin yanında, izin vermeniz halinde analiz ve reklam ölçümü için çerezler kullanabiliriz. İsterseniz tümünü kabul edebilir, reddedebilir veya tercihlerinizi yönetebilirsiniz.',
+        description: 'Sitemizde zorunlu çerezlerin yanında, ziyaretçi istatistikleri için analitik çerezler kullanıyoruz; reklam/pazarlama çerezleri ise yalnızca izin vermeniz hâlinde kullanılır. İsterseniz tümünü kabul edebilir, reklam çerezlerini reddedebilir veya tercihlerinizi detaylı yönetebilirsiniz.',
         acceptAll: 'Tümünü Kabul Et',
-        reject: 'Reddet',
+        reject: 'Reklamları Reddet',
         manage: 'Tercihleri Yönet',
         modalTitle: 'Çerez tercih merkezi',
         modalDescription: 'Aşağıdaki kategorileri dilediğiniz gibi yönetebilirsiniz. Zorunlu çerezler sitenin temel işlevleri için gereklidir ve kapatılamaz.',
@@ -21,7 +21,7 @@ const copy = {
         },
         analytics: {
             title: 'Analitik Çerezler',
-            desc: 'Site kullanımını anlamamıza, performansı ölçmemize ve deneyimi geliştirmemize yardımcı olur.'
+            desc: 'Site kullanımını anlamamıza ve performansı ölçmemize yardımcı olur. Standart ziyaretçi istatistiği olduğu için varsayılan olarak açıktır, dilerseniz kapatabilirsiniz.'
         },
         marketing: {
             title: 'Reklam / Pazarlama Çerezleri',
@@ -30,9 +30,9 @@ const copy = {
     },
     en: {
         title: 'Manage your cookie preferences',
-        description: 'Alongside essential cookies, we may use analytics and advertising measurement cookies if you allow them. You can accept all, reject optional cookies, or manage your choices in detail.',
+        description: 'Alongside essential cookies, we use analytics cookies for visitor statistics; advertising/marketing cookies are only used if you allow them. You can accept all, reject advertising cookies, or manage your choices in detail.',
         acceptAll: 'Accept All',
-        reject: 'Reject',
+        reject: 'Reject Advertising',
         manage: 'Manage Preferences',
         modalTitle: 'Cookie preference center',
         modalDescription: 'You can manage the categories below at any time. Essential cookies are required for the core site experience and cannot be disabled.',
@@ -45,7 +45,7 @@ const copy = {
         },
         analytics: {
             title: 'Analytics Cookies',
-            desc: 'Help us understand site usage, measure performance, and improve the experience.'
+            desc: 'Help us understand site usage and measure performance. Enabled by default as standard visitor statistics — you can disable it if you prefer.'
         },
         marketing: {
             title: 'Advertising / Marketing Cookies',
@@ -70,11 +70,15 @@ export default function CookieConsent() {
 
     const isEn = locale === 'en'
     const tx = copy[isEn ? 'en' : 'tr']
-    const [analytics, setAnalytics] = useState(Boolean(preferences?.analytics))
+    // Analitik çerezler artık varsayılan olarak açık (bkz. ConsentContext —
+    // analytics_storage: 'granted' varsayılanı) — henüz hiç tercih kaydedilmemişse
+    // (preferences === null, ilk ziyaret) checkbox da bu varsayılanı yansıtır.
+    // Kullanıcı daha önce açıkça bir tercih kaydettiyse (preferences dolu) o esas alınır.
+    const [analytics, setAnalytics] = useState(preferences ? Boolean(preferences.analytics) : true)
     const [marketing, setMarketing] = useState(Boolean(preferences?.marketing))
 
     useEffect(() => {
-        setAnalytics(Boolean(preferences?.analytics))
+        setAnalytics(preferences ? Boolean(preferences.analytics) : true)
         setMarketing(Boolean(preferences?.marketing))
     }, [preferences])
 

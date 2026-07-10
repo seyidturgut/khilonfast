@@ -47,8 +47,16 @@ function ensureGoogleConsentDefaults() {
         window.dataLayer!.push(arguments)
     }
 
+    // KVKK (Türkiye hedef kitlesi) GDPR'ın aksine saf analitik çerezler için önceden
+    // opt-in zorunlu kılmıyor — sadece reklam/pazarlama çerezleri (ad_*) daha hassas
+    // ve onaya bağlı kalmalı. analytics_storage'ı varsayılan "granted" yapıyoruz ki
+    // banner'a hiç dokunmayan/reddeden ziyaretçiler de GA4 standart raporlarında
+    // sayılsın (Consent Mode v2'de "denied" hit'ler GA4 UI raporlarına hiç girmiyor —
+    // sadece anonim modellemeye besleniyor, bu da küçük/orta trafikte pratikte
+    // görünmüyordu — 10 Tem 2026 müşteri şikayeti: GA4 rakamı gerçek trafiğin
+    // ~%2'si kadar görünüyordu, kök neden buydu).
     window.gtag('consent', 'default', {
-        analytics_storage: 'denied',
+        analytics_storage: 'granted',
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
@@ -209,8 +217,13 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
         persistPreferences({ analytics: true, marketing: true })
     }, [persistPreferences])
 
+    // "Reddet" artık sadece reklam/pazarlama çerezlerini kapatır — analitik çerezler
+    // KVKK kapsamında zaten onaya bağlı değil (bkz. ensureGoogleConsentDefaults),
+    // bu yüzden genel "reddet" tıklamasıyla da kapatılmaz. Kullanıcı "Tercihleri
+    // Yönet" modalından analitiği elle kapatmayı seçerse (savePreferences ile) o
+    // açık tercih zaten saygı görür.
     const rejectOptional = useCallback(() => {
-        persistPreferences({ analytics: false, marketing: false })
+        persistPreferences({ analytics: true, marketing: false })
     }, [persistPreferences])
 
     const openPreferences = useCallback(() => {
