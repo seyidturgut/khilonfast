@@ -1,0 +1,200 @@
+{
+  "summary": {
+    "health_score": 62,
+    "business_type": "B2B Marketing Agency (services, sectoral solutions, productized subscriptions, training/courses, 1:1 consulting) — bilingual TR/EN, React/Vite SPA with server-side prerendering, PHP+Node dual backend, Cloudflare edge",
+    "top_findings": [
+      "CRITICAL: Cloudflare WAF/Bot Management is returning HTTP 403 to real requests from ClaudeBot, PerplexityBot, Perplexity-User, anthropic-ai, and cohere-ai at the network edge — independent of and prior to robots.txt being consulted. This silently defeats the site's llms.txt/AI-Answer-Box/schema investment for several major AI platforms.",
+      "CRITICAL: robots.txt contains a genuine self-contradiction — a Cloudflare-managed 'Disallow: /' block and a hand-written 'Allow: /' block both target the same AI user-agent tokens (GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, Amazonbot, Meta-ExternalAgent) in one file. Parser behavior is vendor-dependent.",
+      "CRITICAL: Site-wide soft-404 — any unmatched path returns HTTP 200 with the TR homepage's HTML, index,follow meta robots, and a canonical pointing to the homepage. Verified with random slugs, case-variants, and guessed EN URLs.",
+      "HIGH: ~85% of the 18 sectoral pages are templated boilerplate — nav/footer/service-training-product lists identical, and 5 of 6 FAQ Q&As copied verbatim across pages, with only ~250-400 unique words per page. Scaled/doorway-page risk.",
+      "HIGH: LCP fails Google's 'Good' threshold (≤2.5s) on every page tested (6.5s-22s), worsening sharply with template depth; a sectoral page template has an outright CLS failure (0.854) plus a 9MB/299-request payload.",
+      "HIGH: BreadcrumbList schema mis-parents Consulting under Trainings, and every product page's breadcrumb is hardcoded to Maestro AI's URL regardless of the actual product.",
+      "HIGH: Cookie-consent banner overlaps the primary hero CTA on first paint (desktop+mobile+interior pages) — the real first-clickable element is the cookie banner, not the marketing CTA."
+    ],
+    "quick_wins": [
+      "Flip Cloudflare's AI Crawl Control / Bot Management managed rule to Allow for ClaudeBot, PerplexityBot, Perplexity-User, anthropic-ai, cohere-ai (dashboard change, no code)",
+      "Consolidate robots.txt into one directive block per user-agent (removes the self-contradiction)",
+      "Add the consulting/consultants section (/danismanlik, /danismanlar, /en/consulting, /en/consultants) to the sitemap — it's live, indexable content currently absent from all 6 sub-sitemaps",
+      "Fix the product-page BreadcrumbList hardcoded Maestro AI URL bug — one template fix, sitewide impact",
+      "Remove deprecated HowTo schema (no SERP benefit since Sept 2023)",
+      "Fix cookie-banner/hero-CTA overlap and the 375px hamburger-button clipping bug",
+      "Unify info@khilon.com vs info@khilonfast.com contact email inconsistency"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 68,
+      "what_works": [
+        "Sitemap/hreflang reciprocity across TR/EN pairs",
+        "Self-referencing canonicals, clean URL structure",
+        "Full baseline security headers (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)",
+        "Viewport meta present, image width/height set (good CLS hygiene)",
+        "Consistent TTFB 300-400ms (Cloudflare edge + prerendering working)"
+      ],
+      "findings": [
+        {"title": "Site-wide soft-404", "severity": "Critical", "description": "Any unmatched path (random slug, case-variant of a real URL, guessed EN URL) returns HTTP 200 with the TR homepage HTML, index,follow meta robots, and homepage canonical.", "recommendation": "Return a real 404 status from the SPA fallback/edge worker instead of serving homepage content for unmatched routes."},
+        {"title": "robots.txt self-contradiction", "severity": "Critical", "description": "Cloudflare-managed 'Disallow: /' block and a hand-written 'Allow: /' block both exist for the same AI user-agent tokens in one file; parser behavior is vendor-dependent (first-match-wins vs least-restrictive-wins).", "recommendation": "Fix at the source: adjust Cloudflare's AI Crawl Control dashboard toggle per-bot instead of hand-editing text around its auto-injected block, so the file ends up with one directive group per user-agent."},
+        {"title": "CSP is Report-Only with no reporting endpoint", "severity": "High", "description": "Content-Security-Policy-Report-Only is sent but there's no report-to/report-uri collecting violations, so it provides neither real protection nor visibility.", "recommendation": "Add a reporting endpoint, run a burn-in period reviewing violations, then promote to an enforced Content-Security-Policy."},
+        {"title": "No canonical-host redirect", "severity": "Medium", "description": "http:// and www. both serve 200 directly instead of a 301 to the canonical https apex.", "recommendation": "Add a Cloudflare redirect rule collapsing all host/scheme variants to the canonical apex."},
+        {"title": "Pages not edge-cached", "severity": "Medium", "description": "cf-cache-status returns DYNAMIC on prerendered HTML, inflating TTFB ~0.5-0.85s versus a cached hit.", "recommendation": "Add a Cache Rule/Page Rule to cache prerendered HTML at the edge with appropriate purge-on-deploy."},
+        {"title": "IndexNow not implemented", "severity": "Medium", "description": "No IndexNow protocol support for Bing/Yandex/Naver instant-indexing.", "recommendation": "Implement IndexNow ping on publish/update for faster non-Google indexation."},
+        {"title": "Render-blocking unrelated CSS", "severity": "Low", "description": "A 9.2KB pdf-*.css loads render-blocking on pages without any PDF viewer.", "recommendation": "Scope the PDF-viewer stylesheet to only load on pages that use it."},
+        {"title": "Missing fetchpriority on LCP images", "severity": "Low", "description": "Hero images lack fetchpriority=\"high\".", "recommendation": "Add fetchpriority=\"high\" to above-the-fold hero images."}
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 61,
+      "what_works": [
+        "Prerendered SPA delivers full text (880-1,780 words/page) with no JS execution needed — thin content is not the binding problem",
+        "AI Answer Box (direct-answer paragraph under H1) present and well-formed on every sampled page type",
+        "FAQPage/Question/Answer + BreadcrumbList JSON-LD correctly implemented sitewide"
+      ],
+      "findings": [
+        {"title": "Sectoral pages ~85% templated boilerplate", "severity": "High", "description": "Diffed 3 of ~18 sectoral pages line-for-line: nav/footer/service-training-product lists identical, section order identical, 5 of 6 FAQ Q&As copied verbatim (only the first question sector-customized). Unique content ~250-400 words out of 1,100-1,580 total. Training pages show the same pattern.", "recommendation": "Make sectoral/training FAQs genuinely vertical-specific; expand the unique-content block per page; consider a seo-programmatic review for a full scaled-content verdict."},
+        {"title": "Weak Experience/Authoritativeness signals", "severity": "High", "description": "No real case studies with verifiable client metrics; single-line testimonials swap names in lockstep with the sector template (e.g. different name/company per page but same structure). Named expert 'Bora Işık' invoked repeatedly for training credibility with no bio page, credentials, or Person schema.", "recommendation": "Add real named case studies with metrics; build a credible author/expert bio page with Person schema for Bora Işık."},
+        {"title": "Contact email inconsistency", "severity": "Medium", "description": "Both info@khilon.com and info@khilonfast.com appear on the site — a legacy-rebrand trust flag.", "recommendation": "Standardize on info@khilonfast.com everywhere."},
+        {"title": "Synthetic freshness signals", "severity": "Medium", "description": "dateModified is a single sitewide build-time value, not per-page edit history; sitemap lastmod for distinct sectoral URLs shares identical batch timestamps.", "recommendation": "Derive dateModified from real content-edit timestamps per page."},
+        {"title": "AI Answer Box not schema-wrapped", "severity": "Low", "description": "The answer-box paragraph isn't itself wrapped in Question/Answer schema and isn't a semantic heading.", "recommendation": "Wrap the answer box in FAQPage/Question schema and use a semantic heading tag."}
+      ]
+    },
+    {
+      "name": "On-Page / Search Experience (SXO)",
+      "score": 61,
+      "what_works": [
+        "Consulting drill-down pages are the strongest page type checked: clear pricing, 11-module curriculum, FAQ, testimonial",
+        "Energy sector page ranks (#2 observed) for its head term"
+      ],
+      "findings": [
+        {"title": "Page-type/intent mismatch on content-strategy service page", "severity": "Critical", "description": "The '/hizmetlerimiz/icerik-stratejisi' page is a pure sales page, but its likely head term 'içerik stratejisi nedir' has a SERP 100% dominated by informational 'nedir + nasıl oluşturulur' educational content.", "recommendation": "Add an upfront educational/definitional block before the sales pitch, or create a separate informational pillar page that links to the service page."},
+        {"title": "No price shown on training/course pages", "severity": "High", "description": "The Teknoloji & Yazılım course page shows zero price anywhere in static HTML; CTA links to an empty #pricing anchor — unlike every competitor course-catalog page and unlike khilonfast's own consulting pages which do show '5.000 USD/tek seferlik'.", "recommendation": "Add visible pricing to all training/course pages, matching the consulting page pattern."},
+        {"title": "No named case studies or client logos on any sampled page type", "severity": "Medium", "description": "Trust signals are thin across homepage, service, sectoral, training, and consulting pages.", "recommendation": "Single highest-leverage fix: add real client logos and named case studies with metrics."},
+        {"title": "Homepage doesn't rank for its own head term", "severity": "Medium", "description": "Homepage doesn't appear in top-10 for 'B2B pazarlama ajansı'; H1 is a slogan rather than a descriptive, keyword-bearing statement.", "recommendation": "Consider a descriptive H1 variant or supporting subhead carrying the target phrase."},
+        {"title": "Booking/checkout flow not exercisable in static analysis", "severity": "Info", "description": "The JS-driven 'Başlayın' button flow could not be tested without a browser renderer in this environment.", "recommendation": "Manual QA pass on the live booking/checkout flow recommended."}
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 72,
+      "what_works": [
+        "All schema server-rendered and valid JSON — no syntax errors across 21+ pages sampled",
+        "JSON-LD only, correct https://schema.org context, ISO 8601 dateModified",
+        "Real verified sameAs links (LinkedIn/Instagram both HTTP 200, not placeholders)",
+        "FAQPage correctly present and content-accurate sitewide; earlier lazy-mount empty-schema bug does not reproduce"
+      ],
+      "findings": [
+        {"title": "Deprecated HowTo schema still live", "severity": "Critical", "description": "The 'how khilonfast works' page (TR+EN) still ships HowTo schema, removed from Google SERP features since September 2023.", "recommendation": "Delete the HowTo schema block; it provides no benefit and is dead weight."},
+        {"title": "BreadcrumbList mis-parents Consulting under Trainings", "severity": "Critical", "description": "/danismanlik and /en/consulting show a breadcrumb implying Consulting is a child of Trainings, despite being its own top-level offering.", "recommendation": "Correct the breadcrumb hierarchy to reflect Consulting as a top-level section."},
+        {"title": "Product-page breadcrumb hardcoded to Maestro AI URL", "severity": "Critical", "description": "Position-2 'Urunler' breadcrumb item is hardcoded to /urunler/maestro-ai on every product page, so e.g. the Eye Tracking product falsely claims Maestro AI's URL as its parent.", "recommendation": "Generate the breadcrumb parent URL dynamically per product instead of a hardcoded value."},
+        {"title": "Hardcoded ASCII breadcrumb labels lose Turkish diacritics", "severity": "High", "description": "\"Egitimler\"/\"Urunler\" appear in breadcrumb schema instead of the correct \"Eğitimler\"/\"Ürünler\" used elsewhere on the same pages.", "recommendation": "Fix the hardcoded label strings to use proper Turkish characters."},
+        {"title": "Product/Course schema missing offers/image/hasCourseInstance", "severity": "High", "description": "Both core commercial page types lack fields required for rich-result eligibility.", "recommendation": "Add offers (with price/currency), image, and for Course pages hasCourseInstance."},
+        {"title": "No SearchAction on WebSite schema", "severity": "Medium", "description": "Missing sitelinks-searchbox eligibility.", "recommendation": "Add a SearchAction to the WebSite schema if the site has an internal search."},
+        {"title": "Organization missing ContactPoint/PostalAddress", "severity": "Medium", "description": "Real phone/address exist on the Contact page but aren't reflected in Organization schema.", "recommendation": "Add ContactPoint and PostalAddress to Organization schema."},
+        {"title": "Service-page breadcrumbs point to in-page anchors", "severity": "Medium", "description": "Breadcrumbs reference #services anchors instead of real URLs.", "recommendation": "Point breadcrumb items at real canonical URLs."}
+      ]
+    },
+    {
+      "name": "Sitemap Structure",
+      "score": 78,
+      "what_works": [
+        "All 6 sub-sitemaps + index are well-formed XML, well under the 50k URL limit",
+        "18 spot-checked URLs across all 6 sitemaps returned clean 200s with unique titles",
+        "hreflang alternates fully reciprocal in service-, sectoral-, training-, and product-sitemaps"
+      ],
+      "findings": [
+        {"title": "Consulting section entirely missing from sitemaps", "severity": "High", "description": "/danismanlik, /en/consulting, /danismanlar, /en/consultants all return live, distinct 200 pages with proper titles but appear in none of the 6 sitemaps.", "recommendation": "Add to page-sitemap.xml or create a dedicated consulting-sitemap.xml."},
+        {"title": "Sitewide soft-404 undermines sitemap trust", "severity": "Medium", "description": "Any arbitrary path returns 200 with the generic homepage — this is the same issue flagged under Technical SEO, reducing confidence that all sitemap 200s reflect distinct real content.", "recommendation": "See Technical SEO soft-404 fix."},
+        {"title": "Identical lastmod across all 73 URLs", "severity": "Low", "description": "Every URL shares the exact same millisecond-precision build timestamp rather than real per-page freshness data.", "recommendation": "Generate lastmod from actual content-edit history where feasible."},
+        {"title": "flow-sitemap.xml URLs lack EN hreflang", "severity": "Info", "description": "All 5 flow-sitemap URLs are TR-only with no en alternate.", "recommendation": "Confirm this is intentional (no EN flow content) or add EN alternates."}
+      ]
+    },
+    {
+      "name": "Performance (Core Web Vitals)",
+      "score": 47,
+      "what_works": [
+        "TTFB consistently good (300-400ms) on all pages tested — Cloudflare edge + prerendering working at the network level",
+        "CLS is Good (0.000) on 3 of 4 pages tested"
+      ],
+      "findings": [
+        {"title": "LCP fails 'Good' threshold on every page tested", "severity": "Critical", "description": "Lighthouse lab runs: Home TR 6.55s, Home EN 14.46s, Service page 22.06s, Sectoral page 8.26s — all Poor (threshold ≤2.5s), worsening sharply with template depth.", "recommendation": "Prior WebP/manualChunks optimizations clearly haven't propagated past the homepage template — audit LCP element and JS blocking on service/sectoral templates specifically."},
+        {"title": "CLS failure on sectoral page template", "severity": "Critical", "description": "Sectoral page scored 0.854 CLS (Poor, threshold ≤0.1), the only page with a CLS failure, alongside a 9MB/299-request payload (5x the homepage).", "recommendation": "Highest-priority single fix — identify the shifting element(s) on the sectoral template and reserve layout space; audit why payload is 5x homepage weight."},
+        {"title": "TR homepage has markedly worse TBT than EN", "severity": "High", "description": "TR homepage: 594ms TBT (Poor) with 6.0s main-thread work vs EN homepage's 235ms TBT with 3.2s main-thread work.", "recommendation": "Investigate TR-specific script/widget difference (e.g. a TR-only third-party embed) causing the doubled main-thread work."},
+        {"title": "~650KB unused JavaScript shipped on every page", "severity": "Medium", "description": "Suggests shared vendor chunks (three.js/pdf/analytics) load even on pages that don't need them.", "recommendation": "Audit manualChunks boundaries; lazy-load three.js/pdf chunks only on routes that use them."}
+      ]
+    },
+    {
+      "name": "AI Search Readiness (GEO)",
+      "score": 48,
+      "what_works": [
+        "llms.txt and llms-full.txt present, well-formed, and current (170 pages, generated 2026-07-10)",
+        "AI Answer Box content confirmed server-rendered with question-style headings and direct ~45-word answers",
+        "Content-Signal (ai-train=no, use=reference) is compatible with AI citation — doesn't block RAG/retrieval"
+      ],
+      "findings": [
+        {"title": "Cloudflare WAF blocks real AI-bot requests regardless of robots.txt", "severity": "Critical", "description": "Live HTTP requests spoofing AI-bot User-Agent headers were returned HTTP 403 at the Cloudflare edge for ClaudeBot, PerplexityBot, Perplexity-User, anthropic-ai, and cohere-ai — before robots.txt is even consulted. GPTBot, OAI-SearchBot, and Google-Extended returned 200. Likely the 'AI Scrapers and Crawlers' Bot Management managed rule.", "recommendation": "Set Cloudflare's AI Crawl Control / Bot Management to Allow for the affected user-agents — this is the dominant blocker, more impactful than the robots.txt text itself."},
+        {"title": "robots.txt duplicate/contradictory groups", "severity": "Critical", "description": "Same finding as Technical SEO — compounding config smell alongside the WAF block.", "recommendation": "See Technical SEO recommendation."},
+        {"title": "Organization sameAs missing high-value platforms", "severity": "Medium", "description": "Only LinkedIn + Instagram present; no YouTube, Reddit, or Wikipedia/Wikidata — YouTube presence correlates most strongly (~0.737) with brand-citation likelihood in AI answers.", "recommendation": "Add a YouTube channel presence and link it in sameAs if feasible."},
+        {"title": "AI Answer Box shorter than ideal", "severity": "Low", "description": "~45 words per answer box vs the ideal ~134-167 word range for AI-citation passages.", "recommendation": "Expand answer boxes to the ideal length where it doesn't hurt readability."}
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Fixes",
+        "timeframe": "Week 1",
+        "items": [
+          "Flip Cloudflare AI Crawl Control/Bot Management to Allow for ClaudeBot, PerplexityBot, Perplexity-User, anthropic-ai, cohere-ai (dashboard-only change)",
+          "Consolidate robots.txt into one directive group per user-agent, removing the Cloudflare-managed vs hand-written contradiction",
+          "Fix site-wide soft-404 (return real 404 status for unmatched SPA routes)",
+          "Fix product-page BreadcrumbList hardcoded Maestro AI URL bug",
+          "Fix BreadcrumbList mis-parenting Consulting under Trainings",
+          "Remove deprecated HowTo schema",
+          "Fix cookie-consent-banner/hero-CTA overlap and the 375px hamburger-button clipping bug"
+        ]
+      },
+      {
+        "name": "Phase 2: High-Impact Improvements",
+        "timeframe": "Weeks 2-3",
+        "items": [
+          "Investigate and fix sectoral-page-template CLS failure (0.854) and 9MB payload",
+          "Diagnose and reduce LCP across service/sectoral templates (currently 8-22s, all Poor)",
+          "Add pricing to all training/course pages",
+          "Add /danismanlik, /en/consulting, /danismanlar, /en/consultants to the sitemap",
+          "De-templatize sectoral-page FAQs to be genuinely vertical-specific",
+          "Fix hardcoded ASCII breadcrumb labels (Egitimler/Urunler → Eğitimler/Ürünler)",
+          "Add offers/image to Product schema, hasCourseInstance/offers to Course schema",
+          "Investigate TR-homepage TBT regression vs EN homepage (594ms vs 235ms)"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Authority",
+        "timeframe": "Month 2",
+        "items": [
+          "Add real named case studies with verifiable client metrics across service/sectoral/training pages",
+          "Build a credible author/expert bio page + Person schema for Bora Işık",
+          "Unify info@khilon.com vs info@khilonfast.com contact email",
+          "Add educational/definitional content block to the content-strategy service page to compete against informational SERP intent",
+          "Promote CSP from Report-Only to enforced after a reporting burn-in period",
+          "Add YouTube presence and reflect in Organization sameAs"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring & Iteration",
+        "timeframe": "Ongoing",
+        "items": [
+          "Set up canonical-host redirect (http/www → https apex) and edge caching for prerendered HTML",
+          "Implement IndexNow for Bing/Yandex/Naver",
+          "Derive dateModified/lastmod from real per-page edit history instead of build timestamps",
+          "Re-run Lighthouse and AI-bot-UA spot checks monthly to confirm fixes hold",
+          "Re-verify Cloudflare AI Crawl Control setting after any WAF/managed-rule updates (Cloudflare periodically resets or updates managed rulesets)"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
