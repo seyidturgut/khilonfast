@@ -42,14 +42,14 @@ type CheckoutLegalCopy = {
 const COMPANY_TR = {
     name: 'Khilon Danışmanlık Anonim Şirketi',
     web: 'www.khilonfast.com',
-    email: 'info@khilon.com',
+    email: 'info@khilonfast.com',
     phone: '0533 494 5869',
     address: 'Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe/İstanbul',
 }
 const COMPANY_EN = {
     name: 'Khilon Danışmanlık A.Ş. (Khilon Consulting Inc.)',
     web: 'www.khilonfast.com',
-    email: 'info@khilon.com',
+    email: 'info@khilonfast.com',
     phone: '+90 533 494 5869',
     address: 'Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe/İstanbul, Turkey',
 }
@@ -1049,7 +1049,7 @@ export const legalContent: Record<AppLocale, Record<LegalDocumentKey, LegalDocum
                     title: '1. Yakında',
                     paragraphs: [
                         'Bu belgenin Türkçe çevirisi hazırlanmaktadır. İngilizce tam metni için /en/terms-of-use sayfasını ziyaret edebilirsiniz.',
-                        'Sorularınız için info@khilon.com adresinden bize ulaşabilirsiniz.',
+                        'Sorularınız için info@khilonfast.com adresinden bize ulaşabilirsiniz.',
                     ],
                 },
             ],
@@ -1070,7 +1070,7 @@ export const legalContent: Record<AppLocale, Record<LegalDocumentKey, LegalDocum
                     title: '1. DATA CONTROLLER',
                     paragraphs: [
                         'The Platform is operated by:',
-                        'Khilon Danışmanlık Anonim Şirketi Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe / Istanbul / Türkiye Email: info@khilon.com Phone: +90 533 494 5869',
+                        'Khilon Danışmanlık Anonim Şirketi Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe / Istanbul / Türkiye Email: info@khilonfast.com Phone: +90 533 494 5869',
                         'For the purposes of applicable data protection laws, Khilon acts as the data controller with respect to personal data processed through the Platform and related Services.',
                     ],
                 },
@@ -1291,7 +1291,7 @@ export const legalContent: Record<AppLocale, Record<LegalDocumentKey, LegalDocum
                     title: '14. CONTACT & DATA REQUESTS',
                     paragraphs: [
                         'Privacy-related requests may be submitted through:',
-                        'Email: info@khilon.com',
+                        'Email: info@khilonfast.com',
                         'Postal Address: Khilon Danışmanlık Anonim Şirketi Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe / Istanbul / Türkiye',
                         'We may request additional verification information before responding to certain requests.',
                     ],
@@ -1584,7 +1584,7 @@ export const legalContent: Record<AppLocale, Record<LegalDocumentKey, LegalDocum
                     title: '12. CONTACT',
                     paragraphs: [
                         'Questions regarding this Cookie Policy may be directed to:',
-                        'Email: info@khilon.com',
+                        'Email: info@khilonfast.com',
                         'Postal Address: Khilon Danışmanlık Anonim Şirketi Yıldız Posta Caddesi Çiğdem Apartmanı No:11/8 Gayrettepe / Istanbul / Türkiye',
                     ],
                 },

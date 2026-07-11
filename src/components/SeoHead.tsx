@@ -13,7 +13,7 @@ type LocaleValue = {
 }
 
 type SeoKind = 'website' | 'about' | 'contact' | 'service' | 'product' | 'course' | 'howto' | 'collection'
-type SeoSection = 'company' | 'services' | 'sectoral' | 'trainings' | 'products' | 'flows'
+type SeoSection = 'company' | 'services' | 'sectoral' | 'trainings' | 'products' | 'flows' | 'consulting'
 
 type SeoEntry = {
     key?: string
@@ -378,7 +378,7 @@ const pageEntries: SeoEntry[] = [
             en: 'Grow your brand with industry-specific, hands-on, and results-oriented consulting programs.'
         },
         kind: 'collection' as const,
-        section: 'trainings' // Grouped with trainings for breadcrumbs
+        section: 'consulting' as const
     },
     {
         key: 'consultants',
@@ -1017,35 +1017,6 @@ function buildSchema({
         ]
     }
 
-    if (kind === 'howto') {
-        const relatedFlow = setupFlows.find((flow) => canonicalUrl === `${SITE_URL}${flow.path}`)
-        return [
-            organization,
-            website,
-            webpageBase,
-            breadcrumbList,
-            {
-                '@type': 'HowTo',
-                name: title.replace(' | khilonfast', ''),
-                description,
-                url: canonicalUrl,
-                publisher: { '@id': `${SITE_URL}/#organization` },
-                ...(relatedFlow
-                    ? {
-                        step: relatedFlow.paths.flatMap((path, pathIndex) =>
-                            path.steps.map((step, stepIndex) => ({
-                                '@type': 'HowToStep',
-                                position: pathIndex * 10 + stepIndex + 1,
-                                name: step.title,
-                                text: step.description
-                            }))
-                        )
-                    }
-                    : {})
-            }
-        ]
-    }
-
     if (kind === 'collection') {
         return [
             organization,
@@ -1067,9 +1038,10 @@ function localizedSectionLabel(section: SeoSection | undefined, inLanguage: stri
     const isEnglish = inLanguage === 'en-US'
     if (section === 'services') return isEnglish ? 'Services' : 'Hizmetlerimiz'
     if (section === 'sectoral') return isEnglish ? 'Industries' : 'Sektörel Hizmetler'
-    if (section === 'trainings') return isEnglish ? 'Programs' : 'Egitimler'
-    if (section === 'products') return isEnglish ? 'Products' : 'Urunler'
-    if (section === 'flows') return isEnglish ? 'Setup Flows' : 'Kurulum Akislari'
+    if (section === 'trainings') return isEnglish ? 'Programs' : 'Eğitimler'
+    if (section === 'products') return isEnglish ? 'Products' : 'Ürünler'
+    if (section === 'flows') return isEnglish ? 'Setup Flows' : 'Kurulum Akışları'
+    if (section === 'consulting') return isEnglish ? 'Consulting' : 'Danışmanlık'
     if (section === 'company') return isEnglish ? 'Company' : 'Kurumsal'
     return isEnglish ? 'Pages' : 'Sayfalar'
 }
@@ -1079,7 +1051,8 @@ function localizedSectionPath(section: SeoSection | undefined, inLanguage: strin
     if (section === 'services') return isEnglish ? `/en/${enSlugs.home || ''}#services`.replace(/\/+#/, '/#') : '/#services'
     if (section === 'sectoral') return isEnglish ? `/en/${enSlugs.home || ''}#sectoral-services`.replace(/\/+#/, '/#') : '/#sectoral-services'
     if (section === 'trainings') return isEnglish ? `/en/${enSlugs.trainings}` : `/${trSlugs.trainings}`
-    if (section === 'products') return isEnglish ? `/en/${enSlugs.maestro}` : `/${trSlugs.maestro}`
+    if (section === 'products') return isEnglish ? `/en/${enSlugs.home || ''}#products`.replace(/\/+#/, '/#') : '/#products'
+    if (section === 'consulting') return isEnglish ? `/en/${enSlugs.consulting}` : `/${trSlugs.consulting}`
     if (section === 'company') return isEnglish ? '/en/about' : `/${trSlugs.about}`
     return '/'
 }

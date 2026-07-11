@@ -263,7 +263,7 @@ export default function OnboardingPresentation() {
                     {isEn ? 'Have questions? Our team is here to help.' : 'Sorularınız mı var? Ekibimiz yardıma hazır.'}
                 </p>
                 <p style={{ margin: '0 0 24px', color: '#64748b', fontSize: 13 }}>
-                    <a href="mailto:info@khilon.com" style={{ color: '#1a3a52', fontWeight: 600 }}>info@khilon.com</a>
+                    <a href="mailto:info@khilonfast.com" style={{ color: '#1a3a52', fontWeight: 600 }}>info@khilonfast.com</a>
                     {' · +90 533 494 58 69'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>

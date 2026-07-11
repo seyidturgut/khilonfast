@@ -361,7 +361,7 @@ function EnPurchaseBlockedModal({ onClose }: { onClose: () => void }) {
                 </h2>
                 <p style={{ margin: '0 0 22px', color: '#475569', fontSize: '0.95rem', lineHeight: 1.55 }}>
                     Online payment is being set up for international purchases.
-                    Please contact us at <a href="mailto:info@khilon.com" style={{ color: '#1a3a52', fontWeight: 600 }}>info@khilon.com</a> to complete your order.
+                    Please contact us at <a href="mailto:info@khilonfast.com" style={{ color: '#1a3a52', fontWeight: 600 }}>info@khilonfast.com</a> to complete your order.
                 </p>
                 <button
                     onClick={onClose}

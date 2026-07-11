@@ -719,4 +719,28 @@ body.mobile-menu-open {
         width: 42px;
         height: 42px;
     }
+
+    /* SEO audit fix: at narrow widths (≤375px) logo + lang-switch + menu-toggle
+       overflowed the container and clipped the hamburger button off-screen.
+       Shrink the logo and tighten the row so everything fits. */
+    .header-container {
+        gap: 0.6rem;
+    }
+
+    .logo img {
+        height: 24px;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+
+    .lang-switch {
+        padding: 2px;
+    }
+
+    .lang-switch .lang-btn {
+        padding: 3px 7px;
+        font-size: 0.8rem;
+    }
 }

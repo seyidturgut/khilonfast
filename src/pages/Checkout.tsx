@@ -1147,8 +1147,8 @@ export default function Checkout() {
                                             {bankAccounts.length === 0 && (
                                                 <p style={{ margin: '0.75rem 0 0', color: '#dc2626', fontSize: '0.85rem' }}>
                                                     {isEn
-                                                        ? 'No bank accounts available right now. Please contact us at info@khilon.com.'
-                                                        : 'Şu anda manuel havale hesabı tanımlı değil. info@khilon.com ile iletişime geçin.'}
+                                                        ? 'No bank accounts available right now. Please contact us at info@khilonfast.com.'
+                                                        : 'Şu anda manuel havale hesabı tanımlı değil. info@khilonfast.com ile iletişime geçin.'}
                                                 </p>
                                             )}
 

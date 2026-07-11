@@ -1,5 +1,8 @@
 Options -MultiViews
 
+# SEO audit fix: eşleşmeyen path'ler için gerçek 404 status (soft-404 bug fix)
+ErrorDocument 404 /404.html
+
 # JavaScript modülleri için doğru MIME type (pdf.worker .mjs için kritik)
 <IfModule mod_mime.c>
   AddType application/javascript .mjs
@@ -81,10 +84,21 @@ DirectorySlash Off
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule \.(png|jpg|jpeg|webp|avif|gif|svg|ico|css|js|mjs|map|pdf|zip|woff|woff2|ttf|eot|mp4|webm|mp3|wav|xml|txt|json)$ - [R=404,L]
 
-  # Gerçek dosya varsa dokunma (assets, images vb.)
+  # Bilinen fonksiyonel/oturum-gerekli SPA rotaları (prerender edilmez, içerik
+  # sayfası değildir) — bunlar index.html + 200 ile servis edilmeye devam eder.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(admin|dashboard|checkout|payment-callback|payment-success|giris|kayit-ol|login|register|sifre-belirle|set-password|unsubscribe|abonelikten-cik|onboarding-sunumu|onboarding-presentation|danismanlik-odeme|danismanlik/randevu|egitimllerim|elementor-696|hesabim)(/|$) /index.html [L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^en/(dashboard|checkout|payment-callback|payment-success|login|register|egitimllerim)(/|$) /index.html [L]
+
+  # Gerçek dosya/klasör varsa dokunma
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
 
-  # Geri kalanı SPA index.html'e yönlendir
-  RewriteRule . /index.html [L]
+  # SEO audit fix: geri kalan eşleşmeyen path'ler artık gerçek 404 alır
+  # (önceden burası index.html + 200 dönüyordu → site-wide soft-404 bug'ı)
+  RewriteRule . - [R=404,L]
 </IfModule>

@@ -39,7 +39,8 @@ const mainRouteKeys = [
   'sectoralManufacturing',
   'trainings',
   'maestro',
-  'eyeTracking'
+  'eyeTracking',
+  'consulting'
 ]
 
 const trainingRouteMap = [
@@ -112,7 +113,16 @@ const pageEntries = [
     priority: '0.64',
     changefreq: 'monthly',
     bucket: 'flows'
-  }))
+  })),
+  // SEO audit fix: danışmanlık/danışmanlar bölümü canlı ve indexlenebilir
+  // olmasına rağmen hiçbir sitemap'te yer almıyordu.
+  {
+    tr: '/danismanlar',
+    en: '/en/consultants',
+    priority: '0.75',
+    changefreq: 'weekly',
+    bucket: 'pages'
+  }
 ]
 
 const segmentedEntries = {

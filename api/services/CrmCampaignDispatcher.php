@@ -248,7 +248,7 @@ function crmDispatchCampaignBatch(PDO $db, int $campaignId, int $batchSize = 50)
         }
     } catch (Throwable $e) {}
 
-    $fromEmail = $campaign['from_email'] ?: $fromEmail ?: 'info@khilon.com';
+    $fromEmail = $campaign['from_email'] ?: $fromEmail ?: 'info@khilonfast.com';
     $fromName = $campaign['from_name'] ?: $fromName ?: 'Khilonfast';
 
     $rs = $db->prepare("SELECT * FROM crm_campaign_recipients

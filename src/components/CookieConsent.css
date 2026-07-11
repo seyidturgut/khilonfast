@@ -18,6 +18,10 @@
     box-shadow: 0 18px 48px rgba(15, 23, 42, 0.34);
     padding: 1.25rem 1.35rem;
     backdrop-filter: blur(14px);
+    /* SEO audit fix: banner could grow tall enough to cover the hero CTA — cap its
+       height and let long copy scroll instead of pushing the whole bar upward */
+    max-height: min(38vh, 300px);
+    overflow-y: auto;
 }
 
 .cookie-banner__eyebrow {
@@ -231,6 +235,44 @@
     .cookie-modal__list {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    /* SEO audit fix: cap banner height on small screens so it can't cover the
+       hero CTA; scroll the description instead of growing the fixed bar */
+    .cookie-banner__content {
+        max-height: min(28vh, 210px);
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+        gap: 0.6rem;
+    }
+
+    .cookie-banner__content h2 {
+        font-size: 1rem;
+    }
+
+    .cookie-banner__eyebrow {
+        margin-bottom: 0.15rem;
+    }
+
+    /* Keep the first-paint banner to eyebrow + title + buttons; full detail
+       stays one tap away in "Tercihleri Yönet" so the bar can't cover the CTA */
+    .cookie-banner__content p {
+        display: none;
+    }
+
+    .cookie-banner__actions {
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+    }
+
+    .cookie-banner__actions .cookie-btn {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0.55rem 0.35rem;
+        font-size: 0.72rem;
+        line-height: 1.15;
+        white-space: normal;
+        text-align: center;
     }
 
     .cookie-category {

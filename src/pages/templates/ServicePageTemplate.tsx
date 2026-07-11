@@ -248,7 +248,13 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [downloadModalUrl, setDownloadModalUrl] = useState<string | null>(null);
     const [comingSoonOpen, setComingSoonOpen] = useState(false);
-    const [dynamicPackages, setDynamicPackages] = useState<PricingPackage[]>(props.serviceKey ? [] : props.pricingSection.packages);
+    // SEO audit fix: starting this at [] left the entire pricing section absent
+    // from the prerendered/static HTML for every serviceKey-driven page (price
+    // only appeared after the client-side product-price fetch resolved, which
+    // prerendering doesn't wait for). Seed it with the static config so first
+    // paint — and the crawler-visible snapshot — always shows a price; the
+    // effect below still overwrites it once the live API result arrives.
+    const [dynamicPackages, setDynamicPackages] = useState<PricingPackage[]>(props.pricingSection.packages);
     const [dynamicHero, setDynamicHero] = useState(props.hero);
     const [cmsPageId, setCmsPageId] = useState<number | null>(null);
     const [cmsAllContent, setCmsAllContent] = useState<Record<string, any> | null>(null);
@@ -393,7 +399,11 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         setActiveFaqIndex(0);
         setActiveAudienceTabIndex(0);
         setDynamicHero(props.hero);
-        setDynamicPackages(props.serviceKey ? [] : props.pricingSection.packages);
+        // SEO audit fix: this used to reset to [] for serviceKey pages, blanking
+        // the pricing section until the live product-price fetch resolved —
+        // invisible to prerendering. Seed with the static config price instead;
+        // the fetch effect below still overwrites it once live data arrives.
+        setDynamicPackages(props.pricingSection.packages);
     }, [cmsSlug, currentLang, props.hero, props.pricingSection.packages, props.serviceKey]);
 
     // Keep UI text state in sync when parent props change (including CMS edits).

@@ -206,7 +206,7 @@ export default function ContactPage() {
           </div>
           <div className="contact-hero-card">
             <div className="contact-card-title">{tx('contact.card.title')}</div>
-            <div className="contact-card-item"><span className="label">{tx('contact.card.email')}</span><span className="value">info@khilon.com</span></div>
+            <div className="contact-card-item"><span className="label">{tx('contact.card.email')}</span><span className="value">info@khilonfast.com</span></div>
             <div className="contact-card-item"><span className="label">{tx('contact.card.phone')}</span><span className="value">+90 533 494 58 69</span></div>
             <div className="contact-card-item"><span className="label">{tx('contact.card.address')}</span><span className="value">{tx('contact.card.location')}</span></div>
             <div className="contact-card-foot">{tx('contact.card.hours')}</div>

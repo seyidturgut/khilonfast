@@ -383,7 +383,7 @@ function CampaignBuilder({ onClose }: { onClose: () => void }) {
                                     </div>
                                     <div className="form-row">
                                         <label>Gönderici E-posta</label>
-                                        <input type="email" value={form.from_email} onChange={(e) => setForm({ ...form, from_email: e.target.value })} placeholder="info@khilon.com" />
+                                        <input type="email" value={form.from_email} onChange={(e) => setForm({ ...form, from_email: e.target.value })} placeholder="info@khilonfast.com" />
                                     </div>
                                 </div>
                             </div>

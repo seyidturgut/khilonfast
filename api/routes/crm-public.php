@@ -529,7 +529,7 @@ if ($action === 'form' && !empty($id) && $subAction === 'submit' && $method === 
     if ($doubleOptIn) {
         try {
             // Brevo settings + base URL
-            $apiKey = ''; $fromEmail = 'info@khilon.com'; $fromName = 'Khilonfast';
+            $apiKey = ''; $fromEmail = 'info@khilonfast.com'; $fromName = 'Khilonfast';
             try {
                 $rs = $db->query("SELECT setting_key, setting_value FROM settings
                                   WHERE setting_key IN ('brevo_api_key','sender_email','sender_name')");

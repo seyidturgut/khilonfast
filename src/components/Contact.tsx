@@ -35,7 +35,7 @@ export default function Contact() {
                                 <div className="contact-icon">📧</div>
                                 <div>
                                     <h4>{isEn ? 'Email' : 'E-posta'}</h4>
-                                    <p>info@khilon.com</p>
+                                    <p>info@khilonfast.com</p>
                                 </div>
                             </div>
                             <div className="contact-item">

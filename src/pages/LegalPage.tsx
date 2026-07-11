@@ -90,11 +90,11 @@ export default function LegalPage({ documentKey }: LegalPageProps) {
                             <h3>{isEn ? 'Need support?' : 'Yardıma mı ihtiyacınız var?'}</h3>
                             <p>
                                 {isEn
-                                    ? 'If you have questions about policies, payments, or purchase flows, reach us at info@khilon.com.'
-                                    : 'Politikalar, ödeme süreçleri veya satın alma akışı hakkında sorularınız varsa bize info@khilon.com üzerinden ulaşabilirsiniz.'}
+                                    ? 'If you have questions about policies, payments, or purchase flows, reach us at info@khilonfast.com.'
+                                    : 'Politikalar, ödeme süreçleri veya satın alma akışı hakkında sorularınız varsa bize info@khilonfast.com üzerinden ulaşabilirsiniz.'}
                             </p>
-                            <a href="mailto:info@khilon.com" className="legal-sidebar__cta">
-                                info@khilon.com
+                            <a href="mailto:info@khilonfast.com" className="legal-sidebar__cta">
+                                info@khilonfast.com
                             </a>
                         </div>
 
