@@ -59,6 +59,7 @@ app.get('/api/exchange-rate', async (req, res) => {
         res.status(500).json({ error: 'rate fetch failed' });
     }
 });
+app.use('/api/client-error', require('./routes/client-error'));
 app.use('/api/email-automation', emailAutomationRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/crm-public', crmPublicRoutes);

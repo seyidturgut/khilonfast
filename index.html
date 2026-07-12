@@ -30,6 +30,66 @@
 
 <body>
     <div id="root"></div>
+    <script>
+        /* Fatal JS hata yakalayıcı — React'ten ÖNCE, bilerek ES5 sözdiziminde.
+           Amaç: in-app WebView (Instagram vb.) beyaz sayfa şikayetlerinin gerçek
+           hata mesajını /api/client-error'a raporlamak. Eski motorlar modern
+           bundle'ı parse edemese bile BU script çalışır ve hatayı bildirir. */
+        (function () {
+            var sent = 0;
+            function report(payload) {
+                if (sent >= 3) return;
+                sent++;
+                try {
+                    payload.url = window.location.href;
+                    var body = JSON.stringify(payload);
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon('/api/client-error', new Blob([body], { type: 'application/json' }));
+                    } else {
+                        var x = new XMLHttpRequest();
+                        x.open('POST', '/api/client-error', true);
+                        x.setRequestHeader('Content-Type', 'application/json');
+                        x.send(body);
+                    }
+                } catch (e) { /* raporlama asla sayfayı bozmasın */ }
+            }
+            window.addEventListener('error', function (e) {
+                try {
+                    report({
+                        type: 'error',
+                        message: String(e.message || (e.error && e.error.message) || 'unknown'),
+                        source: String(e.filename || ''),
+                        line: e.lineno || 0,
+                        col: e.colno || 0,
+                        stack: String((e.error && e.error.stack) || '').slice(0, 2000)
+                    });
+                } catch (x) { }
+            });
+            window.addEventListener('unhandledrejection', function (e) {
+                try {
+                    var r = e.reason || {};
+                    report({
+                        type: 'unhandledrejection',
+                        message: String(r.message || r || 'unknown'),
+                        stack: String(r.stack || '').slice(0, 2000)
+                    });
+                } catch (x) { }
+            });
+            /* 6 sn watchdog: React hâlâ mount olmadıysa beyaz ekran var demektir —
+               raporla ve kullanıcıya beyaz ekran yerine yenile butonu göster. */
+            setTimeout(function () {
+                try {
+                    var root = document.getElementById('root');
+                    if (root && root.childNodes.length === 0) {
+                        report({ type: 'blank_screen', message: 'root empty after 6s' });
+                        root.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1a3a52;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:24px;box-sizing:border-box">'
+                            + '<div><p style="margin:0 0 16px;font-size:17px">Sayfa y&#252;klenirken bir sorun olu&#351;tu.</p>'
+                            + '<button onclick="window.location.reload()" style="background:#C5D63D;color:#1a3a52;border:none;font-weight:700;padding:12px 28px;border-radius:8px;font-size:15px">Yeniden Dene</button></div></div>';
+                    }
+                } catch (x) { }
+            }, 6000);
+        })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
 </body>
 

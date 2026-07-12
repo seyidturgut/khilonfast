@@ -133,6 +133,10 @@ switch ($controller) {
         // İletişim formu submit — public, admin'e mail
         require_once __DIR__ . '/routes/contact-submit.php';
         break;
+    case 'client-error':
+        // PUBLIC — tarayıcı fatal JS hata raporu (Instagram WebView beyaz sayfa debug)
+        require_once __DIR__ . '/routes/client-error.php';
+        break;
     case 'manual-bank-accounts':
         // PUBLIC — checkout için aktif manuel havale hesaplarını listeler
         require_once __DIR__ . '/routes/manual-bank-accounts.php';
