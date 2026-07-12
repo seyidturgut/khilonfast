@@ -73,10 +73,18 @@ interface CartProviderProps {
 
 export const CartProvider = ({ children }: CartProviderProps) => {
     const [items, setItems] = useState<CartItem[]>(() => {
-        const saved = localStorage.getItem('cart');
-        if (!saved) return [];
-        const parsed = JSON.parse(saved) as CartItem[];
-        return parsed.map((item) => ({ ...item, quantity: 1 }));
+        // SEO/reliability fix: localStorage can throw (Safari Private Mode,
+        // restricted in-app browser storage sandboxes) and a corrupted/legacy
+        // 'cart' value can fail JSON.parse — either would crash the whole app
+        // during React's render phase with no boundary to catch it (blank page).
+        try {
+            const saved = localStorage.getItem('cart');
+            if (!saved) return [];
+            const parsed = JSON.parse(saved) as CartItem[];
+            return parsed.map((item) => ({ ...item, quantity: 1 }));
+        } catch {
+            return [];
+        }
     });
 
     const [currencyConflict, setCurrencyConflict] = useState<CurrencyConflict | null>(null);
@@ -117,7 +125,11 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     }, [isEnLocale]);
 
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(items));
+        try {
+            localStorage.setItem('cart', JSON.stringify(items));
+        } catch {
+            // Storage unavailable/full (private mode, restricted in-app browser) — cart still works in-memory.
+        }
     }, [items]);
 
     /**
@@ -286,7 +298,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         if (!currencyConflict) return;
         if (replace) {
             const { pendingProduct } = currencyConflict;
-            localStorage.removeItem('cart');
+            try { localStorage.removeItem('cart'); } catch { /* storage unavailable */ }
             setItems([{ ...pendingProduct, quantity: 1 }]);
         }
         setCurrencyConflict(null);
