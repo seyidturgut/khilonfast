@@ -84,15 +84,29 @@ DirectorySlash Off
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule \.(png|jpg|jpeg|webp|avif|gif|svg|ico|css|js|mjs|map|pdf|zip|woff|woff2|ttf|eot|mp4|webm|mp3|wav|xml|txt|json)$ - [R=404,L]
 
-  # Bilinen fonksiyonel/oturum-gerekli SPA rotaları (prerender edilmez, içerik
-  # sayfası değildir) — bunlar index.html + 200 ile servis edilmeye devam eder.
+  # Bilinen fonksiyonel/oturum-gerekli SPA rotaları VE eski slug yönlendirme
+  # alias'ları (prerender edilmez, içerik sayfası değildir — src/App.tsx'teki
+  # TÜM route'lar scripts/extract-functional-routes.mjs ile taranıp prerender
+  # edilen dizinlerle karşılaştırılarak üretildi) — bunlar index.html + 200 ile
+  # servis edilmeye devam eder, React Router client-side çözer/yönlendirir.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(admin|dashboard|checkout|payment-callback|payment-success|giris|kayit-ol|login|register|sifre-belirle|set-password|unsubscribe|abonelikten-cik|onboarding-sunumu|onboarding-presentation|danismanlik-odeme|danismanlik/randevu|egitimllerim|elementor-696|hesabim)(/|$) /index.html [L]
+  RewriteRule ^(admin|dashboard|checkout|odeme|payment-callback|payment-success|giris|kayit-ol|login|register|sifre-belirle|set-password|unsubscribe|abonelikten-cik|onboarding-sunumu|onboarding-formu|onboarding-presentation|danismanlik-odeme|danismanlik/randevu|egitimllerim|elementor-696|hesabim|home|nasil-calisir|hizmetler|courses|b2b-pazarlama-stratejinizi-maestro-ai-ile-yonetin-copy|b2b-sektorunde-buyume-odakli-pazarlama-egitimi|endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi|endustriyel-gida-sektorunde-buyume-odakli-pazarlama-egitimi-copy|enerji-sektorunde-buyume-odakli-pazarlama-egitimi|filo-kiralama-sektorunde-buyume-odakli-pazarlama-egitimi|fintech-sektorunde-buyume-odakli-pazarlama-egitimi|odeme-sistemlerinde-buyume-odakli-pazarlama-egitimi|ofis-kurumsal-ic-tasarim-sektorunde-buyume-odakli-pazarlama-egitimi|teknoloji-yazilim-sektorunde-buyume-odakli-pazarlama-egitimi|uretim-sektorunde-buyume-odakli-pazarlama-egitimi)(/|$) /index.html [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^en/(dashboard|checkout|payment-callback|payment-success|login|register|egitimllerim)(/|$) /index.html [L]
+  RewriteRule ^en/(dashboard|checkout|payment-callback|payment-success|login|register|forgot-password|set-password|onboarding-form|onboarding-presentation|egitimllerim|unsubscribe)(/|$) /index.html [L]
+
+  # Veritabanı-tabanlı, prerender edilmeyen dinamik detay sayfaları (danışman
+  # profili, danışmanlık program id'si) — bunlar da index.html + 200 alıp
+  # client-side veri çekerek render olmaya devam etmeli.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(danismanlar|danismanlik)/[^/]+/?$ /index.html [L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^en/(consultants|consulting)/[^/]+/?$ /index.html [L]
 
   # Gerçek dosya/klasör varsa dokunma
   RewriteCond %{REQUEST_FILENAME} !-f
