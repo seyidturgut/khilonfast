@@ -27,7 +27,19 @@ const HeroBackgroundEffect: React.FC = () => {
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
         camera.position.z = isMobile ? 800 : 600;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        // WebGL bağlamı bazı ortamlarda (Meta/Instagram link-önizleme render botları,
+        // eski cihazlar, GPU-kısıtlı/headless WebView'ler) oluşturulamaz ve
+        // WebGLRenderer constructor "Error creating WebGL context." fırlatır.
+        // Bu effect'te yakalanmamış bir hata, error boundary yoksa React 18'de
+        // TÜM uygulamayı unmount eder → BEYAZ EKRAN. Reklamdan gelen kullanıcılar
+        // sayfayı hiç göremez. Bu yüzden guard'lıyoruz: WebGL yoksa efekti sessizce
+        // atla, sayfa (statik CSS arka planla) normal çalışmaya devam etsin.
+        let renderer: THREE.WebGLRenderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, failIfMajorPerformanceCaveat: false });
+        } catch (e) {
+            return;
+        }
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './i18n'
 import App from './App.tsx'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Build-time prerender (puppeteer) sırasında native fetch'i de stub'la — axios'u zaten api.ts'de halletim.
 // Prerender server'ında /api yok, sayfalar hang'lemesin diye boş response dön.
@@ -22,6 +23,8 @@ if (typeof window !== 'undefined' && (window as any).__PRERENDER__ === true) {
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <App />
+        <ErrorBoundary>
+            <App />
+        </ErrorBoundary>
     </StrictMode>,
 )
