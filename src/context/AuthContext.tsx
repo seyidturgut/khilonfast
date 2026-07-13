@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authAPI, clearApiCache } from '../services/api';
+import { safeGetItem, safeSetItem, safeRemoveItem } from '../utils/safeStorage';
 
 interface User {
     id: number;
@@ -47,7 +48,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+    const [token, setToken] = useState<string | null>(() => safeGetItem('token'));
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -80,7 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             clearApiCache();
             setToken(newToken);
             setUser(userData);
-            localStorage.setItem('token', newToken);
+            safeSetItem('token', newToken);
             return userData;
         } catch (error: any) {
             console.error('Login error:', error);
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             clearApiCache();
             setToken(newToken);
             setUser(userData);
-            localStorage.setItem('token', newToken);
+            safeSetItem('token', newToken);
         } catch (error: any) {
             console.error('Register error:', error);
             throw new Error(error.response?.data?.error || 'Registration failed');
@@ -119,7 +120,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             clearApiCache();
             setToken(newToken);
             setUser(userData);
-            localStorage.setItem('token', newToken);
+            safeSetItem('token', newToken);
         } catch (error: any) {
             console.error('Google login error:', error);
             throw new Error(error.response?.data?.error || 'Google ile giriş başarısız');
@@ -130,7 +131,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setLoading(true);
         clearApiCache();
         setToken(newToken);
-        localStorage.setItem('token', newToken);
+        safeSetItem('token', newToken);
         try {
             const response = await authAPI.getMe();
             setUser(response.data.user);
@@ -143,7 +144,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         clearApiCache();
         setUser(null);
         setToken(null);
-        localStorage.removeItem('token');
+        safeRemoveItem('token');
     };
 
     const value = {

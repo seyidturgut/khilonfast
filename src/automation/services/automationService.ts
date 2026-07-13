@@ -14,6 +14,7 @@ import type {
   AutomationEdge,
 } from '../types';
 import { validateAutomation } from '../utils/validation';
+import { safeGetItem } from '../../utils/safeStorage';
 
 // ─── Fetch helper ─────────────────────────────────────────────
 
@@ -21,7 +22,7 @@ async function apiFetch<T>(
   path: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const token = localStorage.getItem('token') ?? '';
+  const token = safeGetItem('token') ?? '';
   const res = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers: {

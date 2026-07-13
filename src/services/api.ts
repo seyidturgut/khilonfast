@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL, logApiTarget } from '../config/api';
+import { safeGetItem } from '../utils/safeStorage';
 
 logApiTarget();
 
@@ -63,7 +64,7 @@ api.interceptors.request.use(
             });
             return config;
         }
-        const token = localStorage.getItem('token');
+        const token = safeGetItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
