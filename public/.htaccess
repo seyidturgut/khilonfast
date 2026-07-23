@@ -108,6 +108,16 @@ DirectorySlash Off
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^en/(consultants|consulting)/[^/]+/?$ /index.html [L]
 
+  # ESKİ SLUG YÖNLENDİRME ALIAS'LARI — App.tsx'te <Navigate> ile karşılanan, PRERENDER
+  # EDİLMEYEN kök rotalar. Prerender klasörleri olmadığı için yukarıdaki -d kuralına
+  # takılmıyorlar; buraya yazılmazsa 404 döner ve eski linkler/reklamlar kırılır.
+  # (Sektörel olanlar "-icin-" ekli yeni slug'a yönlenir.)
+  # ÜRETİMİ: scripts/extract-functional-routes.mjs — TAM YOL karşılaştırması yapar,
+  # yalnız ilk segmente bakmak YANILTICI (klasör var sanılır, alt yol prerender değildir).
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(hizmetlerimiz/(buyume-odakli-pazarlama-egitimi|eye-tracking-reklam-analizi|maestro-ai)|sektorel-hizmetler/(b2b-360-pazarlama-yonetimi|endustriyel-gida-sef-cozumleri-firmalari-360-pazarlama-yonetimi|enerji-firmalari-360-pazarlama-yonetimi|filo-kiralama-firmalari-360-pazarlama-yonetimi|fintech-firmalari-360-pazarlama-yonetimi|odeme-sistemleri-firmalari-360-pazarlama-yonetimi|ofis-kurumsal-ic-tasarim-firmalari-360-pazarlama-yonetimi|teknoloji-yazilim-firmalari-360-pazarlama-yonetimi|uretim-firmalari-360-pazarlama-yonetimi))/?$ /index.html [L]
+
   # Gerçek dosya/klasör varsa dokunma
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
