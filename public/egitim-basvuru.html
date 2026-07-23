@@ -12,364 +12,566 @@
 <meta property="og:description" content="Sektörel büyüme odaklı pazarlama eğitim programları için başvuru formu.">
 <meta property="og:url" content="https://khilonfast.com/egitim-basvuru.html">
 <link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --primary:#C5D63D; --primary-dark:#aab835;
-    --navy:#1a3a52; --accent:#2d5570;
-    --bg:#ffffff; --bg-soft:#f6f8f3; --card:#ffffff;
-    --text:#1a1a1a; --muted:#5a6470; --line:#e6e9ee;
-    --radius:16px; --radius-lg:22px;
-    --shadow:0 1px 2px rgba(26,58,82,.04),0 12px 30px -12px rgba(26,58,82,.18);
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    --accent:#C7F24E; --accent-dark:#7a8f1e; --accent-tint:rgba(199,242,78,.14);
+    --ink:#121316; --cream:#F4F2EC; --muted:#6E6D68; --muted2:#9a988f;
+    --line:rgba(18,19,22,.08); --line2:rgba(18,19,22,.12);
+    --sg:'Space Grotesk',system-ui,sans-serif; --mn:'Manrope',system-ui,sans-serif;
   }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-  body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;
-    background-image:radial-gradient(at 12% 0%,rgba(197,214,61,.10) 0,transparent 45%),
-                     radial-gradient(at 92% 6%,rgba(26,58,82,.06) 0,transparent 40%);}
-  a{color:inherit}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
-  ::selection{background:var(--primary);color:var(--navy)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--mn);color:var(--ink);
+    background:radial-gradient(1200px 700px at 50% -8%,#f4f2ea,#e2dfd6);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  input,textarea{font-family:var(--mn)}
+  input:focus,textarea:focus{outline:none}
+  .scroll::-webkit-scrollbar{width:0;height:0}
+  .scroll{scrollbar-width:none}
+  @keyframes slideup{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes pop{0%{transform:scale(.5);opacity:0}62%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 
-  /* Header */
-  header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:20}
-  .hd{display:flex;align-items:center;padding:16px 0}
-  .brand{display:inline-flex;align-items:center}
-  .brand img{height:28px;width:auto;display:block}
+  /* App shell — mobil tam ekran, masaüstünde ortalı kolon */
+  .app{max-width:440px;margin:0 auto;background:var(--cream);min-height:100vh;position:relative;
+    display:flex;flex-direction:column;overflow:hidden}
+  @media(min-width:480px){
+    .app{min-height:92vh;margin:4vh auto;border-radius:34px;
+      box-shadow:0 44px 100px -34px rgba(18,19,22,.5),0 0 0 1px rgba(18,19,22,.05)}
+  }
+  .view{flex:1;padding-bottom:96px}
+  .screen{display:none}
+  .screen.active{display:block;animation:slideup .3s ease}
+  .pad{padding:14px 22px 22px}
 
-  /* Hero */
-  .hero{padding:38px 0 20px}
-  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;
-    border-radius:999px;padding:6px 14px;font-size:11.5px;letter-spacing:.6px;color:var(--accent);font-weight:600;text-transform:uppercase}
-  .pill i{width:7px;height:7px;border-radius:50%;background:var(--primary);display:inline-block}
-  h1{margin:18px 0 0;font-size:clamp(30px,7vw,52px);line-height:1.06;letter-spacing:-.02em;font-weight:800;color:var(--navy)}
-  h1 em{font-style:normal;color:var(--primary-dark)}
-  .lead{margin-top:16px;max-width:640px;color:var(--muted);font-size:clamp(15px,2.6vw,17px)}
+  /* Top bar (logo) */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 6px}
+  .topbar .logo{display:flex;align-items:baseline;gap:7px}
+  .topbar .logo b{font:700 21px var(--sg);letter-spacing:-.03em}
+  .topbar .logo s{font:600 10px var(--sg);color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+  .topbar .mark{width:40px;height:40px;border-radius:13px;background:var(--ink);display:flex;align-items:center;justify-content:center;font:700 17px var(--sg);color:var(--accent)}
 
-  /* Layout grid */
-  .grid{display:grid;gap:20px;padding:12px 0 40px}
-  @media(min-width:920px){.grid{grid-template-columns:1.35fr .9fr;gap:26px;align-items:start}}
+  /* Hero card (dark) */
+  .hero{background:var(--ink);border-radius:28px;padding:26px 23px 23px;color:#fff;position:relative;overflow:hidden}
+  .hero .glow{position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:var(--accent);opacity:.14;filter:blur(6px)}
+  .hero .kick{font:600 10.5px var(--sg);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:15px;position:relative}
+  .hero h1{font:600 28px/1.12 var(--sg);letter-spacing:-.025em;margin-bottom:12px;position:relative}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero p{font:400 14px/1.55 var(--mn);color:rgba(255,255,255,.65);margin-bottom:20px;position:relative}
+  .hero .badges{display:flex;gap:9px;margin-top:14px}
+  .hero .badges div{flex:1;text-align:center;padding:9px;border-radius:11px;background:rgba(255,255,255,.07);font:600 11.5px var(--sg);color:rgba(255,255,255,.82)}
 
-  /* Form card */
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
-  form.card{padding:22px}
-  @media(min-width:600px){form.card{padding:30px}}
-  .fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .fhead h2{font-size:19px;color:var(--navy);letter-spacing:-.01em}
-  .fhead .mins{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--primary-dark);
-    background:rgba(197,214,61,.16);padding:4px 9px;border-radius:999px}
-  .fields{display:grid;gap:15px}
-  @media(min-width:560px){.fields{grid-template-columns:1fr 1fr}}
-  .field{display:flex;flex-direction:column}
-  .field.full{grid-column:1/-1}
-  label,.lbl{font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-  input[type=text],input[type=email],input[type=tel],textarea{
-    width:100%;font-family:inherit;font-size:15px;color:var(--text);background:#fbfcf9;
-    border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;transition:.15s}
-  textarea{resize:vertical;min-height:84px}
-  input:focus,textarea:focus{border-color:var(--primary-dark);background:#fff;box-shadow:0 0 0 3px rgba(197,214,61,.18)}
-  input::placeholder,textarea::placeholder{color:#aab2ba}
+  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:16px;
+    background:var(--accent);color:var(--ink);font:700 15px var(--sg);cursor:pointer;border:none;
+    box-shadow:0 12px 26px -12px var(--accent);transition:.15s}
+  .cta:hover{filter:brightness(.97)}
+  .cta:active{transform:translateY(1px)}
 
-  /* Chip choices (radio + checkbox) */
-  .chips{display:grid;gap:9px;grid-template-columns:repeat(2,1fr)}
-  @media(min-width:560px){.chips.seats{grid-template-columns:repeat(4,1fr)}}
-  @media(min-width:560px){.chips.progs{grid-template-columns:repeat(3,1fr)}}
-  .chip{position:relative;cursor:pointer;border:1px solid var(--line);background:#fbfcf9;border-radius:12px;
-    padding:11px 12px;font-size:13.5px;color:#33404c;text-align:center;transition:.15s;user-select:none}
-  .chip:hover{border-color:var(--primary-dark)}
-  .chip input{position:absolute;opacity:0;inset:0;cursor:pointer}
-  .chip.on{border-color:var(--primary-dark);background:rgba(197,214,61,.16);color:var(--navy);font-weight:600}
-  .progs .chip{text-align:left;display:flex;align-items:center;gap:8px}
-  .progs .chip .dot{width:15px;height:15px;border-radius:5px;border:1.5px solid #c3ccbf;flex:0 0 auto;display:grid;place-items:center;transition:.15s}
-  .progs .chip.on .dot{background:var(--primary-dark);border-color:var(--primary-dark)}
-  .progs .chip.on .dot::after{content:"";width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+  .sect-title{font:700 13px var(--sg);color:var(--ink)}
 
-  /* KVKK + submit */
-  .consent{display:flex;flex-direction:column;gap:9px;margin-top:8px}
-  .consent-row{display:flex;align-items:flex-start;gap:10px;font-size:.85rem;line-height:1.5;color:#475569;
-    cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400}
-  .consent-row.etk{font-size:.8rem;color:#64748b}
-  .consent-row input{width:17px;height:17px;margin-top:2px;accent-color:var(--primary-dark);flex:0 0 auto}
-  .consent-row a{color:var(--accent);text-decoration:underline;font-weight:600}
-  .submit{width:100%;margin-top:6px;border:none;cursor:pointer;font-family:inherit;font-size:16px;font-weight:800;
-    color:var(--navy);background:var(--primary);border-radius:13px;padding:15px;transition:.15s;box-shadow:0 8px 20px -8px rgba(197,214,61,.7)}
-  .submit:hover{background:var(--primary-dark)}
-  .submit:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
-  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-  .msg{margin-top:14px;border-radius:12px;padding:13px 15px;font-size:14px;display:none}
-  .msg.ok{display:block;background:rgba(197,214,61,.14);border:1px solid var(--primary-dark);color:#4a5a12}
-  .msg.err{display:block;background:#fdecec;border:1px solid #f0b4b4;color:#a12a2a}
+  /* Why list */
+  .why{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+  .why .row{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .why .row:last-child{border-bottom:none}
+  .why .ck{width:26px;height:26px;border-radius:8px;background:var(--accent);flex:none;display:flex;align-items:center;justify-content:center;font:800 13px var(--sg);color:var(--ink)}
+  .why .row span{font:600 14px var(--mn);color:#2c2c2a}
 
-  /* Side info card */
-  .aside h3{font-size:17px;color:var(--navy);margin-bottom:8px}
-  .aside p{font-size:14px;color:var(--muted)}
-  .aside ul{list-style:none;margin-top:16px;display:grid;gap:11px}
-  .aside li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#33404c}
-  .aside li .ck{flex:0 0 auto;width:20px;height:20px;border-radius:6px;background:var(--primary);color:var(--navy);
-    display:grid;place-items:center;font-weight:900;font-size:12px}
-  .aside.card{padding:22px}
+  /* Row header with "see all" */
+  .rowhead{display:flex;align-items:center;justify-content:space-between;margin:26px 0 14px}
+  .rowhead .all{font:600 12px var(--sg);color:var(--muted);cursor:pointer}
 
-  /* Sections */
-  section.block{padding:14px 0 8px}
-  .shead{margin-bottom:16px}
-  .shead h2{font-size:clamp(22px,4.5vw,30px);color:var(--navy);letter-spacing:-.02em}
-  .shead p{color:var(--muted);font-size:15px;margin-top:6px;max-width:620px}
-  .progrid{display:grid;gap:14px;grid-template-columns:1fr}
-  @media(min-width:600px){.progrid{grid-template-columns:1fr 1fr}}
-  @media(min-width:920px){.progrid{grid-template-columns:1fr 1fr 1fr}}
-  .prog{border:1px solid var(--line);border-radius:var(--radius);padding:18px;background:#fff;transition:.15s}
-  .prog:hover{border-color:var(--primary-dark);transform:translateY(-2px);box-shadow:var(--shadow)}
-  .prog h4{font-size:16px;color:var(--navy);margin-bottom:6px}
-  .prog p{font-size:13.5px;color:var(--muted)}
-  .prog .kbd{display:inline-block;width:30px;height:30px;border-radius:8px;background:rgba(197,214,61,.16);
-    color:var(--primary-dark);font-weight:900;display:grid;place-items:center;margin-bottom:12px;font-size:14px}
+  /* Popular horizontal cards */
+  .hscroll{display:flex;gap:12px;overflow-x:auto;margin:0 -22px;padding:2px 22px 4px}
+  .pcard{flex:none;width:152px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:16px;cursor:pointer;transition:.15s}
+  .pcard:hover{border-color:var(--accent-dark)}
+  .badge{width:42px;height:42px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;font:700 16px var(--sg);background:var(--accent-tint);color:var(--ink)}
+  .pcard .name{font:700 15px var(--sg);color:var(--ink);margin:13px 0 5px;letter-spacing:-.01em}
+  .pcard .tag{font:600 11px var(--sg);color:var(--muted2);letter-spacing:.08em}
+
+  .ghost{margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;
+    border-radius:16px;background:#fff;border:1.5px solid var(--line2);font:700 14px var(--sg);color:var(--ink);cursor:pointer;transition:.15s}
+  .ghost:hover{border-color:var(--accent-dark)}
+
+  /* Eyebrow + big title (programs/faq) */
+  .eyebrow{font:600 10.5px var(--sg);letter-spacing:.18em;color:var(--muted2);text-transform:uppercase;margin:8px 0 8px}
+  .big{font:600 27px/1.1 var(--sg);letter-spacing:-.025em;color:var(--ink);margin-bottom:6px}
+  .sub{font:400 13.5px/1.5 var(--mn);color:var(--muted);margin-bottom:20px}
+
+  /* Programs list */
+  .plist{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:14px;margin-bottom:11px;cursor:pointer;transition:.15s}
+  .plist:hover{border-color:var(--accent-dark)}
+  .plist .info{flex:1;min-width:0}
+  .plist .info .name{font:700 15px var(--sg);color:var(--ink);letter-spacing:-.01em;margin-bottom:3px}
+  .plist .info .desc{font:500 12.5px/1.4 var(--mn);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .plist .arw{font:600 18px var(--sg);color:#c3c1b8;flex:none}
+
+  /* Detail */
+  .back{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--sg);color:var(--muted);margin:6px 0 20px;cursor:pointer}
+  .detail-tag{font:600 10.5px var(--sg);letter-spacing:.16em;color:var(--accent-dark);text-transform:uppercase;margin-bottom:10px}
+  .detail-name{font:600 29px/1.08 var(--sg);letter-spacing:-.03em;color:var(--ink);margin-bottom:13px}
+  .detail-desc{font:400 15px/1.6 var(--mn);color:#4a4a48;margin-bottom:18px}
+  .meta{display:flex;gap:8px;margin-bottom:26px;flex-wrap:wrap}
+  .meta div{padding:8px 12px;border-radius:10px;background:#fff;border:1px solid var(--line2);font:600 11.5px var(--sg);color:#3a3b40}
+  .mod{display:flex;gap:13px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+  .mod .n{width:26px;height:26px;border-radius:8px;background:var(--accent);flex:none;display:flex;align-items:center;justify-content:center;font:800 12px var(--sg);color:var(--ink)}
+  .mod span{font:600 14px/1.35 var(--mn);color:#2c2c2a;padding-top:3px}
+
+  /* Form */
+  .fh{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+  .fh .t{font:600 26px var(--sg);letter-spacing:-.025em}
+  .fh .min{padding:7px 11px;border-radius:20px;background:var(--ink);color:#fff;font:600 11px var(--sg);white-space:nowrap}
+  .banner{margin:12px 0;padding:13px 15px;border-radius:13px;background:#fdeeeb;border:1px solid #f4c9c0;font:600 12.5px var(--mn);color:#c0392b;display:none}
+  .banner.show{display:block}
+  .step{margin:24px 0 14px;display:flex;align-items:center;gap:10px}
+  .step .no{font:700 11px var(--sg);color:var(--accent-dark);letter-spacing:.1em}
+  .step .lb{font:700 13px var(--sg);color:var(--ink)}
+  .step .opt{font:500 11px var(--mn);color:var(--muted2)}
+  .step .ln{flex:1;height:1px;background:var(--line2)}
+  .fld{margin-bottom:14px}
+  .fld label{display:block;font:600 12px var(--sg);color:var(--muted);margin-bottom:7px}
+  .fld input,.fld textarea{width:100%;padding:14px 15px;border:1.5px solid var(--line2);border-radius:14px;background:#fff;font:500 15px var(--mn);color:var(--ink);transition:.15s}
+  .fld textarea{min-height:88px;resize:none;font:500 14px/1.5 var(--mn)}
+  .fld input:focus,.fld textarea:focus{border-color:var(--ink)}
+  .fld .err{color:#c0392b;font:600 11px var(--mn);margin-top:5px;display:none}
+  .fld.invalid .err{display:block}
+  .fld.invalid input{border-color:#e2a9a0}
+  .two{display:flex;gap:11px}
+  .two>.fld{flex:1}
+
+  .parts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .part{display:flex;align-items:center;justify-content:center;text-align:center;padding:15px 8px;border-radius:14px;cursor:pointer;transition:.15s;
+    font:600 14px var(--sg);background:#fff;border:1.5px solid var(--line2);color:#3a3b40}
+  .part:hover{border-color:var(--accent-dark)}
+  .part.on{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+
+  .chips{display:flex;flex-direction:column;gap:9px}
+  .chip{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:14px;cursor:pointer;transition:.15s;
+    font:600 14px var(--sg);background:#fff;border:1.5px solid var(--line);color:#3a3b40}
+  .chip:hover{border-color:var(--accent-dark)}
+  .chip .box{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;font:800 12px var(--sg);color:var(--ink);transition:.15s;background:transparent;border:1.5px solid rgba(18,19,22,.25)}
+  .chip .box i{display:none;font-style:normal}
+  .chip.on{background:var(--accent-tint);border-color:var(--accent);color:var(--ink)}
+  .chip.on .box{background:var(--accent);border-color:var(--accent)}
+  .chip.on .box i{display:block}
+
+  .consents{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+  .cons{display:flex;gap:12px;cursor:pointer}
+  .cons .box{width:24px;height:24px;border-radius:8px;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;font:800 13px var(--sg);color:var(--ink);transition:.15s;background:#fff;border:1.5px solid rgba(18,19,22,.22)}
+  .cons .box i{display:none;font-style:normal}
+  .cons.on .box{background:var(--accent);border-color:var(--accent)}
+  .cons.on .box i{display:block}
+  .cons span{font:500 12.5px/1.45 var(--mn);color:#4a4a48}
+  .cons span b{color:var(--ink)}
+  .cons span a{color:var(--ink);font-weight:700;text-decoration:underline}
+  .cons-err{color:#c0392b;font:600 11px var(--mn);margin:-8px 0 0 36px;display:none}
+  .cons-err.show{display:block}
+
+  /* Sticky CTA bar (form/detail) */
+  .sticky{position:sticky;bottom:0;padding:16px 22px 22px;background:linear-gradient(to top,var(--cream) 72%,rgba(244,242,236,0));z-index:5}
+
+  /* Success */
+  .success{padding:30px 24px 40px;display:flex;flex-direction:column;align-items:center;text-align:center}
+  .success .tick{width:92px;height:92px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font:700 42px var(--sg);color:var(--ink);margin:22px 0 26px;animation:pop .5s cubic-bezier(.2,.8,.2,1)}
+  .success h2{font:600 27px/1.1 var(--sg);letter-spacing:-.025em;margin-bottom:12px}
+  .success p{font:400 14.5px/1.55 var(--mn);color:#5a5a57;margin:0 0 28px;max-width:280px}
+  .summary{width:100%;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;text-align:left;margin-bottom:24px}
+  .summary .r{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .summary .r:last-child{border-bottom:none}
+  .summary .r .k{font:600 13px var(--mn);color:var(--muted2)}
+  .summary .r .v{font:600 13px var(--sg);color:var(--ink);text-align:right}
+  .linkbtn{margin-top:12px;font:600 13px var(--sg);color:var(--muted);cursor:pointer;padding:8px}
 
   /* FAQ */
-  .faq{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
-  .faq details{border-bottom:1px solid var(--line)}
-  .faq details:last-child{border-bottom:none}
-  .faq summary{list-style:none;cursor:pointer;padding:16px 18px;font-weight:600;color:var(--navy);font-size:15px;
-    display:flex;justify-content:space-between;align-items:center;gap:12px}
-  .faq summary::-webkit-details-marker{display:none}
-  .faq summary .pm{flex:0 0 auto;width:24px;height:24px;border-radius:7px;background:rgba(197,214,61,.16);
-    color:var(--primary-dark);display:grid;place-items:center;font-size:18px;font-weight:700;transition:.2s}
-  .faq details[open] summary .pm{transform:rotate(45deg)}
-  .faq .ans{padding:0 18px 16px;color:var(--muted);font-size:14px}
+  .faq{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:11px;overflow:hidden}
+  .faq .q{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer}
+  .faq .q .txt{flex:1;font:700 14px/1.35 var(--sg);color:var(--ink)}
+  .faq .q .sign{width:26px;height:26px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font:700 17px var(--sg);background:rgba(18,19,22,.06);color:var(--ink);transition:.2s}
+  .faq.open .q .sign{background:var(--accent)}
+  .faq .a{padding:0 16px 16px;font:400 13.5px/1.55 var(--mn);color:#5a5a57;display:none}
+  .faq.open .a{display:block}
+  .faq-cta{margin-top:20px;background:var(--ink);border-radius:20px;padding:22px;text-align:center}
+  .faq-cta h3{font:600 16px var(--sg);color:#fff;margin-bottom:6px}
+  .faq-cta p{font:400 13px/1.5 var(--mn);color:rgba(255,255,255,.62);margin:0 0 16px}
 
-  footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;color:var(--muted);font-size:13px}
-  .footin{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+  /* Bottom nav */
+  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(440px,100%);
+    background:rgba(244,242,236,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    padding:9px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-around;z-index:20}
+  @media(min-width:480px){.nav{bottom:4vh;border-radius:0 0 34px 34px}}
+  .nav.hidden{display:none}
+  .nav a{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;flex:1;padding-top:5px}
+  .nav a .dot{width:36px;height:26px;border-radius:9px;transition:.2s;background:rgba(18,19,22,.07)}
+  .nav a .lb{font:600 11px var(--sg);color:var(--muted2)}
+  .nav a.on .dot{background:var(--accent)}
+  .nav a.on .lb{font-weight:700;color:var(--ink)}
+
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 </style>
 </head>
 <body>
+<div class="app">
+  <div class="view scroll" id="view">
 
-<header>
-  <div class="wrap hd">
-    <a href="https://khilonfast.com" class="brand" aria-label="khilonfast"><img src="/fast-logo-big.svg" alt="khilonfast" width="150" height="28"></a>
-  </div>
-</header>
-
-<main>
-  <!-- HERO -->
-  <section class="wrap hero">
-    <h1>Sektöre özel <em>büyüme odaklı pazarlama</em> eğitimleri.</h1>
-    <p class="lead">B2B, fintech, üretim, enerji ve 9 sektöre özel tasarlanmış online pazarlama eğitim programları.
-      Dijital platform üzerinden istediğiniz zaman erişip kendi hızınızda ilerleyin. Aşağıdaki formu doldurarak size uygun eğitim akışını talep edin.</p>
-  </section>
-
-  <!-- FORM + ASIDE -->
-  <section class="wrap grid">
-    <form class="card" id="applyForm" novalidate>
-      <div class="fhead">
-        <h2>Eğitim başvuru formu</h2>
-        <span class="mins">2 dk</span>
+    <!-- ══ HOME ══ -->
+    <section class="screen active" id="s-home">
+      <div class="topbar">
+        <a href="https://khilonfast.com" class="logo"><b>khilonfast</b><s>Academy</s></a>
+        <div class="mark">f</div>
       </div>
-
-      <div class="fields">
-        <div class="field">
-          <label for="fullName">Ad Soyad</label>
-          <input type="text" id="fullName" name="fullName" autocomplete="name" maxlength="120" required>
-        </div>
-        <div class="field">
-          <label for="role">Ünvan / Rol</label>
-          <input type="text" id="role" name="role" autocomplete="organization-title" maxlength="120">
-        </div>
-        <div class="field">
-          <label for="company">Firma</label>
-          <input type="text" id="company" name="company" autocomplete="organization" maxlength="160">
-        </div>
-        <div class="field">
-          <label for="phone">Telefon</label>
-          <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="40" placeholder="05xx xxx xx xx">
-        </div>
-        <div class="field full">
-          <label for="email">E-posta</label>
-          <input type="email" id="email" name="email" autocomplete="email" maxlength="200" required>
-        </div>
-
-        <div class="field full">
-          <span class="lbl">Katılımcı sayısı</span>
-          <div class="chips seats" id="seats">
-            <label class="chip"><input type="radio" name="seats" value="1 kişi">1 kişi</label>
-            <label class="chip"><input type="radio" name="seats" value="2 - 5 kişi">2 - 5 kişi</label>
-            <label class="chip"><input type="radio" name="seats" value="6 - 15 kişi">6 - 15 kişi</label>
-            <label class="chip"><input type="radio" name="seats" value="15+ kişi">15+ kişi</label>
+      <div class="pad" style="padding-top:4px">
+        <div class="hero">
+          <div class="glow"></div>
+          <div class="kick">9 sektöre özel</div>
+          <h1>Büyüme odaklı <em>pazarlama</em> eğitimleri.</h1>
+          <p>B2B, fintech, üretim, enerji ve 9 sektöre özel online programlar. Kendi hızınızda ilerleyin.</p>
+          <button class="cta" data-go="form">Başvuruya başla →</button>
+          <div class="badges">
+            <div>⏱ 2 dk başvuru</div>
+            <div>◆ Sertifikalı</div>
           </div>
         </div>
 
-        <div class="field full">
-          <span class="lbl">İlgilendiğiniz eğitim programları</span>
-          <div class="chips progs" id="progs">
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Ödeme Sistemleri">Ödeme Sistemleri</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="B2B">B2B</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Fintech">Fintech</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Teknoloji & Yazılım">Teknoloji & Yazılım</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Üretim">Üretim</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Enerji">Enerji</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Ofis & Kurumsal İç Tasarım">Ofis & Kurumsal İç Tasarım</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Filo Kiralama">Filo Kiralama</label>
-            <label class="chip"><span class="dot"></span><input type="checkbox" name="programs" value="Endüstriyel Gıda">Endüstriyel Gıda</label>
+        <div class="sect-title" style="margin:24px 0 8px">Neden khilonfast Academy?</div>
+        <div class="why">
+          <div class="row"><div class="ck">✓</div><span>Sektöre özel içerik</span></div>
+          <div class="row"><div class="ck">✓</div><span>Kendi hızında online erişim</span></div>
+          <div class="row"><div class="ck">✓</div><span>Uygulamalı satış hunisi &amp; ölçümleme</span></div>
+        </div>
+
+        <div class="rowhead">
+          <div class="sect-title">Popüler programlar</div>
+          <div class="all" data-go="programs">Tümü →</div>
+        </div>
+        <div class="hscroll" id="popular"></div>
+
+        <button class="ghost" data-go="programs">Tüm 9 programı gör</button>
+      </div>
+    </section>
+
+    <!-- ══ PROGRAMS ══ -->
+    <section class="screen" id="s-programs">
+      <div class="pad" style="padding-top:8px">
+        <div class="eyebrow">9 SEKTÖR</div>
+        <div class="big">Sektörel programlar</div>
+        <p class="sub">Büyüme odaklı pazarlama eğitim akışları. Bir programa dokunun.</p>
+        <div id="programsList"></div>
+      </div>
+    </section>
+
+    <!-- ══ DETAIL ══ -->
+    <section class="screen" id="s-detail">
+      <div class="pad" style="padding-top:8px">
+        <div class="back" data-go="programs">← Programlar</div>
+        <div class="detail-tag" id="d-tag"></div>
+        <div class="detail-name" id="d-name"></div>
+        <p class="detail-desc" id="d-desc"></p>
+        <div class="meta"><div>6 modül</div><div>~4 saat</div><div>Sertifika</div></div>
+        <div class="sect-title" style="margin-bottom:6px">Program içeriği</div>
+        <div id="d-modules"></div>
+      </div>
+      <div class="sticky"><button class="cta" id="d-apply">Bu programa başvur →</button></div>
+    </section>
+
+    <!-- ══ FORM ══ -->
+    <section class="screen" id="s-form">
+      <form id="applyForm" novalidate>
+        <div class="pad" style="padding-top:8px;padding-bottom:8px">
+          <div class="back" data-go="home">← Ana sayfa</div>
+          <div class="fh"><div class="t">Başvuru formu</div><div class="min">⏱ 2 dk</div></div>
+          <p class="sub" style="margin-bottom:8px">Size uygun eğitim akışını hazırlayalım.</p>
+        </div>
+
+        <div style="padding:0 22px 8px">
+          <div class="banner" id="banner">Lütfen zorunlu alanları ve gizlilik onayını tamamlayın.</div>
+
+          <div class="step"><span class="no">01</span><span class="lb">Kişisel bilgiler</span><div class="ln"></div></div>
+
+          <div class="fld" id="fld-name">
+            <label for="f-name">Ad Soyad *</label>
+            <input id="f-name" type="text" autocomplete="name" maxlength="120" placeholder="Adınız ve soyadınız">
+            <div class="err">Bu alan zorunlu</div>
+          </div>
+          <div class="fld">
+            <label for="f-role">Ünvan / Rol</label>
+            <input id="f-role" type="text" autocomplete="organization-title" maxlength="120" placeholder="Örn. Pazarlama Müdürü">
+          </div>
+          <div class="fld">
+            <label for="f-company">Firma</label>
+            <input id="f-company" type="text" autocomplete="organization" maxlength="160" placeholder="Şirket adı">
+          </div>
+          <div class="two">
+            <div class="fld" id="fld-phone">
+              <label for="f-phone">Telefon *</label>
+              <input id="f-phone" type="tel" autocomplete="tel" maxlength="40" placeholder="05xx xxx xx xx">
+              <div class="err">Zorunlu</div>
+            </div>
+          </div>
+          <div class="fld" id="fld-email">
+            <label for="f-email">E-posta *</label>
+            <input id="f-email" type="email" autocomplete="email" maxlength="200" placeholder="ad@firma.com">
+            <div class="err">Geçerli e-posta giriniz</div>
+          </div>
+
+          <div class="step"><span class="no">02</span><span class="lb">Katılımcı sayısı</span><div class="ln"></div></div>
+          <div class="parts" id="parts">
+            <div class="part" data-part="1 kişi">1 kişi</div>
+            <div class="part" data-part="2 - 5 kişi">2 - 5 kişi</div>
+            <div class="part" data-part="6 - 15 kişi">6 - 15 kişi</div>
+            <div class="part" data-part="15+ kişi">15+ kişi</div>
+          </div>
+
+          <div class="step"><span class="no">03</span><span class="lb">İlgilendiğiniz programlar</span><div class="ln"></div></div>
+          <div class="chips" id="chips"></div>
+
+          <div class="step"><span class="no">04</span><span class="lb">Notunuz</span><span class="opt">opsiyonel</span><div class="ln"></div></div>
+          <textarea id="f-note" class="" maxlength="1200" placeholder="Eklemek istedikleriniz..." style="width:100%;min-height:88px;resize:none;padding:14px 15px;border:1.5px solid var(--line2);border-radius:14px;background:#fff;font:500 14px/1.5 var(--mn);color:var(--ink)"></textarea>
+
+          <div class="hp" aria-hidden="true"><input type="text" id="f-website" tabindex="-1" autocomplete="off"></div>
+
+          <div class="consents">
+            <div class="cons" id="cons1">
+              <div class="box"><i>✓</i></div>
+              <span><a href="https://khilonfast.com/gizlilik-politikasi" target="_blank" rel="noopener noreferrer">Gizlilik Politikası</a>'nı okudum ve kabul ediyorum. *</span>
+            </div>
+            <div class="cons-err" id="cons-err">Devam etmek için gerekli</div>
+            <div class="cons" id="cons2">
+              <div class="box"><i>✓</i></div>
+              <span>khilonfast'tan e-posta, SMS ve telefon üzerinden güncelleme ve pazarlama iletişimi almayı kabul ediyorum.</span>
+            </div>
           </div>
         </div>
 
-        <div class="field full">
-          <label for="note">Notunuz (opsiyonel)</label>
-          <textarea id="note" name="note" maxlength="1200" placeholder="Eklemek istedikleriniz..."></textarea>
+        <div class="sticky"><button type="submit" class="cta" id="submitBtn">Başvuruyu Gönder →</button></div>
+      </form>
+    </section>
+
+    <!-- ══ SUCCESS ══ -->
+    <section class="screen" id="s-success">
+      <div class="success">
+        <div class="tick">✓</div>
+        <h2>Başvurun alındı!</h2>
+        <p id="su-msg">Teşekkürler. Ekibimiz size uygun eğitim akışını hazırlayıp en kısa sürede dönüş yapacak.</p>
+        <div class="summary">
+          <div class="r"><span class="k">Ad Soyad</span><span class="v" id="su-name">—</span></div>
+          <div class="r"><span class="k">Katılımcı</span><span class="v" id="su-part">Belirtilmedi</span></div>
+          <div class="r"><span class="k">Programlar</span><span class="v" id="su-prog">Genel</span></div>
+        </div>
+        <button class="cta" data-go="programs">Programları keşfet →</button>
+        <div class="linkbtn" id="su-reset">Ana sayfaya dön</div>
+      </div>
+    </section>
+
+    <!-- ══ FAQ ══ -->
+    <section class="screen" id="s-faq">
+      <div class="pad" style="padding-top:8px">
+        <div class="eyebrow">DESTEK</div>
+        <div class="big" style="margin-bottom:20px">Sık sorulan sorular</div>
+        <div id="faqList"></div>
+        <div class="faq-cta">
+          <h3>Hâlâ soru mu var?</h3>
+          <p>Başvuru formunu doldurun, ekibimiz size ulaşsın.</p>
+          <button class="cta" data-go="form">Başvuru yap →</button>
         </div>
       </div>
+    </section>
 
-      <!-- honeypot -->
-      <div class="hp" aria-hidden="true"><label>Web sitesi<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-
-      <div class="consent">
-        <label class="consent-row">
-          <input type="checkbox" id="kvkk" required>
-          <span><a href="https://khilonfast.com/gizlilik-politikasi" target="_blank" rel="noopener noreferrer">Gizlilik Politikası</a>'nı okudum ve kabul ediyorum.</span>
-        </label>
-        <label class="consent-row etk">
-          <input type="checkbox" id="etk">
-          <span>Khilonfast'tan e-posta, SMS, telefon ve benzeri iletişim kanalları üzerinden güncellemeler, eğitim içerikleri, ürün duyuruları, webinar davetleri, pazarlama iletişimi ve promosyon mesajları almayı kabul ediyorum.</span>
-        </label>
-      </div>
-
-      <button type="submit" class="submit" id="submitBtn" style="margin-top:16px">Başvuruyu Gönder →</button>
-      <div class="msg" id="formMsg" role="status" aria-live="polite"></div>
-    </form>
-
-    <aside class="card aside">
-      <h3>khilonfast Academy nedir?</h3>
-      <p>9 sektöre özel tasarlanmış online pazarlama eğitim programları. Satın alma sonrası dijital platform üzerinden istediğiniz zaman erişip kendi hızınızda ilerleyebilirsiniz.</p>
-      <ul>
-        <li><span class="ck">✓</span> Sektöre özel içerik</li>
-        <li><span class="ck">✓</span> Kendi hızında online erişim</li>
-        <li><span class="ck">✓</span> Uygulamalı satış hunisi &amp; ölçümleme</li>
-      </ul>
-    </aside>
-  </section>
-
-  <!-- PROGRAMLAR -->
-  <section class="wrap block">
-    <div class="shead">
-      <h2>Sektörel eğitim programları</h2>
-      <p>9 farklı sektör için hazırlanmış büyüme odaklı pazarlama eğitim akışları.</p>
-    </div>
-    <div class="progrid">
-      <div class="prog"><div class="kbd">1</div><h4>Ödeme Sistemleri</h4><p>Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.</p></div>
-      <div class="prog"><div class="kbd">2</div><h4>B2B</h4><p>B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti.</p></div>
-      <div class="prog"><div class="kbd">3</div><h4>Fintech</h4><p>Fintech odaklı büyüme stratejileri ve kanal optimizasyonu.</p></div>
-      <div class="prog"><div class="kbd">4</div><h4>Teknoloji &amp; Yazılım</h4><p>SaaS ve teknoloji markaları için performans odaklı içerik.</p></div>
-      <div class="prog"><div class="kbd">5</div><h4>Üretim</h4><p>Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi.</p></div>
-      <div class="prog"><div class="kbd">6</div><h4>Enerji</h4><p>Enerji sektöründe karar verici odaklı pazarlama planlama.</p></div>
-      <div class="prog"><div class="kbd">7</div><h4>Ofis &amp; Kurumsal İç Tasarım</h4><p>Kurumsal iç tasarımda tekliften satışa pazarlama modeli.</p></div>
-      <div class="prog"><div class="kbd">8</div><h4>Filo Kiralama</h4><p>Filo kiralamada lead kalitesi ve dönüşüm yönetimi eğitimi.</p></div>
-      <div class="prog"><div class="kbd">9</div><h4>Endüstriyel Gıda</h4><p>Endüstriyel gıdaya özel büyüme odaklı pazarlama akışı.</p></div>
-    </div>
-  </section>
-
-  <!-- SSS -->
-  <section class="wrap block">
-    <div class="shead"><h2>Sık sorulan sorular</h2></div>
-    <div class="faq">
-      <details>
-        <summary>khilonfast Academy eğitim programları kimler içindir?<span class="pm">+</span></summary>
-        <div class="ans">Pazarlama, satış ve büyüme süreçlerinden sorumlu ekiplere, işletme sahiplerine ve kariyerinde ilerlemek isteyen pazarlama profesyonellerine yöneliktir. Her program belirli bir sektöre özel tasarlanmıştır.</div>
-      </details>
-      <details>
-        <summary>Eğitimler online mı, canlı mı yapılıyor?<span class="pm">+</span></summary>
-        <div class="ans">Eğitimlere satın alma sonrası dijital platform üzerinden istediğiniz zaman erişebilir, kendi hızınızda ilerleyebilirsiniz.</div>
-      </details>
-      <details>
-        <summary>Eğitim içeriğine ne kadar süre erişimim olur?<span class="pm">+</span></summary>
-        <div class="ans">Erişim süresi programa göre değişir; satın alma sonrası hesabınızdan içeriklere erişim ve süre bilgisine ulaşabilirsiniz.</div>
-      </details>
-      <details>
-        <summary>Hangi sektörlere özel eğitim programı var?<span class="pm">+</span></summary>
-        <div class="ans">Ödeme sistemleri, B2B, fintech, teknoloji, üretim, enerji, ofis &amp; kurumsal iç tasarım, filo kiralama ve endüstriyel gıda sektörlerine özel programlarımız bulunuyor.</div>
-      </details>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="wrap footin">
-    <span>© <span id="yr">2026</span> khilonfast Academy — Eğitim Programları</span>
-    <a href="https://khilonfast.com">khilonfast.com</a>
   </div>
-</footer>
+
+  <!-- Bottom nav -->
+  <nav class="nav" id="nav">
+    <a data-go="home"   data-nav="home"><span class="dot"></span><span class="lb">Ana Sayfa</span></a>
+    <a data-go="programs" data-nav="programs"><span class="dot"></span><span class="lb">Programlar</span></a>
+    <a data-go="faq"    data-nav="faq"><span class="dot"></span><span class="lb">SSS</span></a>
+  </nav>
+</div>
 
 <script>
 (function(){
   var ENDPOINT = "/api/crm-public/form/egitim-basvurusu/submit";
-  document.getElementById('yr').textContent = new Date().getFullYear();
 
-  // Chip görsel durumu
-  function syncChips(container){
-    container.querySelectorAll('.chip').forEach(function(chip){
-      var inp = chip.querySelector('input');
-      chip.classList.toggle('on', inp.checked);
+  var PROGRAMS = [
+    {n:1,name:'Ödeme Sistemleri',tag:'PAYMENTS',desc:'Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.'},
+    {n:2,name:'B2B',tag:'B2B',desc:'B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti.'},
+    {n:3,name:'Fintech',tag:'FINTECH',desc:'Fintech odaklı büyüme stratejileri ve kanal optimizasyonu.'},
+    {n:4,name:'Teknoloji & Yazılım',tag:'SAAS',desc:'SaaS ve teknoloji markaları için performans odaklı içerik.'},
+    {n:5,name:'Üretim',tag:'MANUFACTURING',desc:'Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi.'},
+    {n:6,name:'Enerji',tag:'ENERGY',desc:'Enerji sektöründe karar verici odaklı pazarlama planlama.'},
+    {n:7,name:'Ofis & Kurumsal İç Tasarım',tag:'INTERIORS',desc:'Kurumsal iç tasarımda tekliften satışa pazarlama modeli.'},
+    {n:8,name:'Filo Kiralama',tag:'FLEET',desc:'Filo kiralamada lead kalitesi ve dönüşüm yönetimi eğitimi.'},
+    {n:9,name:'Endüstriyel Gıda',tag:'FOOD',desc:'Endüstriyel gıdaya özel büyüme odaklı pazarlama akışı.'},
+  ];
+  var MODULES = [
+    'Değer önerisi & sektörel konumlandırma',
+    'İdeal müşteri profili & mesaj haritası',
+    'Satış hunisi kurulumu ve içerik akışı',
+    'Kanal seçimi & performans optimizasyonu',
+    'Ölçümleme, raporlama ve iterasyon',
+  ];
+  var FAQ = [
+    {q:'Bu programlar kimler için?',a:'Pazarlama, satış ve büyümeden sorumlu ekiplere, işletme sahiplerine ve kariyerinde ilerlemek isteyen pazarlama profesyonellerine yöneliktir. Her program belirli bir sektöre özel tasarlanmıştır.'},
+    {q:'Eğitimler online mı, canlı mı?',a:'Satın alma sonrası dijital platform üzerinden istediğiniz zaman erişebilir, kendi hızınızda ilerleyebilirsiniz.'},
+    {q:'İçeriğe ne kadar süre erişebilirim?',a:'Erişim süresi programa göre değişir; satın alma sonrası hesabınızdan içeriklere ve süre bilgisine ulaşabilirsiniz.'},
+    {q:'Hangi sektörlere özel program var?',a:'Ödeme sistemleri, B2B, fintech, teknoloji, üretim, enerji, ofis & kurumsal iç tasarım, filo kiralama ve endüstriyel gıda.'},
+  ];
+
+  var $  = function(s,r){ return (r||document).querySelector(s); };
+  var el = function(tag,cls,html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; };
+  var esc= function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+
+  var state = { screen:'home', detail:0, participants:'', selected:{}, c1:false, c2:false };
+  var view = $('#view'), nav = $('#nav');
+
+  function top(){ requestAnimationFrame(function(){ view.scrollTop=0; }); }
+  function go(s){
+    state.screen=s;
+    document.querySelectorAll('.screen').forEach(function(sec){ sec.classList.remove('active'); });
+    $('#s-'+s).classList.add('active');
+    var showNav = (s==='home'||s==='programs'||s==='faq');
+    nav.classList.toggle('hidden', !showNav);
+    document.querySelectorAll('.nav a').forEach(function(a){ a.classList.toggle('on', a.getAttribute('data-nav')===s); });
+    top();
+  }
+
+  // data-go handlers
+  document.querySelectorAll('[data-go]').forEach(function(node){
+    node.addEventListener('click', function(){ go(node.getAttribute('data-go')); });
+  });
+
+  // Popular (first 4) + full list
+  var pop=$('#popular'), list=$('#programsList');
+  PROGRAMS.forEach(function(p,i){
+    if(i<4){
+      var c=el('div','pcard','<div class="badge">'+p.n+'</div><div class="name">'+esc(p.name)+'</div><div class="tag">'+esc(p.tag)+'</div>');
+      c.addEventListener('click',function(){ openDetail(i); });
+      pop.appendChild(c);
+    }
+    var r=el('div','plist','<div class="badge">'+p.n+'</div><div class="info"><div class="name">'+esc(p.name)+'</div><div class="desc">'+esc(p.desc)+'</div></div><div class="arw">→</div>');
+    r.addEventListener('click',function(){ openDetail(i); });
+    list.appendChild(r);
+  });
+
+  // Detail
+  function openDetail(i){
+    state.detail=i; var p=PROGRAMS[i];
+    $('#d-tag').textContent = p.tag+' · PROGRAM '+p.n;
+    $('#d-name').textContent = p.name;
+    $('#d-desc').textContent = p.desc;
+    var mm=$('#d-modules'); mm.innerHTML='';
+    MODULES.forEach(function(t,k){ mm.appendChild(el('div','mod','<div class="n">'+(k+1)+'</div><span>'+esc(t)+'</span>')); });
+    go('detail');
+  }
+  $('#d-apply').addEventListener('click',function(){
+    var p=PROGRAMS[state.detail]; state.selected[p.name]=true; renderChips(); go('form');
+  });
+
+  // Program chips (form)
+  var chips=$('#chips');
+  function renderChips(){
+    chips.innerHTML='';
+    PROGRAMS.forEach(function(p){
+      var on=!!state.selected[p.name];
+      var c=el('div','chip'+(on?' on':''),'<div class="box"><i>✓</i></div><span>'+esc(p.name)+'</span>');
+      c.addEventListener('click',function(){
+        if(state.selected[p.name]) delete state.selected[p.name]; else state.selected[p.name]=true;
+        renderChips();
+      });
+      chips.appendChild(c);
     });
   }
-  ['seats','progs'].forEach(function(id){
-    var c = document.getElementById(id);
-    c.addEventListener('change', function(){ syncChips(c); });
-  });
+  renderChips();
 
-  var form = document.getElementById('applyForm');
-  var btn  = document.getElementById('submitBtn');
-  var msg  = document.getElementById('formMsg');
-
-  function showMsg(type, text){ msg.className = 'msg ' + type; msg.textContent = text; }
-
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    msg.className = 'msg'; msg.textContent = '';
-
-    var fullName = form.fullName.value.trim();
-    var email    = form.email.value.trim();
-    var programs = Array.prototype.map.call(
-      form.querySelectorAll('input[name=programs]:checked'), function(i){ return i.value; });
-    var seatsEl  = form.querySelector('input[name=seats]:checked');
-
-    if(!fullName){ return showMsg('err','Lütfen ad soyad giriniz.'); }
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ return showMsg('err','Geçerli bir e-posta giriniz.'); }
-    if(programs.length === 0){ return showMsg('err','En az bir eğitim programı seçiniz.'); }
-    if(!document.getElementById('kvkk').checked){ return showMsg('err','Devam etmek için Gizlilik Politikası onayı gereklidir.'); }
-
-    var payload = {
-      first_name: fullName,
-      role:       form.role.value.trim(),
-      company:    form.company.value.trim(),
-      phone:      form.phone.value.trim(),
-      email:      email,
-      seats:      seatsEl ? seatsEl.value : '',
-      programs:   programs,
-      note:       form.note.value.trim(),
-      kvkk:       'Gizlilik Politikası onaylandı',
-      etk:        document.getElementById('etk').checked ? 'Onaylandı' : 'Reddedildi',
-      website:    form.website.value // honeypot
-    };
-
-    btn.disabled = true; var old = btn.textContent; btn.textContent = 'Gönderiliyor...';
-    fetch(ENDPOINT, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    })
-    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, d:d}; }); })
-    .then(function(res){
-      if(res.ok && res.d && res.d.ok){
-        form.reset(); syncChips(document.getElementById('seats')); syncChips(document.getElementById('progs'));
-        showMsg('ok', res.d.message || 'Teşekkürler! Başvurunuz alındı, en kısa sürede size dönüş yapacağız.');
-        btn.textContent = 'Gönderildi ✓';
-      } else {
-        showMsg('err', (res.d && res.d.error) || 'Bir hata oluştu, lütfen tekrar deneyin.');
-        btn.disabled = false; btn.textContent = old;
-      }
-    })
-    .catch(function(){
-      showMsg('err','Bağlantı hatası. Lütfen tekrar deneyin.');
-      btn.disabled = false; btn.textContent = old;
+  // Participants
+  document.querySelectorAll('#parts .part').forEach(function(node){
+    node.addEventListener('click',function(){
+      state.participants = node.getAttribute('data-part');
+      document.querySelectorAll('#parts .part').forEach(function(n){ n.classList.toggle('on', n===node); });
     });
   });
+
+  // Consents
+  function bindCons(id,key){
+    var c=$('#'+id);
+    c.addEventListener('click',function(){ state[key]=!state[key]; c.classList.toggle('on',state[key]); if(key==='c1'&&state.c1) $('#cons-err').classList.remove('show'); });
+  }
+  bindCons('cons1','c1'); bindCons('cons2','c2');
+
+  // FAQ
+  var faqList=$('#faqList');
+  FAQ.forEach(function(it,i){
+    var f=el('div','faq'+(i===0?' open':''),'<div class="q"><div class="txt">'+esc(it.q)+'</div><div class="sign">'+(i===0?'−':'+')+'</div></div><div class="a">'+esc(it.a)+'</div>');
+    f.querySelector('.q').addEventListener('click',function(){
+      var isOpen=f.classList.contains('open');
+      document.querySelectorAll('#faqList .faq').forEach(function(x){ x.classList.remove('open'); x.querySelector('.sign').textContent='+'; });
+      if(!isOpen){ f.classList.add('open'); f.querySelector('.sign').textContent='−'; }
+    });
+    faqList.appendChild(f);
+  });
+
+  // Submit
+  var form=$('#applyForm'), banner=$('#banner'), btn=$('#submitBtn');
+  var emailRe=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+  function mark(id,bad){ $('#'+id).classList.toggle('invalid',bad); }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('#f-name').value.trim(), phone=$('#f-phone').value.trim(), email=$('#f-email').value.trim();
+    var badName=!name, badPhone=!phone, badEmail=!emailRe.test(email), badC1=!state.c1;
+    mark('fld-name',badName); mark('fld-phone',badPhone); mark('fld-email',badEmail);
+    $('#cons-err').classList.toggle('show',badC1);
+    if(badName||badPhone||badEmail||badC1){
+      banner.classList.add('show'); top(); return;
+    }
+    banner.classList.remove('show');
+
+    var programs=Object.keys(state.selected);
+    var payload={
+      first_name:name,
+      role:$('#f-role').value.trim(),
+      company:$('#f-company').value.trim(),
+      phone:phone,
+      email:email,
+      seats:state.participants,
+      programs:programs,
+      note:$('#f-note').value.trim(),
+      kvkk:'Gizlilik Politikası onaylandı',
+      etk:state.c2?'Onaylandı':'Reddedildi',
+      website:$('#f-website').value
+    };
+
+    var old=btn.textContent; btn.textContent='Gönderiliyor...'; btn.disabled=true;
+    fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(r){ return r.json().catch(function(){return{};}).then(function(d){return{ok:r.ok,d:d};}); })
+      .then(function(res){
+        if(res.ok&&res.d&&res.d.ok){
+          $('#su-name').textContent = name;
+          $('#su-part').textContent = state.participants||'Belirtilmedi';
+          $('#su-prog').textContent = programs.length?programs.join(', '):'Genel';
+          $('#su-msg').textContent = 'Teşekkürler '+name+'. Ekibimiz size uygun eğitim akışını hazırlayıp en kısa sürede dönüş yapacak.';
+          go('success'); btn.textContent=old; btn.disabled=false;
+        } else {
+          banner.textContent=(res.d&&res.d.error)||'Bir hata oluştu, lütfen tekrar deneyin.';
+          banner.classList.add('show'); btn.textContent=old; btn.disabled=false; top();
+        }
+      })
+      .catch(function(){
+        banner.textContent='Bağlantı hatası. Lütfen tekrar deneyin.';
+        banner.classList.add('show'); btn.textContent=old; btn.disabled=false; top();
+      });
+  });
+
+  // Reset from success
+  $('#su-reset').addEventListener('click',function(){
+    form.reset(); state.selected={}; state.participants=''; state.c1=false; state.c2=false;
+    $('#cons1').classList.remove('on'); $('#cons2').classList.remove('on');
+    document.querySelectorAll('#parts .part').forEach(function(n){ n.classList.remove('on'); });
+    document.querySelectorAll('.fld').forEach(function(n){ n.classList.remove('invalid'); });
+    banner.classList.remove('show'); renderChips(); go('home');
+  });
+
+  go('home');
 })();
 </script>
 </body>
