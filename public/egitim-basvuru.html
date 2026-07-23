@@ -17,145 +17,101 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --accent:#C7F24E; --accent-dark:#7a8f1e; --accent-tint:rgba(199,242,78,.14);
+    --accent:#C7F24E; --accent-dark:#7a8f1e; --accent-tint:rgba(199,242,78,.135);
     --ink:#121316; --cream:#F4F2EC; --muted:#6E6D68; --muted2:#9a988f;
     --line:rgba(18,19,22,.08); --line2:rgba(18,19,22,.12);
     --sg:'Space Grotesk',system-ui,sans-serif; --mn:'Manrope',system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
-  body{font-family:var(--mn);color:var(--ink);
-    background:radial-gradient(1200px 700px at 50% -8%,#f4f2ea,#e2dfd6);min-height:100vh}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{font-family:var(--mn);color:var(--ink);min-height:100vh;
+    background:radial-gradient(1400px 720px at 50% -10%,#f5f3ec,#e6e3da) fixed}
   a{color:inherit;text-decoration:none}
+  a:hover{color:#5a5a57}
   input,textarea{font-family:var(--mn)}
   input:focus,textarea:focus{outline:none}
-  .scroll::-webkit-scrollbar{width:0;height:0}
-  .scroll{scrollbar-width:none}
   @keyframes slideup{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
   @keyframes pop{0%{transform:scale(.5);opacity:0}62%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,48px)}
 
-  /* App shell — mobil tam ekran, masaüstünde ortalı kolon */
-  .app{max-width:440px;margin:0 auto;background:var(--cream);min-height:100vh;position:relative;
-    display:flex;flex-direction:column;overflow:hidden}
-  @media(min-width:480px){
-    .app{min-height:92vh;margin:4vh auto;border-radius:34px;
-      box-shadow:0 44px 100px -34px rgba(18,19,22,.5),0 0 0 1px rgba(18,19,22,.05)}
-  }
-  .view{flex:1;padding-bottom:96px}
-  .screen{display:none}
-  .screen.active{display:block;animation:slideup .3s ease}
-  .pad{padding:14px 22px 22px}
+  /* Header */
+  .hdr{position:sticky;top:0;z-index:30;background:rgba(244,242,236,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .hdr-in{height:66px;display:flex;align-items:center;justify-content:space-between}
+  .hdr img{height:24px;width:auto;display:block}
+  .hdr nav{display:flex;align-items:center;gap:10px}
+  .hdr nav a{font:600 13px var(--sg);color:var(--muted);padding:8px 4px}
+  .hdr .apply{padding:10px 18px;border-radius:22px;background:var(--ink);color:#fff;font:700 13px var(--sg);cursor:pointer}
+  .hdr nav a.apply:hover{color:#fff}
+  @media(max-width:620px){ .hdr nav .link{display:none} }
 
-  /* Top bar (logo) */
-  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 6px}
-  .topbar .logo{display:flex;align-items:baseline;gap:7px}
-  .topbar .logo b{font:700 21px var(--sg);letter-spacing:-.03em}
-  .topbar .logo s{font:600 10px var(--sg);color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
-  .topbar .mark{width:40px;height:40px;border-radius:13px;background:var(--ink);display:flex;align-items:center;justify-content:center;font:700 17px var(--sg);color:var(--accent)}
+  /* Hero + form */
+  .top{padding:clamp(28px,5vw,60px) 0 clamp(36px,5vw,64px)}
+  .cols{display:flex;flex-wrap:wrap;gap:clamp(24px,3.5vw,40px);align-items:flex-start}
 
-  /* Hero card (dark) */
-  .hero{background:var(--ink);border-radius:28px;padding:26px 23px 23px;color:#fff;position:relative;overflow:hidden}
-  .hero .glow{position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:var(--accent);opacity:.14;filter:blur(6px)}
-  .hero .kick{font:600 10.5px var(--sg);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:15px;position:relative}
-  .hero h1{font:600 28px/1.12 var(--sg);letter-spacing:-.025em;margin-bottom:12px;position:relative}
+  .hero{flex:1 1 440px;min-width:0;background:var(--ink);border-radius:30px;padding:clamp(30px,3.4vw,44px);color:#fff;overflow:hidden;position:relative}
+  @media(min-width:900px){ .hero{position:sticky;top:90px} }
+  .hero .glow{position:absolute;top:-90px;right:-70px;width:280px;height:280px;border-radius:50%;background:var(--accent);opacity:.13;filter:blur(20px)}
+  .hero .wm{position:absolute;top:clamp(20px,3vw,36px);right:clamp(24px,3.4vw,44px);font:700 clamp(90px,13vw,150px)/.8 var(--sg);color:rgba(255,255,255,.05);letter-spacing:-.04em;pointer-events:none}
+  .hero .badge{position:relative;display:inline-flex;align-items:center;gap:9px;padding:8px 14px 8px 11px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);margin-bottom:26px}
+  .hero .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .hero .badge span:last-child{font:600 11px var(--sg);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.82)}
+  .hero h1{position:relative;font:600 clamp(34px,4.6vw,54px)/1.02 var(--sg);letter-spacing:-.035em;margin-bottom:20px}
   .hero h1 em{font-style:normal;color:var(--accent)}
-  .hero p{font:400 14px/1.55 var(--mn);color:rgba(255,255,255,.65);margin-bottom:20px;position:relative}
-  .hero .badges{display:flex;gap:9px;margin-top:14px}
-  .hero .badges div{flex:1;text-align:center;padding:9px;border-radius:11px;background:rgba(255,255,255,.07);font:600 11.5px var(--sg);color:rgba(255,255,255,.82)}
+  .hero .lead{position:relative;margin-bottom:30px;font:400 clamp(14px,1.1vw,16px)/1.6 var(--mn);color:rgba(255,255,255,.6);max-width:42ch}
+  .hero .tags{position:relative;display:flex;flex-wrap:wrap;gap:7px;margin-bottom:32px}
+  .hero .tags span{padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font:600 11.5px var(--sg);color:rgba(255,255,255,.72)}
+  .hero .stats{position:relative;display:flex;gap:clamp(16px,2.4vw,30px);padding-top:26px;border-top:1px solid rgba(255,255,255,.12)}
+  .hero .stats .num{font:700 clamp(26px,3vw,34px) var(--sg);color:var(--accent);letter-spacing:-.02em;line-height:1}
+  .hero .stats .cap{font:600 11.5px var(--mn);color:rgba(255,255,255,.5);margin-top:6px}
+  .hero .stats .sep{width:1px;background:rgba(255,255,255,.12)}
 
-  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:16px;
-    background:var(--accent);color:var(--ink);font:700 15px var(--sg);cursor:pointer;border:none;
-    box-shadow:0 12px 26px -12px var(--accent);transition:.15s}
-  .cta:hover{filter:brightness(.97)}
-  .cta:active{transform:translateY(1px)}
-
-  .sect-title{font:700 13px var(--sg);color:var(--ink)}
-
-  /* Why list */
-  .why{display:flex;flex-direction:column;gap:2px;margin-top:8px}
-  .why .row{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
-  .why .row:last-child{border-bottom:none}
-  .why .ck{width:26px;height:26px;border-radius:8px;background:var(--accent);flex:none;display:flex;align-items:center;justify-content:center;font:800 13px var(--sg);color:var(--ink)}
-  .why .row span{font:600 14px var(--mn);color:#2c2c2a}
-
-  /* Row header with "see all" */
-  .rowhead{display:flex;align-items:center;justify-content:space-between;margin:26px 0 14px}
-  .rowhead .all{font:600 12px var(--sg);color:var(--muted);cursor:pointer}
-
-  /* Popular horizontal cards */
-  .hscroll{display:flex;gap:12px;overflow-x:auto;margin:0 -22px;padding:2px 22px 4px}
-  .pcard{flex:none;width:152px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:16px;cursor:pointer;transition:.15s}
-  .pcard:hover{border-color:var(--accent-dark)}
-  .badge{width:42px;height:42px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;font:700 16px var(--sg);background:var(--accent-tint);color:var(--ink)}
-  .pcard .name{font:700 15px var(--sg);color:var(--ink);margin:13px 0 5px;letter-spacing:-.01em}
-  .pcard .tag{font:600 11px var(--sg);color:var(--muted2);letter-spacing:.08em}
-
-  .ghost{margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;
-    border-radius:16px;background:#fff;border:1.5px solid var(--line2);font:700 14px var(--sg);color:var(--ink);cursor:pointer;transition:.15s}
-  .ghost:hover{border-color:var(--accent-dark)}
-
-  /* Eyebrow + big title (programs/faq) */
-  .eyebrow{font:600 10.5px var(--sg);letter-spacing:.18em;color:var(--muted2);text-transform:uppercase;margin:8px 0 8px}
-  .big{font:600 27px/1.1 var(--sg);letter-spacing:-.025em;color:var(--ink);margin-bottom:6px}
-  .sub{font:400 13.5px/1.5 var(--mn);color:var(--muted);margin-bottom:20px}
-
-  /* Programs list */
-  .plist{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:14px;margin-bottom:11px;cursor:pointer;transition:.15s}
-  .plist:hover{border-color:var(--accent-dark)}
-  .plist .info{flex:1;min-width:0}
-  .plist .info .name{font:700 15px var(--sg);color:var(--ink);letter-spacing:-.01em;margin-bottom:3px}
-  .plist .info .desc{font:500 12.5px/1.4 var(--mn);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .plist .arw{font:600 18px var(--sg);color:#c3c1b8;flex:none}
-
-  /* Detail */
-  .back{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--sg);color:var(--muted);margin:6px 0 20px;cursor:pointer}
-  .detail-tag{font:600 10.5px var(--sg);letter-spacing:.16em;color:var(--accent-dark);text-transform:uppercase;margin-bottom:10px}
-  .detail-name{font:600 29px/1.08 var(--sg);letter-spacing:-.03em;color:var(--ink);margin-bottom:13px}
-  .detail-desc{font:400 15px/1.6 var(--mn);color:#4a4a48;margin-bottom:18px}
-  .meta{display:flex;gap:8px;margin-bottom:26px;flex-wrap:wrap}
-  .meta div{padding:8px 12px;border-radius:10px;background:#fff;border:1px solid var(--line2);font:600 11.5px var(--sg);color:#3a3b40}
-  .mod{display:flex;gap:13px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
-  .mod .n{width:26px;height:26px;border-radius:8px;background:var(--accent);flex:none;display:flex;align-items:center;justify-content:center;font:800 12px var(--sg);color:var(--ink)}
-  .mod span{font:600 14px/1.35 var(--mn);color:#2c2c2a;padding-top:3px}
-
-  /* Form */
-  .fh{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
-  .fh .t{font:600 26px var(--sg);letter-spacing:-.025em}
-  .fh .min{padding:7px 11px;border-radius:20px;background:var(--ink);color:#fff;font:600 11px var(--sg);white-space:nowrap}
-  .banner{margin:12px 0;padding:13px 15px;border-radius:13px;background:#fdeeeb;border:1px solid #f4c9c0;font:600 12.5px var(--mn);color:#c0392b;display:none}
+  /* Form card */
+  .fcard{flex:1 1 380px;min-width:0;background:#fff;border:1px solid var(--line);border-radius:30px;padding:clamp(22px,2.6vw,32px);box-shadow:0 30px 70px -40px rgba(18,19,22,.4)}
+  .fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .fhead .t{font:600 clamp(21px,2.4vw,26px) var(--sg);letter-spacing:-.025em;color:var(--ink)}
+  .fhead .min{padding:7px 12px;border-radius:20px;background:var(--ink);color:#fff;font:600 11px var(--sg);flex:none}
+  .fsub{font:400 13.5px/1.5 var(--mn);color:var(--muted);margin:0 0 8px}
+  .banner{margin:14px 0;padding:13px 15px;border-radius:13px;background:#fdeeeb;border:1px solid #f4c9c0;font:600 12.5px var(--mn);color:#c0392b;display:none}
   .banner.show{display:block}
   .step{margin:24px 0 14px;display:flex;align-items:center;gap:10px}
+  .step:first-of-type{margin-top:20px}
   .step .no{font:700 11px var(--sg);color:var(--accent-dark);letter-spacing:.1em}
   .step .lb{font:700 13px var(--sg);color:var(--ink)}
   .step .opt{font:500 11px var(--mn);color:var(--muted2)}
-  .step .ln{flex:1;height:1px;background:var(--line2)}
-  .fld{margin-bottom:14px}
+  .step .ln{flex:1;height:1px;background:rgba(18,19,22,.09)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
   .fld label{display:block;font:600 12px var(--sg);color:var(--muted);margin-bottom:7px}
-  .fld input,.fld textarea{width:100%;padding:14px 15px;border:1.5px solid var(--line2);border-radius:14px;background:#fff;font:500 15px var(--mn);color:var(--ink);transition:.15s}
-  .fld textarea{min-height:88px;resize:none;font:500 14px/1.5 var(--mn)}
-  .fld input:focus,.fld textarea:focus{border-color:var(--ink)}
+  .fld input,.ta{width:100%;padding:14px 15px;border:1.5px solid var(--line2);border-radius:14px;background:#fbfaf7;font:500 15px var(--mn);color:var(--ink);transition:.15s}
+  .fld input:focus,.ta:focus{border-color:var(--ink)}
+  .ta{min-height:90px;resize:none;font:500 14px/1.5 var(--mn)}
   .fld .err{color:#c0392b;font:600 11px var(--mn);margin-top:5px;display:none}
   .fld.invalid .err{display:block}
   .fld.invalid input{border-color:#e2a9a0}
-  .two{display:flex;gap:11px}
-  .two>.fld{flex:1}
+  .mt12{margin-top:12px}
 
-  .parts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .part{display:flex;align-items:center;justify-content:center;text-align:center;padding:15px 8px;border-radius:14px;cursor:pointer;transition:.15s;
-    font:600 14px var(--sg);background:#fff;border:1.5px solid var(--line2);color:#3a3b40}
-  .part:hover{border-color:var(--accent-dark)}
-  .part.on{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+  /* Dropdown (participants) */
+  .dd{position:relative}
+  .dd-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 15px;border:1.5px solid var(--line2);border-radius:14px;background:#fbfaf7;font:600 14px var(--sg);color:var(--muted2);cursor:pointer;transition:.15s}
+  .dd-btn.has{color:var(--ink)}
+  .dd.open .dd-btn{border-color:var(--ink)}
+  .dd-btn .caret{font-size:12px;color:var(--muted2);transition:.2s}
+  .dd.open .dd-btn .caret{transform:rotate(180deg)}
+  .dd-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:20;background:#fff;border:1px solid var(--line2);border-radius:14px;box-shadow:0 20px 44px -16px rgba(18,19,22,.35);overflow:hidden;display:none}
+  .dd.open .dd-menu{display:block}
+  .dd-opt{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;cursor:pointer;font:600 14px var(--sg);color:#3a3b40;border-bottom:1px solid rgba(18,19,22,.06)}
+  .dd-opt:last-child{border-bottom:none}
+  .dd-opt:hover{background:#faf9f5}
+  .dd-opt.on{background:var(--accent-tint);color:var(--ink)}
+  .dd-opt i{display:none;color:var(--accent-dark);font-weight:700;font-style:normal}
+  .dd-opt.on i{display:block}
 
-  .chips{display:flex;flex-direction:column;gap:9px}
-  .chip{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:14px;cursor:pointer;transition:.15s;
-    font:600 14px var(--sg);background:#fff;border:1.5px solid var(--line);color:#3a3b40}
-  .chip:hover{border-color:var(--accent-dark)}
-  .chip .box{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;font:800 12px var(--sg);color:var(--ink);transition:.15s;background:transparent;border:1.5px solid rgba(18,19,22,.25)}
-  .chip .box i{display:none;font-style:normal}
-  .chip.on{background:var(--accent-tint);border-color:var(--accent);color:var(--ink)}
-  .chip.on .box{background:var(--accent);border-color:var(--accent)}
-  .chip.on .box i{display:block}
+  /* Program chips (form) */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:9px 14px;border-radius:11px;cursor:pointer;transition:.15s;font:600 13px var(--sg);background:#fbfaf7;border:1.5px solid var(--line2);color:#3a3b40}
+  .chip:hover{border-color:rgba(18,19,22,.28)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:var(--ink)}
 
+  /* Consents */
   .consents{margin-top:20px;display:flex;flex-direction:column;gap:14px}
   .cons{display:flex;gap:12px;cursor:pointer}
   .cons .box{width:24px;height:24px;border-radius:8px;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;font:800 13px var(--sg);color:var(--ink);transition:.15s;background:#fff;border:1.5px solid rgba(18,19,22,.22)}
@@ -168,126 +124,109 @@
   .cons-err{color:#c0392b;font:600 11px var(--mn);margin:-8px 0 0 36px;display:none}
   .cons-err.show{display:block}
 
-  /* Sticky CTA bar (form/detail) */
-  .sticky{position:sticky;bottom:0;padding:16px 22px 22px;background:linear-gradient(to top,var(--cream) 72%,rgba(244,242,236,0));z-index:5}
+  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:16px;background:var(--accent);color:var(--ink);font:700 15px var(--sg);cursor:pointer;border:none;box-shadow:0 12px 26px -12px var(--accent);transition:.15s;margin-top:22px}
+  .cta:hover{filter:brightness(.97)}
+  .cta:active{transform:translateY(1px)}
+  .cta:disabled{opacity:.6;cursor:not-allowed}
 
-  /* Success */
-  .success{padding:30px 24px 40px;display:flex;flex-direction:column;align-items:center;text-align:center}
-  .success .tick{width:92px;height:92px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font:700 42px var(--sg);color:var(--ink);margin:22px 0 26px;animation:pop .5s cubic-bezier(.2,.8,.2,1)}
-  .success h2{font:600 27px/1.1 var(--sg);letter-spacing:-.025em;margin-bottom:12px}
-  .success p{font:400 14.5px/1.55 var(--mn);color:#5a5a57;margin:0 0 28px;max-width:280px}
-  .summary{width:100%;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;text-align:left;margin-bottom:24px}
-  .summary .r{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+  /* Success (replaces form body) */
+  .success{text-align:center;padding:14px 4px;animation:slideup .3s ease;display:none}
+  .success.show{display:block}
+  .success .tick{width:84px;height:84px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font:700 40px var(--sg);color:var(--ink);margin:8px auto 22px;animation:pop .5s cubic-bezier(.2,.8,.2,1)}
+  .success h2{font:600 26px var(--sg);letter-spacing:-.02em;color:var(--ink);margin-bottom:12px}
+  .success p{font:400 14.5px/1.55 var(--mn);color:#5a5a57;margin:0 auto 24px;max-width:320px}
+  .summary{background:#f6f4ee;border-radius:16px;padding:18px;text-align:left;margin-bottom:22px}
+  .summary .r{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid rgba(18,19,22,.07)}
   .summary .r:last-child{border-bottom:none}
   .summary .r .k{font:600 13px var(--mn);color:var(--muted2)}
   .summary .r .v{font:600 13px var(--sg);color:var(--ink);text-align:right}
-  .linkbtn{margin-top:12px;font:600 13px var(--sg);color:var(--muted);cursor:pointer;padding:8px}
+  .again{font:700 13px var(--sg);color:var(--muted);cursor:pointer;padding:8px}
+
+  /* Programs section */
+  .sec{padding:clamp(44px,6vw,72px) 0 clamp(20px,3vw,36px);scroll-margin-top:80px}
+  .eyebrow{font:600 11px var(--sg);letter-spacing:.2em;color:var(--muted2);text-transform:uppercase;margin-bottom:8px}
+  .sechead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:26px}
+  .sechead h2{font:600 clamp(24px,3vw,36px)/1.05 var(--sg);letter-spacing:-.025em;color:var(--ink)}
+  .sechead p{font:400 14px/1.5 var(--mn);color:var(--muted);margin:0;max-width:36ch}
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .pcard{display:flex;align-items:center;gap:15px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;cursor:pointer;transition:.15s}
+  .pcard:hover{border-color:rgba(18,19,22,.28)}
+  .pcard .bdg{width:44px;height:44px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;font:700 17px var(--sg);background:var(--accent-tint);color:var(--ink)}
+  .pcard .info{flex:1;min-width:0}
+  .pcard .info .nm{font:700 15.5px var(--sg);color:var(--ink);letter-spacing:-.01em;margin-bottom:4px}
+  .pcard .info .ds{font:500 12.5px/1.4 var(--mn);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pcard .plus{width:28px;height:28px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font:700 17px var(--sg);transition:.15s;background:rgba(18,19,22,.05);color:#c3c1b8}
+  .pcard.picked .plus{background:var(--accent);color:var(--ink)}
 
   /* FAQ */
-  .faq{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:11px;overflow:hidden}
-  .faq .q{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer}
-  .faq .q .txt{flex:1;font:700 14px/1.35 var(--sg);color:var(--ink)}
-  .faq .q .sign{width:26px;height:26px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font:700 17px var(--sg);background:rgba(18,19,22,.06);color:var(--ink);transition:.2s}
+  .faqwrap{max-width:820px;margin:0 auto;padding:clamp(44px,6vw,72px) clamp(20px,5vw,48px);scroll-margin-top:80px}
+  .faqwrap>h2{font:600 clamp(24px,3vw,34px)/1.05 var(--sg);letter-spacing:-.025em;color:var(--ink);margin-bottom:24px;text-align:center}
+  .faq{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
+  .faq .q{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer}
+  .faq .q .txt{flex:1;font:700 15px/1.35 var(--sg);color:var(--ink)}
+  .faq .q .sign{width:28px;height:28px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font:700 18px var(--sg);background:rgba(18,19,22,.06);color:var(--ink);transition:.2s}
   .faq.open .q .sign{background:var(--accent)}
-  .faq .a{padding:0 16px 16px;font:400 13.5px/1.55 var(--mn);color:#5a5a57;display:none}
+  .faq .a{padding:0 20px 18px;font:400 14px/1.6 var(--mn);color:#5a5a57;max-width:64ch;display:none}
   .faq.open .a{display:block}
-  .faq-cta{margin-top:20px;background:var(--ink);border-radius:20px;padding:22px;text-align:center}
-  .faq-cta h3{font:600 16px var(--sg);color:#fff;margin-bottom:6px}
-  .faq-cta p{font:400 13px/1.5 var(--mn);color:rgba(255,255,255,.62);margin:0 0 16px}
 
-  /* Bottom nav */
-  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(440px,100%);
-    background:rgba(244,242,236,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
-    padding:9px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-around;z-index:20}
-  @media(min-width:480px){.nav{bottom:4vh;border-radius:0 0 34px 34px}}
-  .nav.hidden{display:none}
-  .nav a{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;flex:1;padding-top:5px}
-  .nav a .dot{width:36px;height:26px;border-radius:9px;transition:.2s;background:rgba(18,19,22,.07)}
-  .nav a .lb{font:600 11px var(--sg);color:var(--muted2)}
-  .nav a.on .dot{background:var(--accent)}
-  .nav a.on .lb{font-weight:700;color:var(--ink)}
+  /* Footer band */
+  .fband{background:var(--ink)}
+  .fband-in{padding:clamp(40px,5vw,64px) 0;text-align:center}
+  .fband h2{font:600 clamp(22px,2.6vw,30px)/1.1 var(--sg);letter-spacing:-.02em;color:#fff;margin-bottom:10px}
+  .fband p{font:400 14px/1.5 var(--mn);color:rgba(255,255,255,.6);margin:0 auto 24px;max-width:40ch}
+  .fband .go{display:inline-flex;align-items:center;gap:8px;padding:15px 30px;border-radius:16px;background:var(--accent);color:var(--ink);font:700 15px var(--sg);cursor:pointer;border:none}
+  .fband .foot{margin-top:30px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+  .fband .foot .a{font:600 13px var(--sg);color:rgba(255,255,255,.7)}
+  .fband .foot .b{font:500 12px var(--mn);color:rgba(255,255,255,.4)}
 
   .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="view scroll" id="view">
 
-    <!-- ══ HOME ══ -->
-    <section class="screen active" id="s-home">
-      <div class="topbar">
-        <a href="https://khilonfast.com" class="logo"><b>khilonfast</b><s>Academy</s></a>
-        <div class="mark">f</div>
+<!-- HEADER -->
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a href="https://khilonfast.com"><img src="/fast-logo-big.svg" alt="khilonfast"></a>
+    <nav>
+      <a href="#programlar" class="link">Programlar</a>
+      <a href="#sss" class="link">SSS</a>
+      <a class="apply" id="hdrApply">Başvur →</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO + FORM -->
+<section class="wrap top">
+  <div class="cols">
+
+    <div class="hero">
+      <div class="glow"></div>
+      <div class="wm">09</div>
+      <div class="badge"><span class="dot"></span><span>khilonfast Academy</span></div>
+      <h1>Sektörünüze özel <em>büyüme</em> pazarlaması.</h1>
+      <p class="lead">B2B, fintech, üretim, enerji ve daha fazlası — 9 sektöre özel tasarlanmış online pazarlama eğitim programları. Kendi hızınızda ilerleyin.</p>
+      <div class="tags">
+        <span>Ödeme Sistemleri</span><span>B2B</span><span>Fintech</span><span>Üretim</span><span>Enerji</span><span>Filo Kiralama</span>
       </div>
-      <div class="pad" style="padding-top:4px">
-        <div class="hero">
-          <div class="glow"></div>
-          <div class="kick">9 sektöre özel</div>
-          <h1>Büyüme odaklı <em>pazarlama</em> eğitimleri.</h1>
-          <p>B2B, fintech, üretim, enerji ve 9 sektöre özel online programlar. Kendi hızınızda ilerleyin.</p>
-          <button class="cta" data-go="form">Başvuruya başla →</button>
-          <div class="badges">
-            <div>⏱ 2 dk başvuru</div>
-            <div>◆ Sertifikalı</div>
-          </div>
-        </div>
-
-        <div class="sect-title" style="margin:24px 0 8px">Neden khilonfast Academy?</div>
-        <div class="why">
-          <div class="row"><div class="ck">✓</div><span>Sektöre özel içerik</span></div>
-          <div class="row"><div class="ck">✓</div><span>Kendi hızında online erişim</span></div>
-          <div class="row"><div class="ck">✓</div><span>Uygulamalı satış hunisi &amp; ölçümleme</span></div>
-        </div>
-
-        <div class="rowhead">
-          <div class="sect-title">Popüler programlar</div>
-          <div class="all" data-go="programs">Tümü →</div>
-        </div>
-        <div class="hscroll" id="popular"></div>
-
-        <button class="ghost" data-go="programs">Tüm 9 programı gör</button>
+      <div class="stats">
+        <div><div class="num">9</div><div class="cap">Sektör programı</div></div>
+        <div class="sep"></div>
+        <div><div class="num">%100</div><div class="cap">Online erişim</div></div>
+        <div class="sep"></div>
+        <div><div class="num">2dk</div><div class="cap">Başvuru süresi</div></div>
       </div>
-    </section>
+    </div>
 
-    <!-- ══ PROGRAMS ══ -->
-    <section class="screen" id="s-programs">
-      <div class="pad" style="padding-top:8px">
-        <div class="eyebrow">9 SEKTÖR</div>
-        <div class="big">Sektörel programlar</div>
-        <p class="sub">Büyüme odaklı pazarlama eğitim akışları. Bir programa dokunun.</p>
-        <div id="programsList"></div>
-      </div>
-    </section>
-
-    <!-- ══ DETAIL ══ -->
-    <section class="screen" id="s-detail">
-      <div class="pad" style="padding-top:8px">
-        <div class="back" data-go="programs">← Programlar</div>
-        <div class="detail-tag" id="d-tag"></div>
-        <div class="detail-name" id="d-name"></div>
-        <p class="detail-desc" id="d-desc"></p>
-        <div class="meta"><div>6 modül</div><div>~4 saat</div><div>Sertifika</div></div>
-        <div class="sect-title" style="margin-bottom:6px">Program içeriği</div>
-        <div id="d-modules"></div>
-      </div>
-      <div class="sticky"><button class="cta" id="d-apply">Bu programa başvur →</button></div>
-    </section>
-
-    <!-- ══ FORM ══ -->
-    <section class="screen" id="s-form">
+    <div class="fcard" id="formCard">
+      <!-- FORM -->
       <form id="applyForm" novalidate>
-        <div class="pad" style="padding-top:8px;padding-bottom:8px">
-          <div class="back" data-go="home">← Ana sayfa</div>
-          <div class="fh"><div class="t">Başvuru formu</div><div class="min">⏱ 2 dk</div></div>
-          <p class="sub" style="margin-bottom:8px">Size uygun eğitim akışını hazırlayalım.</p>
-        </div>
+        <div class="fhead"><div class="t">Eğitim başvuru formu</div><div class="min">⏱ 2 dk</div></div>
+        <p class="fsub">Formu doldurarak size uygun eğitim akışını talep edin.</p>
+        <div class="banner" id="banner">Lütfen zorunlu alanları ve gizlilik onayını tamamlayın.</div>
 
-        <div style="padding:0 22px 8px">
-          <div class="banner" id="banner">Lütfen zorunlu alanları ve gizlilik onayını tamamlayın.</div>
-
-          <div class="step"><span class="no">01</span><span class="lb">Kişisel bilgiler</span><div class="ln"></div></div>
-
+        <div class="step"><span class="no">01</span><span class="lb">Kişisel bilgiler</span><div class="ln"></div></div>
+        <div class="grid">
           <div class="fld" id="fld-name">
             <label for="f-name">Ad Soyad *</label>
             <input id="f-name" type="text" autocomplete="name" maxlength="120" placeholder="Adınız ve soyadınız">
@@ -301,113 +240,110 @@
             <label for="f-company">Firma</label>
             <input id="f-company" type="text" autocomplete="organization" maxlength="160" placeholder="Şirket adı">
           </div>
-          <div class="two">
-            <div class="fld" id="fld-phone">
-              <label for="f-phone">Telefon *</label>
-              <input id="f-phone" type="tel" autocomplete="tel" maxlength="40" placeholder="05xx xxx xx xx">
-              <div class="err">Zorunlu</div>
-            </div>
+          <div class="fld" id="fld-phone">
+            <label for="f-phone">Telefon *</label>
+            <input id="f-phone" type="tel" autocomplete="tel" maxlength="40" placeholder="05xx xxx xx xx">
+            <div class="err">Zorunlu</div>
           </div>
-          <div class="fld" id="fld-email">
-            <label for="f-email">E-posta *</label>
-            <input id="f-email" type="email" autocomplete="email" maxlength="200" placeholder="ad@firma.com">
-            <div class="err">Geçerli e-posta giriniz</div>
-          </div>
+        </div>
+        <div class="fld mt12" id="fld-email">
+          <label for="f-email">E-posta *</label>
+          <input id="f-email" type="email" autocomplete="email" maxlength="200" placeholder="ad@firma.com">
+          <div class="err">Geçerli e-posta giriniz</div>
+        </div>
 
-          <div class="step"><span class="no">02</span><span class="lb">Katılımcı sayısı</span><div class="ln"></div></div>
-          <div class="parts" id="parts">
-            <div class="part" data-part="1 kişi">1 kişi</div>
-            <div class="part" data-part="2 - 5 kişi">2 - 5 kişi</div>
-            <div class="part" data-part="6 - 15 kişi">6 - 15 kişi</div>
-            <div class="part" data-part="15+ kişi">15+ kişi</div>
-          </div>
-
-          <div class="step"><span class="no">03</span><span class="lb">İlgilendiğiniz programlar</span><div class="ln"></div></div>
-          <div class="chips" id="chips"></div>
-
-          <div class="step"><span class="no">04</span><span class="lb">Notunuz</span><span class="opt">opsiyonel</span><div class="ln"></div></div>
-          <textarea id="f-note" class="" maxlength="1200" placeholder="Eklemek istedikleriniz..." style="width:100%;min-height:88px;resize:none;padding:14px 15px;border:1.5px solid var(--line2);border-radius:14px;background:#fff;font:500 14px/1.5 var(--mn);color:var(--ink)"></textarea>
-
-          <div class="hp" aria-hidden="true"><input type="text" id="f-website" tabindex="-1" autocomplete="off"></div>
-
-          <div class="consents">
-            <div class="cons" id="cons1">
-              <div class="box"><i>✓</i></div>
-              <span><a href="https://khilonfast.com/gizlilik-politikasi" target="_blank" rel="noopener noreferrer">Gizlilik Politikası</a>'nı okudum ve kabul ediyorum. *</span>
-            </div>
-            <div class="cons-err" id="cons-err">Devam etmek için gerekli</div>
-            <div class="cons" id="cons2">
-              <div class="box"><i>✓</i></div>
-              <span>khilonfast'tan e-posta, SMS ve telefon üzerinden güncelleme ve pazarlama iletişimi almayı kabul ediyorum.</span>
-            </div>
+        <div class="step"><span class="no">02</span><span class="lb">Katılımcı sayısı</span><div class="ln"></div></div>
+        <div class="dd" id="dd">
+          <button type="button" class="dd-btn" id="ddBtn"><span id="ddLabel">Seçiniz</span><span class="caret">▾</span></button>
+          <div class="dd-menu" id="ddMenu">
+            <div class="dd-opt" data-val="1 kişi">1 kişi<i>✓</i></div>
+            <div class="dd-opt" data-val="2 - 5 kişi">2 - 5 kişi<i>✓</i></div>
+            <div class="dd-opt" data-val="6 - 15 kişi">6 - 15 kişi<i>✓</i></div>
+            <div class="dd-opt" data-val="15+ kişi">15+ kişi<i>✓</i></div>
           </div>
         </div>
 
-        <div class="sticky"><button type="submit" class="cta" id="submitBtn">Başvuruyu Gönder →</button></div>
-      </form>
-    </section>
+        <div class="step"><span class="no">03</span><span class="lb">İlgilendiğiniz programlar</span><div class="ln"></div></div>
+        <div class="chips" id="chips"></div>
 
-    <!-- ══ SUCCESS ══ -->
-    <section class="screen" id="s-success">
-      <div class="success">
+        <div class="step"><span class="no">04</span><span class="lb">Notunuz</span><span class="opt">opsiyonel</span><div class="ln"></div></div>
+        <textarea id="f-note" class="ta" maxlength="1200" placeholder="Eklemek istedikleriniz..."></textarea>
+
+        <div class="hp" aria-hidden="true"><input type="text" id="f-website" tabindex="-1" autocomplete="off"></div>
+
+        <div class="consents">
+          <div class="cons" id="cons1">
+            <div class="box"><i>✓</i></div>
+            <span><a href="https://khilonfast.com/gizlilik-politikasi" target="_blank" rel="noopener noreferrer">Gizlilik Politikası</a>'nı okudum ve kabul ediyorum. *</span>
+          </div>
+          <div class="cons-err" id="cons-err">Devam etmek için gerekli</div>
+          <div class="cons" id="cons2">
+            <div class="box"><i>✓</i></div>
+            <span>khilonfast'tan e-posta, SMS ve telefon üzerinden güncelleme ve pazarlama iletişimi almayı kabul ediyorum.</span>
+          </div>
+        </div>
+
+        <button type="submit" class="cta" id="submitBtn">Başvuruyu Gönder →</button>
+      </form>
+
+      <!-- SUCCESS -->
+      <div class="success" id="success">
         <div class="tick">✓</div>
         <h2>Başvurun alındı!</h2>
         <p id="su-msg">Teşekkürler. Ekibimiz size uygun eğitim akışını hazırlayıp en kısa sürede dönüş yapacak.</p>
         <div class="summary">
-          <div class="r"><span class="k">Ad Soyad</span><span class="v" id="su-name">—</span></div>
           <div class="r"><span class="k">Katılımcı</span><span class="v" id="su-part">Belirtilmedi</span></div>
           <div class="r"><span class="k">Programlar</span><span class="v" id="su-prog">Genel</span></div>
         </div>
-        <button class="cta" data-go="programs">Programları keşfet →</button>
-        <div class="linkbtn" id="su-reset">Ana sayfaya dön</div>
+        <div class="again" id="su-reset">Yeni başvuru</div>
       </div>
-    </section>
-
-    <!-- ══ FAQ ══ -->
-    <section class="screen" id="s-faq">
-      <div class="pad" style="padding-top:8px">
-        <div class="eyebrow">DESTEK</div>
-        <div class="big" style="margin-bottom:20px">Sık sorulan sorular</div>
-        <div id="faqList"></div>
-        <div class="faq-cta">
-          <h3>Hâlâ soru mu var?</h3>
-          <p>Başvuru formunu doldurun, ekibimiz size ulaşsın.</p>
-          <button class="cta" data-go="form">Başvuru yap →</button>
-        </div>
-      </div>
-    </section>
+    </div>
 
   </div>
+</section>
 
-  <!-- Bottom nav -->
-  <nav class="nav" id="nav">
-    <a data-go="home"   data-nav="home"><span class="dot"></span><span class="lb">Ana Sayfa</span></a>
-    <a data-go="programs" data-nav="programs"><span class="dot"></span><span class="lb">Programlar</span></a>
-    <a data-go="faq"    data-nav="faq"><span class="dot"></span><span class="lb">SSS</span></a>
-  </nav>
-</div>
+<!-- PROGRAMS -->
+<section class="wrap sec" id="programlar">
+  <div class="eyebrow">9 SEKTÖR</div>
+  <div class="sechead">
+    <h2>Sektörel programlar</h2>
+    <p>Bir programa tıklayın, formda otomatik olarak seçilsin.</p>
+  </div>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+
+<!-- FAQ -->
+<section class="faqwrap" id="sss">
+  <h2>Sık sorulan sorular</h2>
+  <div id="faqList"></div>
+</section>
+
+<!-- FOOTER BAND -->
+<section class="fband">
+  <div class="wrap fband-in">
+    <h2>Size uygun eğitim akışını hazırlayalım.</h2>
+    <p>2 dakikada başvurun, ekibimiz sektörünüze özel programı sizin için planlasın.</p>
+    <button class="go" id="bandApply">Hemen başvur →</button>
+    <div class="foot">
+      <span class="a">khilonfast Academy</span>
+      <span class="b">© <span id="yr">2026</span> khilonfast Academy — Eğitim Programları</span>
+    </div>
+  </div>
+</section>
 
 <script>
 (function(){
   var ENDPOINT = "/api/crm-public/form/egitim-basvurusu/submit";
-
   var PROGRAMS = [
-    {n:1,name:'Ödeme Sistemleri',tag:'PAYMENTS',desc:'Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.'},
-    {n:2,name:'B2B',tag:'B2B',desc:'B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti.'},
-    {n:3,name:'Fintech',tag:'FINTECH',desc:'Fintech odaklı büyüme stratejileri ve kanal optimizasyonu.'},
-    {n:4,name:'Teknoloji & Yazılım',tag:'SAAS',desc:'SaaS ve teknoloji markaları için performans odaklı içerik.'},
-    {n:5,name:'Üretim',tag:'MANUFACTURING',desc:'Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi.'},
-    {n:6,name:'Enerji',tag:'ENERGY',desc:'Enerji sektöründe karar verici odaklı pazarlama planlama.'},
-    {n:7,name:'Ofis & Kurumsal İç Tasarım',tag:'INTERIORS',desc:'Kurumsal iç tasarımda tekliften satışa pazarlama modeli.'},
-    {n:8,name:'Filo Kiralama',tag:'FLEET',desc:'Filo kiralamada lead kalitesi ve dönüşüm yönetimi eğitimi.'},
-    {n:9,name:'Endüstriyel Gıda',tag:'FOOD',desc:'Endüstriyel gıdaya özel büyüme odaklı pazarlama akışı.'},
-  ];
-  var MODULES = [
-    'Değer önerisi & sektörel konumlandırma',
-    'İdeal müşteri profili & mesaj haritası',
-    'Satış hunisi kurulumu ve içerik akışı',
-    'Kanal seçimi & performans optimizasyonu',
-    'Ölçümleme, raporlama ve iterasyon',
+    {n:1,name:'Ödeme Sistemleri',desc:'Satış hunisi, değer önerisi ve ölçümleme odaklı uygulamalı içerik.'},
+    {n:2,name:'B2B',desc:'B2B firmalar için pazarlama ve satış entegrasyonu eğitim seti.'},
+    {n:3,name:'Fintech',desc:'Fintech odaklı büyüme stratejileri ve kanal optimizasyonu.'},
+    {n:4,name:'Teknoloji & Yazılım',desc:'SaaS ve teknoloji markaları için performans odaklı içerik.'},
+    {n:5,name:'Üretim',desc:'Üretim firmaları için sürdürülebilir talep ve dönüşüm yönetimi.'},
+    {n:6,name:'Enerji',desc:'Enerji sektöründe karar verici odaklı pazarlama planlama.'},
+    {n:7,name:'Ofis & Kurumsal İç Tasarım',desc:'Kurumsal iç tasarımda tekliften satışa pazarlama modeli.'},
+    {n:8,name:'Filo Kiralama',desc:'Filo kiralamada lead kalitesi ve dönüşüm yönetimi eğitimi.'},
+    {n:9,name:'Endüstriyel Gıda',desc:'Endüstriyel gıdaya özel büyüme odaklı pazarlama akışı.'},
   ];
   var FAQ = [
     {q:'Bu programlar kimler için?',a:'Pazarlama, satış ve büyümeden sorumlu ekiplere, işletme sahiplerine ve kariyerinde ilerlemek isteyen pazarlama profesyonellerine yöneliktir. Her program belirli bir sektöre özel tasarlanmıştır.'},
@@ -416,162 +352,111 @@
     {q:'Hangi sektörlere özel program var?',a:'Ödeme sistemleri, B2B, fintech, teknoloji, üretim, enerji, ofis & kurumsal iç tasarım, filo kiralama ve endüstriyel gıda.'},
   ];
 
-  var $  = function(s,r){ return (r||document).querySelector(s); };
-  var el = function(tag,cls,html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; };
-  var esc= function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var el=function(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+  var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
 
-  var state = { screen:'home', detail:0, participants:'', selected:{}, c1:false, c2:false };
-  var view = $('#view'), nav = $('#nav');
+  var state={ participants:'', selected:{}, c1:false, c2:false };
+  var formCard=$('#formCard'), form=$('#applyForm'), success=$('#success');
+  document.getElementById('yr').textContent=new Date().getFullYear();
 
-  function top(){ requestAnimationFrame(function(){ view.scrollTop=0; }); }
-  function go(s){
-    state.screen=s;
-    document.querySelectorAll('.screen').forEach(function(sec){ sec.classList.remove('active'); });
-    $('#s-'+s).classList.add('active');
-    var showNav = (s==='home'||s==='programs'||s==='faq');
-    nav.classList.toggle('hidden', !showNav);
-    document.querySelectorAll('.nav a').forEach(function(a){ a.classList.toggle('on', a.getAttribute('data-nav')===s); });
-    top();
-  }
+  function scrollToForm(){ var y=formCard.getBoundingClientRect().top+window.scrollY-80; window.scrollTo({top:y,behavior:'smooth'}); }
+  $('#hdrApply').addEventListener('click',scrollToForm);
+  $('#bandApply').addEventListener('click',scrollToForm);
 
-  // data-go handlers
-  document.querySelectorAll('[data-go]').forEach(function(node){
-    node.addEventListener('click', function(){ go(node.getAttribute('data-go')); });
-  });
-
-  // Popular (first 4) + full list
-  var pop=$('#popular'), list=$('#programsList');
-  PROGRAMS.forEach(function(p,i){
-    if(i<4){
-      var c=el('div','pcard','<div class="badge">'+p.n+'</div><div class="name">'+esc(p.name)+'</div><div class="tag">'+esc(p.tag)+'</div>');
-      c.addEventListener('click',function(){ openDetail(i); });
-      pop.appendChild(c);
-    }
-    var r=el('div','plist','<div class="badge">'+p.n+'</div><div class="info"><div class="name">'+esc(p.name)+'</div><div class="desc">'+esc(p.desc)+'</div></div><div class="arw">→</div>');
-    r.addEventListener('click',function(){ openDetail(i); });
-    list.appendChild(r);
-  });
-
-  // Detail
-  function openDetail(i){
-    state.detail=i; var p=PROGRAMS[i];
-    $('#d-tag').textContent = p.tag+' · PROGRAM '+p.n;
-    $('#d-name').textContent = p.name;
-    $('#d-desc').textContent = p.desc;
-    var mm=$('#d-modules'); mm.innerHTML='';
-    MODULES.forEach(function(t,k){ mm.appendChild(el('div','mod','<div class="n">'+(k+1)+'</div><span>'+esc(t)+'</span>')); });
-    go('detail');
-  }
-  $('#d-apply').addEventListener('click',function(){
-    var p=PROGRAMS[state.detail]; state.selected[p.name]=true; renderChips(); go('form');
+  // Program cards
+  var pgrid=$('#pgrid'), chips=$('#chips');
+  PROGRAMS.forEach(function(p){
+    var card=el('div','pcard','<div class="bdg">'+p.n+'</div><div class="info"><div class="nm">'+esc(p.name)+'</div><div class="ds">'+esc(p.desc)+'</div></div><div class="plus">+</div>');
+    card.setAttribute('data-prog',p.name);
+    card.addEventListener('click',function(){ state.selected[p.name]=true; syncSelected(); scrollToForm(); });
+    pgrid.appendChild(card);
   });
 
   // Program chips (form)
-  var chips=$('#chips');
-  function renderChips(){
-    chips.innerHTML='';
-    PROGRAMS.forEach(function(p){
-      var on=!!state.selected[p.name];
-      var c=el('div','chip'+(on?' on':''),'<div class="box"><i>✓</i></div><span>'+esc(p.name)+'</span>');
-      c.addEventListener('click',function(){
-        if(state.selected[p.name]) delete state.selected[p.name]; else state.selected[p.name]=true;
-        renderChips();
-      });
-      chips.appendChild(c);
+  PROGRAMS.forEach(function(p){
+    var c=el('div','chip',esc(p.name));
+    c.setAttribute('data-prog',p.name);
+    c.addEventListener('click',function(){ if(state.selected[p.name])delete state.selected[p.name]; else state.selected[p.name]=true; syncSelected(); });
+    chips.appendChild(c);
+  });
+  function syncSelected(){
+    document.querySelectorAll('#chips .chip').forEach(function(c){ c.classList.toggle('on', !!state.selected[c.getAttribute('data-prog')]); });
+    document.querySelectorAll('#pgrid .pcard').forEach(function(c){
+      var on=!!state.selected[c.getAttribute('data-prog')];
+      c.classList.toggle('picked',on); c.querySelector('.plus').textContent=on?'✓':'+';
     });
   }
-  renderChips();
 
-  // Participants
-  document.querySelectorAll('#parts .part').forEach(function(node){
-    node.addEventListener('click',function(){
-      state.participants = node.getAttribute('data-part');
-      document.querySelectorAll('#parts .part').forEach(function(n){ n.classList.toggle('on', n===node); });
+  // Participants dropdown
+  var dd=$('#dd'), ddLabel=$('#ddLabel'), ddBtn=$('#ddBtn');
+  ddBtn.addEventListener('click',function(e){ e.stopPropagation(); dd.classList.toggle('open'); });
+  document.querySelectorAll('#ddMenu .dd-opt').forEach(function(opt){
+    opt.addEventListener('click',function(){
+      state.participants=opt.getAttribute('data-val'); ddLabel.textContent=state.participants; ddBtn.classList.add('has');
+      document.querySelectorAll('#ddMenu .dd-opt').forEach(function(o){ o.classList.toggle('on',o===opt); });
+      dd.classList.remove('open');
     });
   });
+  document.addEventListener('click',function(e){ if(!dd.contains(e.target)) dd.classList.remove('open'); });
 
   // Consents
-  function bindCons(id,key){
-    var c=$('#'+id);
-    c.addEventListener('click',function(){ state[key]=!state[key]; c.classList.toggle('on',state[key]); if(key==='c1'&&state.c1) $('#cons-err').classList.remove('show'); });
-  }
+  function bindCons(id,key){ var c=$('#'+id); c.addEventListener('click',function(){ state[key]=!state[key]; c.classList.toggle('on',state[key]); if(key==='c1'&&state.c1)$('#cons-err').classList.remove('show'); }); }
   bindCons('cons1','c1'); bindCons('cons2','c2');
 
   // FAQ
   var faqList=$('#faqList');
-  FAQ.forEach(function(it,i){
-    var f=el('div','faq'+(i===0?' open':''),'<div class="q"><div class="txt">'+esc(it.q)+'</div><div class="sign">'+(i===0?'−':'+')+'</div></div><div class="a">'+esc(it.a)+'</div>');
+  FAQ.forEach(function(it){
+    var f=el('div','faq','<div class="q"><div class="txt">'+esc(it.q)+'</div><div class="sign">+</div></div><div class="a">'+esc(it.a)+'</div>');
     f.querySelector('.q').addEventListener('click',function(){
-      var isOpen=f.classList.contains('open');
+      var open=f.classList.contains('open');
       document.querySelectorAll('#faqList .faq').forEach(function(x){ x.classList.remove('open'); x.querySelector('.sign').textContent='+'; });
-      if(!isOpen){ f.classList.add('open'); f.querySelector('.sign').textContent='−'; }
+      if(!open){ f.classList.add('open'); f.querySelector('.sign').textContent='−'; }
     });
     faqList.appendChild(f);
   });
 
   // Submit
-  var form=$('#applyForm'), banner=$('#banner'), btn=$('#submitBtn');
-  var emailRe=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-
+  var banner=$('#banner'), btn=$('#submitBtn'), emailRe=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   function mark(id,bad){ $('#'+id).classList.toggle('invalid',bad); }
-
   form.addEventListener('submit',function(e){
     e.preventDefault();
     var name=$('#f-name').value.trim(), phone=$('#f-phone').value.trim(), email=$('#f-email').value.trim();
-    var badName=!name, badPhone=!phone, badEmail=!emailRe.test(email), badC1=!state.c1;
-    mark('fld-name',badName); mark('fld-phone',badPhone); mark('fld-email',badEmail);
-    $('#cons-err').classList.toggle('show',badC1);
-    if(badName||badPhone||badEmail||badC1){
-      banner.classList.add('show'); top(); return;
-    }
+    var bN=!name,bP=!phone,bE=!emailRe.test(email),bC=!state.c1;
+    mark('fld-name',bN); mark('fld-phone',bP); mark('fld-email',bE); $('#cons-err').classList.toggle('show',bC);
+    if(bN||bP||bE||bC){ banner.classList.add('show'); scrollToForm(); return; }
     banner.classList.remove('show');
-
     var programs=Object.keys(state.selected);
-    var payload={
-      first_name:name,
-      role:$('#f-role').value.trim(),
-      company:$('#f-company').value.trim(),
-      phone:phone,
-      email:email,
-      seats:state.participants,
-      programs:programs,
-      note:$('#f-note').value.trim(),
-      kvkk:'Gizlilik Politikası onaylandı',
-      etk:state.c2?'Onaylandı':'Reddedildi',
-      website:$('#f-website').value
-    };
-
+    var payload={ first_name:name, role:$('#f-role').value.trim(), company:$('#f-company').value.trim(),
+      phone:phone, email:email, seats:state.participants, programs:programs, note:$('#f-note').value.trim(),
+      kvkk:'Gizlilik Politikası onaylandı', etk:state.c2?'Onaylandı':'Reddedildi', website:$('#f-website').value };
     var old=btn.textContent; btn.textContent='Gönderiliyor...'; btn.disabled=true;
     fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
       .then(function(r){ return r.json().catch(function(){return{};}).then(function(d){return{ok:r.ok,d:d};}); })
       .then(function(res){
         if(res.ok&&res.d&&res.d.ok){
-          $('#su-name').textContent = name;
-          $('#su-part').textContent = state.participants||'Belirtilmedi';
-          $('#su-prog').textContent = programs.length?programs.join(', '):'Genel';
-          $('#su-msg').textContent = 'Teşekkürler '+name+'. Ekibimiz size uygun eğitim akışını hazırlayıp en kısa sürede dönüş yapacak.';
-          go('success'); btn.textContent=old; btn.disabled=false;
+          $('#su-msg').textContent='Teşekkürler '+name+'. Ekibimiz size uygun eğitim akışını hazırlayıp en kısa sürede dönüş yapacak.';
+          $('#su-part').textContent=state.participants||'Belirtilmedi';
+          $('#su-prog').textContent=programs.length?programs.join(', '):'Genel';
+          form.style.display='none'; success.classList.add('show'); scrollToForm();
+          btn.textContent=old; btn.disabled=false;
         } else {
-          banner.textContent=(res.d&&res.d.error)||'Bir hata oluştu, lütfen tekrar deneyin.';
-          banner.classList.add('show'); btn.textContent=old; btn.disabled=false; top();
+          banner.textContent=(res.d&&res.d.error)||'Bir hata oluştu, lütfen tekrar deneyin.'; banner.classList.add('show');
+          btn.textContent=old; btn.disabled=false; scrollToForm();
         }
       })
-      .catch(function(){
-        banner.textContent='Bağlantı hatası. Lütfen tekrar deneyin.';
-        banner.classList.add('show'); btn.textContent=old; btn.disabled=false; top();
-      });
+      .catch(function(){ banner.textContent='Bağlantı hatası. Lütfen tekrar deneyin.'; banner.classList.add('show'); btn.textContent=old; btn.disabled=false; });
   });
 
-  // Reset from success
   $('#su-reset').addEventListener('click',function(){
     form.reset(); state.selected={}; state.participants=''; state.c1=false; state.c2=false;
+    ddLabel.textContent='Seçiniz'; ddBtn.classList.remove('has');
+    document.querySelectorAll('#ddMenu .dd-opt').forEach(function(o){o.classList.remove('on');});
     $('#cons1').classList.remove('on'); $('#cons2').classList.remove('on');
-    document.querySelectorAll('#parts .part').forEach(function(n){ n.classList.remove('on'); });
-    document.querySelectorAll('.fld').forEach(function(n){ n.classList.remove('invalid'); });
-    banner.classList.remove('show'); renderChips(); go('home');
+    document.querySelectorAll('.fld').forEach(function(n){n.classList.remove('invalid');});
+    banner.classList.remove('show'); syncSelected();
+    success.classList.remove('show'); form.style.display='';
   });
-
-  go('home');
 })();
 </script>
 </body>
