@@ -3375,6 +3375,13 @@ if ($action === 'orders' && !empty($id) && ($routes[3] ?? '') === 'confirm-manua
             invoiceSendAdminSaleNotification($db, (int)$orderId, 'manual_transfer');
         } catch (Throwable $e) { error_log('[admin sale notify manual] ' . $e->getMessage()); }
 
+        // GA4 sunucu tarafli purchase — havale onayi gunler sonra olabilir, kullanici
+        // o an sitede degil; client-side bu geliri HIC olcemezdi. (idempotent)
+        try {
+            require_once __DIR__ . '/../services/Ga4MeasurementProtocol.php';
+            ga4SendPurchase($db, (int)$orderId);
+        } catch (Throwable $e) { error_log('[ga4 purchase manual] ' . $e->getMessage()); }
+
         // Email automation event + müşteri mailleri
         try {
             $userStmt = $db->prepare("SELECT email, first_name FROM users WHERE id = ? LIMIT 1");

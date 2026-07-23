@@ -208,8 +208,8 @@ if ($method === 'POST' && empty($action)) {
             "INSERT INTO orders (
                 user_id, order_number, subtotal_amount, coupon_discount_amount, shipping_amount, tax_amount,
                 total_amount, coupon_id, coupon_code, coupon_name, applied_coupon_snapshot_json,
-                currency, customer_lang, status, usd_try_rate_used, customer_type
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'TRY', ?, ?, ?, ?)"
+                currency, customer_lang, status, usd_try_rate_used, customer_type, ga_client_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'TRY', ?, ?, ?, ?, ?)"
         );
         $stmt->execute([
             $userId,
@@ -227,6 +227,9 @@ if ($method === 'POST' && empty($action)) {
             $orderStatus,
             $rateUsed,
             $customerType,
+            // GA4 client_id — Measurement Protocol purchase atfı için (bkz. migrations/ga4_ecommerce.sql)
+            (isset($input['ga_client_id']) && is_string($input['ga_client_id']) && $input['ga_client_id'] !== '')
+                ? substr($input['ga_client_id'], 0, 64) : null,
         ]);
         $orderId = (int)$db->lastInsertId();
 

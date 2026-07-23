@@ -14,6 +14,7 @@ import Cart from '../../components/Cart'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import FAQ from '../../components/FAQ'
 import { parseLocalizedPrice, pickLocalizedPriceAndCurrency, formatLocalizedPrice } from '../../utils/price'
+import { trackViewItem } from '../../utils/ga4Ecommerce'
 import './ServicePageTemplate.css'
 import trCommon from '../../locales/tr/common.json'
 import enCommon from '../../locales/en/common.json'
@@ -648,6 +649,25 @@ export default function ServicePageTemplate(props: ServicePageProps) {
     }, [props.serviceKey, props.disableApiHeroTextOverride, currentLang, t, props.pricingSection.description, props.pricingSection.packages, props.heroPriceCard?.packageId]);
 
     const displayPackages = props.serviceKey ? dynamicPackages : props.pricingSection.packages;
+
+    // GA4: ürün/hizmet/eğitim detayı görüntülendi. Bu şablon hizmet, sektörel,
+    // eğitim ve ürün sayfalarının hepsinde kullanıldığı için view_item'ı tek
+    // yerden kapsıyoruz. Sayfa başına BİR KEZ (fiyat API'si geç gelirse bekler).
+    const viewItemSentFor = useRef<string | null>(null);
+    useEffect(() => {
+        const pkg = displayPackages?.[0];
+        if (!pkg) return;
+        const key = `${cmsSlug}|${pkg.id}`;
+        if (viewItemSentFor.current === key) return;
+        viewItemSentFor.current = key;
+        trackViewItem({
+            product_key: String(pkg.productKey || pkg.id || ''),
+            name: pkg.fullName || pkg.name || displayHero.title,
+            price: parseLocalizedPrice(pkg.price),
+            currency: (pkg.price || '').includes('$') ? 'USD' : 'TRY',
+            quantity: 1
+        });
+    }, [displayPackages, cmsSlug, displayHero.title]);
 
     const localizeInternalPath = (path?: string) => {
         if (!path) return path;

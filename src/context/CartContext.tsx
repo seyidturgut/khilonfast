@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import api, { productsAPI, paymentAPI } from '../services/api';
+import { trackAddToCart, trackRemoveFromCart } from '../utils/ga4Ecommerce';
 
 interface BankAccountSummary {
     id: number;
@@ -251,10 +252,13 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
         // EN locale'de USD fiyatı korunur (TL'ye çevirme yok). TR'de eski davranış.
         if (isEnLocale) {
+            // GA4: yalnızca GERÇEKTEN eklendiyse say (zaten sepetteyse setItems eklemiyor)
+            const alreadyInCart = items.some(item => item.id === product.id);
             setItems(prevItems => {
                 if (prevItems.find(item => item.id === product.id)) return prevItems;
                 return [...prevItems, { ...product, quantity: 1 }];
             });
+            if (!alreadyInCart) trackAddToCart({ ...product, quantity: 1 });
             setTimeout(() => { refreshPrices().catch(() => {}); }, 0);
             return true;
         }
@@ -284,10 +288,13 @@ export const CartProvider = ({ children }: CartProviderProps) => {
             return false;
         }
 
+        // GA4: yalnızca GERÇEKTEN eklendiyse say (zaten sepetteyse setItems eklemiyor)
+        const alreadyInCart = items.some(item => item.id === normalizedProduct.id);
         setItems(prevItems => {
             if (prevItems.find(item => item.id === normalizedProduct.id)) return prevItems;
             return [...prevItems, { ...normalizedProduct, quantity: 1 }];
         });
+        if (!alreadyInCart) trackAddToCart({ ...normalizedProduct, quantity: 1 });
 
         // Backend'de fiyat güncellendiyse veya yeni kur varsa arkada senkronla
         setTimeout(() => { refreshPrices().catch(() => {}); }, 0);
@@ -300,12 +307,17 @@ export const CartProvider = ({ children }: CartProviderProps) => {
             const { pendingProduct } = currencyConflict;
             try { localStorage.removeItem('cart'); } catch { /* storage unavailable */ }
             setItems([{ ...pendingProduct, quantity: 1 }]);
+            // Para birimi çakışması çözülüp sepet bu ürünle değiştirildi = gerçek bir ekleme
+            trackAddToCart({ ...pendingProduct, quantity: 1 });
         }
         setCurrencyConflict(null);
     };
 
     const removeFromCart = (productId: string) => {
+        // GA4: silinmeden ÖNCE ürünü yakala (sonra elimizde kalmaz)
+        const removed = items.find(item => item.id === productId);
         setItems(prevItems => prevItems.filter(item => item.id !== productId));
+        if (removed) trackRemoveFromCart(removed);
     };
 
     const clearCart = () => {

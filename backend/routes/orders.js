@@ -54,7 +54,7 @@ router.post('/',
 
             await connection.beginTransaction();
 
-            const { items, guest_email, guest_name, guest_phone, coupon_code } = req.body;
+            const { items, guest_email, guest_name, guest_phone, coupon_code, ga_client_id } = req.body;
 
             // Maestro AI henüz satın alınamaz — maestro-* ürün içeren sipariş reddedilir.
             // (rollback yeterli; connection.release() finally bloğunda yapılıyor)
@@ -285,8 +285,8 @@ router.post('/',
                 `INSERT INTO orders
                     (user_id, order_number, subtotal_amount, coupon_discount_amount, total_amount,
                      coupon_id, coupon_code, coupon_name, applied_coupon_snapshot_json, currency, status,
-                     usd_try_rate_used)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                     usd_try_rate_used, ga_client_id)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     userId,
                     orderNumber,
@@ -299,7 +299,9 @@ router.post('/',
                     couponSnapshot ? JSON.stringify(couponSnapshot) : null,
                     currency,
                     orderStatus,
-                    usedUsdConversion ? usdTryRate : null
+                    usedUsdConversion ? usdTryRate : null,
+                    // GA4 client_id — Measurement Protocol purchase atfı için
+                    (typeof ga_client_id === 'string' && ga_client_id) ? ga_client_id.slice(0, 64) : null
                 ]
             );
 

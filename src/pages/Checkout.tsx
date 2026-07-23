@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { couponAPI, emailAutomationAPI, ordersAPI, paymentAPI } from '../services/api';
 import { HiCheckCircle, HiCreditCard, HiShieldCheck, HiShoppingBag, HiLibrary } from 'react-icons/hi';
+import { trackBeginCheckout, getGa4ClientId } from '../utils/ga4Ecommerce';
 
 interface SavedCard {
     id: number;
@@ -266,6 +267,16 @@ export default function Checkout() {
         setPricingSummary(baseSummary);
     }, [baseSummary]);
 
+    // GA4: ödeme akışı başladı. Sepet yüklenene kadar bekle, sonra SADECE BİR KEZ gönder
+    // (fiyat/kupon güncellemeleri re-render tetikler, her seferinde saymamalı).
+    const beginCheckoutSent = useRef(false);
+    useEffect(() => {
+        if (beginCheckoutSent.current) return;
+        if (!items || items.length === 0) return;
+        beginCheckoutSent.current = true;
+        trackBeginCheckout(items);
+    }, [items]);
+
     const formatPrice = (amount: number, currency: string) => {
         const formatted = Number(amount).toLocaleString(isEn ? 'en-US' : 'tr-TR', {
             minimumFractionDigits: 0,
@@ -497,6 +508,9 @@ export default function Checkout() {
                 items: buildOrderItems(),
                 coupon_code: pricingSummary?.applied_coupon?.code || null,
                 customer_type: buyingAsBusiness ? 'company' : 'individual',
+                // GA4: sunucu taraflı purchase'ın doğru kullanıcıya/reklam kaynağına
+                // atfedilebilmesi için client_id'yi siparişle birlikte gönder
+                ga_client_id: getGa4ClientId(),
                 national_id: !buyingAsBusiness ? nationalId : '',
                 company_name: buyingAsBusiness ? companyName.trim() : '',
                 tax_office: buyingAsBusiness ? taxOffice.trim() : '',
@@ -552,6 +566,9 @@ export default function Checkout() {
                 items: buildOrderItems(),
                 coupon_code: pricingSummary?.applied_coupon?.code || null,
                 customer_type: buyingAsBusiness ? 'company' : 'individual',
+                // GA4: sunucu taraflı purchase'ın doğru kullanıcıya/reklam kaynağına
+                // atfedilebilmesi için client_id'yi siparişle birlikte gönder
+                ga_client_id: getGa4ClientId(),
                 national_id: !buyingAsBusiness ? nationalId : '',
                 company_name: buyingAsBusiness ? companyName.trim() : '',
                 tax_office: buyingAsBusiness ? taxOffice.trim() : '',

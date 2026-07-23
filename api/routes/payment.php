@@ -264,6 +264,12 @@ if ($action === 'initiate' && $method === 'POST') {
             createSubscriptionsForOrder($db, (int)$payload['id'], (int)$orderId, 'manual_transfer', null);
             $db->commit();
 
+            // GA4 purchase — commit SONRASI (rollback olursa gonderilmesin)
+            try {
+                require_once __DIR__ . '/../services/Ga4MeasurementProtocol.php';
+                ga4SendPurchase($db, (int)$orderId);
+            } catch (Throwable $e) { error_log('[ga4 purchase free] ' . $e->getMessage()); }
+
             // Bedava sipariş mailleri — onay + (varsa) form-required onboarding daveti.
             // Önceden bu blokta HİÇ mail yoktu.
             try {
@@ -441,6 +447,12 @@ if ($action === 'initiate' && $method === 'POST') {
                 require_once __DIR__ . '/../services/InvoiceService.php';
                 invoiceSendAdminSaleNotification($db, (int)$orderId, 'credit_card');
             } catch (Throwable $e) { error_log('[admin sale notify cc] ' . $e->getMessage()); }
+
+            // GA4 sunucu taraflı purchase (idempotent — ga4_purchase_sent_at ile korunur)
+            try {
+                require_once __DIR__ . '/../services/Ga4MeasurementProtocol.php';
+                ga4SendPurchase($db, (int)$orderId);
+            } catch (Throwable $e) { error_log('[ga4 purchase cc] ' . $e->getMessage()); }
 
             // Boss Panel push bildirimi — yeni satış
             try {
@@ -915,6 +927,12 @@ if ($action === 'callback' && ($method === 'GET' || $method === 'POST')) {
                 $resolvedPaymentMethod = (string)($pmStmt->fetchColumn() ?: 'credit_card');
                 invoiceSendAdminSaleNotification($db, (int)$order['id'], $resolvedPaymentMethod);
             } catch (Throwable $e) { error_log('[admin sale notify 3ds] ' . $e->getMessage()); }
+
+            // GA4 sunucu taraflı purchase (idempotent)
+            try {
+                require_once __DIR__ . '/../services/Ga4MeasurementProtocol.php';
+                ga4SendPurchase($db, (int)$order['id']);
+            } catch (Throwable $e) { error_log('[ga4 purchase 3ds] ' . $e->getMessage()); }
 
             // Boss Panel push bildirimi — yeni satış (kart 3DS veya Anında Havale)
             try {

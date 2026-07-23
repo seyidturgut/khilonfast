@@ -108,6 +108,12 @@ if ($action === 'run' && $method === 'POST') {
             if ($isSuccess) {
                 $db->prepare("UPDATE orders SET status = 'completed' WHERE id = ?")->execute([$newOrderId]);
 
+                // GA4 purchase — abonelik yenileme geliri de olculmeli (tarayiciya hic ugramaz)
+                try {
+                    require_once __DIR__ . '/../services/Ga4MeasurementProtocol.php';
+                    ga4SendPurchase($db, (int)$newOrderId);
+                } catch (Throwable $e) { error_log('[ga4 purchase renewal] ' . $e->getMessage()); }
+
                 // Aboneliği uzat — SADECE mevcut kaydı güncelle.
                 // (Önceden ek bir INSERT yapılıyordu → aynı ürün için çift aktif
                 //  abonelik + sonraki cron'da çift tahsilat riski. INSERT kaldırıldı.)

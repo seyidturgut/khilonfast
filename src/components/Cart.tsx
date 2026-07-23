@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { HiX, HiShoppingCart, HiTrash } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './Cart.css';
 import { getLocalizedPathByKey, useRouteLocale } from '../utils/locale';
+import { trackViewCart } from '../utils/ga4Ecommerce';
 
 interface CartProps {
     isOpen: boolean;
@@ -16,6 +18,13 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     const navigate = useNavigate();
     const currentLang = useRouteLocale();
     const checkoutPath = getLocalizedPathByKey(currentLang, 'checkout');
+
+    // GA4: sepet drawer'ı her AÇILDIĞINDA bir kez view_cart (kapalıyken ateşlenmez)
+    useEffect(() => {
+        if (isOpen) trackViewCart(items);
+        // items kasten bağımlılık DEĞİL: drawer açıkken sepet değişince tekrar saymayalım
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen]);
 
     const handleCheckout = () => {
         onClose();
