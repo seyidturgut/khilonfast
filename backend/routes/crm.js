@@ -803,7 +803,15 @@ router.put('/contacts/:id', async (req, res) => {
 
 router.delete('/contacts/:id', async (req, res) => {
     try {
-        const [r] = await db.query('DELETE FROM crm_contacts WHERE id = ?', [Number(req.params.id)]);
+        const cid = Number(req.params.id);
+        // Silmeden önce üye olduğu listeleri yakala
+        let affected = [];
+        try { const [rows] = await db.query('SELECT list_id FROM crm_list_contacts WHERE contact_id = ?', [cid]); affected = rows.map(x => Number(x.list_id)); } catch {}
+        // Üyelik + etiket bağlarını temizle (öksüz satır kalmasın)
+        try { await db.query('DELETE FROM crm_list_contacts WHERE contact_id = ?', [cid]); } catch {}
+        try { await db.query('DELETE FROM crm_contact_tags WHERE contact_id = ?', [cid]); } catch {}
+        const [r] = await db.query('DELETE FROM crm_contacts WHERE id = ?', [cid]);
+        for (const lid of [...new Set(affected)]) { try { await recountListContacts(lid); } catch {} }
         res.json({ ok: true, deleted: r.affectedRows });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -812,7 +820,10 @@ router.post('/contacts/bulk-delete', async (req, res) => {
     try {
         const ids = (req.body.ids || []).map(Number).filter(Boolean);
         if (!ids.length) return res.status(400).json({ error: 'ids required' });
+        try { await db.query(`DELETE FROM crm_list_contacts WHERE contact_id IN (?)`, [ids]); } catch {}
+        try { await db.query(`DELETE FROM crm_contact_tags WHERE contact_id IN (?)`, [ids]); } catch {}
         const [r] = await db.query(`DELETE FROM crm_contacts WHERE id IN (?)`, [ids]);
+        try { await recountListContacts(); } catch {}  // tüm static listeler
         res.json({ ok: true, deleted: r.affectedRows });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });

@@ -7,6 +7,10 @@
   var ENDPOINT = '/api/crm-public/form/' + SLUG + '/submit';
   var SEEN_KEY = 'khilonExitPopupSeen';
 
+  // Popup'ın gösterilmeyeceği hassas sayfalar (ödeme, giriş, panel, admin, onboarding...)
+  var EXCLUDE = /(^|\/)(admin|dashboard|checkout|odeme|payment|payment-callback|payment-success|giris|login|kayit-ol|register|sifre-belirle|set-password|hesabim|onboarding|onboarding-sunumu|onboarding-formu|egitimllerim|abonelikten-cik|unsubscribe|danismanlik-odeme|danismanlik-basvurusu-odeme)(\/|$|-)/i;
+  function blocked(){ return EXCLUDE.test(location.pathname); }
+
   try { if (sessionStorage.getItem(SEEN_KEY)) return; } catch(e){}
 
   // Form aktif mi? (admin pasif yaptıysa 404 → hiç gösterme)
@@ -21,7 +25,7 @@
     var shown = false;
 
     function open(){
-      if (shown) return; shown = true;
+      if (shown || blocked()) return; shown = true;
       try { sessionStorage.setItem(SEEN_KEY, '1'); } catch(e){}
       ov.classList.add('on');
       document.documentElement.style.overflow = 'hidden';

@@ -407,10 +407,12 @@ function crmRecountTagContacts(PDO $db, ?int $tagId = null): void
 if (!function_exists('crmRecountListContacts')) {
 function crmRecountListContacts(PDO $db, ?int $listId = null): void
 {
-    $where = $listId ? "WHERE id = " . (int)$listId : "";
+    $where = $listId
+        ? "WHERE id = " . (int)$listId . " AND type = 'static'"
+        : "WHERE type = 'static'";
     $db->exec("UPDATE crm_lists SET contact_count = (
         SELECT COUNT(*) FROM crm_list_contacts WHERE list_id = crm_lists.id
-    ) $where AND type = 'static'");
+    ) $where");
 }
 }
 

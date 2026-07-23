@@ -193,8 +193,21 @@ if ($action === 'contacts') {
 
     // DELETE /api/crm/contacts/:id
     if ($method === 'DELETE' && !empty($id) && empty($subAction)) {
+        $cid = (int)$id;
+        // Silmeden önce contact'ın üye olduğu listeleri yakala
+        $affected = [];
+        try {
+            $st = $db->prepare("SELECT list_id FROM crm_list_contacts WHERE contact_id = ?");
+            $st->execute([$cid]);
+            $affected = array_map('intval', $st->fetchAll(PDO::FETCH_COLUMN));
+        } catch (Throwable $e) {}
+        // Üyelik + etiket bağlarını temizle (öksüz satır kalmasın)
+        try { $db->prepare("DELETE FROM crm_list_contacts WHERE contact_id = ?")->execute([$cid]); } catch (Throwable $e) {}
+        try { $db->prepare("DELETE FROM crm_contact_tags WHERE contact_id = ?")->execute([$cid]); } catch (Throwable $e) {}
         $stmt = $db->prepare("DELETE FROM crm_contacts WHERE id = ?");
-        $stmt->execute([(int)$id]);
+        $stmt->execute([$cid]);
+        // Etkilenen liste sayaçlarını güncelle
+        foreach (array_unique($affected) as $lid) { crmRecountListContacts($db, (int)$lid); }
         sendResponse(['ok' => true, 'deleted' => $stmt->rowCount()]);
     }
 
@@ -204,8 +217,13 @@ if ($action === 'contacts') {
         $ids = array_filter(array_map('intval', $data['ids'] ?? []));
         if (!$ids) sendResponse(['error' => 'ids required'], 400);
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        // Üyelik + etiket bağlarını temizle
+        try { $db->prepare("DELETE FROM crm_list_contacts WHERE contact_id IN ($placeholders)")->execute($ids); } catch (Throwable $e) {}
+        try { $db->prepare("DELETE FROM crm_contact_tags WHERE contact_id IN ($placeholders)")->execute($ids); } catch (Throwable $e) {}
         $stmt = $db->prepare("DELETE FROM crm_contacts WHERE id IN ($placeholders)");
         $stmt->execute($ids);
+        // Tüm static liste sayaçlarını yeniden hesapla (helper null-case düzeltildi)
+        crmRecountListContacts($db);
         sendResponse(['ok' => true, 'deleted' => $stmt->rowCount()]);
     }
 
