@@ -1,7 +1,6 @@
-import { lazy, Suspense } from 'react';
 import '../Hero.css';
-// PERFORMANS: bkz. Hero.tsx — three.js'i her sayfaya tasimamak icin lazy.
-const HeroBackgroundEffect = lazy(() => import('../HeroBackgroundEffect'));
+// PERFORMANS: bkz. DeferredHeroBackground — three.js'i her sayfaya tasimamak icin.
+import DeferredHeroBackground from '../DeferredHeroBackground';
 
 interface HeroBlockProps {
     data: {
@@ -31,7 +30,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
     return (
         <section id="home" className="hero" style={{ position: 'relative', overflow: 'hidden' }}>
             {/* Background Layer: Full-screen Data Flow Lines */}
-            <Suspense fallback={null}><HeroBackgroundEffect /></Suspense>
+            <DeferredHeroBackground />
 
             <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
                 <div className="hero-content">
