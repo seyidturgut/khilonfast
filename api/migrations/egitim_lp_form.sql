@@ -45,7 +45,25 @@ ON DUPLICATE KEY UPDATE
     double_opt_in   = 0,
     is_active       = 1;
 
--- 3) Liste sayaç senkronu (kart üzerindeki "kişi" sayısı doğru görünsün diye)
+-- 3) actions_json'daki list_id'yi oturum değişkeninden BAĞIMSIZ olarak kesinle.
+--    (Bazı SQL çalıştırıcılar her ifadeyi ayrı bağlantıda çalıştırır → @list_id NULL kalır
+--     → add_to_list atlanır → başvuru listeye düşmez. Bu UPDATE onu slug alt-sorgusuyla düzeltir.)
+UPDATE crm_forms
+SET actions_json = JSON_ARRAY(
+    JSON_OBJECT('type','add_to_list','list_id',
+        (SELECT id FROM crm_lists WHERE slug = 'egitim-basvurulari-lp' LIMIT 1)),
+    JSON_OBJECT('type','notify_admin')
+)
+WHERE slug = 'egitim-basvurusu';
+
+-- 4) Bu forma daha önce gelmiş ama listeye eklenmemiş başvuranları geriye dönük listeye ekle
+INSERT IGNORE INTO crm_list_contacts (list_id, contact_id)
+SELECT (SELECT id FROM crm_lists WHERE slug = 'egitim-basvurulari-lp' LIMIT 1), s.contact_id
+FROM crm_form_submissions s
+JOIN crm_forms f ON f.id = s.form_id
+WHERE f.slug = 'egitim-basvurusu' AND s.contact_id IS NOT NULL AND s.status = 'confirmed';
+
+-- 5) Liste sayaç senkronu (kart üzerindeki "kişi" sayısı doğru görünsün diye)
 UPDATE crm_lists
 SET contact_count = (SELECT COUNT(*) FROM crm_list_contacts WHERE list_id = crm_lists.id)
 WHERE slug = 'egitim-basvurulari-lp' AND type = 'static';
