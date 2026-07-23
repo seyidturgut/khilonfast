@@ -22,6 +22,8 @@ VALUES (
         JSON_OBJECT('key','phone','label','Telefon','type','text','required',false),
         JSON_OBJECT('key','email','label','E-posta','type','email','required',true),
         JSON_OBJECT('key','interest','label','İlgilendiğiniz konu','type','text','required',false),
+        JSON_OBJECT('key','company_size','label','Firma çalışan sayısı','type','text','required',false),
+        JSON_OBJECT('key','budget','label','Aylık / proje bütçesi','type','text','required',false),
         JSON_OBJECT('key','note','label','Not','type','textarea','required',false),
         JSON_OBJECT('key','kvkk','label','Gizlilik Politikası Onayı','type','text','required',false),
         JSON_OBJECT('key','etk','label','ETK / Pazarlama İzni','type','text','required',false)
