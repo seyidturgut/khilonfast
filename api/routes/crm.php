@@ -393,7 +393,7 @@ if ($action === 'contacts') {
             $smart = $db->query("SELECT id, rules_json FROM crm_lists WHERE type = 'smart'")->fetchAll();
             foreach ($smart as $l) {
                 $rules = json_decode((string)$l['rules_json'], true) ?: [];
-                $built = crmBuildSmartListSql($rules);
+                $built = crmBuildSmartListSql($rules, $db);
                 $w = $built['where'] ? "AND (" . $built['where'] . ")" : '';
                 $cs = $db->prepare("SELECT 1 FROM crm_contacts c WHERE c.id = ? $w LIMIT 1");
                 $cs->execute(array_merge([$contactId], $built['params']));
@@ -864,6 +864,49 @@ if ($action === 'campaigns') {
                     'type' => $row['type'] ?? 'smart',
                 ],
                 'opened_count' => $opened,
+            ]);
+        } catch (Throwable $e) {
+            sendResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // /api/crm/campaigns/:id/clickers-list — bu kampanyada İÇERİK linkine TIKLAYANLAR için
+    // canlı akıllı liste oluştur. Abonelikten çık + sosyal medya + KVKK + mailto tıklamaları
+    // HARİÇ (bkz. crmClickExcludePatterns) → yalnızca gerçek ilgi gösterenler.
+    // Geçmiş kampanyalar için tek tık; yeni gönderimlerde zaten otomatik oluşur (idempotent).
+    if ($method === 'POST' && !empty($id) && $subAction === 'clickers-list') {
+        try {
+            $cStmt = $db->prepare("SELECT id, name FROM crm_campaigns WHERE id = ?");
+            $cStmt->execute([(int)$id]);
+            $camp = $cStmt->fetch();
+            if (!$camp) sendResponse(['error' => 'Kampanya bulunamadı'], 404);
+
+            require_once __DIR__ . '/../services/CrmSmartListEngine.php';
+            $listId = crmEnsureClickersList($db, (int)$id, (string)($camp['name'] ?? ''));
+            $row = $db->query("SELECT slug, name, type FROM crm_lists WHERE id = " . (int)$listId)->fetch();
+
+            // Canlı sayı: kuralla AYNI filtreyi uygula (tekil kişi)
+            $clicked = 0;
+            try {
+                $patterns = crmClickExcludePatterns($db);
+                $sql = "SELECT COUNT(DISTINCT contact_id) FROM crm_email_tracking
+                        WHERE campaign_id = ? AND event = 'clicked'
+                          AND contact_id IS NOT NULL AND link_url IS NOT NULL AND link_url <> ''";
+                $prm = [(int)$id];
+                foreach ($patterns as $pat) { $sql .= " AND link_url NOT LIKE ?"; $prm[] = '%' . $pat . '%'; }
+                $qs = $db->prepare($sql); $qs->execute($prm);
+                $clicked = (int)$qs->fetchColumn();
+            } catch (Throwable $e) {}
+
+            sendResponse([
+                'ok' => true,
+                'list' => [
+                    'id' => (int)$listId,
+                    'slug' => $row['slug'] ?? '',
+                    'name' => $row['name'] ?? '',
+                    'type' => $row['type'] ?? 'smart',
+                ],
+                'clicked_count' => $clicked,
             ]);
         } catch (Throwable $e) {
             sendResponse(['error' => $e->getMessage()], 500);
@@ -1519,7 +1562,7 @@ if ($action === 'lists') {
             $count = (int)$r['contact_count'];
             if ($r['type'] === 'smart' && $rules) {
                 try {
-                    $built = crmBuildSmartListSql($rules);
+                    $built = crmBuildSmartListSql($rules, $db);
                     $w = $built['where'] ? "WHERE " . $built['where'] : '';
                     $cs = $db->prepare("SELECT COUNT(*) FROM crm_contacts c $w");
                     $cs->execute($built['params']);
@@ -1548,7 +1591,7 @@ if ($action === 'lists') {
         $count = (int)$r['contact_count'];
         if ($r['type'] === 'smart' && $rules) {
             try {
-                $built = crmBuildSmartListSql($rules);
+                $built = crmBuildSmartListSql($rules, $db);
                 $w = $built['where'] ? "WHERE " . $built['where'] : '';
                 $cs = $db->prepare("SELECT COUNT(*) FROM crm_contacts c $w");
                 $cs->execute($built['params']);
@@ -1625,7 +1668,7 @@ if ($action === 'lists') {
 
         if ($list['type'] === 'smart') {
             $rules = json_decode((string)$list['rules_json'], true) ?: [];
-            $built = crmBuildSmartListSql($rules);
+            $built = crmBuildSmartListSql($rules, $db);
             $w = $built['where'] ? "WHERE " . $built['where'] : '';
             $cs = $db->prepare("SELECT COUNT(*) FROM crm_contacts c $w");
             $cs->execute($built['params']);

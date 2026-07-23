@@ -31,7 +31,7 @@ function crmResolveCampaignAudience(PDO $db, array $campaign): array
             foreach ($rs as $r) $contactIds[(int)$r['contact_id']] = true;
         } else {
             $rules = json_decode((string)$list['rules_json'], true) ?: [];
-            $built = crmBuildSmartListSql($rules);
+            $built = crmBuildSmartListSql($rules, $db);
             $w = $built['where'] ? "WHERE " . $built['where'] : '';
             $sql = "SELECT c.id FROM crm_contacts c $w";
             $rs = $db->prepare($sql);
@@ -131,6 +131,11 @@ function crmEnqueueCampaign(PDO $db, int $campaignId, bool $dryRun = false): arr
     try { crmEnsureOpenersList($db, $campaignId, (string)($campaign['name'] ?? '')); }
     catch (Throwable $e) { error_log('[crm] openers list: ' . $e->getMessage()); }
 
+    // Aynı şekilde İÇERİK linkine TIKLAYANLAR için otomatik canlı liste ("{ad}_tikladi").
+    // Abonelikten çık + sosyal medya tıklamaları hariç → yalnızca gerçek ilgi.
+    try { crmEnsureClickersList($db, $campaignId, (string)($campaign['name'] ?? '')); }
+    catch (Throwable $e) { error_log('[crm] clickers list: ' . $e->getMessage()); }
+
     return ['audience_count' => $count, 'queued' => $count, 'variants' => $variantStats];
 }
 }
@@ -161,6 +166,47 @@ function crmEnsureOpenersList(PDO $db, int $campaignId, string $campaignName): i
 
     if ($existingId > 0) {
         // Kampanya adı değişmiş olabilir → liste adını + açıklamayı + kuralı güncel tut.
+        $db->prepare("UPDATE crm_lists SET name = ?, description = ?, rules_json = ? WHERE id = ?")
+           ->execute([$listName, $desc, $rules, $existingId]);
+        return $existingId;
+    }
+
+    $db->prepare(
+        "INSERT INTO crm_lists (slug, name, description, type, rules_json)
+         VALUES (?, ?, ?, 'smart', ?)"
+    )->execute([$slug, $listName, $desc, $rules]);
+    return (int)$db->lastInsertId();
+}
+}
+
+if (!function_exists('crmEnsureClickersList')) {
+/**
+ * Kampanya başına "{kampanya_adı}_tikladi" CANLI akıllı listesini idempotent oluşturur.
+ *
+ * crmEnsureOpenersList ile AYNI desen; tek fark kural: clicked_link_campaign.
+ * Bu kural yalnızca İÇERİK linklerine tıklayanları alır — abonelikten çık, sosyal medya,
+ * KVKK ve iletişim (mailto) linkleri HARİÇ (bkz. crmClickExcludePatterns).
+ * Böylece müşteri hiçbir şey yapmadan "gerçekten ilgilenenler" listesini hazır bulur;
+ * liste canlı çözülür (geç tıklayanlar otomatik dahil, bakım gerekmez).
+ */
+function crmEnsureClickersList(PDO $db, int $campaignId, string $campaignName): int
+{
+    $slug = 'campaign-' . $campaignId . '-clicked';
+    $baseName = trim($campaignName) !== '' ? trim($campaignName) : ('Kampanya #' . $campaignId);
+    $listName = mb_substr($baseName, 0, 150) . '_tikladi';
+    $rules = json_encode([
+        'match' => 'all',
+        'rules' => [['field' => 'clicked_link_campaign', 'op' => 'equals', 'value' => $campaignId]],
+    ]);
+
+    $stmt = $db->prepare("SELECT id FROM crm_lists WHERE slug = ? LIMIT 1");
+    $stmt->execute([$slug]);
+    $existingId = (int)($stmt->fetchColumn() ?: 0);
+
+    $desc = 'Otomatik: "' . $baseName . '" kampanyasında içerik linkine tıklayan kişiler '
+          . '(abonelikten çık ve sosyal medya tıklamaları hariç, canlı).';
+
+    if ($existingId > 0) {
         $db->prepare("UPDATE crm_lists SET name = ?, description = ?, rules_json = ? WHERE id = ?")
            ->execute([$listName, $desc, $rules, $existingId]);
         return $existingId;

@@ -23,7 +23,12 @@ const FIELDS: FieldDef[] = [
     { key: 'has_tag', label: 'Etiket Var', kind: 'tag' },
     { key: 'in_list', label: 'Liste Üyesi', kind: 'list' },
     { key: 'opened_campaign', label: 'Kampanya Açtı', kind: 'campaign' },
-    { key: 'clicked_campaign', label: 'Kampanyada Tıkladı', kind: 'campaign' },
+    { key: 'clicked_campaign', label: 'Kampanyada Tıkladı (tüm linkler)', kind: 'campaign' },
+    // Yalnızca İÇERİK linkleri: abonelikten çık, sosyal medya, KVKK ve mailto tıklamaları
+    // hariç tutulur (hariç kalıplar: Ayarlar > crm_click_exclude_patterns).
+    // Footer linkleri kurumsal mail güvenlik tarayıcıları (bot) tarafından da çok tıklandığı
+    // için bu kural aynı zamanda bot gürültüsünü temizler → gerçek ilgi.
+    { key: 'clicked_link_campaign', label: 'Kampanyada İçerik Linkine Tıkladı (önerilen)', kind: 'campaign' },
 ];
 
 const OPS_BY_KIND: Record<FieldDef['kind'], { value: string; label: string; needsValue?: boolean }[]> = {

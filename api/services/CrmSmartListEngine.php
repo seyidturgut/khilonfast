@@ -1,4 +1,34 @@
 <?php
+
+if (!function_exists('crmClickExcludePatterns')) {
+/**
+ * "İçerik linkine tıklayanlar" listesinden HARİÇ tutulacak URL kalıpları.
+ *
+ * Kaynak: settings.crm_click_exclude_patterns (satır başına 1 kalıp, LIKE %kalip% olarak uygulanır).
+ * Ayar yoksa/boşsa aşağıdaki varsayılan kullanılır — bunlar crmStandardFooter()'ın
+ * kampanya maillerine otomatik eklediği linklerdir (bkz. CrmCampaignDispatcher.php):
+ *   /abonelikten-cik      → abonelikten çık
+ *   facebook/instagram/linkedin.com → sosyal medya
+ *   /gizlilik-politikasi  → KVKK
+ *   mailto:               → iletişim e-postası
+ * Böylece liste yalnızca GERÇEK içerik ilgisini gösterir (+ footer'a saldıran
+ * kurumsal mail güvenlik tarayıcısı botları da elenmiş olur).
+ */
+function crmClickExcludePatterns(?PDO $db = null): array
+{
+    $default = "/abonelikten-cik\nfacebook.com\ninstagram.com\nlinkedin.com\n/gizlilik-politikasi\nmailto:";
+    // $db yoksa (SQL builder'a geçilmemişse) ayara bakmadan varsayılanı kullan
+    $raw = $db instanceof PDO ? (string)getSetting($db, 'crm_click_exclude_patterns', $default) : $default;
+    if (trim($raw) === '') { $raw = $default; }
+    $out = [];
+    foreach (preg_split('/\r\n|\r|\n/', $raw) as $line) {
+        $line = trim($line);
+        if ($line !== '') { $out[] = $line; }
+    }
+    return $out;
+}
+}
+
 // api/services/CrmSmartListEngine.php
 // Smart list rules_json → SQL builder.
 //
@@ -21,7 +51,7 @@
 // Tablolarda c.* prefix kullanılır (crm_contacts AS c).
 
 if (!function_exists('crmBuildSmartListSql')) {
-function crmBuildSmartListSql($rulesJson): array
+function crmBuildSmartListSql($rulesJson, ?PDO $db = null): array
 {
     $rules = is_array($rulesJson) ? $rulesJson : (json_decode((string)$rulesJson, true) ?: []);
     $match = ($rules['match'] ?? 'all') === 'any' ? 'OR' : 'AND';
@@ -76,6 +106,33 @@ function crmBuildSmartListSql($rulesJson): array
             $sub .= ")";
             if ($op === 'not_equals') $sub = "NOT $sub";
             $clauses[] = $sub;
+            if ($needsId) $params[] = (int)$val;
+            continue;
+        }
+
+        // ─── İÇERİK linkine tıklayanlar (footer/sosyal/unsubscribe HARİÇ) ───
+        // Neden ayrı bir kural: yukarıdaki clicked_campaign, crm_campaign_recipients.clicked_at
+        // (evet/hayır bayrağı) bakar — HANGİ linke tıklandığını bilemez. Müşteri ise
+        // "abonelikten çık ve sosyal medya dışındaki linklere tıklayanlar" istiyor.
+        // Bu kural crm_email_tracking.link_url üzerinden gider (her tıklama URL'iyle kayıtlı).
+        // BONUS: footer linkleri geçmişte eşit ~3030 tık almıştı = kurumsal mail güvenlik
+        // tarayıcıları (bot). Footer'ı dışlamak bot gürültüsünü de temizler.
+        // Hariç kalıplar 'crm_click_exclude_patterns' ayarından (satır başına 1 kalıp) okunur;
+        // yeni bir sosyal ağ eklenirse DEPLOY GEREKMEDEN güncellenebilir.
+        if ($field === 'clicked_link_campaign') {
+            $patterns = crmClickExcludePatterns($db); // $db yoksa varsayılan kalıplar
+            $sub = "EXISTS (SELECT 1 FROM crm_email_tracking et
+                    WHERE et.contact_id = c.id AND et.event = 'clicked'
+                      AND et.link_url IS NOT NULL AND et.link_url <> ''";
+            foreach ($patterns as $pat) {
+                $sub .= " AND et.link_url NOT LIKE ?";
+            }
+            $needsId = ($op === 'equals' || $op === 'not_equals');
+            if ($needsId) { $sub .= " AND et.campaign_id = ?"; }
+            $sub .= ")";
+            if ($op === 'not_equals') $sub = "NOT $sub";
+            $clauses[] = $sub;
+            foreach ($patterns as $pat) { $params[] = '%' . $pat . '%'; }
             if ($needsId) $params[] = (int)$val;
             continue;
         }
@@ -167,7 +224,7 @@ function crmBuildSmartListSql($rulesJson): array
 if (!function_exists('crmRunSmartListPreview')) {
 function crmRunSmartListPreview(PDO $db, $rulesJson, int $sampleLimit = 10): array
 {
-    $built = crmBuildSmartListSql($rulesJson);
+    $built = crmBuildSmartListSql($rulesJson, $db);
     $whereSql = $built['where'] ? "WHERE " . $built['where'] : '';
     $params = $built['params'];
 
