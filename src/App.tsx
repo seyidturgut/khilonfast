@@ -80,6 +80,7 @@ import { productPrograms } from './data/productPrograms'
 import { setupFlows } from './data/setupFlows'
 import { resolveLocaleFromPath } from './utils/locale'
 import { normalizeBrandTextNodes } from './utils/brandText'
+import { installButtonClickTracking } from './utils/ga4ButtonTracking'
 import { ConsentProvider } from './context/ConsentContext'
 import trCommon from './locales/tr/common.json'
 import enCommon from './locales/en/common.json'
@@ -353,6 +354,11 @@ function MainContent() {
         }, 50);
         return () => window.clearTimeout(id);
     }, [location.pathname, location.search, isAdminRoute]);
+
+    // Buton/link tıklama takibi — tek delege dinleyici, uygulama ömrü boyunca bir kez.
+    // Route'a bağlı DEĞİL: her sayfa değişiminde kurup kaldırmak gereksiz iş olurdu,
+    // dinleyici zaten tıklama anında güncel pathname'i okuyor.
+    useEffect(() => installButtonClickTracking(), []);
 
     useLayoutEffect(() => {
         normalizeBrandTextNodes();
