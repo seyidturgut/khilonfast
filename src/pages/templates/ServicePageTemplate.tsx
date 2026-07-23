@@ -662,12 +662,15 @@ export default function ServicePageTemplate(props: ServicePageProps) {
         viewItemSentFor.current = key;
         trackViewItem({
             product_key: String(pkg.productKey || pkg.id || ''),
-            name: pkg.fullName || pkg.name || displayHero.title,
+            // DİKKAT: burada displayHero KULLANMA — o bu satırdan ~230 satır SONRA
+            // tanımlanıyor; bağımlılık dizisi render anında değerlendiği için
+            // "Cannot access before initialization" (TDZ) hatası verir ve TÜM sayfa çöker.
+            name: pkg.fullName || pkg.name || props.hero.title,
             price: parseLocalizedPrice(pkg.price),
             currency: (pkg.price || '').includes('$') ? 'USD' : 'TRY',
             quantity: 1
         });
-    }, [displayPackages, cmsSlug, displayHero.title]);
+    }, [displayPackages, cmsSlug, props.hero.title]);
 
     const localizeInternalPath = (path?: string) => {
         if (!path) return path;
