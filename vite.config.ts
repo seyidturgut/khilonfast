@@ -53,20 +53,31 @@ export default defineConfig(({ mode, command }) => {
         build: {
             chunkSizeWarningLimit: 1500,
             cssCodeSplit: true,
+            // pdf chunk'i (176 KB) ayri chunk oldugu icin Vite onu baslangic grafigine
+            // alip <link modulepreload> ile 181 SAYFANIN HEPSINE indiriyordu. Oysa
+            // react-pdf yalnizca TrainingContentPage (lazy route) icinde kullaniliyor.
+            // Chunk yapisini bozmadan (manualChunks'tan cikarmak prerender'i timeout'a
+            // sokuyor) sadece PRELOAD bagini kesiyoruz: dinamik import calistiginda
+            // yine normal sekilde yuklenir, ama on-yukleme yapilmaz.
+            modulePreload: {
+                resolveDependencies: (_filename, deps) =>
+                    deps.filter((d) => !/\/pdf-[A-Za-z0-9_-]+\.js$/.test(d))
+            },
             rollupOptions: {
                 output: {
                     manualChunks(id) {
                         if (!id.includes('node_modules')) return
-                        // React + react-dom + scheduler + react-router stay together to avoid circular deps
+                        // KRITIK: React'e KENDI chunk'ini ver. Isimsiz birakilirsa Rollup
+                        // paylasilan react/jsx-runtime'i baska bir manuel chunk'a (bizde
+                        // 'pdf', 463 KB) ilistiriyordu; o zaman JSX kullanan HER bilesen
+                        // (Breadcrumbs, AiAnswerBox...) pdf.js'in tamamini indirmek
+                        // zorunda kaliyordu. Hepsi tek chunk'ta = dongusel bagimlilik yok.
+                        if (/node_modules\/(react|react-dom|scheduler|react-router|react-router-dom)\//.test(id)) return 'react'
+                        // react-icons/@heroicons ayri (asagida) — yukaridaki regex onlari kapsamaz
                         if (id.includes('react-icons') || id.includes('@heroicons')) return 'icons'
                         if (id.includes('react-i18next') || id.includes('i18next')) return 'i18n'
                         if (id.includes('/three/') || id.includes('three-') || id.includes('@react-three')) return 'three'
-                        // pdf: BİLEREK ayrı chunk YAPILMIYOR. Ayrı chunk olunca Vite onu
-                        // başlangıç grafiğine alıp <link modulepreload> ile TÜM sayfalara
-                        // (181 sayfa) 176 KB olarak indiriyordu. Oysa react-pdf yalnızca
-                        // TrainingContentPage.tsx'te (lazy route) kullanılıyor. manualChunks'tan
-                        // çıkarınca o lazy chunk'ın İÇİNE giriyor → sadece kurs içeriği
-                        // açıldığında iniyor. (Tek dosyada kullanıldığı için kopyalanma riski yok.)
+                        if (id.includes('react-pdf') || id.includes('pdfjs-dist')) return 'pdf'
                         if (id.includes('react-email-editor') || id.includes('embed/embed')) return 'email-editor'
                         if (id.includes('framer-motion') || id.includes('gsap') || id.includes('lottie')) return 'animation'
                         if (id.includes('chart') || id.includes('recharts') || id.includes('d3-')) return 'charts'
