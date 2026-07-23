@@ -168,6 +168,21 @@ export default function CrmCampaignDetailPage() {
         }
     };
 
+    const handleCreateClickersList = async () => {
+        if (!id) return;
+        try {
+            setSending(true);
+            setActionMsg('');
+            const res = await crmAPI.createClickersList(id);
+            const r = res.data;
+            setActionMsg(`✓ Tıklayanlar listesi hazır: "${r.list?.name}" (şu an ${r.clicked_count ?? 0} kişi). Abonelikten çık ve sosyal medya tıklamaları hariç tutuldu — yalnızca içerik linkine tıklayanlar. Liste canlı, yeni tıklamalar otomatik eklenir.`);
+        } catch (e: any) {
+            setActionMsg('Hata: ' + (e?.response?.data?.error || e.message));
+        } finally {
+            setSending(false);
+        }
+    };
+
     const handleDelete = async () => {
         if (!id || !campaign) return;
         if (!confirm(`"${campaign.name}" silinsin mi? Geri alınamaz.`)) return;
@@ -312,6 +327,16 @@ export default function CrmCampaignDetailPage() {
                                 title="Bu kampanyayı açanlardan canlı bir akıllı liste oluşturur. Sonraki kampanyalarda hedef olarak seçebilirsiniz."
                             >
                                 <HiUsers /> Açanlardan Liste Oluştur
+                            </button>
+                        )}
+                        {(campaign.status === 'sent' || campaign.status === 'sending' || campaign.status === 'paused') && (
+                            <button
+                                className="btn btn-secondary"
+                                onClick={handleCreateClickersList}
+                                disabled={sending}
+                                title="Bu kampanyada İÇERİK linkine tıklayanlardan canlı bir akıllı liste oluşturur. Abonelikten çık, sosyal medya, KVKK ve e-posta linkleri hariç tutulur."
+                            >
+                                <HiUsers /> Tıklayanlardan Liste Oluştur
                             </button>
                         )}
                         <button className="btn btn-danger" onClick={handleDelete}><HiTrash /> Sil</button>
