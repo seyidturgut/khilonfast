@@ -15,6 +15,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-16FR1976GE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-16FR1976GE');
+</script>
 <style>
   :root{
     --accent:#C7F24E; --accent-dark:#7a8f1e; --accent-tint:rgba(199,242,78,.135);
@@ -440,6 +448,7 @@
           $('#su-msg').textContent='Teşekkürler '+name+'. Ekibimiz size uygun eğitim akışını hazırlayıp en kısa sürede dönüş yapacak.';
           $('#su-part').textContent=state.participants||'Belirtilmedi';
           $('#su-prog').textContent=programs.length?programs.join(', '):'Genel';
+          if(window.gtag){ gtag('event','generate_lead',{form_id:'egitim-basvurusu',form_name:'Eğitim Başvurusu'}); }
           form.style.display='none'; success.classList.add('show'); scrollToForm();
           btn.textContent=old; btn.disabled=false;
         } else {
@@ -461,5 +470,6 @@
   });
 })();
 </script>
+<script defer src="/exit-popup.js"></script>
 </body>
 </html>
