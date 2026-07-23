@@ -2,8 +2,20 @@
 import express from 'express';
 import crypto from 'crypto';
 import db from '../config/database.js';
+import { sendCustomMail } from '../services/emailService.js';
 
 const router = express.Router();
+
+async function getCrmSetting(key, fallback = '') {
+    try {
+        const [rows] = await db.query('SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1', [key]);
+        return rows.length ? String(rows[0].setting_value) : fallback;
+    } catch { return fallback; }
+}
+
+const _escHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+));
 
 // Inline scoring engine (subset — sadece webhook için yeterli)
 let _scoreRulesCache = null;
@@ -405,6 +417,30 @@ router.post('/form/:slug/submit', express.json(), async (req, res) => {
                         if (t.length) await db.query('INSERT IGNORE INTO crm_contact_tags (contact_id, tag_id) VALUES (?, ?)', [contactId, t[0].id]);
                     } else if (a.type === 'add_to_list' && a.list_id) {
                         await db.query('INSERT IGNORE INTO crm_list_contacts (list_id, contact_id) VALUES (?, ?)', [Number(a.list_id), contactId]);
+                    } else if (a.type === 'notify_admin') {
+                        // Başvuru içeriğini admin'e mail at (PHP tarafı ile aynı davranış)
+                        const adminEmail = String(a.email || '').trim() || await getCrmSetting('contact_email', '');
+                        if (adminEmail) {
+                            const labelMap = {};
+                            for (const ff of fields) { if (ff.key) labelMap[ff.key] = ff.label || ff.key; }
+                            const rows = Object.entries(cleaned).map(([k, v]) => {
+                                const label = _escHtml(labelMap[k] || k);
+                                const val = Array.isArray(v) ? v.map(String).join(', ') : String(v ?? '');
+                                return '<tr>'
+                                    + '<td style="padding:8px 12px;color:#64748b;font-weight:600;vertical-align:top;border-bottom:1px solid #eef2f7;white-space:nowrap">' + label + '</td>'
+                                    + '<td style="padding:8px 12px;color:#0f172a;white-space:pre-wrap;border-bottom:1px solid #eef2f7">' + _escHtml(val || '-') + '</td>'
+                                    + '</tr>';
+                            }).join('');
+                            const html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;margin:0;color:#102a43">'
+                                + '<div style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                                + '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px">'
+                                + '<h2 style="margin:0;font-size:1.15rem">Yeni Başvuru — ' + _escHtml(form.name) + '</h2></div>'
+                                + '<div style="padding:16px 12px"><table style="width:100%;border-collapse:collapse;font-size:14px">' + rows + '</table></div>'
+                                + '</div></body></html>';
+                            try {
+                                await sendCustomMail({ to: adminEmail, subject: '[Khilonfast] Yeni Başvuru — ' + form.name, html });
+                            } catch (e) { console.warn('[form-notify]:', e.message); }
+                        }
                     }
                 } catch (e) { console.warn('[form-action]:', e.message); }
             }

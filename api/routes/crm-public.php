@@ -507,6 +507,35 @@ if ($action === 'form' && !empty($id) && $subAction === 'submit' && $method === 
                 } elseif ($act['type'] === 'add_to_list' && !empty($act['list_id'])) {
                     $db->prepare("INSERT IGNORE INTO crm_list_contacts (list_id, contact_id) VALUES (?, ?)")
                        ->execute([(int)$act['list_id'], $contactId]);
+                } elseif ($act['type'] === 'notify_admin') {
+                    // Başvuru içeriğini admin'e mail at (contact-submit ile aynı mekanizma)
+                    $adminEmail = trim((string)($act['email'] ?? '')) ?: (string)getSetting($db, 'contact_email', '');
+                    if ($adminEmail !== '' && function_exists('sendTransactionalEmail')) {
+                        $safe = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+                        $labelMap = [];
+                        foreach ($fields as $ff) {
+                            if (!empty($ff['key'])) $labelMap[$ff['key']] = $ff['label'] ?? $ff['key'];
+                        }
+                        $rows = '';
+                        foreach ($cleaned as $k => $v) {
+                            $label = $safe($labelMap[$k] ?? $k);
+                            $val = is_array($v) ? implode(', ', array_map('strval', $v)) : (string)$v;
+                            $rows .= '<tr>'
+                                . '<td style="padding:8px 12px;color:#64748b;font-weight:600;vertical-align:top;border-bottom:1px solid #eef2f7;white-space:nowrap">' . $label . '</td>'
+                                . '<td style="padding:8px 12px;color:#0f172a;white-space:pre-wrap;border-bottom:1px solid #eef2f7">' . $safe($val !== '' ? $val : '-') . '</td>'
+                                . '</tr>';
+                        }
+                        $formName = $safe((string)$form['name']);
+                        $html = '<!doctype html><html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px;margin:0;color:#102a43">'
+                            . '<div style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #dde7f0;border-radius:12px;overflow:hidden">'
+                            . '<div style="background:linear-gradient(90deg,#1a3a52,#89b004);color:#fff;padding:20px 24px">'
+                            . '<h2 style="margin:0;font-size:1.15rem">Yeni Başvuru — ' . $formName . '</h2></div>'
+                            . '<div style="padding:16px 12px"><table style="width:100%;border-collapse:collapse;font-size:14px">' . $rows . '</table></div>'
+                            . '</div></body></html>';
+                        try {
+                            sendTransactionalEmail($db, $adminEmail, '[Khilonfast] Yeni Başvuru — ' . $form['name'], $html);
+                        } catch (Throwable $e) { error_log('[form-notify]: ' . $e->getMessage()); }
+                    }
                 }
             } catch (Throwable $e) { error_log('[form-action]: ' . $e->getMessage()); }
         }
