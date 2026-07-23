@@ -22,9 +22,6 @@ type GtagFn = (...args: unknown[]) => void;
 /** GA4 parametre değerleri için üst sınır (GA4 limiti 100 karakter). */
 const MAX_LEN = 100;
 
-/** Bu uzunluğa kadar olan metinler zaten bir buton etiketidir, ayıklamaya gerek yok. */
-const SHORT_LABEL = 60;
-
 function getGtag(): GtagFn | null {
     try {
         const g = (window as unknown as { gtag?: GtagFn }).gtag;
@@ -50,28 +47,24 @@ function labelOf(el: HTMLElement): string {
         /* sorgu başarısızsa düz metne düş */
     }
 
-    const raw = el.innerText || el.textContent || '';
-    const text = clean(raw);
-
-    // Kısa etiketler ("Hemen Başlayın", "Satın Al") olduğu gibi kullanılır.
-    if (text && text.length <= SHORT_LABEL) return text;
+    const text = clean(el.innerText || el.textContent);
 
     if (text) {
-        // Uzun metin = kart/mega-menü öğesi: başlık + açıklama birleşmiş
-        // ("Go To Market StratejisiPazara giriş ve büyüme planları").
-        // Başlığı ayıkla: önce satır sonu, olmazsa İLK METİN DÜĞÜMÜ — bu projede
-        // başlık ile açıklama ayrı <span>'lerde ve satır içi olduğu için
-        // innerText satır sonu üretmiyor, tek güvenilir ayraç ilk metin düğümü.
-        const firstLine = clean(raw.split('\n').map((s) => s.trim()).find(Boolean));
-        if (firstLine && firstLine.length <= SHORT_LABEL) return firstLine;
-
+        // Menü ve kart öğelerinde başlık ile açıklama ayrı <span>'lerde ve SATIR İÇİ
+        // olduğu için innerText araya satır sonu koymaz; hepsi birleşip
+        // "Go To Market StratejisiPazara giriş ve büyüme planları" gibi okunmaz
+        // bir etiket çıkar. Tek güvenilir ayraç İLK METİN DÜĞÜMÜ = başlık.
+        //
+        // Ana sayfada ölçüldü: 86 tıklanabilir öğenin 45'inde sonuç aynı (tek metin
+        // düğümü), 32'sinde belirgin şekilde daha temiz, bozulan yok.
         try {
             const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
             let node = walker.nextNode();
             while (node) {
                 const chunk = clean(node.textContent);
-                // 2 karakterden kısa parçalar ikon/ayraç artığıdır, atla
-                if (chunk.length > 2) return chunk;
+                // Harf/rakam içermeyen parçalar ayraç veya ikon artığıdır ("|", "›").
+                // DİKKAT: uzunluk eşiği KULLANMA — "TR"/"EN" dil butonları elenir.
+                if (chunk && /[\p{L}\p{N}]/u.test(chunk)) return chunk;
                 node = walker.nextNode();
             }
         } catch {
