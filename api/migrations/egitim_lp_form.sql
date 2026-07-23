@@ -26,7 +26,8 @@ VALUES (
         JSON_OBJECT('key','seats','label','Katılımcı sayısı','type','text','required',false),
         JSON_OBJECT('key','programs','label','İlgilenilen programlar','type','array','required',true),
         JSON_OBJECT('key','note','label','Not','type','textarea','required',false),
-        JSON_OBJECT('key','kvkk','label','KVKK Onayı','type','text','required',false)
+        JSON_OBJECT('key','kvkk','label','Gizlilik Politikası Onayı','type','text','required',false),
+        JSON_OBJECT('key','etk','label','ETK / Pazarlama İzni','type','text','required',false)
     ),
     JSON_ARRAY(
         JSON_OBJECT('type','add_to_list','list_id',@list_id),
@@ -43,3 +44,8 @@ ON DUPLICATE KEY UPDATE
     success_message = VALUES(success_message),
     double_opt_in   = 0,
     is_active       = 1;
+
+-- 3) Liste sayaç senkronu (kart üzerindeki "kişi" sayısı doğru görünsün diye)
+UPDATE crm_lists
+SET contact_count = (SELECT COUNT(*) FROM crm_list_contacts WHERE list_id = crm_lists.id)
+WHERE slug = 'egitim-basvurulari-lp' AND type = 'static';

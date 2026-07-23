@@ -417,6 +417,7 @@ router.post('/form/:slug/submit', express.json(), async (req, res) => {
                         if (t.length) await db.query('INSERT IGNORE INTO crm_contact_tags (contact_id, tag_id) VALUES (?, ?)', [contactId, t[0].id]);
                     } else if (a.type === 'add_to_list' && a.list_id) {
                         await db.query('INSERT IGNORE INTO crm_list_contacts (list_id, contact_id) VALUES (?, ?)', [Number(a.list_id), contactId]);
+                        await db.query("UPDATE crm_lists SET contact_count = (SELECT COUNT(*) FROM crm_list_contacts WHERE list_id = crm_lists.id) WHERE id = ? AND type = 'static'", [Number(a.list_id)]);
                     } else if (a.type === 'notify_admin') {
                         // Başvuru içeriğini admin'e mail at (PHP tarafı ile aynı davranış)
                         const adminEmail = String(a.email || '').trim() || await getCrmSetting('contact_email', '');
@@ -494,6 +495,7 @@ router.get('/form/:slug/confirm', async (req, res) => {
                         if (t.length) await db.query('INSERT IGNORE INTO crm_contact_tags (contact_id, tag_id) VALUES (?, ?)', [contactId, t[0].id]);
                     } else if (a.type === 'add_to_list' && a.list_id) {
                         await db.query('INSERT IGNORE INTO crm_list_contacts (list_id, contact_id) VALUES (?, ?)', [Number(a.list_id), contactId]);
+                        await db.query("UPDATE crm_lists SET contact_count = (SELECT COUNT(*) FROM crm_list_contacts WHERE list_id = crm_lists.id) WHERE id = ? AND type = 'static'", [Number(a.list_id)]);
                     }
                 } catch {}
             }

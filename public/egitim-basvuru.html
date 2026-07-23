@@ -32,14 +32,10 @@
   ::selection{background:var(--primary);color:var(--navy)}
 
   /* Header */
-  header{border-bottom:1px solid var(--line);background:rgba(255,255,255,.82);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
-  .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
-  .brand{display:flex;align-items:center;gap:10px;min-width:0}
-  .logo{width:34px;height:34px;flex:0 0 auto;display:grid;place-items:center;border-radius:9px;
-    background:var(--primary);color:var(--navy);font-weight:900;font-size:19px}
-  .brand b{font-size:15px;font-weight:700;letter-spacing:.2px}
-  .brand span{color:var(--muted);font-weight:500}
-  .hd .tag{font-size:12px;color:var(--muted);white-space:nowrap}
+  header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:20}
+  .hd{display:flex;align-items:center;padding:16px 0}
+  .brand{display:inline-flex;align-items:center}
+  .brand img{height:28px;width:auto;display:block}
 
   /* Hero */
   .hero{padding:38px 0 20px}
@@ -89,8 +85,12 @@
   .progs .chip.on .dot::after{content:"";width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
 
   /* KVKK + submit */
-  .kvkk{display:flex;align-items:flex-start;gap:10px;margin-top:6px;font-size:13px;color:var(--muted);cursor:pointer}
-  .kvkk input{width:17px;height:17px;margin-top:2px;accent-color:var(--primary-dark);flex:0 0 auto}
+  .consent{display:flex;flex-direction:column;gap:9px;margin-top:8px}
+  .consent-row{display:flex;align-items:flex-start;gap:10px;font-size:.85rem;line-height:1.5;color:#475569;
+    cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400}
+  .consent-row.etk{font-size:.8rem;color:#64748b}
+  .consent-row input{width:17px;height:17px;margin-top:2px;accent-color:var(--primary-dark);flex:0 0 auto}
+  .consent-row a{color:var(--accent);text-decoration:underline;font-weight:600}
   .submit{width:100%;margin-top:6px;border:none;cursor:pointer;font-family:inherit;font-size:16px;font-weight:800;
     color:var(--navy);background:var(--primary);border-radius:13px;padding:15px;transition:.15s;box-shadow:0 8px 20px -8px rgba(197,214,61,.7)}
   .submit:hover{background:var(--primary-dark)}
@@ -144,18 +144,13 @@
 
 <header>
   <div class="wrap hd">
-    <div class="brand">
-      <div class="logo">k</div>
-      <b>khilonfast <span>Academy</span></b>
-    </div>
-    <span class="tag">Eğitim Başvurusu</span>
+    <a href="https://khilonfast.com" class="brand" aria-label="khilonfast"><img src="/fast-logo-big.svg" alt="khilonfast" width="150" height="28"></a>
   </div>
 </header>
 
 <main>
   <!-- HERO -->
   <section class="wrap hero">
-    <span class="pill"><i></i>KHILONFAST ACADEMY · EĞİTİM PROGRAMLARI</span>
     <h1>Sektöre özel <em>büyüme odaklı pazarlama</em> eğitimleri.</h1>
     <p class="lead">B2B, fintech, üretim, enerji ve 9 sektöre özel tasarlanmış online pazarlama eğitim programları.
       Dijital platform üzerinden istediğiniz zaman erişip kendi hızınızda ilerleyin. Aşağıdaki formu doldurarak size uygun eğitim akışını talep edin.</p>
@@ -225,10 +220,16 @@
       <!-- honeypot -->
       <div class="hp" aria-hidden="true"><label>Web sitesi<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
-      <label class="kvkk">
-        <input type="checkbox" id="kvkk" required>
-        <span>Kişisel verilerimin başvurumun değerlendirilmesi amacıyla işlenmesini kabul ediyorum (KVKK).</span>
-      </label>
+      <div class="consent">
+        <label class="consent-row">
+          <input type="checkbox" id="kvkk" required>
+          <span><a href="https://khilonfast.com/gizlilik-politikasi" target="_blank" rel="noopener noreferrer">Gizlilik Politikası</a>'nı okudum ve kabul ediyorum.</span>
+        </label>
+        <label class="consent-row etk">
+          <input type="checkbox" id="etk">
+          <span>Khilonfast'tan e-posta, SMS, telefon ve benzeri iletişim kanalları üzerinden güncellemeler, eğitim içerikleri, ürün duyuruları, webinar davetleri, pazarlama iletişimi ve promosyon mesajları almayı kabul ediyorum.</span>
+        </label>
+      </div>
 
       <button type="submit" class="submit" id="submitBtn" style="margin-top:16px">Başvuruyu Gönder →</button>
       <div class="msg" id="formMsg" role="status" aria-live="polite"></div>
@@ -331,7 +332,7 @@
     if(!fullName){ return showMsg('err','Lütfen ad soyad giriniz.'); }
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ return showMsg('err','Geçerli bir e-posta giriniz.'); }
     if(programs.length === 0){ return showMsg('err','En az bir eğitim programı seçiniz.'); }
-    if(!document.getElementById('kvkk').checked){ return showMsg('err','Devam etmek için KVKK onayı gereklidir.'); }
+    if(!document.getElementById('kvkk').checked){ return showMsg('err','Devam etmek için Gizlilik Politikası onayı gereklidir.'); }
 
     var payload = {
       first_name: fullName,
@@ -342,7 +343,8 @@
       seats:      seatsEl ? seatsEl.value : '',
       programs:   programs,
       note:       form.note.value.trim(),
-      kvkk:       'Onaylandı',
+      kvkk:       'Gizlilik Politikası onaylandı',
+      etk:        document.getElementById('etk').checked ? 'Onaylandı' : 'Reddedildi',
       website:    form.website.value // honeypot
     };
 

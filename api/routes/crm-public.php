@@ -507,6 +507,7 @@ if ($action === 'form' && !empty($id) && $subAction === 'submit' && $method === 
                 } elseif ($act['type'] === 'add_to_list' && !empty($act['list_id'])) {
                     $db->prepare("INSERT IGNORE INTO crm_list_contacts (list_id, contact_id) VALUES (?, ?)")
                        ->execute([(int)$act['list_id'], $contactId]);
+                    crmRecountListContacts($db, (int)$act['list_id']);
                 } elseif ($act['type'] === 'notify_admin') {
                     // Başvuru içeriğini admin'e mail at (contact-submit ile aynı mekanizma)
                     $adminEmail = trim((string)($act['email'] ?? '')) ?: (string)getSetting($db, 'contact_email', '');
@@ -637,6 +638,7 @@ if ($action === 'form' && !empty($id) && $subAction === 'confirm' && $method ===
                 } elseif ($act['type'] === 'add_to_list' && !empty($act['list_id'])) {
                     $db->prepare("INSERT IGNORE INTO crm_list_contacts (list_id, contact_id) VALUES (?, ?)")
                        ->execute([(int)$act['list_id'], $contactId]);
+                    crmRecountListContacts($db, (int)$act['list_id']);
                 }
             } catch (Throwable $e) {}
         }
