@@ -83,8 +83,14 @@ export default function CrmListsPage() {
     const handleExport = async (l: CrmList) => {
         try {
             setExportingId(l.id);
-            const safe = (l.slug || l.name || 'liste').toString().replace(/[^\w.-]+/g, '-').toLowerCase();
-            await crmAPI.downloadCsv({ list_id: l.id }, `${safe}-${new Date().toISOString().slice(0, 10)}.csv`);
+            // Dosya adı liste ADI olsun (Türkçe karakterler korunur; yalnızca
+            // dosya sisteminde sorun çıkaran karakterler temizlenir).
+            const safe = (l.name || l.slug || 'liste')
+                .toString()
+                .replace(/[\\/:*?"<>|]+/g, '-')
+                .replace(/\s+/g, ' ')
+                .trim();
+            await crmAPI.downloadCsv({ list_id: l.id }, `${safe} - ${new Date().toISOString().slice(0, 10)}.csv`);
         } catch (e: any) {
             alert(e?.response?.data?.error || 'CSV indirilemedi');
         } finally {

@@ -214,6 +214,8 @@ function crmExportContactsCsv(PDO $db, array $filters = []): string
         ]);
     }
     rewind($out);
-    return stream_get_contents($out);
+    // UTF-8 BOM: Excel BOM olmadan dosyayı ANSI sanıp Türkçe karakterleri bozar
+    // (Gıda → GÄ±da). BOM ile doğru açılır; diğer araçlar BOM'u yok sayar.
+    return "\xEF\xBB\xBF" . stream_get_contents($out);
 }
 }
