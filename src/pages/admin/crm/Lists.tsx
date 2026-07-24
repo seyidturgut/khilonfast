@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AdminLayout from '../../../layouts/AdminLayout';
 import { crmAPI, type CrmList, type CrmTag, type CrmListRules } from '../../../services/api';
-import { HiCollection, HiPlus, HiTrash, HiPencil, HiX, HiArrowLeft, HiLightningBolt, HiClipboardList, HiSave, HiEye } from 'react-icons/hi';
+import { HiCollection, HiPlus, HiTrash, HiPencil, HiX, HiArrowLeft, HiLightningBolt, HiClipboardList, HiSave, HiEye, HiDownload } from 'react-icons/hi';
 import { CrmPageStyles } from './Contacts';
 import SmartListRuleBuilder from '../../../components/admin/crm/SmartListRuleBuilder';
 
@@ -20,6 +20,7 @@ export default function CrmListsPage() {
     const [tags, setTags] = useState<CrmTag[]>([]);
     const [campaigns, setCampaigns] = useState<{ id: number; name: string }[]>([]);
     const [previewCount, setPreviewCount] = useState<number | null>(null);
+    const [exportingId, setExportingId] = useState<number | null>(null);
 
     const load = async () => {
         try {
@@ -78,6 +79,19 @@ export default function CrmListsPage() {
         }
     };
 
+    // Listeyi CSV indir — akıllı listeler dahil (yetkili istek, token header'da gider)
+    const handleExport = async (l: CrmList) => {
+        try {
+            setExportingId(l.id);
+            const safe = (l.slug || l.name || 'liste').toString().replace(/[^\w.-]+/g, '-').toLowerCase();
+            await crmAPI.downloadCsv({ list_id: l.id }, `${safe}-${new Date().toISOString().slice(0, 10)}.csv`);
+        } catch (e: any) {
+            alert(e?.response?.data?.error || 'CSV indirilemedi');
+        } finally {
+            setExportingId(null);
+        }
+    };
+
     const handleDelete = async (l: CrmList) => {
         if (!confirm(`"${l.name}" listesi silinsin mi?`)) return;
         try { await crmAPI.deleteList(l.id); await load(); }
@@ -115,6 +129,14 @@ export default function CrmListsPage() {
                             {l.description && <div className="list-desc">{l.description}</div>}
                             <div className="list-actions">
                                 <Link to={`/admin/crm/lists/${l.id}`} className="btn btn-secondary btn-sm">Aç</Link>
+                                <button
+                                    className="btn btn-secondary btn-sm"
+                                    onClick={() => handleExport(l)}
+                                    disabled={exportingId === l.id}
+                                    title="Bu listeyi CSV olarak indir"
+                                >
+                                    <HiDownload /> {exportingId === l.id ? 'İndiriliyor…' : 'CSV'}
+                                </button>
                                 <button className="icon-btn danger" onClick={() => handleDelete(l)} title="Sil"><HiTrash /></button>
                             </div>
                         </div>

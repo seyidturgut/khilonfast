@@ -169,8 +169,29 @@ function crmExportContactsCsv(PDO $db, array $filters = []): string
         $params[] = (int)$filters['min_score'];
     }
     if (!empty($filters['list_id'])) {
-        $where[] = 'id IN (SELECT contact_id FROM crm_list_contacts WHERE list_id = ?)';
-        $params[] = (int)$filters['list_id'];
+        $lid = (int)$filters['list_id'];
+        // ÖNEMLİ: Smart (akıllı) listelerin üyeliği crm_list_contacts'ta TUTULMAZ —
+        // rules_json'dan canlı hesaplanır. Tip kontrolü yapılmazsa akıllı listeler
+        // (örn. otomatik "Açanlar"/"Tıklayanlar") boş CSV döner.
+        $listType = null; $listRules = null;
+        try {
+            $ls = $db->prepare("SELECT type, rules_json FROM crm_lists WHERE id = ? LIMIT 1");
+            $ls->execute([$lid]);
+            if ($lr = $ls->fetch()) { $listType = $lr['type'] ?? null; $listRules = $lr['rules_json'] ?? null; }
+        } catch (Throwable $e) {}
+
+        if ($listType === 'smart') {
+            require_once __DIR__ . '/CrmSmartListEngine.php';
+            $rules = json_decode((string)$listRules, true) ?: [];
+            $built = crmBuildSmartListSql($rules, $db);
+            if (!empty($built['where'])) {
+                $where[] = 'id IN (SELECT c.id FROM crm_contacts c WHERE ' . $built['where'] . ')';
+                $params = array_merge($params, $built['params']);
+            }
+        } else {
+            $where[] = 'id IN (SELECT contact_id FROM crm_list_contacts WHERE list_id = ?)';
+            $params[] = $lid;
+        }
     }
     if (!empty($filters['tag_slug'])) {
         $where[] = "id IN (SELECT contact_id FROM crm_contact_tags ct

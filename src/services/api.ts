@@ -380,6 +380,23 @@ export const crmAPI = {
         const qs = sp.toString();
         return `${API_BASE_URL}/crm/csv-export${qs ? '?' + qs : ''}`;
     },
+    // CSV'yi YETKİLİ indir. Düz <a href download> linki Authorization header'ı
+    // gönderemediği için 401 alıyordu; burada axios ile (token'lı) blob çekip
+    // istemci tarafında indiriyoruz. Akıllı listeler de desteklenir.
+    downloadCsv: async (
+        params?: { status?: string; tag_slug?: string; list_id?: number; min_score?: number },
+        filename?: string
+    ) => {
+        const res = await api.get('/crm/csv-export', { params, responseType: 'blob' });
+        const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/csv;charset=utf-8;' }));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || `crm-contacts-${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    },
 
     // Faz 9: Dashboard + Funnels
     getDashboard: (growthDays = 30) => api.get('/crm/dashboard', { params: { growth_days: growthDays } }),
