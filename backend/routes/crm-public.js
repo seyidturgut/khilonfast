@@ -138,18 +138,33 @@ router.post('/webhook/brevo', express.raw({ type: '*/*' }), async (req, res) => 
         const contactId = await findOrCreateContactByEmail(email);
         const occurredAt = e.date ? new Date(e.date) : new Date();
 
+        const trkMsgId = String(e['message-id'] || e.messageId || '') || null;
+
+        // campaign_id'yi message_id üzerinden çöz — tıklayanlar/açanlar listeleri
+        // crm_email_tracking.campaign_id'ye bakar; doldurulmazsa listeler BOŞ çıkar.
+        let trkCampaignId = null;
+        if (trkMsgId) {
+            try {
+                const bare = trkMsgId.replace(/^<|>$/g, '');
+                const variants = [...new Set([trkMsgId, bare, `<${bare}>`])];
+                const [cr] = await db.query('SELECT campaign_id FROM crm_campaign_recipients WHERE message_id IN (?) LIMIT 1', [variants]);
+                if (cr.length && cr[0].campaign_id) trkCampaignId = Number(cr[0].campaign_id);
+            } catch {}
+        }
+
         try {
             await db.query(
                 `INSERT INTO crm_email_tracking
-                 (contact_id, email, event, message_id, link_url, reason, ip, user_agent, provider, raw_payload, occurred_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'brevo', ?, ?)`,
+                 (contact_id, email, event, message_id, link_url, reason, ip, user_agent, provider, campaign_id, raw_payload, occurred_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'brevo', ?, ?, ?)`,
                 [
                     contactId, email, normalized,
-                    String(e['message-id'] || e.messageId || '') || null,
+                    trkMsgId,
                     String(e.link || e.url || '') || null,
                     String(e.reason || '') || null,
                     String(e.ip || '') || null,
                     String(e.user_agent || e.ua || '').slice(0, 500) || null,
+                    trkCampaignId,
                     JSON.stringify(e),
                     occurredAt
                 ]

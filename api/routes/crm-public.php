@@ -82,19 +82,37 @@ if ($action === 'webhook' && $id === 'brevo' && $method === 'POST') {
             try {
                 $diagnosticEvents = ['hard_bounce', 'soft_bounce', 'bounced', 'blocked', 'complaint', 'deferred', 'error', 'invalid'];
                 $storePayload = in_array($normalized, $diagnosticEvents, true) ? json_encode($e) : null;
+                $trkMsgId = (string)($e['message-id'] ?? $e['messageId'] ?? '') ?: null;
+
+                // campaign_id'yi message_id üzerinden çöz — tıklayanlar/açanlar listeleri
+                // crm_email_tracking.campaign_id'ye bakar; doldurulmazsa listeler BOŞ çıkar.
+                $trkCampaignId = null;
+                if ($trkMsgId !== null) {
+                    try {
+                        $bareMid = trim($trkMsgId, '<>');
+                        $midVariants = array_values(array_unique([$trkMsgId, $bareMid, '<' . $bareMid . '>']));
+                        $midPh = implode(',', array_fill(0, count($midVariants), '?'));
+                        $cst = $db->prepare("SELECT campaign_id FROM crm_campaign_recipients WHERE message_id IN ($midPh) LIMIT 1");
+                        $cst->execute($midVariants);
+                        $cv = $cst->fetchColumn();
+                        if ($cv) { $trkCampaignId = (int)$cv; }
+                    } catch (Throwable $ex) {}
+                }
+
                 $stmt = $db->prepare("INSERT INTO crm_email_tracking
-                    (contact_id, email, event, message_id, link_url, reason, ip, user_agent, provider, raw_payload, occurred_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'brevo', ?, ?)");
+                    (contact_id, email, event, message_id, link_url, reason, ip, user_agent, provider, campaign_id, raw_payload, occurred_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'brevo', ?, ?, ?)");
                 $occurredAt = isset($e['date']) ? date('Y-m-d H:i:s', strtotime((string)$e['date'])) : date('Y-m-d H:i:s');
                 $stmt->execute([
                     $contactId,
                     $email,
                     $normalized,
-                    (string)($e['message-id'] ?? $e['messageId'] ?? '') ?: null,
+                    $trkMsgId,
                     (string)($e['link'] ?? $e['url'] ?? '') ?: null,
                     (string)($e['reason'] ?? '') ?: null,
                     (string)($e['ip'] ?? '') ?: null,
                     substr((string)($e['user_agent'] ?? $e['ua'] ?? ''), 0, 500) ?: null,
+                    $trkCampaignId,
                     $storePayload,
                     $occurredAt
                 ]);
